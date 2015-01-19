@@ -1,0 +1,142 @@
+<body style=margin:0 onload=init()>
+<canvas id=canvas>
+<script src=../iso.js></script>
+<script>
+
+	function init () {
+
+		iso = Iso(window, null, new ArrayBuffer(0x20000));
+		console.log('iso available functions:', iso);
+
+		W = canvas.width = innerWidth;
+		H = canvas.height = innerHeight;
+		context = canvas.getContext('2d');
+		context.lineWidth = 2;
+		context.strokeStyle = '#fff';
+
+		cols_nb = 16;
+		rows_nb = 16;
+		offset_x = 128;
+		offset_y = 64;
+		map_length = cols_nb * rows_nb;
+		tile_size = H / cols_nb;
+
+		is_iso = false;
+		tiles_pts = [];
+		tile_sprites = [];
+		for (var i=map_length; i--; tile_sprites[i]=create_tile_sprite(i));
+
+		tiles_cols = new Float32Array(map_length);
+		tiles_rows = new Float32Array(map_length);
+	
+		for (var i=0; i<map_length; i++) {
+			tiles_cols[i] = iso.cell_col(i, cols_nb);
+			tiles_rows[i] = iso.cell_row(i, cols_nb);
+		}
+
+		tiles_x = new Uint16Array(map_length);
+		tiles_y = new Uint16Array(map_length);
+
+		resize_tiles(tile_size);
+
+		loop();
+		init_events();
+	}
+
+	function loop () {
+
+		requestAnimationFrame(loop);
+
+		context.fillRect(0, 0, W, H);
+
+		if (is_iso) {
+
+			for (var i=0; i<map_length; i++) {
+
+				context.drawImage(tile_sprites[i], 0, 0, tile_sprites[i].width, tile_sprites[i].height, tiles_x[i], tiles_y[i], tile_size, tile_size);
+
+				// pour le debug par example :
+
+				context.beginPath();
+				context.moveTo(tiles_pts[i].x0, tiles_pts[i].y0);
+				context.lineTo(tiles_pts[i].x1, tiles_pts[i].y1);
+				context.lineTo(tiles_pts[i].x2, tiles_pts[i].y2);
+				context.lineTo(tiles_pts[i].x3, tiles_pts[i].y3);
+				context.closePath();
+				context.stroke();
+			}
+
+		} else {
+
+			for (var i=0; i<map_length; i++) {
+
+				var x = i%cols_nb;
+				var y = i/cols_nb|0;
+
+				context.drawImage(tile_sprites[i], 0, 0, tile_sprites[i].width, tile_sprites[i].height, x*tile_size+offset_x, y*tile_size+offset_y, tile_size, tile_size);
+
+				context.strokeRect(x*tile_size+offset_x, y*tile_size+offset_y, tile_size, tile_size);
+			}
+		}
+	}
+
+	function create_tile_sprite (nb) {
+
+		var c = document.createElement('canvas');
+		c.width = c.height = tile_size;
+		var ctx = c.getContext('2d');
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		var g = ctx.createLinearGradient(0, 0, c.width*0.5, c.height);
+
+		g.addColorStop(0, '#2e3');
+		g.addColorStop(1, '#042');
+		ctx.fillStyle = g;
+		ctx.beginPath();
+		ctx.moveTo(0, c.height*0.5);
+		ctx.lineTo(c.width*0.5, c.height*0.25);
+		ctx.lineTo(c.width, c.height*0.5);
+		ctx.lineTo(c.width*0.5, c.height*0.75);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = '#000';
+		ctx.font = (c.height*0.3) + "px arial";
+		ctx.fillText(nb, c.width*0.5, c.height*0.5);
+
+		return c;
+	}
+
+	function init_events () {
+
+		onkeydown = function (e) {
+
+			switch (e.keyCode) {
+
+				case 107: // +
+				case 38: // up arrow
+					resize_tiles(tile_size+1);
+				break;
+				case 109: // -
+				case 40: // down arrow
+					resize_tiles(tile_size-1);
+				break;
+				default:
+					is_iso = !is_iso;
+				break;
+			}
+		}
+	}
+
+	function resize_tiles (new_size) {
+
+		tile_size = new_size;
+
+		for (var i=0; i<map_length; i++) {
+			tiles_x[i] = iso.cell_x(tiles_cols[i], tile_size, offset_x);
+			tiles_y[i] = iso.cell_y(tiles_rows[i], tile_size, offset_y);
+		}
+
+		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
+	}
+
+</script>
