@@ -18,6 +18,8 @@
 		rows_nb = 16;
 		offset_x = 128;
 		offset_y = 64;
+		offset_move_speed = 5;
+		zoom_speed = 3;
 		map_length = cols_nb * rows_nb;
 		tile_size = H / cols_nb;
 
@@ -34,8 +36,8 @@
 			tiles_rows[i] = iso.cell_row(i, cols_nb);
 		}
 
-		tiles_x = new Uint16Array(map_length);
-		tiles_y = new Uint16Array(map_length);
+		tiles_x = new Int16Array(map_length);
+		tiles_y = new Int16Array(map_length);
 
 		resize_tiles(tile_size);
 
@@ -55,7 +57,7 @@
 
 				context.drawImage(tile_sprites[i], 0, 0, tile_sprites[i].width, tile_sprites[i].height, tiles_x[i], tiles_y[i], tile_size, tile_size);
 
-				// pour le debug par example :
+				// utilisation de iso.all_map_pts_xy() pour le debug par example :
 
 				context.beginPath();
 				context.moveTo(tiles_pts[i].x0, tiles_pts[i].y0);
@@ -111,14 +113,23 @@
 		onkeydown = function (e) {
 
 			switch (e.keyCode) {
-
-				case 107: // +
+				case 37: // left arrow
+					change_offset_x(offset_x-offset_move_speed);
+				break;
 				case 38: // up arrow
-					resize_tiles(tile_size+1);
+					change_offset_y(offset_y-offset_move_speed);
+				break;
+				case 39: // right arrow
+					change_offset_x(offset_x+offset_move_speed);
+				break;
+				case 40: // down arrow
+					change_offset_y(offset_y+offset_move_speed);
+				break;
+				case 107: // +
+					resize_tiles(tile_size+zoom_speed);
 				break;
 				case 109: // -
-				case 40: // down arrow
-					resize_tiles(tile_size-1);
+					resize_tiles(tile_size-zoom_speed);
 				break;
 				default:
 					is_iso = !is_iso;
@@ -135,7 +146,26 @@
 			tiles_x[i] = iso.cell_x(tiles_cols[i], tile_size, offset_x);
 			tiles_y[i] = iso.cell_y(tiles_rows[i], tile_size, offset_y);
 		}
+		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
+	}
 
+	function change_offset_x (new_offset_x) {
+
+		offset_x = new_offset_x;
+
+		for (var i=0; i<map_length; i++) {
+			tiles_x[i] = iso.cell_x(tiles_cols[i], tile_size, offset_x);
+		}
+		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
+	}
+
+	function change_offset_y (new_offset_y) {
+
+		offset_y = new_offset_y;
+
+		for (var i=0; i<map_length; i++) {
+			tiles_y[i] = iso.cell_y(tiles_rows[i], tile_size, offset_y);
+		}
 		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
 	}
 
