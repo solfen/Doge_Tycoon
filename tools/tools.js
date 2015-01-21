@@ -16,7 +16,7 @@ function cell_row (cell_index) {
 
 }
 
-function
+//function
 
 /*
 function get_xy (c) {
@@ -31,12 +31,14 @@ function get_cell_from_xy (x, y) {
 /*
 les modules :
 - math (dirty_math)
-- isometric trigo
-- ui
+- isometric (trigo ?)
+- (ui ?)
 - sound
 - ia
-- facebook api
-- 
+- surcouche facebook api
+- inputs (events)
+- (sprites multi-tiles ?)
+- manager d'évenements (pool priorités)
 
 - setup des tools!!
 */

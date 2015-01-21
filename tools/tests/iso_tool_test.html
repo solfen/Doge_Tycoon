@@ -11,101 +11,86 @@
 		W = canvas.width = innerWidth;
 		H = canvas.height = innerHeight;
 		context = canvas.getContext('2d');
-		context.lineWidth = 2;
 		context.strokeStyle = '#fff';
+		mouse = {x:0, y:0};
+		is_iso = true;
+		debug = false;
 
-		cols_nb = 16;
-		rows_nb = 16;
-		offset_x = 128;
-		offset_y = 64;
-		offset_move_speed = 5;
-		zoom_speed = 3;
+		cols_nb = 32;
+		rows_nb = 32;
+		offset_x = 0;
+		offset_y = 0;
+		offset_x_move = 0;
+		offset_y_move = 0;
+		offset_move_speed = 8;
+		zoom_speed = 48;
 		map_length = cols_nb * rows_nb;
-		tile_size = H / cols_nb;
+		tile_size = 128;
 
-		is_iso = false;
 		tiles_pts = [];
-		tile_sprites = [];
-		for (var i=map_length; i--; tile_sprites[i]=create_tile_sprite(i));
 
 		tiles_cols = new Float32Array(map_length);
 		tiles_rows = new Float32Array(map_length);
 	
 		for (var i=0; i<map_length; i++) {
+			
 			tiles_cols[i] = iso.cell_col(i, cols_nb);
 			tiles_rows[i] = iso.cell_row(i, cols_nb);
 		}
 
-		tiles_x = new Int16Array(map_length);
-		tiles_y = new Int16Array(map_length);
-
-		resize_tiles(tile_size);
+		resize_tiles(tile_size); // appelé ici pour générer la sprite de la map
+		
+		tile_sprites = [];
+		for (var i=map_length; i--; tile_sprites[i]=create_tile_sprite(i, '#042','#0e4'));
 
 		loop();
-		init_events();
+		setTimeout(init_events, 200);
 	}
 
 	function loop () {
 
 		requestAnimationFrame(loop);
 
+		offset_x += offset_x_move;
+		offset_y += offset_y_move;
+
 		context.fillRect(0, 0, W, H);
 
 		if (is_iso) {
 
-			for (var i=0; i<map_length; i++) {
+			context.drawImage(iso_map_sprite, -offset_x, -offset_y, W, H, 0, 0, W, H);
 
-				context.drawImage(tile_sprites[i], 0, 0, tile_sprites[i].width, tile_sprites[i].height, tiles_x[i], tiles_y[i], tile_size, tile_size);
+			var i = iso.cell_index_from_xy(mouse.x, mouse.y, offset_x, offset_y, tile_size, tile_size, cols_nb);
+			context.drawImage(create_tile_sprite(i,'#416','#b5f'), iso.cell_x(tiles_cols[i],tile_size,offset_x), iso.cell_y(tiles_rows[i],tile_size,offset_y));
 
-				// utilisation de iso.all_map_pts_xy() pour le debug par example :
+			if (debug) {
 
-				context.beginPath();
-				context.moveTo(tiles_pts[i].x0, tiles_pts[i].y0);
-				context.lineTo(tiles_pts[i].x1, tiles_pts[i].y1);
-				context.lineTo(tiles_pts[i].x2, tiles_pts[i].y2);
-				context.lineTo(tiles_pts[i].x3, tiles_pts[i].y3);
-				context.closePath();
-				context.stroke();
+				for (var i=0; i<map_length; i++) {
+
+					// utilisation de iso.all_map_pts_xy() pour le debug par example (warning perfs!) :
+
+					context.beginPath();
+					context.moveTo(tiles_pts[i].x0, tiles_pts[i].y0);
+					context.lineTo(tiles_pts[i].x1, tiles_pts[i].y1);
+					context.lineTo(tiles_pts[i].x2, tiles_pts[i].y2);
+					context.lineTo(tiles_pts[i].x3, tiles_pts[i].y3);
+					context.closePath();
+					context.stroke();
+				}
 			}
-
 		} else {
 
-			for (var i=0; i<map_length; i++) {
+			context.drawImage(classic_map_sprite, -offset_x, -offset_y, W, H, 0, 0, W, H);
 
-				var x = i%cols_nb;
-				var y = i/cols_nb|0;
+			var i = ((mouse.x-offset_x)/tile_size|0)+((mouse.y-offset_y)/tile_size|0)*cols_nb;
+			context.drawImage(create_tile_sprite(i,'#416','#b5f'), offset_x+i%cols_nb*tile_size, offset_y+(i/cols_nb|0)*tile_size);
 
-				context.drawImage(tile_sprites[i], 0, 0, tile_sprites[i].width, tile_sprites[i].height, x*tile_size+offset_x, y*tile_size+offset_y, tile_size, tile_size);
-
-				context.strokeRect(x*tile_size+offset_x, y*tile_size+offset_y, tile_size, tile_size);
-			}
+			//if (debug) {
+				for (var i=0; i<map_length; i++) {
+					context.strokeRect(i%cols_nb*tile_size+offset_x, (i/cols_nb|0)*tile_size+offset_y, tile_size, tile_size);
+				}
+			//}
 		}
-	}
-
-	function create_tile_sprite (nb) {
-
-		var c = document.createElement('canvas');
-		c.width = c.height = tile_size;
-		var ctx = c.getContext('2d');
-		ctx.textAlign = 'center';
-		ctx.textBaseline = 'middle';
-		var g = ctx.createLinearGradient(0, 0, c.width*0.5, c.height);
-
-		g.addColorStop(0, '#2e3');
-		g.addColorStop(1, '#042');
-		ctx.fillStyle = g;
-		ctx.beginPath();
-		ctx.moveTo(0, c.height*0.5);
-		ctx.lineTo(c.width*0.5, c.height*0.25);
-		ctx.lineTo(c.width, c.height*0.5);
-		ctx.lineTo(c.width*0.5, c.height*0.75);
-		ctx.closePath();
-		ctx.fill();
-		ctx.fillStyle = '#000';
-		ctx.font = (c.height*0.3) + "px arial";
-		ctx.fillText(nb, c.width*0.5, c.height*0.5);
-
-		return c;
 	}
 
 	function init_events () {
@@ -114,16 +99,33 @@
 
 			switch (e.keyCode) {
 				case 37: // left arrow
-					change_offset_x(offset_x-offset_move_speed);
+					offset_x_move = offset_move_speed;
 				break;
 				case 38: // up arrow
-					change_offset_y(offset_y-offset_move_speed);
+					offset_y_move = offset_move_speed;
 				break;
 				case 39: // right arrow
-					change_offset_x(offset_x+offset_move_speed);
+					offset_x_move = -offset_move_speed;
 				break;
 				case 40: // down arrow
-					change_offset_y(offset_y+offset_move_speed);
+					offset_y_move = -offset_move_speed;
+				break;
+
+			}
+		}
+
+		onkeyup = function (e) {
+
+			switch (e.keyCode) {
+				case 13: // enter
+				case 32: // space
+					debug = !debug;
+				break;
+				case 37: // left arrow
+				case 38: // up arrow
+				case 39: // right arrow
+				case 40: // down arrow
+					move_ending();
 				break;
 				case 107: // +
 					resize_tiles(tile_size+zoom_speed);
@@ -136,37 +138,107 @@
 				break;
 			}
 		}
+
+		onmousemove = function (e) {
+
+			mouse.x = e.clientX;
+			mouse.y = e.clientY;
+		}
+
+		onmousedown = function (e) {
+
+			console.log(iso.cell_index_from_xy(mouse.x, mouse.y, offset_x, offset_y, tile_size, tile_size, cols_nb));
+		}
 	}
 
 	function resize_tiles (new_size) {
 
 		tile_size = new_size;
+		
+		iso_map_sprite = create_iso_map_sprite();
+		classic_map_sprite = create_classic_map_sprite();
+		
+		offset_x = W/2-tile_size*cols_nb/2;
+		offset_y = H/2-tile_size*rows_nb/4;
 
-		for (var i=0; i<map_length; i++) {
-			tiles_x[i] = iso.cell_x(tiles_cols[i], tile_size, offset_x);
-			tiles_y[i] = iso.cell_y(tiles_rows[i], tile_size, offset_y);
-		}
 		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
 	}
 
-	function change_offset_x (new_offset_x) {
+	function move_ending () {
 
-		offset_x = new_offset_x;
-
-		for (var i=0; i<map_length; i++) {
-			tiles_x[i] = iso.cell_x(tiles_cols[i], tile_size, offset_x);
-		}
+		offset_x_move = 0;
+		offset_y_move = 0;
 		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
 	}
 
-	function change_offset_y (new_offset_y) {
+	function create_iso_map_sprite () {
 
-		offset_y = new_offset_y;
+		var c = document.createElement('canvas');
+		
+		c.width = tile_size*cols_nb;
+
+		if (c.width < 64)  {
+			c.width = 64;
+			tile_size = c.width/cols_nb;
+		} else if (c.width > 0xfff*2) { // size max before canvas crash !
+			c.width = 0xfff*2;
+			tile_size = c.width/cols_nb;
+		}
+
+		c.height = c.width;
+
+		var ctx = c.getContext('2d');
 
 		for (var i=0; i<map_length; i++) {
-			tiles_y[i] = iso.cell_y(tiles_rows[i], tile_size, offset_y);
+			ctx.drawImage(create_tile_sprite(i,'#042','#0e4'), iso.cell_x(tiles_cols[i],tile_size,0), iso.cell_y(tiles_rows[i],tile_size,0), tile_size, tile_size);
 		}
-		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
+
+		return c;
+	}
+
+	function create_classic_map_sprite () {
+
+		var c = document.createElement('canvas');
+		
+		c.height = c.width = tile_size*cols_nb;
+
+		var ctx = c.getContext('2d');
+
+		for (var i=0; i<map_length; i++) {
+
+			var x = i%cols_nb;
+			var y = i/cols_nb|0;
+
+			ctx.drawImage(create_tile_sprite(i,'#042','#0e4'), offset_x+x*tile_size, offset_y+y*tile_size);
+		}
+
+		return c;
+	}
+
+	function create_tile_sprite (nb, color0, color1) {
+
+		var c = document.createElement('canvas');
+		c.width = c.height = tile_size;
+		var ctx = c.getContext('2d');
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		var g = ctx.createLinearGradient(0, 0, c.width/2, c.height);
+
+		g.addColorStop(0, color0);
+		g.addColorStop(1, color1);
+		ctx.fillStyle = g;
+		ctx.beginPath();
+		ctx.moveTo(0, c.height*0.5);
+		ctx.lineTo(c.width*0.5, c.height*0.25);
+		ctx.lineTo(c.width, c.height*0.5);
+		ctx.lineTo(c.width*0.5, c.height*0.75);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = '#000';
+		ctx.font = (c.height*0.2) + "px arial black";
+		ctx.fillText(nb, c.width*0.5, c.height*0.5);
+
+		return c;
 	}
 
 </script>
