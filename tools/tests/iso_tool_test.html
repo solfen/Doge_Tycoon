@@ -12,9 +12,10 @@
 		H = canvas.height = innerHeight;
 		context = canvas.getContext('2d');
 		context.strokeStyle = '#fff';
-		mouse = {x:0, y:0};
+		mouse = {x:0, y:0, old_x:0, old_y:0};
 		is_iso = true;
 		debug = false;
+		mouse_grip = false;
 
 		cols_nb = 32;
 		rows_nb = 32;
@@ -23,7 +24,7 @@
 		offset_x_move = 0;
 		offset_y_move = 0;
 		offset_move_speed = 8;
-		zoom_speed = 48;
+		zoom_speed = 32;
 		map_length = cols_nb * rows_nb;
 		tile_size = 128;
 
@@ -41,7 +42,7 @@
 		resize_tiles(tile_size); // appelé ici pour générer la sprite de la map
 		
 		tile_sprites = [];
-		for (var i=map_length; i--; tile_sprites[i]=create_tile_sprite(i, '#042','#0e4'));
+		for (var i=map_length; i--; tile_sprites[i]=create_tile_sprite(i));
 
 		loop();
 		setTimeout(init_events, 200);
@@ -61,7 +62,7 @@
 			context.drawImage(iso_map_sprite, -offset_x, -offset_y, W, H, 0, 0, W, H);
 
 			var i = iso.cell_index_from_xy(mouse.x, mouse.y, offset_x, offset_y, tile_size, tile_size, cols_nb);
-			context.drawImage(create_tile_sprite(i,'#416','#b5f'), iso.cell_x(tiles_cols[i],tile_size,offset_x), iso.cell_y(tiles_rows[i],tile_size,offset_y));
+			context.drawImage(create_debug_tile_sprite(i,'#b5f'), iso.cell_x(tiles_cols[i],tile_size,offset_x), iso.cell_y(tiles_rows[i],tile_size,offset_y));
 
 			if (debug) {
 
@@ -83,7 +84,7 @@
 			context.drawImage(classic_map_sprite, -offset_x, -offset_y, W, H, 0, 0, W, H);
 
 			var i = ((mouse.x-offset_x)/tile_size|0)+((mouse.y-offset_y)/tile_size|0)*cols_nb;
-			context.drawImage(create_tile_sprite(i,'#416','#b5f'), offset_x+i%cols_nb*tile_size, offset_y+(i/cols_nb|0)*tile_size);
+			context.drawImage(create_debug_tile_sprite(i,'#b5f'), offset_x+i%cols_nb*tile_size, offset_y+(i/cols_nb|0)*tile_size);
 
 			//if (debug) {
 				for (var i=0; i<map_length; i++) {
@@ -143,11 +144,25 @@
 
 			mouse.x = e.clientX;
 			mouse.y = e.clientY;
+
+			if (mouse_grip) {
+
+				offset_x = mouse.x-mouse.old_x;
+				offset_y = mouse.y-mouse.old_y;
+			}
 		}
 
 		onmousedown = function (e) {
 
-			console.log(iso.cell_index_from_xy(mouse.x, mouse.y, offset_x, offset_y, tile_size, tile_size, cols_nb));
+			mouse_grip = true;
+			mouse.old_x = mouse.x-offset_x;
+			mouse.old_y = mouse.y-offset_y;
+		}
+
+		onmouseup = function (e) {
+
+			mouse_grip = false;
+			move_ending();
 		}
 	}
 
@@ -190,7 +205,7 @@
 		var ctx = c.getContext('2d');
 
 		for (var i=0; i<map_length; i++) {
-			ctx.drawImage(create_tile_sprite(i,'#042','#0e4'), iso.cell_x(tiles_cols[i],tile_size,0), iso.cell_y(tiles_rows[i],tile_size,0), tile_size, tile_size);
+			ctx.drawImage(create_tile_sprite(i), iso.cell_x(tiles_cols[i],tile_size,0), iso.cell_y(tiles_rows[i],tile_size,0), tile_size, tile_size);
 		}
 
 		return c;
@@ -209,24 +224,49 @@
 			var x = i%cols_nb;
 			var y = i/cols_nb|0;
 
-			ctx.drawImage(create_tile_sprite(i,'#042','#0e4'), offset_x+x*tile_size, offset_y+y*tile_size);
+			ctx.drawImage(create_tile_sprite(i), offset_x+x*tile_size, offset_y+y*tile_size);
 		}
 
 		return c;
 	}
 
-	function create_tile_sprite (nb, color0, color1) {
+	function create_tile_sprite (nb) {
 
 		var c = document.createElement('canvas');
 		c.width = c.height = tile_size;
 		var ctx = c.getContext('2d');
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
-		var g = ctx.createLinearGradient(0, 0, c.width/2, c.height);
 
-		g.addColorStop(0, color0);
-		g.addColorStop(1, color1);
-		ctx.fillStyle = g;
+		for (var i=0,l=1+Math.random()*9|0; i<l; i++) {
+
+			var offset_y = i*c.height*0.025;
+			ctx.beginPath();
+			ctx.moveTo(0, c.height*0.5-offset_y);
+			ctx.lineTo(c.width*0.5, c.height*0.25-offset_y);
+			ctx.lineTo(c.width, c.height*0.5-offset_y);
+			ctx.lineTo(c.width*0.5, c.height*0.75-offset_y);
+			ctx.closePath();
+			ctx.fillStyle = 'rgb(0,'+(50+i/10*205|0)+',5)';
+			ctx.fill();
+		}
+
+		ctx.fillStyle = '#000';
+		ctx.font = (c.height*0.2) + "px arial black";
+		ctx.fillText(nb, c.width*0.5, c.height*0.5);
+
+		return c;
+	}
+
+	function create_debug_tile_sprite (nb, color) {
+
+		var c = document.createElement('canvas');
+		c.width = c.height = tile_size;
+		var ctx = c.getContext('2d');
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		ctx.fillStyle = color;
+
 		ctx.beginPath();
 		ctx.moveTo(0, c.height*0.5);
 		ctx.lineTo(c.width*0.5, c.height*0.25);
@@ -234,6 +274,7 @@
 		ctx.lineTo(c.width*0.5, c.height*0.75);
 		ctx.closePath();
 		ctx.fill();
+
 		ctx.fillStyle = '#000';
 		ctx.font = (c.height*0.2) + "px arial black";
 		ctx.fillText(nb, c.width*0.5, c.height*0.5);
