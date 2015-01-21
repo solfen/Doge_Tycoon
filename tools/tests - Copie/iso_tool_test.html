@@ -1,0 +1,221 @@
+<body style=margin:0 onload=init()>
+<script src=../iso.js></script>
+<script src=../../libs/pixi.dev.js></script>
+<script>
+
+	function init () {
+
+		iso = Iso(window, null, new ArrayBuffer(0x20000)); //because ASM is awsomes
+		console.log('iso available functions:', iso);
+
+		W  = innerWidth;
+		H  = innerHeight;
+
+		//////////////////////////////////////////////////// PÏXI STUFF //////////////////////////////////////////////////////////////////
+
+		spritesFrames = [];
+		for(var i=79;i>0;i--){
+			spritesFrames.push("sprite"+i);
+		}
+		// create an new instance of a pixi stage
+		stage = new PIXI.Stage(0xFFFFFF);
+		
+		// create a renderer instance.
+		renderer = PIXI.autoDetectRenderer(800, 600);
+			
+		// add the renderer view element to the DOM
+		document.body.appendChild(renderer.view);
+
+		mapContainer = new PIXI.DisplayObjectContainer(); // create an empty container
+		mapContainer.position.x = 0;
+		mapContainer.position.y = 0;
+		stage.addChild(mapContainer);
+
+		var assetsToLoader = [ "sprites.json"]; // create an array of assets to load
+		loader = new PIXI.AssetLoader(assetsToLoader); // create a new loader
+		loader.onComplete = onAssetsLoaded; // set callback
+		loader.load(); //begin load
+
+
+		cols_nb = 16;
+		rows_nb = 16;
+		offset_x = 128;
+		offset_y = 64;
+		offset_move_speed = 5;
+		zoom_speed = 3;
+		map_length = cols_nb * rows_nb;
+		tile_nb = cols_nb * rows_nb;
+		tile_size = H / cols_nb;
+		tiles = [];
+
+		/*for (var i=map_length; i--; tile_sprites[i]=create_tile_sprite(i));
+
+		tiles_cols = new Float32Array(map_length);
+		tiles_rows = new Float32Array(map_length);
+	
+		for (var i=0; i<map_length; i++) {
+			tiles_cols[i] = iso.cell_col(i, cols_nb);
+			tiles_rows[i] = iso.cell_row(i, cols_nb);
+		}
+
+		tiles_x = new Int16Array(map_length);
+		tiles_y = new Int16Array(map_length);
+
+		resize_tiles(tile_size);
+
+		loop();
+		init_events();*/
+	}
+
+	function onAssetsLoaded(){
+		/*for(var i=0; i<tile_nb;i++){
+			tiles[i] = {
+				sprite: PIXI.Sprite.fromFrame("sprite26"),
+				col: iso.cell_col(i, cols_nb),
+				row: iso.cell_row(i, cols_nb),
+				x: iso.cell_x(iso.cell_col(i, cols_nb), tile_size, offset_x),
+				y: iso.cell_y(iso.cell_row(i, cols_nb), tile_size, offset_y),
+				width: tile_size,
+				height: tile_size
+			}
+			tiles[i].sprite.position.x = tiles[i].x;
+			tiles[i].sprite.position.y = tiles[i].y;
+			tiles[i].sprite.width = tiles[i].width;
+			tiles[i].sprite.height = tiles[i].height;
+			mapContainer.addChild(tiles[i].sprite);
+		}*/
+		var alien = PIXI.Sprite.fromFrame("sprite26");
+		alien.position.x = Math.random() * 800 - 400;
+		alien.position.y = Math.random() * 600 - 300;
+		alien.anchor.x = 0.5;
+		alien.anchor.y = 0.5;
+		stage.addChild(alien);
+		//mapContainer.addChild(alien);
+		loop();
+	}
+	function loop () {
+
+		requestAnimationFrame(loop);
+
+		//context.fillRect(0, 0, W, H);
+
+		/*if (is_iso) {
+
+			for (var i=0; i<map_length; i++) {
+
+				context.drawImage(tile_sprites[i], 0, 0, tile_sprites[i].width, tile_sprites[i].height, tiles_x[i], tiles_y[i], tile_size, tile_size);
+
+				// utilisation de iso.all_map_pts_xy() pour le debug par example :
+
+				context.beginPath();
+				context.moveTo(tiles_pts[i].x0, tiles_pts[i].y0);
+				context.lineTo(tiles_pts[i].x1, tiles_pts[i].y1);
+				context.lineTo(tiles_pts[i].x2, tiles_pts[i].y2);
+				context.lineTo(tiles_pts[i].x3, tiles_pts[i].y3);
+				context.closePath();
+				context.stroke();
+			}
+
+		} else {
+
+			for (var i=0; i<map_length; i++) {
+
+				var x = i%cols_nb;
+				var y = i/cols_nb|0;
+
+				context.drawImage(tile_sprites[i], 0, 0, tile_sprites[i].width, tile_sprites[i].height, x*tile_size+offset_x, y*tile_size+offset_y, tile_size, tile_size);
+
+				context.strokeRect(x*tile_size+offset_x, y*tile_size+offset_y, tile_size, tile_size);
+			}
+		}*/
+		renderer.render(stage);
+	}
+
+	function create_tile_sprite (nb) {
+
+		var c = document.createElement('canvas');
+		c.width = c.height = tile_size;
+		var ctx = c.getContext('2d');
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		var g = ctx.createLinearGradient(0, 0, c.width*0.5, c.height);
+
+		g.addColorStop(0, '#2e3');
+		g.addColorStop(1, '#042');
+		ctx.fillStyle = g;
+		ctx.beginPath();
+		ctx.moveTo(0, c.height*0.5);
+		ctx.lineTo(c.width*0.5, c.height*0.25);
+		ctx.lineTo(c.width, c.height*0.5);
+		ctx.lineTo(c.width*0.5, c.height*0.75);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = '#000';
+		ctx.font = (c.height*0.3) + "px arial";
+		ctx.fillText(nb, c.width*0.5, c.height*0.5);
+
+		return c;
+	}
+
+	function init_events () {
+
+		onkeydown = function (e) {
+
+			switch (e.keyCode) {
+				case 37: // left arrow
+					change_offset_x(offset_x-offset_move_speed);
+				break;
+				case 38: // up arrow
+					change_offset_y(offset_y-offset_move_speed);
+				break;
+				case 39: // right arrow
+					change_offset_x(offset_x+offset_move_speed);
+				break;
+				case 40: // down arrow
+					change_offset_y(offset_y+offset_move_speed);
+				break;
+				case 107: // +
+					resize_tiles(tile_size+zoom_speed);
+				break;
+				case 109: // -
+					resize_tiles(tile_size-zoom_speed);
+				break;
+				default:
+					is_iso = !is_iso;
+				break;
+			}
+		}
+	}
+
+	function resize_tiles (new_size) {
+
+		tile_size = new_size;
+
+		for (var i=0; i<map_length; i++) {
+			tiles_x[i] = iso.cell_x(tiles_cols[i], tile_size, offset_x);
+			tiles_y[i] = iso.cell_y(tiles_rows[i], tile_size, offset_y);
+		}
+		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
+	}
+
+	function change_offset_x (new_offset_x) {
+
+		offset_x = new_offset_x;
+
+		for (var i=0; i<map_length; i++) {
+			tiles_x[i] = iso.cell_x(tiles_cols[i], tile_size, offset_x);
+		}
+		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
+	}
+
+	function change_offset_y (new_offset_y) {
+
+		offset_y = new_offset_y;
+
+		for (var i=0; i<map_length; i++) {
+			tiles_y[i] = iso.cell_y(tiles_rows[i], tile_size, offset_y);
+		}
+		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
+	}
+
+</script>
