@@ -10,7 +10,7 @@ function Iso (stdlib, foreign, buffer) {
 
 	function cell_row (cell_index, cols_nb) {
 
-		return (cell_index%cols_nb+(cell_index/cols_nb|0)) / 4;
+		return (cell_index%cols_nb+(cell_index/cols_nb|0)) / 2;
 	}
 
 	function  cell_x (col, cell_w, offset_x) {
@@ -25,7 +25,7 @@ function Iso (stdlib, foreign, buffer) {
 
 	function cell_index_from_cr (col, row, cols_nb) {
 
-		return (col+row*2-cols_nb/2+0.5|0) + (row*2-col+(cols_nb-1)/2|0) * cols_nb;
+		return (row+col-cols_nb/2+0.5|0) + (row-col+cols_nb/2-0.5|0) * cols_nb;
 	}
 
 	function cell_index_from_xy (x, y, offset_x, offset_y, cell_w, cell_h, cols_nb) {
@@ -33,10 +33,10 @@ function Iso (stdlib, foreign, buffer) {
 		x = (x-offset_x) / cell_w;
 		y = (y-offset_y) / cell_h;
 
-		return cell_index_from_cr(x, y, cols_nb)-1;
+		return (y+x-cols_nb/2|0) + (y-x+cols_nb/2|0) * cols_nb;
 	}
 
-	function all_map_pts_xy (offset_x, offset_y, cell_w, cell_h, cells_nb, cols_nb) { // to debug for example
+	function all_map_pts_xy (offset_x, offset_y, cell_w, cell_h, cells_nb, cols_nb) { // i.e.: to debug
 
 		var pts = [];
 
@@ -48,13 +48,13 @@ function Iso (stdlib, foreign, buffer) {
 			};
 
 			pts[i].x1 = pts[i].x0 + cell_w*0.5;
-			pts[i].y1 = pts[i].y0 - cell_h*0.25;
+			pts[i].y1 = pts[i].y0 - cell_h*0.5;
 
 			pts[i].x2 = pts[i].x0 + cell_w;
 			pts[i].y2 = pts[i].y0;
 
 			pts[i].x3 = pts[i].x1;
-			pts[i].y3 = pts[i].y0 + cell_h*0.25;
+			pts[i].y3 = pts[i].y0 + cell_h*0.5;
 		}
 
 		return pts;

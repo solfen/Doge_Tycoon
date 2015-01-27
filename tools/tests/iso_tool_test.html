@@ -18,7 +18,7 @@
 		mouse_grip = false;
 
 		cols_nb = 32;
-		rows_nb = 32;
+		rows_nb = 24;
 		offset_x = 0;
 		offset_y = 0;
 		offset_x_move = 0;
@@ -26,7 +26,8 @@
 		offset_move_speed = 8;
 		zoom_speed = 32;
 		map_length = cols_nb * rows_nb;
-		tile_size = 128;
+		tile_width = 128;
+		tile_height = 64;
 
 		tiles_pts = [];
 
@@ -37,9 +38,12 @@
 			
 			tiles_cols[i] = iso.cell_col(i, cols_nb);
 			tiles_rows[i] = iso.cell_row(i, cols_nb);
+			//console.log('--------------------------------------');
+			//console.log('i:', i);
+			//console.log('cell_index_from_cr():', iso.cell_index_from_cr(tiles_cols[i], tiles_rows[i], cols_nb));
 		}
 
-		resize_tiles(tile_size); // appelé ici pour générer la sprite de la map
+		resize_tiles(tile_width, tile_height); /** appelé ici pour générer la sprite de la map */
 		
 		tile_sprites = [];
 		for (var i=map_length; i--; tile_sprites[i]=create_tile_sprite(i));
@@ -61,14 +65,14 @@
 
 			context.drawImage(iso_map_sprite, -offset_x, -offset_y, W, H, 0, 0, W, H);
 
-			var i = iso.cell_index_from_xy(mouse.x, mouse.y, offset_x, offset_y, tile_size, tile_size, cols_nb);
-			context.drawImage(create_debug_tile_sprite(i,'#b5f'), iso.cell_x(tiles_cols[i],tile_size,offset_x), iso.cell_y(tiles_rows[i],tile_size,offset_y));
+			var i = iso.cell_index_from_xy(mouse.x, mouse.y, offset_x, offset_y, tile_width, tile_height, cols_nb);
+			context.drawImage(create_debug_tile_sprite(i,'#b5f'), iso.cell_x(tiles_cols[i],tile_width,offset_x), iso.cell_y(tiles_rows[i],tile_height,offset_y));
 
 			if (debug) {
 
 				for (var i=0; i<map_length; i++) {
 
-					// utilisation de iso.all_map_pts_xy() pour le debug par example (warning perfs!) :
+					/** utilisation de iso.all_map_pts_xy() pour le debug par example (warning perfs!) : */
 
 					context.beginPath();
 					context.moveTo(tiles_pts[i].x0, tiles_pts[i].y0);
@@ -83,14 +87,14 @@
 
 			context.drawImage(classic_map_sprite, -offset_x, -offset_y, W, H, 0, 0, W, H);
 
-			var i = ((mouse.x-offset_x)/tile_size|0)+((mouse.y-offset_y)/tile_size|0)*cols_nb;
-			context.drawImage(create_debug_tile_sprite(i,'#b5f'), offset_x+i%cols_nb*tile_size, offset_y+(i/cols_nb|0)*tile_size);
+			var i = ((mouse.x-offset_x)/tile_width|0)+((mouse.y-offset_y)/tile_height|0)*cols_nb;
+			context.drawImage(create_debug_tile_sprite(i,'#b5f'), offset_x+i%cols_nb*tile_width, offset_y+(i/cols_nb|0)*tile_height);
 
-			//if (debug) {
+			if (debug) {
 				for (var i=0; i<map_length; i++) {
-					context.strokeRect(i%cols_nb*tile_size+offset_x, (i/cols_nb|0)*tile_size+offset_y, tile_size, tile_size);
+					context.strokeRect(i%cols_nb*tile_width+offset_x, (i/cols_nb|0)*tile_height+offset_y, tile_width, tile_height);
 				}
-			//}
+			}
 		}
 	}
 
@@ -99,16 +103,16 @@
 		onkeydown = function (e) {
 
 			switch (e.keyCode) {
-				case 37: // left arrow
+				case 37: /** left arrow */
 					offset_x_move = offset_move_speed;
 				break;
-				case 38: // up arrow
+				case 38: /** up arrow */
 					offset_y_move = offset_move_speed;
 				break;
-				case 39: // right arrow
+				case 39: /** right arrow */
 					offset_x_move = -offset_move_speed;
 				break;
-				case 40: // down arrow
+				case 40: /** down arrow */
 					offset_y_move = -offset_move_speed;
 				break;
 
@@ -118,21 +122,21 @@
 		onkeyup = function (e) {
 
 			switch (e.keyCode) {
-				case 13: // enter
-				case 32: // space
+				case 13: /** enter */
+				case 32: /** space */
 					debug = !debug;
 				break;
-				case 37: // left arrow
-				case 38: // up arrow
-				case 39: // right arrow
-				case 40: // down arrow
+				case 37: /** left arrow */
+				case 38: /** up arrow */
+				case 39: /** right arrow */
+				case 40: /** down arrow */
 					move_ending();
 				break;
-				case 107: // +
-					resize_tiles(tile_size+zoom_speed);
+				case 107: /** + */
+					resize_tiles(tile_width+zoom_speed, tile_height+zoom_speed);
 				break;
-				case 109: // -
-					resize_tiles(tile_size-zoom_speed);
+				case 109: /** - */
+					resize_tiles(tile_width-zoom_speed, tile_height-zoom_speed);
 				break;
 				default:
 					is_iso = !is_iso;
@@ -163,51 +167,52 @@
 
 			mouse_grip = false;
 			move_ending();
+			//console.log('cell_index_from_xy(mouse):', iso.cell_index_from_xy(mouse.x, mouse.y, offset_x, offset_y, tile_width, tile_height, cols_nb));
 		}
 	}
 
-	function resize_tiles (new_size) {
+	function resize_tiles (new_width, new_height) {
 
-		tile_size = new_size;
+		tile_width = new_width;
+		tile_height = new_height;
 		
 		iso_map_sprite = create_iso_map_sprite();
 		classic_map_sprite = create_classic_map_sprite();
 		
-		offset_x = W/2-tile_size*cols_nb/2;
-		offset_y = H/2-tile_size*rows_nb/4;
+		offset_x = W/2-tile_width*cols_nb/2;
+		offset_y = H/2-tile_height*rows_nb/2;
 
-		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
+		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_width, tile_height, map_length, cols_nb);
 	}
 
 	function move_ending () {
 
 		offset_x_move = 0;
 		offset_y_move = 0;
-		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_size, tile_size, map_length, cols_nb);
+		tiles_pts = iso.all_map_pts_xy(offset_x, offset_y, tile_width, tile_height, map_length, cols_nb);
 	}
 
 	function create_iso_map_sprite () {
 
 		var c = document.createElement('canvas');
 		
-		c.width = tile_size*cols_nb;
+		c.width = tile_width*cols_nb;
 
 		if (c.width < 64)  {
 			c.width = 64;
-			tile_size = c.width/cols_nb;
-		} else if (c.width > 0xfff*2) { // size max before canvas crash !
+			tile_width = c.width/cols_nb;
+		} else if (c.width > 0xfff*2) { /** size max before canvas crash ! */
 			c.width = 0xfff*2;
-			tile_size = c.width/cols_nb;
+			tile_width = c.width/cols_nb;
 		}
 
-		c.height = c.width;
+		c.height = c.width/2;
 
 		var ctx = c.getContext('2d');
 
 		for (var i=0; i<map_length; i++) {
-			ctx.drawImage(create_tile_sprite(i), iso.cell_x(tiles_cols[i],tile_size,0), iso.cell_y(tiles_rows[i],tile_size,0), tile_size, tile_size);
+			ctx.drawImage(create_tile_sprite(i), iso.cell_x(tiles_cols[i],tile_width,0), iso.cell_y(tiles_rows[i],tile_height,0), tile_width, tile_height);
 		}
-
 		return c;
 	}
 
@@ -215,8 +220,8 @@
 
 		var c = document.createElement('canvas');
 		
-		c.height = c.width = tile_size*cols_nb;
-
+		c.width = tile_width * cols_nb;
+		c.height = tile_height * rows_nb;
 		var ctx = c.getContext('2d');
 
 		for (var i=0; i<map_length; i++) {
@@ -224,28 +229,28 @@
 			var x = i%cols_nb;
 			var y = i/cols_nb|0;
 
-			ctx.drawImage(create_tile_sprite(i), offset_x+x*tile_size, offset_y+y*tile_size);
+			ctx.drawImage(create_tile_sprite(i), offset_x+x*tile_width, offset_y+y*tile_height);
 		}
-
 		return c;
 	}
 
 	function create_tile_sprite (nb) {
 
 		var c = document.createElement('canvas');
-		c.width = c.height = tile_size;
+		c.width = tile_width;
+		c.height = tile_height;
 		var ctx = c.getContext('2d');
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
 
 		for (var i=0,l=1+Math.random()*9|0; i<l; i++) {
 
-			var offset_y = i*c.height*0.025;
+			var offset_y = 0;
 			ctx.beginPath();
 			ctx.moveTo(0, c.height*0.5-offset_y);
-			ctx.lineTo(c.width*0.5, c.height*0.25-offset_y);
+			ctx.lineTo(c.width*0.5, -offset_y);
 			ctx.lineTo(c.width, c.height*0.5-offset_y);
-			ctx.lineTo(c.width*0.5, c.height*0.75-offset_y);
+			ctx.lineTo(c.width*0.5, c.height-offset_y);
 			ctx.closePath();
 			ctx.fillStyle = 'rgb(0,'+(50+i/10*205|0)+',5)';
 			ctx.fill();
@@ -261,7 +266,8 @@
 	function create_debug_tile_sprite (nb, color) {
 
 		var c = document.createElement('canvas');
-		c.width = c.height = tile_size;
+		c.width = tile_width;
+		c.height = tile_height;
 		var ctx = c.getContext('2d');
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'middle';
@@ -269,9 +275,9 @@
 
 		ctx.beginPath();
 		ctx.moveTo(0, c.height*0.5);
-		ctx.lineTo(c.width*0.5, c.height*0.25);
+		ctx.lineTo(c.width*0.5, 0);
 		ctx.lineTo(c.width, c.height*0.5);
-		ctx.lineTo(c.width*0.5, c.height*0.75);
+		ctx.lineTo(c.width*0.5, c.height);
 		ctx.closePath();
 		ctx.fill();
 
