@@ -1,0 +1,4 @@
+-cp src
+-main com.isartdigital.Main
+-js bin/Structure.js
+-lib pixijs

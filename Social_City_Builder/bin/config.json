@@ -1,0 +1,10 @@
+{
+	"version": "0.1.0",
+	"debug":true,
+	"langPath":"localization",
+	"language":"",
+	"languages":["en","fr"],
+	
+	"test":"test of a custom data"
+
+}
