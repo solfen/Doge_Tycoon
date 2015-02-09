@@ -94,7 +94,7 @@ class UIManager
 	 */
 	public function openHud (pHUD:Hud): Void {
 		GameStage.getInstance().getHudContainer().addChild(pHUD);
-		pHUD.open();
+		//pHUD.open();
 	}
 	
 	/**
@@ -104,7 +104,7 @@ class UIManager
 	 */
 	public function closeHud (): Void {
 		GameStage.getInstance().getHudContainer().removeChild(HudManager.getInstance());
-		HudManager.getInstance().close();
+		//HudManager.getInstance().close();
 	}
 	
 	/**
@@ -146,7 +146,7 @@ class UIManager
 	 public function startGame (): Void {
 		closeScreens();
 		GameStage.getInstance().getHudContainer().addChild(HudManager.getInstance());
-		HudManager.getInstance().open();
+		HudManager.getInstance();
 		
 	}
 	

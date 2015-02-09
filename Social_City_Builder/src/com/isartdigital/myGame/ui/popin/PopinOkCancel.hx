@@ -33,7 +33,7 @@ class PopinOkCancel extends MyPopin
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {
-		super.onClick(pData);
+		//super.onClick(pData);
 		UIManager.getInstance().closeCurrentPopin();
 		UIManager.getInstance().closeCurrentPopin();
 	}

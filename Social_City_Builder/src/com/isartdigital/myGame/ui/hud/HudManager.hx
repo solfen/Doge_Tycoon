@@ -1,60 +1,53 @@
 package com.isartdigital.myGame.ui.hud;
 
-import com.isartdigital.myGame.ui.UIManager;
+import com.isartdigital.Main;
 import com.isartdigital.myGame.ui.hud.HudBuild;
+import com.isartdigital.myGame.ui.IconHud;
 import com.isartdigital.utils.events.GameStageEvent;
-import com.isartdigital.utils.game.GameStage;
-import com.isartdigital.utils.ui.Screen;
-import com.isartdigital.utils.ui.UIPosition;
-import pixi.display.Sprite;
-import pixi.textures.Texture;
+import pixi.InteractionData;
 
-/**
- * Classe en charge de gérer les informations du Hud
- * @author Mathieu ANTHOINE
- */
-class HudManager extends Screen 
+// HudManger serves as a container for the HUD, spwans the HudIcons and manage the resize
+class HudManager extends pixi.display.DisplayObjectContainer
 {
-	
-	/**
-	 * instance unique de la classe Hud
-	 */
 	private static var instance: HudManager;
-	private var _UIManager:UIManager;
+	private var childs:Array<IconHud> = [];
+	private var currentChild: IconHud;
 
-	/**
-	 * Retourne l'instance unique de la classe, et la crée si elle n'existait pas au préalable
-	 * @return instance unique
-	 */
 	public static function getInstance (): HudManager {
 		if (instance == null) instance = new HudManager();
 		return instance;
 	}	
 	
-	public function new() 
-	{
+	public function new()  {
 		super();
-		_UIManager = UIManager.getInstance();
-		_modal = false;
-		_UIManager.openHud(HudBuild.getInstance());
-		HudBuild.getInstance().x = GameStage.getInstance().width;
-		HudBuild.getInstance().y = GameStage.getInstance().height;
+		interactive = true;
+		click = onClick;
+
+		//childs creation
+		currentChild = new HudBuild(50,50);
+		childs.push(currentChild);
+		addChild(currentChild);		
+		childs.push(new HudBuild(0,0));
+		addChild(childs[childs.length-1]);
+		Main.getInstance().getStage().addChild(this);
 	}
 	
-	/**
-	 * repositionne les éléments du Hud
-	 * @param	pEvent
-	 */
-	override private function onResize (pEvent:GameStageEvent=null): Void {
+
+	private function onResize (pEvent:GameStageEvent=null): Void { // A VENIR ?
 
 	}
-	
-	/**
-	 * détruit l'instance unique et met sa référence interne à null
-	 */
-	override public function destroy (): Void {
+	private function onClick (pData:InteractionData): Void{
+		destroy();
+	}
+
+	// removes all childs then 
+	public function destroy (): Void {
+	 	for(i in 0...childs.length){
+			removeChild(childs[i]);
+	 	}
+	 	childs = []; // destroys all the childs
+		Main.getInstance().getStage().removeChild(this); // a voir si ce n'est pas celui qui destroy le HUD qui le remove aussi
 		instance = null;
-		super.destroy();
 	}
 
 }

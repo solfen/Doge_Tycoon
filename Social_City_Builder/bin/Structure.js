@@ -142,7 +142,10 @@ com.isartdigital.Main.getInstance = function() {
 };
 com.isartdigital.Main.__super__ = com.isartdigital.utils.events.EventDispatcher;
 com.isartdigital.Main.prototype = $extend(com.isartdigital.utils.events.EventDispatcher.prototype,{
-	preloadAssets: function(pEvent) {
+	getStage: function() {
+		return this.stage;
+	}
+	,preloadAssets: function(pEvent) {
 		pEvent.target.removeEventListener("loaded",$bind(this,this.preloadAssets));
 		com.isartdigital.utils.Config.init((js.Boot.__cast(pEvent.target , PIXI.JsonLoader)).json);
 		com.isartdigital.utils.game.GameStage.getInstance().set_scaleMode(com.isartdigital.utils.game.GameStageScale.NO_SCALE);
@@ -173,6 +176,7 @@ com.isartdigital.Main.prototype = $extend(com.isartdigital.utils.events.EventDis
 		lAssets.push("assets/Hud_TL.png");
 		lAssets.push("assets/Hud_TR.png");
 		lAssets.push("assets/Hud_B.png");
+		lAssets.push("assets/closeButton.png");
 		lAssets.push("assets/ambulance.json");
 		var lLoader = new PIXI.AssetLoader(lAssets);
 		lLoader.addEventListener("onProgress",$bind(this,this.onLoadProgress));
@@ -296,6 +300,7 @@ com.isartdigital.myGame.game.sprites.Ambulance.__super__ = PIXI.MovieClip;
 com.isartdigital.myGame.game.sprites.Ambulance.prototype = $extend(PIXI.MovieClip.prototype,{
 	onClick: function(pData) {
 		console.log("click ambulance");
+		com.isartdigital.myGame.ui.hud.HudManager.getInstance();
 		com.isartdigital.myGame.ui.UIManager.getInstance().openPopin(com.isartdigital.myGame.ui.popin.Popin0.getInstance());
 		com.isartdigital.myGame.ui.popin.Popin0.getInstance().x = Math.random() * com.isartdigital.utils.game.GameStage.getInstance().get_safeZone().width - com.isartdigital.utils.game.GameStage.getInstance().get_safeZone().width / 2;
 		com.isartdigital.myGame.ui.popin.Popin0.getInstance().y = Math.random() * com.isartdigital.utils.game.GameStage.getInstance().get_safeZone().height - com.isartdigital.utils.game.GameStage.getInstance().get_safeZone().height / 2;
@@ -389,39 +394,30 @@ com.isartdigital.myGame.ui.GraphicLoader.prototype = $extend(com.isartdigital.ut
 	}
 	,__class__: com.isartdigital.myGame.ui.GraphicLoader
 });
-com.isartdigital.utils.ui.Hud = function() {
-	com.isartdigital.utils.ui.UIComponent.call(this);
-};
-com.isartdigital.utils.ui.Hud.__name__ = ["com","isartdigital","utils","ui","Hud"];
-com.isartdigital.utils.ui.Hud.__super__ = com.isartdigital.utils.ui.UIComponent;
-com.isartdigital.utils.ui.Hud.prototype = $extend(com.isartdigital.utils.ui.UIComponent.prototype,{
-	__class__: com.isartdigital.utils.ui.Hud
-});
-com.isartdigital.myGame.ui.MyHud = function() {
-	com.isartdigital.utils.ui.Hud.call(this);
+com.isartdigital.myGame.ui.IconHud = function(startX,startY,texture) {
 	var lCompleteClassName = Type.getClassName(Type.getClass(this));
-	var lClassName;
 	var pos = lCompleteClassName.lastIndexOf(".") + 1;
-	lClassName = HxOverrides.substr(lCompleteClassName,pos,null);
-	this.background = new PIXI.Sprite(PIXI.Texture.fromImage("assets/" + lClassName + ".png"));
-	this.background.anchor.set(0.5,0.5);
-	this.addChild(this.background);
+	this.texturePath = HxOverrides.substr(lCompleteClassName,pos,null);
+	this.texturePath = "assets/" + this.texturePath + ".png";
+	if(texture != null) this.texturePath = "assets/" + texture + ".png";
+	PIXI.Sprite.call(this,PIXI.Texture.fromImage(this.texturePath));
+	this.x = startX;
+	this.y = startY;
 	this.interactive = true;
 	this.buttonMode = true;
-	this.set_modal(false);
 	this.click = $bind(this,this.onClick);
 	this.mouseover = $bind(this,this.onMouseOver);
 };
-com.isartdigital.myGame.ui.MyHud.__name__ = ["com","isartdigital","myGame","ui","MyHud"];
-com.isartdigital.myGame.ui.MyHud.__super__ = com.isartdigital.utils.ui.Hud;
-com.isartdigital.myGame.ui.MyHud.prototype = $extend(com.isartdigital.utils.ui.Hud.prototype,{
+com.isartdigital.myGame.ui.IconHud.__name__ = ["com","isartdigital","myGame","ui","IconHud"];
+com.isartdigital.myGame.ui.IconHud.__super__ = PIXI.Sprite;
+com.isartdigital.myGame.ui.IconHud.prototype = $extend(PIXI.Sprite.prototype,{
 	onClick: function(pData) {
 		console.log("click hud");
 	}
 	,onMouseOver: function(pData) {
 		console.log("over hud");
 	}
-	,__class__: com.isartdigital.myGame.ui.MyHud
+	,__class__: com.isartdigital.myGame.ui.IconHud
 });
 com.isartdigital.utils.ui.Popin = function() {
 	com.isartdigital.utils.ui.UIComponent.call(this);
@@ -509,11 +505,9 @@ com.isartdigital.myGame.ui.UIManager.prototype = {
 	}
 	,openHud: function(pHUD) {
 		com.isartdigital.utils.game.GameStage.getInstance().getHudContainer().addChild(pHUD);
-		pHUD.open();
 	}
 	,closeHud: function() {
 		com.isartdigital.utils.game.GameStage.getInstance().getHudContainer().removeChild(com.isartdigital.myGame.ui.hud.HudManager.getInstance());
-		com.isartdigital.myGame.ui.hud.HudManager.getInstance().close();
 	}
 	,setPosition: function(pTarget,pPosition,pOffsetX,pOffsetY) {
 		if(pOffsetY == null) pOffsetY = 0;
@@ -551,7 +545,7 @@ com.isartdigital.myGame.ui.UIManager.prototype = {
 	,startGame: function() {
 		this.closeScreens();
 		com.isartdigital.utils.game.GameStage.getInstance().getHudContainer().addChild(com.isartdigital.myGame.ui.hud.HudManager.getInstance());
-		com.isartdigital.myGame.ui.hud.HudManager.getInstance().open();
+		com.isartdigital.myGame.ui.hud.HudManager.getInstance();
 	}
 	,destroy: function() {
 		com.isartdigital.myGame.ui.UIManager.instance = null;
@@ -559,45 +553,50 @@ com.isartdigital.myGame.ui.UIManager.prototype = {
 	,__class__: com.isartdigital.myGame.ui.UIManager
 };
 com.isartdigital.myGame.ui.hud = {};
-com.isartdigital.myGame.ui.hud.HudBuild = function() {
-	com.isartdigital.myGame.ui.MyHud.call(this);
+com.isartdigital.myGame.ui.hud.HudBuild = function(startX,startY,texture) {
+	com.isartdigital.myGame.ui.IconHud.call(this,startX,startY,texture);
 };
 com.isartdigital.myGame.ui.hud.HudBuild.__name__ = ["com","isartdigital","myGame","ui","hud","HudBuild"];
-com.isartdigital.myGame.ui.hud.HudBuild.getInstance = function() {
-	if(com.isartdigital.myGame.ui.hud.HudBuild.instance == null) com.isartdigital.myGame.ui.hud.HudBuild.instance = new com.isartdigital.myGame.ui.hud.HudBuild();
-	return com.isartdigital.myGame.ui.hud.HudBuild.instance;
-};
-com.isartdigital.myGame.ui.hud.HudBuild.__super__ = com.isartdigital.myGame.ui.MyHud;
-com.isartdigital.myGame.ui.hud.HudBuild.prototype = $extend(com.isartdigital.myGame.ui.MyHud.prototype,{
+com.isartdigital.myGame.ui.hud.HudBuild.__super__ = com.isartdigital.myGame.ui.IconHud;
+com.isartdigital.myGame.ui.hud.HudBuild.prototype = $extend(com.isartdigital.myGame.ui.IconHud.prototype,{
 	onClick: function(pData) {
-		com.isartdigital.myGame.ui.UIManager.getInstance().openPopin(com.isartdigital.myGame.ui.popin.PopinBuild.getInstance());
-	}
-	,destroy: function() {
-		com.isartdigital.myGame.ui.hud.HudBuild.instance = null;
-		com.isartdigital.myGame.ui.MyHud.prototype.destroy.call(this);
 	}
 	,__class__: com.isartdigital.myGame.ui.hud.HudBuild
 });
 com.isartdigital.myGame.ui.hud.HudManager = function() {
-	com.isartdigital.utils.ui.Screen.call(this);
-	this._UIManager = com.isartdigital.myGame.ui.UIManager.getInstance();
-	this._modal = false;
-	this._UIManager.openHud(com.isartdigital.myGame.ui.hud.HudBuild.getInstance());
-	com.isartdigital.myGame.ui.hud.HudBuild.getInstance().x = com.isartdigital.utils.game.GameStage.getInstance().width;
-	com.isartdigital.myGame.ui.hud.HudBuild.getInstance().y = com.isartdigital.utils.game.GameStage.getInstance().height;
+	this.childs = [];
+	PIXI.DisplayObjectContainer.call(this);
+	this.interactive = true;
+	this.click = $bind(this,this.onClick);
+	this.currentChild = new com.isartdigital.myGame.ui.hud.HudBuild(50,50);
+	this.childs.push(this.currentChild);
+	this.addChild(this.currentChild);
+	this.childs.push(new com.isartdigital.myGame.ui.hud.HudBuild(0,0));
+	this.addChild(this.childs[this.childs.length - 1]);
+	com.isartdigital.Main.getInstance().getStage().addChild(this);
 };
 com.isartdigital.myGame.ui.hud.HudManager.__name__ = ["com","isartdigital","myGame","ui","hud","HudManager"];
 com.isartdigital.myGame.ui.hud.HudManager.getInstance = function() {
 	if(com.isartdigital.myGame.ui.hud.HudManager.instance == null) com.isartdigital.myGame.ui.hud.HudManager.instance = new com.isartdigital.myGame.ui.hud.HudManager();
 	return com.isartdigital.myGame.ui.hud.HudManager.instance;
 };
-com.isartdigital.myGame.ui.hud.HudManager.__super__ = com.isartdigital.utils.ui.Screen;
-com.isartdigital.myGame.ui.hud.HudManager.prototype = $extend(com.isartdigital.utils.ui.Screen.prototype,{
+com.isartdigital.myGame.ui.hud.HudManager.__super__ = PIXI.DisplayObjectContainer;
+com.isartdigital.myGame.ui.hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	onResize: function(pEvent) {
 	}
+	,onClick: function(pData) {
+		this.destroy();
+	}
 	,destroy: function() {
+		var _g1 = 0;
+		var _g = this.childs.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			this.removeChild(this.childs[i]);
+		}
+		this.childs = [];
+		com.isartdigital.Main.getInstance().getStage().removeChild(this);
 		com.isartdigital.myGame.ui.hud.HudManager.instance = null;
-		com.isartdigital.utils.ui.Screen.prototype.destroy.call(this);
 	}
 	,__class__: com.isartdigital.myGame.ui.hud.HudManager
 });
@@ -669,8 +668,6 @@ com.isartdigital.myGame.ui.popin.PopinBuild = function() {
 	this.y = 0;
 	this.width = 1;
 	this.height = 1;
-	this.child = new com.isartdigital.myGame.ui.popin.IconPopinBuild(0,0,"HudBuild");
-	this.addChild(this.child);
 };
 com.isartdigital.myGame.ui.popin.PopinBuild.__name__ = ["com","isartdigital","myGame","ui","popin","PopinBuild"];
 com.isartdigital.myGame.ui.popin.PopinBuild.getInstance = function() {
@@ -680,11 +677,16 @@ com.isartdigital.myGame.ui.popin.PopinBuild.getInstance = function() {
 com.isartdigital.myGame.ui.popin.PopinBuild.__super__ = com.isartdigital.myGame.ui.MyPopin;
 com.isartdigital.myGame.ui.popin.PopinBuild.prototype = $extend(com.isartdigital.myGame.ui.MyPopin.prototype,{
 	onClick: function(pData) {
-		console.log("big onichan click");
+		com.isartdigital.myGame.ui.MyPopin.prototype.onClick.call(this,pData);
+		com.isartdigital.myGame.ui.UIManager.getInstance().closeCurrentPopin();
+		com.isartdigital.myGame.ui.UIManager.getInstance().closeCurrentPopin();
 	}
 	,destroy: function() {
 		com.isartdigital.myGame.ui.popin.PopinBuild.instance = null;
 		com.isartdigital.myGame.ui.MyPopin.prototype.destroy.call(this);
+	}
+	,closePopin: function(pData) {
+		this.destroy();
 	}
 	,__class__: com.isartdigital.myGame.ui.popin.PopinBuild
 });
@@ -699,7 +701,6 @@ com.isartdigital.myGame.ui.popin.PopinOkCancel.getInstance = function() {
 com.isartdigital.myGame.ui.popin.PopinOkCancel.__super__ = com.isartdigital.myGame.ui.MyPopin;
 com.isartdigital.myGame.ui.popin.PopinOkCancel.prototype = $extend(com.isartdigital.myGame.ui.MyPopin.prototype,{
 	onClick: function(pData) {
-		com.isartdigital.myGame.ui.MyPopin.prototype.onClick.call(this,pData);
 		com.isartdigital.myGame.ui.UIManager.getInstance().closeCurrentPopin();
 		com.isartdigital.myGame.ui.UIManager.getInstance().closeCurrentPopin();
 	}
@@ -1019,6 +1020,14 @@ com.isartdigital.utils.system.DeviceCapabilities.get_height = function() {
 com.isartdigital.utils.system.DeviceCapabilities.get_width = function() {
 	return window.innerWidth;
 };
+com.isartdigital.utils.ui.Hud = function() {
+	com.isartdigital.utils.ui.UIComponent.call(this);
+};
+com.isartdigital.utils.ui.Hud.__name__ = ["com","isartdigital","utils","ui","Hud"];
+com.isartdigital.utils.ui.Hud.__super__ = com.isartdigital.utils.ui.UIComponent;
+com.isartdigital.utils.ui.Hud.prototype = $extend(com.isartdigital.utils.ui.UIComponent.prototype,{
+	__class__: com.isartdigital.utils.ui.Hud
+});
 com.isartdigital.utils.ui.UIPosition = { __ename__ : true, __constructs__ : ["LEFT","RIGHT","TOP","BOTTOM","TOP_LEFT","TOP_RIGHT","BOTTOM_LEFT","BOTTOM_RIGHT","FIT_WIDTH","FIT_HEIGHT","FIT_SCREEN"] };
 com.isartdigital.utils.ui.UIPosition.LEFT = ["LEFT",0];
 com.isartdigital.utils.ui.UIPosition.LEFT.__enum__ = com.isartdigital.utils.ui.UIPosition;

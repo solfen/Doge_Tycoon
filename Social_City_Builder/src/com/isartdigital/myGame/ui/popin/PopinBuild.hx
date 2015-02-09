@@ -2,6 +2,7 @@ package com.isartdigital.myGame.ui.popin;
 import com.isartdigital.myGame.ui.popin.IconPopinBuild;
 import com.isartdigital.myGame.ui.MyPopin;
 import com.isartdigital.utils.game.GameStage;
+import com.isartdigital.myGame.ui.UIManager;
 import pixi.InteractionData;
 import pixi.textures.Texture;
 import pixi.display.Sprite;
@@ -30,18 +31,18 @@ class PopinBuild extends MyPopin
 		width = 1;
 		height = 1;
 
-		child = new IconPopinBuild(0,0,"HudBuild");
+		/*child = new IconPopinBuild(0,0,"HudBuild");
 		addChild(child);
-		
+		child = new IconPopinBuild(1,1, "closeButton");
+		child.click = closePopin;
+		addChild(child);*/
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {
-		trace("big onichan click");
-		/*var lPopin:MyPopin = PopinOkCancel.getInstance();
-		UIManager.getInstance().openPopin(lPopin);
-		lPopin.x = Math.random() * GameStage.getInstance().safeZone.width-GameStage.getInstance().safeZone.width/2;
-		lPopin.y = Math.random() * GameStage.getInstance().safeZone.height-GameStage.getInstance().safeZone.height/2;*/
-		
+		// so there nothing onclick since it will be children who have actions
+		super.onClick(pData);
+		UIManager.getInstance().closeCurrentPopin();
+		UIManager.getInstance().closeCurrentPopin();
 	}
 	
 	/**
@@ -50,6 +51,9 @@ class PopinBuild extends MyPopin
 	override public function destroy (): Void {
 		instance = null;
 		super.destroy();
+	}
+	private function closePopin(pData:InteractionData) : Void{
+		destroy();
 	}
 
 	

@@ -1,48 +1,22 @@
 package com.isartdigital.myGame.ui.hud;
-import com.isartdigital.myGame.ui.MyHud;
+import com.isartdigital.myGame.ui.IconHud;
 import com.isartdigital.myGame.ui.popin.PopinBuild;
 import com.isartdigital.utils.game.GameStage;
 import pixi.InteractionData;
-/**
- * ...
- * @author PIF
- */
-class HudBuild extends MyHud
-{
 
-/**
-	 * instance unique de la classe Popin0
-	 */
+// HudBuild is the BuildIcon of the Hud, it opens the build menu
+// IconHud is a pixi.Sprite tuned for the HUD use.
+class HudBuild extends IconHud
+{
 	private static var instance: HudBuild;
 
-	/**
-	 * Retourne l'instance unique de la classe, et la crée si elle n'existait pas au préalable
-	 * @return instance unique
-	 */
-	public static function getInstance (): HudBuild {
-		if (instance == null) instance = new HudBuild();
-		return instance;
-	}
-	
-	/**
-	 * constructeur privé pour éviter qu'une instance soit créée directement
-	 */
-	private function new() 
+	private function new(startX:Float,startY:Float, ?texture:String) 
 	{
-		super();
-		
+		super(startX,startY, texture);
 	}
-	
+
+	// IconHud has already binded the click on the method Onclick so we just have to overide it to code the action
 	override private function onClick (pData:InteractionData) : Void {
-		UIManager.getInstance().openPopin(PopinBuild.getInstance());
-	}
-	
-	/**
-	 * détruit l'instance unique et met sa référence interne à null
-	 */
-	override public function destroy (): Void {
-		instance = null;
-		super.destroy();
-	}
-	
+		//UIManager.getInstance().openPopin(PopinBuild.getInstance());
+	}	
 }

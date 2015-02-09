@@ -56,7 +56,10 @@ class Main extends EventDispatcher
 		if (instance == null) instance = new Main();
 		return instance;
 	}
-	
+	public function getStage() : Stage {
+		return stage;
+	}
+
 	/**
 	 * création du jeu et lancement du chargement du fichier de configuration
 	 */
@@ -124,6 +127,7 @@ class Main extends EventDispatcher
 		lAssets.push("assets/Hud_TL.png");
 		lAssets.push("assets/Hud_TR.png");
 		lAssets.push("assets/Hud_B.png");
+		lAssets.push("assets/closeButton.png");
 		lAssets.push("assets/ambulance.json");
 
 		var lLoader:AssetLoader = new AssetLoader(lAssets);

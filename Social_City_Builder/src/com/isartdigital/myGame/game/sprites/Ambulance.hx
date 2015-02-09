@@ -1,8 +1,9 @@
 package com.isartdigital.myGame.game.sprites;
 
 import com.isartdigital.myGame.ui.popin.Popin0;
-import com.isartdigital.myGame.ui.UIManager;
+import com.isartdigital.myGame.ui.hud.HudManager;
 import com.isartdigital.utils.game.GameStage;
+import com.isartdigital.myGame.ui.UIManager;
 import pixi.display.MovieClip;
 import pixi.InteractionData;
 import pixi.textures.Texture;
@@ -32,6 +33,7 @@ class Ambulance extends MovieClip
 	
 	private function onClick (pData:InteractionData): Void {
 		trace ("click ambulance");
+		HudManager.getInstance();
 		UIManager.getInstance().openPopin(Popin0.getInstance());
 		Popin0.getInstance().x = Math.random() * GameStage.getInstance().safeZone.width-GameStage.getInstance().safeZone.width/2;
 		Popin0.getInstance().y = Math.random() * GameStage.getInstance().safeZone.height-GameStage.getInstance().safeZone.height/2;
