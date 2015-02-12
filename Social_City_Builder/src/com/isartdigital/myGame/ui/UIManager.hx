@@ -6,6 +6,7 @@ import com.isartdigital.utils.game.GameStage;
 import com.isartdigital.utils.ui.UIPosition;
 import pixi.display.DisplayObject;
 import com.isartdigital.utils.ui.Popin;
+import com.isartdigital.myGame.ui.popin.PopinManager;
 import com.isartdigital.utils.system.DeviceCapabilities;
 import pixi.display.DisplayObjectContainer;
 import pixi.geom.Point;
@@ -147,6 +148,7 @@ class UIManager
 		closeScreens();
 		GameStage.getInstance().getHudContainer().addChild(HudManager.getInstance());
 		HudManager.getInstance();
+		PopinManager.getInstance();
 		
 	}
 	

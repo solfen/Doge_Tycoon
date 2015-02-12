@@ -17,7 +17,7 @@ import pixi.loaders.AssetLoader;
 import pixi.loaders.JsonLoader;
 import pixi.renderers.webgl.WebGLRenderer;
 import pixi.utils.Detector;
-	
+import com.isartdigital.myGame.ui.popin.PopinManager;
 
 /**
  * Classe d'initialisation et lancement du jeu

@@ -35,7 +35,7 @@ class Popin0 extends MyPopin
 		
 	}
 	
-	override private function onClick (pData:InteractionData) : Void {
+	/*override private function onClick (pData:InteractionData) : Void {
 		var lPopin:MyPopin = Math.random()<0.5 ? PopinOkCancel.getInstance() : Popin1.getInstance() ;
 		
 		UIManager.getInstance().openPopin(lPopin);
@@ -44,12 +44,10 @@ class Popin0 extends MyPopin
 		
 	}
 	
-	/**
-	 * détruit l'instance unique et met sa référence interne à null
-	 */
+
 	override public function destroy (): Void {
 		instance = null;
 		super.destroy();
-	}
+	}*/
 
 }

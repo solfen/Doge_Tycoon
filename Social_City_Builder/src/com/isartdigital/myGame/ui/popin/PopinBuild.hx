@@ -1,60 +1,31 @@
 package com.isartdigital.myGame.ui.popin;
-import com.isartdigital.myGame.ui.popin.IconPopinBuild;
 import com.isartdigital.myGame.ui.MyPopin;
-import com.isartdigital.utils.game.GameStage;
-import com.isartdigital.myGame.ui.UIManager;
+import com.isartdigital.myGame.ui.popin.PopinManager;
 import pixi.InteractionData;
-import pixi.textures.Texture;
-import pixi.display.Sprite;
 
-/**
- * ...
- * @author PIF
- */
+//PopinBuild is lauched on HudBuild click
+//PopinBuild inherit form MyPopin who is the base class of all popin
+//Basicly any Popin is just a configuration of Mypopin
 class PopinBuild extends MyPopin
 {
-	private var child:Sprite;
-
 	private static var instance: PopinBuild;
 
-
-	public static function getInstance (): PopinBuild {
-		if (instance == null) instance = new PopinBuild();
+	public static function getInstance (?startX:Float,?startY:Float, ?texture:String): PopinBuild {
+		if (instance == null) instance = new PopinBuild(startX,startY, texture);
 		return instance;
 	}
 	
-	private function new() 
+	private function new(?startX:Float,?startY:Float, ?texture:String) 
 	{
-		super();
-		x = 0;
-		y = 0;
-		width = 1;
-		height = 1;
-
-		/*child = new IconPopinBuild(0,0,"HudBuild");
-		addChild(child);
-		child = new IconPopinBuild(1,1, "closeButton");
-		child.click = closePopin;
-		addChild(child);*/
-	}
-	
-	override private function onClick (pData:InteractionData) : Void {
-		// so there nothing onclick since it will be children who have actions
-		super.onClick(pData);
-		UIManager.getInstance().closeCurrentPopin();
-		UIManager.getInstance().closeCurrentPopin();
-	}
-	
-	/**
-	 * détruit l'instance unique et met sa référence interne à null
-	 */
-	override public function destroy (): Void {
-		instance = null;
-		super.destroy();
-	}
-	private function closePopin(pData:InteractionData) : Void{
-		destroy();
+		super(startX,startY, texture);
+		addIcon(0,0,"closeButton","closeButton");
 	}
 
-	
+	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
+	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
+	override private function childClick(pEvent:Dynamic){
+		if(pEvent.target.name == "closeButton"){
+			PopinManager.getInstance().closePopin("PopinBuild");
+		}
+	}
 }
