@@ -2,3 +2,4 @@
 -main com.isartdigital.Main
 -js bin/Structure.js
 -lib pixijs
+-u 'UTF-8'

@@ -169,8 +169,8 @@ com.isartdigital.Main = function() {
 		return $r;
 	}(this)),(function($this) {
 		var $r;
-		var this11 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
-		var int1 = this11;
+		var this2 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
+		var int1 = this2;
 		$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 		return $r;
 	}(this)));
@@ -257,8 +257,8 @@ com.isartdigital.Main.prototype = $extend(com.isartdigital.utils.events.EventDis
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var this11 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
-			var int1 = this11;
+			var this2 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
+			var int1 = this2;
 			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 			return $r;
 		}(this)));
@@ -620,8 +620,8 @@ com.isartdigital.myGame.ui.UIManager.prototype = {
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var this11 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
-			var int1 = this11;
+			var this2 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
+			var int1 = this2;
 			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 			return $r;
 		}(this)));
@@ -1073,6 +1073,43 @@ com.isartdigital.utils.game.GameStageScale.NO_SCALE = ["NO_SCALE",0];
 com.isartdigital.utils.game.GameStageScale.NO_SCALE.__enum__ = com.isartdigital.utils.game.GameStageScale;
 com.isartdigital.utils.game.GameStageScale.SHOW_ALL = ["SHOW_ALL",1];
 com.isartdigital.utils.game.GameStageScale.SHOW_ALL.__enum__ = com.isartdigital.utils.game.GameStageScale;
+com.isartdigital.utils.game.IsoTools = function() { };
+com.isartdigital.utils.game.IsoTools.__name__ = ["com","isartdigital","utils","game","IsoTools"];
+com.isartdigital.utils.game.IsoTools.cell_col = function(cell_index,cols_nb) {
+	return (cell_index % cols_nb - (js.Boot.__cast(cell_index / cols_nb , Int) | 0) + cols_nb - 1) * 0.5;
+};
+com.isartdigital.utils.game.IsoTools.cell_row = function(cell_index,cols_nb) {
+	return (cell_index % cols_nb + (js.Boot.__cast(cell_index / cols_nb , Int) | 0)) * 0.5;
+};
+com.isartdigital.utils.game.IsoTools.cell_x = function(col,cell_w,offset_x) {
+	return js.Boot.__cast(col * cell_w + offset_x , Int);
+};
+com.isartdigital.utils.game.IsoTools.cell_y = function(row,cell_h,offset_y) {
+	return js.Boot.__cast(row * cell_h + offset_y , Int);
+};
+com.isartdigital.utils.game.IsoTools.cell_index_from_cr = function(col,row,cols_nb) {
+	return js.Boot.__cast(row + col - cols_nb * 0.5 + 0.5 , Int) + js.Boot.__cast(row - col + cols_nb * 0.5 - 0.5 , Int) * cols_nb;
+};
+com.isartdigital.utils.game.IsoTools.cell_index_from_xy = function(x,y,offset_x,offset_y,cell_w,cell_h,cols_nb) {
+	var nX = (x - offset_x) / cell_w;
+	var nY = (y - offset_y) / cell_h;
+	return js.Boot.__cast(nY + nX - cols_nb * 0.5 , Int) + js.Boot.__cast(nY - nX + cols_nb * 0.5 , Int) * cols_nb;
+};
+com.isartdigital.utils.game.IsoTools.all_map_pts_xy = function(offset_x,offset_y,cell_w,cell_h,cells_nb,cols_nb) {
+	var pts = [];
+	var i = 0;
+	while(i < cells_nb) {
+		pts[i] = { x0 : js.Boot.__cast(offset_x + com.isartdigital.utils.game.IsoTools.cell_col(i,cols_nb) * cell_w , Int), y0 : js.Boot.__cast(offset_y + com.isartdigital.utils.game.IsoTools.cell_row(i,cols_nb) * cell_h + cell_h * 0.5 , Int)};
+		pts[i].x1 = js.Boot.__cast(pts[i].x0 + cell_w * 0.5 , Int);
+		pts[i].y1 = js.Boot.__cast(pts[i].y0 - cell_h * 0.5 , Int);
+		pts[i].x2 = pts[i].x0 + cell_w;
+		pts[i].y2 = pts[i].y0;
+		pts[i].x3 = pts[i].x1;
+		pts[i].y3 = js.Boot.__cast(pts[i].y0 + cell_h * 0.5 , Int);
+		i++;
+	}
+	return pts;
+};
 com.isartdigital.utils.system = {};
 com.isartdigital.utils.system.DeviceCapabilities = function() { };
 $hxClasses["com.isartdigital.utils.system.DeviceCapabilities"] = com.isartdigital.utils.system.DeviceCapabilities;
@@ -1318,3 +1355,5 @@ com.isartdigital.utils.game.GameStage.SAFE_ZONE_WIDTH = 2048;
 com.isartdigital.utils.game.GameStage.SAFE_ZONE_HEIGHT = 1366;
 com.isartdigital.Main.main();
 })();
+
+//# sourceMappingURL=Structure.js.map
