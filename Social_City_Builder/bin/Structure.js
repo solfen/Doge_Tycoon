@@ -169,8 +169,8 @@ com.isartdigital.Main = function() {
 		return $r;
 	}(this)),(function($this) {
 		var $r;
-		var this2 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
-		var int1 = this2;
+		var this11 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
+		var int1 = this11;
 		$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 		return $r;
 	}(this)));
@@ -205,6 +205,7 @@ com.isartdigital.Main.prototype = $extend(com.isartdigital.utils.events.EventDis
 		var lAssets = [];
 		lAssets.push("assets/preload.png");
 		lAssets.push("assets/preload_bg.png");
+		lAssets.push("assets/LoaderScene.png");
 		var lLoader = new PIXI.AssetLoader(lAssets);
 		lLoader.addEventListener("onComplete",$bind(this,this.loadAssets));
 		lLoader.load();
@@ -257,8 +258,8 @@ com.isartdigital.Main.prototype = $extend(com.isartdigital.utils.events.EventDis
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var this2 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
-			var int1 = this2;
+			var this11 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
+			var int1 = this11;
 			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 			return $r;
 		}(this)));
@@ -566,6 +567,23 @@ com.isartdigital.myGame.ui.MyScreen.prototype = $extend(com.isartdigital.utils.u
 	}
 	,__class__: com.isartdigital.myGame.ui.MyScreen
 });
+com.isartdigital.myGame.ui.ScenesManager = function() {
+};
+$hxClasses["com.isartdigital.myGame.ui.ScenesManager"] = com.isartdigital.myGame.ui.ScenesManager;
+com.isartdigital.myGame.ui.ScenesManager.__name__ = ["com","isartdigital","myGame","ui","ScenesManager"];
+com.isartdigital.myGame.ui.ScenesManager.getInstance = function() {
+	if(com.isartdigital.myGame.ui.ScenesManager.instance == null) com.isartdigital.myGame.ui.ScenesManager.instance = new com.isartdigital.myGame.ui.ScenesManager();
+	return com.isartdigital.myGame.ui.ScenesManager.instance;
+};
+com.isartdigital.myGame.ui.ScenesManager.prototype = {
+	loadScene: function(sceneName) {
+		if(this.isThereAScene) com.isartdigital.Main.getInstance().getStage().removeChild(this.currentScene);
+		this.currentScene = Type.createInstance(Type.resolveClass("com.isartdigital.myGame.ui.screens." + sceneName),[]);
+		com.isartdigital.Main.getInstance().getStage().addChild(this.currentScene);
+		this.isThereAScene = true;
+	}
+	,__class__: com.isartdigital.myGame.ui.ScenesManager
+};
 com.isartdigital.myGame.ui.UIManager = function() {
 	this.popins = [];
 };
@@ -620,8 +638,8 @@ com.isartdigital.myGame.ui.UIManager.prototype = {
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var this2 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
-			var int1 = this2;
+			var this11 = com.isartdigital.utils.system.DeviceCapabilities.get_height();
+			var int1 = this11;
 			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 			return $r;
 		}(this)));
@@ -715,12 +733,6 @@ com.isartdigital.myGame.ui.popin.PopinBuild.getInstance = function(startX,startY
 com.isartdigital.myGame.ui.popin.PopinBuild.__super__ = com.isartdigital.myGame.ui.MyPopin;
 com.isartdigital.myGame.ui.popin.PopinBuild.prototype = $extend(com.isartdigital.myGame.ui.MyPopin.prototype,{
 	childClick: function(pEvent) {
-		console.log((function($this) {
-			var $r;
-			var key = pEvent.target.name;
-			$r = $this.childs.get(key);
-			return $r;
-		}(this)));
 		if(pEvent.target.name == "closeButton") com.isartdigital.myGame.ui.popin.PopinManager.getInstance().closePopin("PopinBuild");
 	}
 	,__class__: com.isartdigital.myGame.ui.popin.PopinBuild
@@ -766,6 +778,22 @@ com.isartdigital.myGame.ui.popin.PopinManager.prototype = $extend(PIXI.DisplayOb
 	,__class__: com.isartdigital.myGame.ui.popin.PopinManager
 });
 com.isartdigital.myGame.ui.screens = {};
+com.isartdigital.myGame.ui.screens.LoaderScene = function() {
+	PIXI.DisplayObjectContainer.call(this);
+	this.x = 0;
+	this.y = 0;
+	this.addChild(new PIXI.Sprite(PIXI.Texture.fromImage("assets/LoaderScene.png")));
+};
+$hxClasses["com.isartdigital.myGame.ui.screens.LoaderScene"] = com.isartdigital.myGame.ui.screens.LoaderScene;
+com.isartdigital.myGame.ui.screens.LoaderScene.__name__ = ["com","isartdigital","myGame","ui","screens","LoaderScene"];
+com.isartdigital.myGame.ui.screens.LoaderScene.getInstance = function() {
+	if(com.isartdigital.myGame.ui.screens.LoaderScene.instance == null) com.isartdigital.myGame.ui.screens.LoaderScene.instance = new com.isartdigital.myGame.ui.screens.LoaderScene();
+	return com.isartdigital.myGame.ui.screens.LoaderScene.instance;
+};
+com.isartdigital.myGame.ui.screens.LoaderScene.__super__ = PIXI.DisplayObjectContainer;
+com.isartdigital.myGame.ui.screens.LoaderScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+	__class__: com.isartdigital.myGame.ui.screens.LoaderScene
+});
 com.isartdigital.myGame.ui.screens.Screen0 = function() {
 	com.isartdigital.myGame.ui.MyScreen.call(this);
 };
@@ -1074,6 +1102,7 @@ com.isartdigital.utils.game.GameStageScale.NO_SCALE.__enum__ = com.isartdigital.
 com.isartdigital.utils.game.GameStageScale.SHOW_ALL = ["SHOW_ALL",1];
 com.isartdigital.utils.game.GameStageScale.SHOW_ALL.__enum__ = com.isartdigital.utils.game.GameStageScale;
 com.isartdigital.utils.game.IsoTools = function() { };
+$hxClasses["com.isartdigital.utils.game.IsoTools"] = com.isartdigital.utils.game.IsoTools;
 com.isartdigital.utils.game.IsoTools.__name__ = ["com","isartdigital","utils","game","IsoTools"];
 com.isartdigital.utils.game.IsoTools.cell_col = function(cell_index,cols_nb) {
 	return (cell_index % cols_nb - (js.Boot.__cast(cell_index / cols_nb , Int) | 0) + cols_nb - 1) * 0.5;
@@ -1355,5 +1384,3 @@ com.isartdigital.utils.game.GameStage.SAFE_ZONE_WIDTH = 2048;
 com.isartdigital.utils.game.GameStage.SAFE_ZONE_HEIGHT = 1366;
 com.isartdigital.Main.main();
 })();
-
-//# sourceMappingURL=Structure.js.map

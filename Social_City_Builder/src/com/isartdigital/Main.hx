@@ -3,6 +3,7 @@ package com.isartdigital;
 import com.isartdigital.myGame.ui.GraphicLoader;
 import com.isartdigital.myGame.ui.screens.TitleCard;
 import com.isartdigital.myGame.ui.UIManager;
+import com.isartdigital.myGame.ui.ScenesManager;
 import com.isartdigital.utils.Config;
 import com.isartdigital.utils.events.Event;
 import com.isartdigital.utils.events.EventDispatcher;
@@ -101,6 +102,7 @@ class Main extends EventDispatcher
 		var lAssets:Array<String> = [];
 		lAssets.push("assets/preload.png");
 		lAssets.push("assets/preload_bg.png");
+		lAssets.push("assets/LoaderScene.png");
 
 		var lLoader:AssetLoader = new AssetLoader(lAssets);
 		lLoader.addEventListener("onComplete", loadAssets);
@@ -134,6 +136,7 @@ class Main extends EventDispatcher
 		lLoader.addEventListener("onProgress", onLoadProgress);
 		lLoader.addEventListener("onComplete", onLoadComplete);
 
+		//ScenesManager.getInstance().loadScene("LoaderScene");
 		UIManager.getInstance().openScreen(GraphicLoader.getInstance());
 
 		lLoader.load();

@@ -11,6 +11,8 @@ import com.isartdigital.utils.system.DeviceCapabilities;
 import pixi.display.DisplayObjectContainer;
 import pixi.geom.Point;
 import com.isartdigital.myGame.ui.hud.HudManager;
+import com.isartdigital.myGame.ui.ScenesManager;
+
 
 /**
  * Manager (Singleton) en charge de gérer les écrans d'interface
@@ -149,6 +151,7 @@ class UIManager
 		GameStage.getInstance().getHudContainer().addChild(HudManager.getInstance());
 		HudManager.getInstance();
 		PopinManager.getInstance();
+		
 		
 	}
 	
