@@ -1,5 +1,5 @@
 -cp src
--main com.isartdigital.Main
+-main Main
 -js bin/Structure.js
 -lib pixijs
 -u 'UTF-8'
