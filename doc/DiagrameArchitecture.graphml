@@ -16,7 +16,6 @@
     <data key="d0"/>
     <node id="n0" yfiles.foldertype="group">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
@@ -46,7 +45,6 @@
       <graph edgedefault="directed" id="n0:">
         <node id="n0::n0">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="139.66203703703695" width="121.60000000000002" x="726.1353153935192" y="69.63557942708357"/>
@@ -67,7 +65,6 @@ Is 100% static<y:LabelModel>
         </node>
         <node id="n0::n1">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="139.66203703703695" width="121.60000000000002" x="960.9508246527786" y="69.63557942708357"/>
@@ -75,7 +72,7 @@ Is 100% static<y:LabelModel>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="node_size" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="139.66203703703695" modelName="custom" textColor="#000000" visible="true" width="121.60000000000002" x="1.1368683772161603E-13" y="0.0">Game Manager : 
 Not really used,
-See GameScne
+See GameScene
  instead<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
@@ -88,7 +85,6 @@ See GameScne
         </node>
         <node id="n0::n2">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="139.66203703703695" width="121.60000000000002" x="491.31980613425975" y="69.63557942708357"/>
@@ -116,7 +112,6 @@ Render the game
     </node>
     <node id="n1" yfiles.foldertype="group">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
@@ -146,13 +141,12 @@ Render the game
       <graph edgedefault="directed" id="n1:">
         <node id="n1::n0">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="50.42476851851859" width="129.65856481481484" x="1216.8752916124124" y="355.9344319661453"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="123.396484375" x="3.131040219907419" y="1.160626446759295">HudBuild:
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="123.396484375" x="3.1310402199073906" y="1.160626446759295">HudBuild:
 Is an Icon
 Click Open PopinBuild<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
@@ -166,15 +160,14 @@ Click Open PopinBuild<y:LabelModel>
         </node>
         <node id="n1::n1">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="139.66203703703695" width="121.60000000000002" x="1041.5540025499124" y="362.6969283492473"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="node_size" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="139.66203703703695" modelName="custom" textColor="#000000" visible="true" width="123.384765625" x="-0.8923828124999886" y="0.0">HudManager : 
+              <y:NodeLabel alignment="center" autoSizePolicy="node_size" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="139.66203703703695" modelName="custom" textColor="#000000" visible="true" width="123.384765625" x="-0.8923828125000455" y="0.0">HudManager : 
 container for the HUD,
-spwans the Hud
+spawns the Hud
 <y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
@@ -187,7 +180,6 @@ spwans the Hud
         </node>
         <node id="n1::n2">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="135.06018518518522" width="100.0" x="1400.2551454897273" y="355.9344319661453"/>
@@ -195,7 +187,7 @@ spwans the Hud
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="62.8046875" modelName="custom" textColor="#000000" visible="true" width="88.046875" x="5.9765625" y="36.12774884259261">IconHud : 
 PixiSprite tuned
-Has onclick 
+Has onClick 
 Has onOver<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
@@ -210,7 +202,6 @@ Has onOver<y:LabelModel>
     </node>
     <node id="n2" yfiles.foldertype="group">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
@@ -240,13 +231,12 @@ Has onOver<y:LabelModel>
       <graph edgedefault="directed" id="n2:">
         <node id="n2::n0">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="151.99999999999994" width="187.19999999999993" x="1440.1083531358472" y="578.4219419126146"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="node_size" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="151.99999999999994" modelName="custom" textColor="#000000" visible="true" width="187.19999999999993" x="0.0" y="0.0">MyPopin : 
+              <y:NodeLabel alignment="left" autoSizePolicy="node_size" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="151.99999999999994" modelName="custom" textColor="#000000" visible="true" width="187.19999999999993" x="0.0" y="5.6843418860808015E-14">MyPopin : 
 Base popinClass.
 Is a conainer of all the icons 
 that compose the popin.
@@ -265,7 +255,6 @@ an IconPopin child.<y:LabelModel>
         </node>
         <node id="n2::n1">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="94.39999999999998" width="100.0" x="1438.4322520616297" y="758.6104709201372"/>
@@ -285,13 +274,12 @@ Has name<y:LabelModel>
         </node>
         <node id="n2::n2">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="94.39999999999992" width="168.79999999999995" x="1222.18225206163" y="641.0219419126147"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="153.4140625" x="7.692968749999977" y="23.148242187499932">PopinBuild :
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="153.4140625" x="7.692968749999864" y="23.148242187499932">PopinBuild :
 is lauched on HudBuild click
 
 <y:LabelModel>
@@ -306,13 +294,12 @@ is lauched on HudBuild click
         </node>
         <node id="n2::n3">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="151.99999999999994" width="125.60000000000002" x="1047.4561509874127" y="676.8561641551818"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="77.505859375" modelName="custom" textColor="#000000" visible="true" width="127.404296875" x="-0.9021484374999886" y="37.24707031249994">PopinMnager : 
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="77.505859375" modelName="custom" textColor="#000000" visible="true" width="127.404296875" x="-0.9021484375000455" y="37.2470703125">PopinManager : 
 Container for all popins
 Open any popin
 Close any popin
@@ -331,19 +318,18 @@ Close all popin
     </node>
     <node id="n3" yfiles.foldertype="group">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="241.22600188078707" width="443.793997395833" x="484.07976707175976" y="328.5579671223953"/>
+              <y:Geometry height="241.22600188078707" width="452.99593779042743" x="480.7516420717599" y="328.5579671223953"/>
               <y:Fill color="#CAECFF80" transparent="false"/>
               <y:BorderStyle color="#666699" type="dotted" width="1.0"/>
-              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#99CCFF" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="22.37646484375" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="443.793997395833" x="0.0" y="0.0">Scenes</y:NodeLabel>
+              <y:NodeLabel alignment="right" autoSizePolicy="node_width" backgroundColor="#99CCFF" borderDistance="0.0" fontFamily="Dialog" fontSize="15" fontStyle="plain" hasLineColor="false" height="22.37646484375" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="452.99593779042743" x="0.0" y="0.0">Scenes</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
               <y:State closed="false" closedHeight="50.0" closedWidth="50.0" innerGraphDisplayEnabled="false"/>
               <y:Insets bottom="5" bottomF="5.0" left="5" leftF="5.0" right="5" rightF="5.0" top="5" topF="5.0"/>
-              <y:BorderInsets bottom="48" bottomF="48.0" left="0" leftF="0.0" right="18" rightF="18.0" top="0" topF="0.0"/>
+              <y:BorderInsets bottom="48" bottomF="48.0" left="6" leftF="5.568164062499932" right="0" rightF="0.0" top="0" topF="0.0"/>
             </y:GroupNode>
             <y:GroupNode>
               <y:Geometry height="50.0" width="50.0" x="966.9999999999991" y="544.4999999999994"/>
@@ -361,15 +347,14 @@ Close all popin
       <graph edgedefault="directed" id="n3:">
         <node id="n3::n0">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
-              <y:Geometry height="139.66203703703695" width="121.60000000000002" x="491.3198061342597" y="363.5338659215858"/>
+              <y:Geometry height="143.8250994646985" width="134.98225206162988" x="491.3198061342598" y="363.53386592158574"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="77.505859375" modelName="custom" textColor="#000000" visible="true" width="126.080078125" x="-2.240039062499932" y="31.078088831018476">ScenesManager :
-load new scenes just
- with a scene name
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="77.505859375" modelName="custom" textColor="#000000" visible="true" width="132.736328125" x="1.1229619683149963" y="33.15962004484925">ScenesManager :
+load new scenes
+ with only a scene name
  (instanciate it 
 then put it in the stage)<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
@@ -383,13 +368,12 @@ then put it in the stage)<y:LabelModel>
         </node>
         <node id="n3::n1">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="50.42476851851859" width="168.79999999999995" x="734.0987644675928" y="355.9344319661453"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="116.734375" x="26.032812499999977" y="8.511212384259295">LoaderScne :
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="116.734375" x="26.032812499999977" y="8.511212384259295">LoaderScene :
 Print a loading image<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
@@ -402,15 +386,14 @@ Print a loading image<y:LabelModel>
         </node>
         <node id="n3::n2">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
-              <y:Geometry height="80.42476851851848" width="168.79999999999995" x="734.0987644675928" y="436.3592004846639"/>
+              <y:Geometry height="80.42476851851848" width="194.64881539459464" x="734.0987644675927" y="436.3592004846639"/>
               <y:Fill color="#FFCC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="172.75" x="-1.9750000000000227" y="16.160626446759295">GameScene :
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="182.7578125" x="5.945501447297374" y="16.160626446759238">GameScene :
 Init the game
- (Popin Manager,HudManger...)<y:LabelModel>
+ (Popin Manager, HudManager...)<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -424,7 +407,6 @@ Init the game
     </node>
     <node id="n4" yfiles.foldertype="group">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
@@ -454,7 +436,6 @@ Init the game
       <graph edgedefault="directed" id="n4:">
         <node id="n4::n0">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="80.42476851851848" width="100.0" x="486.3198061342597" y="654.9971733940961"/>
@@ -474,7 +455,6 @@ of custom events<y:LabelModel>
         </node>
         <node id="n4::n1">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="74.02138302951425" width="100.0" x="616.3198061342597" y="658.1988661385981"/>
@@ -493,7 +473,6 @@ Moteur ISO<y:LabelModel>
         </node>
         <node id="n4::n2">
           <data key="d4"/>
-          <data key="d5"/>
           <data key="d6">
             <y:UMLNoteNode>
               <y:Geometry height="74.02138302951425" width="129.65856481481478" x="746.3198061342597" y="658.1988661385981"/>
@@ -514,7 +493,6 @@ Width and Height<y:LabelModel>
     </node>
     <node id="n5">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
           <y:Geometry height="57.0" width="129.11354372829692" x="1355.868708333333" y="41.16898148148171"/>
@@ -532,7 +510,6 @@ Width and Height<y:LabelModel>
     </node>
     <node id="n6">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
           <y:Geometry height="57.0" width="129.11354372829692" x="1355.868708333333" y="110.96659794560205"/>
@@ -551,13 +528,12 @@ Calls Class2.test()<y:LabelModel>
     </node>
     <node id="n7">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
           <y:Geometry height="57.0" width="153.99999999999977" x="1557.8687083333323" y="41.16898148148171"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="114.724609375" x="19.6376953125" y="4.448242187499986">Class2 : 
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="114.724609375" x="19.637695312499773" y="4.4482421875">Class2 : 
 contained and
  instancied by class1<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
@@ -571,13 +547,12 @@ contained and
     </node>
     <node id="n8">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
           <y:Geometry height="57.0" width="153.99999999999977" x="1557.8687083333323" y="110.96659794560205"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="50.681640625" x="51.6591796875" y="19.1494140625">Class2 : <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="50.681640625" x="51.65917968749977" y="19.1494140625">Class2 : <y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -589,7 +564,6 @@ contained and
     </node>
     <node id="n9">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="28.0" width="100.0" x="1462.8687083333325" y="120.16898148148167"/>
@@ -611,13 +585,12 @@ contained and
     </node>
     <node id="n10">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
           <y:Geometry height="57.0" width="129.11354372829692" x="1355.868708333333" y="178.16898148148167"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="104.69921875" x="12.207162489148459" y="11.798828124999972">Class 1: 
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="104.69921875" x="12.207162489148459" y="11.798828125">Class 1: 
 Inherit from Class2<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
@@ -630,13 +603,12 @@ Inherit from Class2<y:LabelModel>
     </node>
     <node id="n11">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
           <y:Geometry height="57.0" width="153.99999999999977" x="1557.8687083333323" y="178.16898148148172"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="50.681640625" x="51.6591796875" y="19.1494140625">Class2 : <y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="50.681640625" x="51.65917968749977" y="19.1494140625">Class2 : <y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -648,13 +620,12 @@ Inherit from Class2<y:LabelModel>
     </node>
     <node id="n12">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
           <y:Geometry height="57.0" width="134.98225206162988" x="1355.868708333333" y="245.3713650173613"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="44.013671875" x="45.48429009331494" y="19.14941406250003">Class 1<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="44.013671875" x="45.48429009331494" y="19.1494140625">Class 1<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -666,7 +637,6 @@ Inherit from Class2<y:LabelModel>
     </node>
     <node id="n13">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLNoteNode>
           <y:Geometry height="57.0" width="153.99999999999977" x="1557.868708333332" y="245.37136501736134"/>
@@ -685,7 +655,6 @@ Inherit from Class2<y:LabelModel>
     </node>
     <node id="n14">
       <data key="d4"/>
-      <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
           <y:Geometry height="28.0" width="100.0" x="539.4587644675929" y="285.6395973488135"/>
@@ -706,7 +675,6 @@ Inherit from Class2<y:LabelModel>
       </data>
     </node>
     <edge id="n1::e0" source="n1::n0" target="n1::n2">
-      <data key="d9"/>
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.edge.framed">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -716,7 +684,6 @@ Inherit from Class2<y:LabelModel>
       </data>
     </edge>
     <edge id="n1::e1" source="n1::n1" target="n1::n0">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -727,7 +694,6 @@ Inherit from Class2<y:LabelModel>
       </data>
     </edge>
     <edge id="n2::e0" source="n2::n2" target="n2::n0">
-      <data key="d9"/>
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.edge.framed">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -737,7 +703,6 @@ Inherit from Class2<y:LabelModel>
       </data>
     </edge>
     <edge id="n2::e1" source="n2::n3" target="n2::n2">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -748,7 +713,6 @@ Inherit from Class2<y:LabelModel>
       </data>
     </edge>
     <edge id="n2::e2" source="n2::n2" target="n2::n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -759,7 +723,6 @@ Inherit from Class2<y:LabelModel>
       </data>
     </edge>
     <edge id="e0" source="n3::n2" target="n1::n1">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -770,7 +733,6 @@ Inherit from Class2<y:LabelModel>
       </data>
     </edge>
     <edge id="e1" source="n3::n2" target="n2::n3">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -781,7 +743,6 @@ Inherit from Class2<y:LabelModel>
       </data>
     </edge>
     <edge id="e2" source="n5" target="n7">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -793,7 +754,6 @@ Inherit from Class2<y:LabelModel>
     </edge>
     <edge id="e3" source="n6" target="n8">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -804,7 +764,6 @@ Inherit from Class2<y:LabelModel>
       </data>
     </edge>
     <edge id="e4" source="n10" target="n11">
-      <data key="d9"/>
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.edge.framed">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -815,7 +774,6 @@ Inherit from Class2<y:LabelModel>
     </edge>
     <edge id="e5" source="n0::n2" target="n3::n0">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -827,7 +785,6 @@ Inherit from Class2<y:LabelModel>
     </edge>
     <edge id="e6" source="n12" target="n13">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -839,7 +796,6 @@ Inherit from Class2<y:LabelModel>
     </edge>
     <edge id="e7" source="n0::n2" target="n3::n0">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
@@ -854,7 +810,6 @@ Inherit from Class2<y:LabelModel>
     </edge>
     <edge id="n3::e0" source="n3::n0" target="n3::n1">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -866,7 +821,6 @@ Inherit from Class2<y:LabelModel>
     </edge>
     <edge id="n3::e1" source="n3::n0" target="n3::n2">
       <data key="d8"/>
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

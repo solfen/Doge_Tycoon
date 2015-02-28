@@ -4,7 +4,6 @@ package com.isartdigital.myGame.game;
 import com.isartdigital.myGame.game.sprites.Ambulance;
 import com.isartdigital.myGame.ui.UIManager;
 import com.isartdigital.utils.events.Event;
-import com.isartdigital.utils.game.IsoTools;
 import com.isartdigital.utils.game.GameStage;
 import com.isartdigital.utils.game.IAction;
 import pixi.display.Sprite;

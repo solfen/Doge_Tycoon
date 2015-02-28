@@ -95,8 +95,8 @@ var Main = function() {
 		return $r;
 	}(this)),(function($this) {
 		var $r;
-		var this11 = utils.system.DeviceCapabilities.get_height();
-		var int1 = this11;
+		var this2 = utils.system.DeviceCapabilities.get_height();
+		var int1 = this2;
 		$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 		return $r;
 	}(this)));
@@ -155,8 +155,8 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var this11 = utils.system.DeviceCapabilities.get_height();
-			var int1 = this11;
+			var this2 = utils.system.DeviceCapabilities.get_height();
+			var int1 = this2;
 			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 			return $r;
 		}(this)));
@@ -321,8 +321,8 @@ hud.HudBuild.prototype = $extend(hud.IconHud.prototype,{
 				return $r;
 			}($this)) / (function($this) {
 				var $r;
-				var int11 = 2;
-				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
+				var int3 = 2;
+				$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
 				return $r;
 			}($this));
 			return $r;
@@ -649,8 +649,8 @@ scenes.GameScene = function() {
 			return $r;
 		}($this)) / (function($this) {
 			var $r;
-			var int11 = 2;
-			$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
+			var int3 = 2;
+			$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
 			return $r;
 		}($this));
 		return $r;
@@ -701,8 +701,8 @@ scenes.LoaderScene = function() {
 		return $r;
 	}(this)) / (function($this) {
 		var $r;
-		var int11 = 2;
-		$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
+		var int3 = 2;
+		$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
 		return $r;
 	}(this));
 	this.addChild(img);
@@ -784,8 +784,8 @@ sprites.Ambulance.prototype = $extend(PIXI.MovieClip.prototype,{
 				return $r;
 			}($this)) / (function($this) {
 				var $r;
-				var int11 = 2;
-				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
+				var int3 = 2;
+				$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
 				return $r;
 			}($this));
 			return $r;
