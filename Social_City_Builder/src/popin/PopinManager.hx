@@ -5,7 +5,7 @@ import popin.MyPopin;
 import pixi.InteractionData;
 import pixi.display.DisplayObjectContainer;
 
-// HudManger serves as a container for the HUD, spwans the HudIcons and manage the resize
+// HudManger serves as a container for the Popins, spwans the Popins
 class PopinManager extends DisplayObjectContainer
 {
 	private static var instance: PopinManager;

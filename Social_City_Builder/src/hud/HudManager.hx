@@ -1,6 +1,10 @@
 package hud;
 
 import hud.HudBuild;
+import hud.HudInventory;
+import hud.HudShop;
+import hud.HudQuests;
+import hud.HudOptions;
 import hud.IconHud;
 import pixi.display.DisplayObjectContainer;
 
@@ -19,10 +23,13 @@ class HudManager extends DisplayObjectContainer
 	public function new()  {
 		super();
 
-		//childs creation
-		currentChild = new HudBuild(50,50);
-		childs.push(currentChild);
-		addChild(currentChild);
+		//childs creation the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
+		newChild(new HudBuild(0.95,0.95));
+		newChild(new HudInventory(0.9,0.95));
+		newChild(new HudShop(0.85,0.95));
+		newChild(new HudQuests(0.80,0.95));
+		newChild(new HudOptions(0.95,0.05));
+
 	}
 	
 	// removes all childs then put its instance to null
@@ -32,6 +39,10 @@ class HudManager extends DisplayObjectContainer
 	 	}
 	 	childs = []; // destroys all the childs
 		instance = null;
+	}
+	private function newChild(child:IconHud){
+		childs.push(child);
+		addChild(child);
 	}
 
 }

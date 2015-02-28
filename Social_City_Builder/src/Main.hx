@@ -23,7 +23,7 @@ class Main extends EventDispatcher
 	 * chemin vers le fichier de configuration
 	 */
 	private static inline var CONFIG_PATH:String = "config.json";	
-	
+	private static var stats: Dynamic;
 	private static var instance: Main;
 	public var renderer:WebGLRenderer;
 	private var stage:Stage;
@@ -53,13 +53,15 @@ class Main extends EventDispatcher
 	private function new () {
 		
 		super();
-	
 		stage = new Stage(0x3f7cb6);
-		renderer = Detector.autoDetectRenderer(DeviceCapabilities.width, DeviceCapabilities.height); // vois ce que ça donne dans facebook
+		renderer = Detector.autoDetectRenderer(DeviceCapabilities.width, DeviceCapabilities.height); // voir ce que ça donne dans facebook
 		Browser.document.body.appendChild(renderer.view);
-		Browser.window.requestAnimationFrame(cast gameLoop);
+		stats = new pixi.utils.Stats();
+		Browser.document.body.appendChild( stats.domElement );
+		stats.domElement.style.position = "absolute";
+		stats.domElement.style.top = "0px";
+		gameLoop(0);
 		Browser.window.addEventListener("resize", resize);
-
 		preloadAssets();
 	}
 	
@@ -86,7 +88,7 @@ class Main extends EventDispatcher
 	}
 	
 	private function onLoadProgress (pEvent:Event): Void {
-		var lLoader:AssetLoader = cast(pEvent.target, AssetLoader);
+		/*var lLoader:AssetLoader = cast(pEvent.target, AssetLoader);*/
 		//GraphicLoader.getInstance().update((lLoader.assetURLs.length-lLoader.loadCount)/lLoader.assetURLs.length);
 	}
 	
@@ -99,11 +101,12 @@ class Main extends EventDispatcher
 	/**
 	 * game loop
 	 */
-	private function gameLoop() {
+	private function gameLoop(timestamp) {
+		stats.begin();
 		Browser.window.requestAnimationFrame(cast gameLoop);
 		render();		
 		dispatchEvent(new Event(Event.GAME_LOOP));
-		
+		stats.end();
 	}
 	
 	/**

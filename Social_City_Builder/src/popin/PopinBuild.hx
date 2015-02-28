@@ -24,7 +24,7 @@ class PopinBuild extends MyPopin
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
 	override private function childClick(pEvent:Dynamic){
-		if(pEvent.target.name == "closeButton"){
+		if(pEvent.target._name == "closeButton"){
 			PopinManager.getInstance().closePopin("PopinBuild");
 		}
 	}
