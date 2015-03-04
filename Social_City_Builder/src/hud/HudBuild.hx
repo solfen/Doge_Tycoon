@@ -24,7 +24,7 @@ class HudBuild extends IconHud
 	}
 	
 	private function onClick (pData:InteractionData) : Void {
-		PopinManager.getInstance().openPopin("PopinBuild", DeviceCapabilities.width/2, DeviceCapabilities.height/2);
+		PopinManager.getInstance().openPopin("PopinBuild", 0.5, 0.5);
 	}
 	private function onMouseOver (pData:InteractionData): Void {
 		changeTexture("active");

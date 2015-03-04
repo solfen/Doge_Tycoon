@@ -86,7 +86,7 @@ utils.events.EventDispatcher.prototype = {
 };
 var Main = function() {
 	utils.events.EventDispatcher.call(this);
-	this.stage = new PIXI.Stage(4160694);
+	Main.stage = new PIXI.Stage(4160694);
 	this.renderer = PIXI.autoDetectRenderer((function($this) {
 		var $r;
 		var this1 = utils.system.DeviceCapabilities.get_width();
@@ -95,15 +95,19 @@ var Main = function() {
 		return $r;
 	}(this)),(function($this) {
 		var $r;
-		var this2 = utils.system.DeviceCapabilities.get_height();
-		var int1 = this2;
+		var this11 = utils.system.DeviceCapabilities.get_height();
+		var int1 = this11;
 		$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 		return $r;
 	}(this)));
 	window.document.body.appendChild(this.renderer.view);
-	window.requestAnimationFrame($bind(this,this.gameLoop));
+	Main.stats = new Stats();
+	window.document.body.appendChild(Main.stats.domElement);
+	Main.stats.domElement.style.position = "absolute";
+	Main.stats.domElement.style.top = "0px";
+	this.gameLoop(0);
 	window.addEventListener("resize",$bind(this,this.resize));
-	this.preloadAssets();
+	haxe.Timer.delay($bind(this,this.preloadAssets),10);
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
@@ -114,12 +118,12 @@ Main.getInstance = function() {
 	if(Main.instance == null) Main.instance = new Main();
 	return Main.instance;
 };
+Main.getStage = function() {
+	return Main.stage;
+};
 Main.__super__ = utils.events.EventDispatcher;
 Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
-	getStage: function() {
-		return this.stage;
-	}
-	,preloadAssets: function() {
+	preloadAssets: function() {
 		var lLoader = new PIXI.AssetLoader(GameInfo.preloadAssets);
 		lLoader.addEventListener("onComplete",$bind(this,this.loadAssets));
 		lLoader.load();
@@ -127,24 +131,34 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 	,loadAssets: function(pEvent) {
 		pEvent.target.removeEventListener("onComplete",$bind(this,this.loadAssets));
 		scenes.ScenesManager.getInstance().loadScene("LoaderScene");
-		var lLoader = new PIXI.AssetLoader(GameInfo.preloadAssets);
+		var lLoader = new PIXI.AssetLoader(GameInfo.loadAssets);
 		lLoader.addEventListener("onProgress",$bind(this,this.onLoadProgress));
 		lLoader.addEventListener("onComplete",$bind(this,this.onLoadComplete));
 		lLoader.load();
 	}
 	,onLoadProgress: function(pEvent) {
-		var lLoader;
-		lLoader = js.Boot.__cast(pEvent.target , PIXI.AssetLoader);
 	}
 	,onLoadComplete: function(pEvent) {
 		pEvent.target.removeEventListener("onProgress",$bind(this,this.onLoadProgress));
 		pEvent.target.removeEventListener("onComplete",$bind(this,this.onLoadComplete));
 		scenes.ScenesManager.getInstance().loadScene("GameScene");
 	}
-	,gameLoop: function() {
+	,onFacebookConnect: function(pResponse) {
+		console.log(pResponse.status);
+		if(pResponse.status == "connected") {
+			console.log("awww yeah ! you're in !");
+			FB.ui({ method : "share", href : "https://developers.facebook.com/docs"},$bind(this,this.test));
+		} else if(pResponse.status == "not_authorized") console.log("Oh no ! you're not identified");
+	}
+	,test: function() {
+		console.log("succes");
+	}
+	,gameLoop: function(timestamp) {
+		Main.stats.begin();
 		window.requestAnimationFrame($bind(this,this.gameLoop));
 		this.render();
 		this.dispatchEvent(new utils.events.Event("Event.GAME_LOOP"));
+		Main.stats.end();
 	}
 	,resize: function(pEvent) {
 		this.renderer.resize((function($this) {
@@ -155,15 +169,15 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var this2 = utils.system.DeviceCapabilities.get_height();
-			var int1 = this2;
+			var this11 = utils.system.DeviceCapabilities.get_height();
+			var int1 = this11;
 			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 			return $r;
 		}(this)));
 		this.dispatchEvent(new utils.events.Event("Event.RESIZE"));
 	}
 	,render: function() {
-		this.renderer.render(this.stage);
+		this.renderer.render(Main.stage);
 	}
 	,destroy: function() {
 		window.removeEventListener("resize",$bind(this,this.resize));
@@ -234,6 +248,32 @@ Type.createInstance = function(cl,args) {
 	return null;
 };
 var haxe = {};
+haxe.Timer = function(time_ms) {
+	var me = this;
+	this.id = setInterval(function() {
+		me.run();
+	},time_ms);
+};
+$hxClasses["haxe.Timer"] = haxe.Timer;
+haxe.Timer.__name__ = ["haxe","Timer"];
+haxe.Timer.delay = function(f,time_ms) {
+	var t = new haxe.Timer(time_ms);
+	t.run = function() {
+		t.stop();
+		f();
+	};
+	return t;
+};
+haxe.Timer.prototype = {
+	stop: function() {
+		if(this.id == null) return;
+		clearInterval(this.id);
+		this.id = null;
+	}
+	,run: function() {
+	}
+	,__class__: haxe.Timer
+};
 haxe.ds = {};
 haxe.ds.StringMap = function() {
 	this.h = { };
@@ -263,38 +303,109 @@ haxe.ds.StringMap.prototype = {
 	}
 	,__class__: haxe.ds.StringMap
 };
+var pixi = {};
+pixi.display = {};
+pixi.display.DisplayObject = function() {
+	PIXI.DisplayObject.call(this);
+	this.name = "";
+};
+$hxClasses["pixi.display.DisplayObject"] = pixi.display.DisplayObject;
+pixi.display.DisplayObject.__name__ = ["pixi","display","DisplayObject"];
+pixi.display.DisplayObject.__super__ = PIXI.DisplayObject;
+pixi.display.DisplayObject.prototype = $extend(PIXI.DisplayObject.prototype,{
+	__class__: pixi.display.DisplayObject
+});
+pixi.display.DisplayObjectContainer = function() {
+	PIXI.DisplayObjectContainer.call(this);
+};
+$hxClasses["pixi.display.DisplayObjectContainer"] = pixi.display.DisplayObjectContainer;
+pixi.display.DisplayObjectContainer.__name__ = ["pixi","display","DisplayObjectContainer"];
+pixi.display.DisplayObjectContainer.__super__ = PIXI.DisplayObjectContainer;
+pixi.display.DisplayObjectContainer.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+	getChildByName: function(name) {
+		var _g1 = 0;
+		var _g = this.children.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(this.children[i].name == name) return this.children[i];
+		}
+		return null;
+	}
+	,applyScale: function(pixelRatio) {
+		if(pixelRatio > 0) this.scale.set(1 / pixelRatio,1 / pixelRatio);
+	}
+	,__class__: pixi.display.DisplayObjectContainer
+});
 var hud = {};
-hud.IconHud = function(startX,startY,texture) {
-	var lCompleteClassName = Type.getClassName(Type.getClass(this));
-	var pos = lCompleteClassName.lastIndexOf(".") + 1;
-	this.texturePath = HxOverrides.substr(lCompleteClassName,pos,null);
-	this.texturePath = "assets/" + this.texturePath + ".png";
-	if(texture != null) this.texturePath = "assets/" + texture + ".png";
-	PIXI.Sprite.call(this,PIXI.Texture.fromImage(this.texturePath));
-	this.x = startX;
-	this.y = startY;
-	this.interactive = true;
-	this.buttonMode = true;
-	this.click = $bind(this,this.onClick);
-	this.mouseover = $bind(this,this.onMouseOver);
+hud.IconHud = function(startX,startY,texturePathNormal,texturePathActive,texturePathHover) {
+	this.hoverTexture = null;
+	this.activeTexture = null;
+	this.normalTexture = PIXI.Texture.fromImage(texturePathNormal);
+	if(texturePathActive != null) this.activeTexture = PIXI.Texture.fromImage(texturePathActive);
+	if(texturePathHover != null) this.hoverTexture = PIXI.Texture.fromImage(texturePathHover);
+	PIXI.Sprite.call(this,this.normalTexture);
+	this.anchor.set(0.5,0.5);
+	var _g1 = startX;
+	var _g = utils.system.DeviceCapabilities.get_width();
+	this.x = (function($this) {
+		var $r;
+		var $int = _g;
+		$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+		return $r;
+	}(this)) * _g1;
+	var _g3 = startY;
+	var _g2 = utils.system.DeviceCapabilities.get_height();
+	this.y = (function($this) {
+		var $r;
+		var int1 = _g2;
+		$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+		return $r;
+	}(this)) * _g3;
 };
 $hxClasses["hud.IconHud"] = hud.IconHud;
 hud.IconHud.__name__ = ["hud","IconHud"];
 hud.IconHud.__super__ = PIXI.Sprite;
 hud.IconHud.prototype = $extend(PIXI.Sprite.prototype,{
-	onClick: function(pData) {
-	}
-	,onMouseOver: function(pData) {
+	changeTexture: function(state) {
+		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "hover" && this.hoverTexture != null) this.setTexture(this.hoverTexture); else if(state == "normal") this.setTexture(this.normalTexture); else console.log("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state);
 	}
 	,__class__: hud.IconHud
 });
-hud.HudBuild = function(startX,startY,texture) {
-	hud.IconHud.call(this,startX,startY,texture);
+hud.HudBuild = function(startX,startY) {
+	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconBuildNormal.png","assets/HUD/HudIconBuildActive.png");
+	this.interactive = true;
+	this.buttonMode = true;
+	this.click = $bind(this,this.onClick);
+	this.mouseover = $bind(this,this.onMouseOver);
+	this.mouseout = $bind(this,this.onMouseOut);
 };
 $hxClasses["hud.HudBuild"] = hud.HudBuild;
 hud.HudBuild.__name__ = ["hud","HudBuild"];
 hud.HudBuild.__super__ = hud.IconHud;
 hud.HudBuild.prototype = $extend(hud.IconHud.prototype,{
+	onClick: function(pData) {
+		popin.PopinManager.getInstance().openPopin("PopinBuild",0.5,0.5);
+	}
+	,onMouseOver: function(pData) {
+		this.changeTexture("active");
+	}
+	,onMouseOut: function(pData) {
+		this.changeTexture("normal");
+	}
+	,__class__: hud.HudBuild
+});
+hud.HudInventory = function(startX,startY) {
+	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconInventoryNormal.png","assets/HUD/HudIconInventoryActive.png");
+	this.interactive = true;
+	this.buttonMode = true;
+	this.click = $bind(this,this.onClick);
+	this.mouseover = $bind(this,this.onMouseOver);
+	this.mouseout = $bind(this,this.onMouseOut);
+};
+$hxClasses["hud.HudInventory"] = hud.HudInventory;
+hud.HudInventory.__name__ = ["hud","HudInventory"];
+hud.HudInventory.__super__ = hud.IconHud;
+hud.HudInventory.prototype = $extend(hud.IconHud.prototype,{
 	onClick: function(pData) {
 		popin.PopinManager.getInstance().openPopin("PopinBuild",(function($this) {
 			var $r;
@@ -321,21 +432,29 @@ hud.HudBuild.prototype = $extend(hud.IconHud.prototype,{
 				return $r;
 			}($this)) / (function($this) {
 				var $r;
-				var int3 = 2;
-				$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
+				var int11 = 2;
+				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
 				return $r;
 			}($this));
 			return $r;
 		}(this)));
 	}
-	,__class__: hud.HudBuild
+	,onMouseOver: function(pData) {
+		this.changeTexture("active");
+	}
+	,onMouseOut: function(pData) {
+		this.changeTexture("normal");
+	}
+	,__class__: hud.HudInventory
 });
 hud.HudManager = function() {
 	this.childs = [];
-	PIXI.DisplayObjectContainer.call(this);
-	this.currentChild = new hud.HudBuild(50,50);
-	this.childs.push(this.currentChild);
-	this.addChild(this.currentChild);
+	pixi.display.DisplayObjectContainer.call(this);
+	this.newChild(new hud.HudBuild(0.95,0.95));
+	this.newChild(new hud.HudInventory(0.9,0.95));
+	this.newChild(new hud.HudShop(0.85,0.95));
+	this.newChild(new hud.HudQuests(0.80,0.95));
+	this.newChild(new hud.HudOptions(0.95,0.05));
 };
 $hxClasses["hud.HudManager"] = hud.HudManager;
 hud.HudManager.__name__ = ["hud","HudManager"];
@@ -343,8 +462,8 @@ hud.HudManager.getInstance = function() {
 	if(hud.HudManager.instance == null) hud.HudManager.instance = new hud.HudManager();
 	return hud.HudManager.instance;
 };
-hud.HudManager.__super__ = PIXI.DisplayObjectContainer;
-hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+hud.HudManager.__super__ = pixi.display.DisplayObjectContainer;
+hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	destroy: function() {
 		var _g1 = 0;
 		var _g = this.childs.length;
@@ -355,15 +474,167 @@ hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 		this.childs = [];
 		hud.HudManager.instance = null;
 	}
+	,newChild: function(child) {
+		this.childs.push(child);
+		this.addChild(child);
+	}
 	,__class__: hud.HudManager
+});
+hud.HudOptions = function(startX,startY) {
+	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconOptionNormal.png","assets/HUD/HudIconOptionActive.png");
+	this.interactive = true;
+	this.buttonMode = true;
+	this.click = $bind(this,this.onClick);
+	this.mouseover = $bind(this,this.onMouseOver);
+	this.mouseout = $bind(this,this.onMouseOut);
+};
+$hxClasses["hud.HudOptions"] = hud.HudOptions;
+hud.HudOptions.__name__ = ["hud","HudOptions"];
+hud.HudOptions.__super__ = hud.IconHud;
+hud.HudOptions.prototype = $extend(hud.IconHud.prototype,{
+	onClick: function(pData) {
+		popin.PopinManager.getInstance().openPopin("PopinBuild",(function($this) {
+			var $r;
+			var a = utils.system.DeviceCapabilities.get_width();
+			$r = (function($this) {
+				var $r;
+				var $int = a;
+				$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+				return $r;
+			}($this)) / (function($this) {
+				var $r;
+				var int1 = 2;
+				$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+				return $r;
+			}($this));
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var a1 = utils.system.DeviceCapabilities.get_height();
+			$r = (function($this) {
+				var $r;
+				var int2 = a1;
+				$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
+				return $r;
+			}($this)) / (function($this) {
+				var $r;
+				var int11 = 2;
+				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
+				return $r;
+			}($this));
+			return $r;
+		}(this)));
+	}
+	,onMouseOver: function(pData) {
+		this.changeTexture("active");
+	}
+	,onMouseOut: function(pData) {
+		this.changeTexture("normal");
+	}
+	,__class__: hud.HudOptions
+});
+hud.HudQuests = function(startX,startY) {
+	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconQuestNormal.png");
+	this.interactive = true;
+	this.buttonMode = true;
+	this.click = $bind(this,this.onClick);
+};
+$hxClasses["hud.HudQuests"] = hud.HudQuests;
+hud.HudQuests.__name__ = ["hud","HudQuests"];
+hud.HudQuests.__super__ = hud.IconHud;
+hud.HudQuests.prototype = $extend(hud.IconHud.prototype,{
+	onClick: function(pData) {
+		popin.PopinManager.getInstance().openPopin("PopinBuild",(function($this) {
+			var $r;
+			var a = utils.system.DeviceCapabilities.get_width();
+			$r = (function($this) {
+				var $r;
+				var $int = a;
+				$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+				return $r;
+			}($this)) / (function($this) {
+				var $r;
+				var int1 = 2;
+				$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+				return $r;
+			}($this));
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var a1 = utils.system.DeviceCapabilities.get_height();
+			$r = (function($this) {
+				var $r;
+				var int2 = a1;
+				$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
+				return $r;
+			}($this)) / (function($this) {
+				var $r;
+				var int11 = 2;
+				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
+				return $r;
+			}($this));
+			return $r;
+		}(this)));
+	}
+	,__class__: hud.HudQuests
+});
+hud.HudShop = function(startX,startY) {
+	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconShopNormal.png","assets/HUD/HudIconShopActive.png");
+	this.interactive = true;
+	this.buttonMode = true;
+	this.click = $bind(this,this.onClick);
+	this.mouseover = $bind(this,this.onMouseOver);
+	this.mouseout = $bind(this,this.onMouseOut);
+};
+$hxClasses["hud.HudShop"] = hud.HudShop;
+hud.HudShop.__name__ = ["hud","HudShop"];
+hud.HudShop.__super__ = hud.IconHud;
+hud.HudShop.prototype = $extend(hud.IconHud.prototype,{
+	onClick: function(pData) {
+		popin.PopinManager.getInstance().openPopin("PopinBuild",(function($this) {
+			var $r;
+			var a = utils.system.DeviceCapabilities.get_width();
+			$r = (function($this) {
+				var $r;
+				var $int = a;
+				$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+				return $r;
+			}($this)) / (function($this) {
+				var $r;
+				var int1 = 2;
+				$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+				return $r;
+			}($this));
+			return $r;
+		}(this)),(function($this) {
+			var $r;
+			var a1 = utils.system.DeviceCapabilities.get_height();
+			$r = (function($this) {
+				var $r;
+				var int2 = a1;
+				$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
+				return $r;
+			}($this)) / (function($this) {
+				var $r;
+				var int11 = 2;
+				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
+				return $r;
+			}($this));
+			return $r;
+		}(this)));
+	}
+	,onMouseOver: function(pData) {
+		this.changeTexture("active");
+	}
+	,onMouseOut: function(pData) {
+		this.changeTexture("normal");
+	}
+	,__class__: hud.HudShop
 });
 var js = {};
 js.Boot = function() { };
 $hxClasses["js.Boot"] = js.Boot;
 js.Boot.__name__ = ["js","Boot"];
-js.Boot.getClass = function(o) {
-	if((o instanceof Array) && o.__enum__ == null) return Array; else return o.__class__;
-};
 js.Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -431,52 +702,6 @@ js.Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-js.Boot.__interfLoop = function(cc,cl) {
-	if(cc == null) return false;
-	if(cc == cl) return true;
-	var intf = cc.__interfaces__;
-	if(intf != null) {
-		var _g1 = 0;
-		var _g = intf.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var i1 = intf[i];
-			if(i1 == cl || js.Boot.__interfLoop(i1,cl)) return true;
-		}
-	}
-	return js.Boot.__interfLoop(cc.__super__,cl);
-};
-js.Boot.__instanceof = function(o,cl) {
-	if(cl == null) return false;
-	switch(cl) {
-	case Int:
-		return (o|0) === o;
-	case Float:
-		return typeof(o) == "number";
-	case Bool:
-		return typeof(o) == "boolean";
-	case String:
-		return typeof(o) == "string";
-	case Array:
-		return (o instanceof Array) && o.__enum__ == null;
-	case Dynamic:
-		return true;
-	default:
-		if(o != null) {
-			if(typeof(cl) == "function") {
-				if(o instanceof cl) return true;
-				if(js.Boot.__interfLoop(js.Boot.getClass(o),cl)) return true;
-			}
-		} else return false;
-		if(cl == Class && o.__name__ != null) return true;
-		if(cl == Enum && o.__ename__ != null) return true;
-		return o.__enum__ == cl;
-	}
-};
-js.Boot.__cast = function(o,t) {
-	if(js.Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
-};
-var pixi = {};
 pixi.DomDefinitions = function() { };
 $hxClasses["pixi.DomDefinitions"] = pixi.DomDefinitions;
 pixi.DomDefinitions.__name__ = ["pixi","DomDefinitions"];
@@ -489,10 +714,10 @@ pixi.renderers.IRenderer.prototype = {
 };
 var popin = {};
 popin.IconPopin = function(pX,pY,pTexturePath,pName,isInteractive) {
-	PIXI.Sprite.call(this,PIXI.Texture.fromImage("assets/" + pTexturePath + ".png"));
+	PIXI.Sprite.call(this,PIXI.Texture.fromImage(pTexturePath));
 	this.x = pX;
 	this.y = pY;
-	this.name = pName;
+	this._name = pName;
 	this.interactive = isInteractive;
 	this.buttonMode = isInteractive;
 };
@@ -502,20 +727,52 @@ popin.IconPopin.__super__ = PIXI.Sprite;
 popin.IconPopin.prototype = $extend(PIXI.Sprite.prototype,{
 	__class__: popin.IconPopin
 });
-popin.MyPopin = function(startX,startY,textureName,isModal) {
+popin.MyPopin = function(startX,startY,texturePath,isModal) {
 	if(isModal == null) isModal = true;
 	if(startY == null) startY = 0;
 	if(startX == null) startX = 0;
 	this.childs = new haxe.ds.StringMap();
-	PIXI.DisplayObjectContainer.call(this);
-	this.x = startX;
-	this.y = startY;
+	pixi.display.DisplayObjectContainer.call(this);
+	var _g1 = startX;
+	var _g = utils.system.DeviceCapabilities.get_width();
+	this.x = (function($this) {
+		var $r;
+		var $int = _g;
+		$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+		return $r;
+	}(this)) * _g1;
+	var _g3 = startY;
+	var _g2 = utils.system.DeviceCapabilities.get_height();
+	this.y = (function($this) {
+		var $r;
+		var int1 = _g2;
+		$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+		return $r;
+	}(this)) * _g3;
 	if(isModal) {
 		this.modalZone = new PIXI.Sprite(PIXI.Texture.fromImage("assets/alpha_bg.png"));
-		this.modalZone.x = -startX;
-		this.modalZone.y = -startY;
-		this.modalZone.width = 2500;
-		this.modalZone.height = 2500;
+		var _g5 = -startX;
+		var _g4 = utils.system.DeviceCapabilities.get_width();
+		this.modalZone.x = (function($this) {
+			var $r;
+			var int2 = _g4;
+			$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
+			return $r;
+		}(this)) * _g5;
+		var _g7 = -startY;
+		var _g6 = utils.system.DeviceCapabilities.get_height();
+		this.modalZone.y = (function($this) {
+			var $r;
+			var int3 = _g6;
+			$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
+			return $r;
+		}(this)) * _g7;
+		var this1 = utils.system.DeviceCapabilities.get_width();
+		var int4 = this1;
+		if(int4 < 0) this.modalZone.width = 4294967296.0 + int4; else this.modalZone.width = int4 + 0.0;
+		var this2 = utils.system.DeviceCapabilities.get_height();
+		var int5 = this2;
+		if(int5 < 0) this.modalZone.height = 4294967296.0 + int5; else this.modalZone.height = int5 + 0.0;
 		this.modalZone.interactive = true;
 		this.modalZone.click = $bind(this,this.stopClickEventPropagation);
 		var v = this.modalZone;
@@ -523,14 +780,7 @@ popin.MyPopin = function(startX,startY,textureName,isModal) {
 		v;
 		this.addChild(this.modalZone);
 	}
-	if(textureName == null) {
-		var lCompleteClassName = Type.getClassName(Type.getClass(this));
-		var lClassName;
-		var pos = lCompleteClassName.lastIndexOf(".") + 1;
-		lClassName = HxOverrides.substr(lCompleteClassName,pos,null);
-		textureName = lClassName;
-	}
-	this.background = new PIXI.Sprite(PIXI.Texture.fromImage("assets/" + textureName + ".png"));
+	this.background = new PIXI.Sprite(PIXI.Texture.fromImage(texturePath));
 	this.background.anchor.set(0.5,0.5);
 	var v1 = this.background;
 	this.childs.set("background",v1);
@@ -539,21 +789,38 @@ popin.MyPopin = function(startX,startY,textureName,isModal) {
 };
 $hxClasses["popin.MyPopin"] = popin.MyPopin;
 popin.MyPopin.__name__ = ["popin","MyPopin"];
-popin.MyPopin.getInstance = function(startX,startY,textureName) {
-	if(popin.MyPopin.instance == null) popin.MyPopin.instance = new popin.MyPopin(startX,startY,textureName);
-	return popin.MyPopin.instance;
-};
-popin.MyPopin.__super__ = PIXI.DisplayObjectContainer;
-popin.MyPopin.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
-	addIcon: function(x,y,textureName,name,isInteractive) {
+popin.MyPopin.__super__ = pixi.display.DisplayObjectContainer;
+popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+	addIcon: function(x,y,texturePath,name,isInteractive) {
 		if(isInteractive == null) isInteractive = true;
-		if(name == null) name = textureName;
-		this.currentChild = new popin.IconPopin(x,y,textureName,name,isInteractive);
+		this.currentChild = new popin.IconPopin(x * this.background.width - this.background.width / 2,y * this.background.height - this.background.height / 2,texturePath,name,isInteractive);
 		if(isInteractive) this.currentChild.click = $bind(this,this.childClick);
 		var v = this.currentChild;
 		this.childs.set(name,v);
 		v;
 		this.addChild(this.currentChild);
+	}
+	,addText: function(x,y,font,fontSize,txt,name,pAlign) {
+		if(pAlign == null) pAlign = "center";
+		var style = { font : fontSize + " " + font, align : pAlign};
+		var tempText = new PIXI.BitmapText(txt,style);
+		var _g1 = x;
+		var _g = utils.system.DeviceCapabilities.get_width();
+		tempText.position.x = (function($this) {
+			var $r;
+			var $int = _g;
+			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+			return $r;
+		}(this)) * _g1;
+		var _g3 = y;
+		var _g2 = utils.system.DeviceCapabilities.get_height();
+		tempText.position.y = (function($this) {
+			var $r;
+			var int1 = _g2;
+			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+			return $r;
+		}(this)) * _g3;
+		this.addChild(tempText);
 	}
 	,childClick: function(pEvent) {
 	}
@@ -563,26 +830,33 @@ popin.MyPopin.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	}
 	,__class__: popin.MyPopin
 });
-popin.PopinBuild = function(startX,startY,texture) {
-	popin.MyPopin.call(this,startX,startY,texture);
-	this.addIcon(0,0,"closeButton","closeButton");
+popin.PopinBuild = function(startX,startY) {
+	popin.MyPopin.call(this,startX,startY,"assets/Popins/PopInBackground.png");
+	this.addIcon(-0.15,-0.15,"assets/Popins/PopInHeaderConstruction.png","header",false);
+	this.addIcon(0.65,0.05,"assets/Popins/PopInTitleNiches.png","category",false);
+	this.addIcon(0.10,0.15,"assets/Popins/PopInScrollBackground.png","contentBackground",false);
+	this.addIcon(0.125,0.175,"assets/Popins/PopInBuiltBgArticle.png","articleBase",false);
+	this.addIcon(0.14,0.1875,"assets/Popins/PopInBuiltArticlePreview.png","ArticlePreview",false);
+	this.addIcon(0.3,0.275,"assets/Popins/PopInBuiltArticleBgRessources.png","ArticleRessourcesBack",false);
+	this.addIcon(0.305,0.28,"assets/Popins/PopInBuiltArticleSoftRessource.png","SoftRessource1",false);
+	this.addIcon(0.755,0.28,"assets/Popins/PopInBuiltArticleHardRessource.png","HardRessource",false);
+	this.addIcon(0.695,0.2875,"assets/Popins/PopInBuiltSoftNormal.png","ArticleBgRessources",false);
+	this.addIcon(0.82,0.2875,"assets/Popins/PopInBuiltHardNormal.png","ArticleBgRessources",false);
+	this.addIcon(0.95,0,"assets/Popins/HudInventoryCloseButtonNormal.png","closeButton");
+	this.addIcon(0.10,0.15,"assets/Popins/PopInScrollOverlay.png","contentBackground",false);
 };
 $hxClasses["popin.PopinBuild"] = popin.PopinBuild;
 popin.PopinBuild.__name__ = ["popin","PopinBuild"];
-popin.PopinBuild.getInstance = function(startX,startY,texture) {
-	if(popin.PopinBuild.instance == null) popin.PopinBuild.instance = new popin.PopinBuild(startX,startY,texture);
-	return popin.PopinBuild.instance;
-};
 popin.PopinBuild.__super__ = popin.MyPopin;
 popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 	childClick: function(pEvent) {
-		if(pEvent.target.name == "closeButton") popin.PopinManager.getInstance().closePopin("PopinBuild");
+		if(pEvent.target._name == "closeButton") popin.PopinManager.getInstance().closePopin("PopinBuild");
 	}
 	,__class__: popin.PopinBuild
 });
 popin.PopinManager = function() {
 	this.childs = new haxe.ds.StringMap();
-	PIXI.DisplayObjectContainer.call(this);
+	pixi.display.DisplayObjectContainer.call(this);
 };
 $hxClasses["popin.PopinManager"] = popin.PopinManager;
 popin.PopinManager.__name__ = ["popin","PopinManager"];
@@ -590,8 +864,8 @@ popin.PopinManager.getInstance = function() {
 	if(popin.PopinManager.instance == null) popin.PopinManager.instance = new popin.PopinManager();
 	return popin.PopinManager.instance;
 };
-popin.PopinManager.__super__ = PIXI.DisplayObjectContainer;
-popin.PopinManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+popin.PopinManager.__super__ = pixi.display.DisplayObjectContainer;
+popin.PopinManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	openPopin: function(popinName,pX,pY) {
 		var v = Type.createInstance(Type.resolveClass("popin." + popinName),[pX,pY]);
 		this.childs.set(popinName,v);
@@ -612,14 +886,14 @@ popin.PopinManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	}
 	,destroy: function() {
 		this.closeAllPopin();
-		Main.getInstance().getStage().removeChild(this);
+		Main.getStage().removeChild(this);
 		popin.PopinManager.instance = null;
 	}
 	,__class__: popin.PopinManager
 });
 var scenes = {};
 scenes.GameScene = function() {
-	PIXI.DisplayObjectContainer.call(this);
+	pixi.display.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	var background = new PIXI.Sprite(PIXI.Texture.fromImage("assets/game.png"));
@@ -649,8 +923,8 @@ scenes.GameScene = function() {
 			return $r;
 		}($this)) / (function($this) {
 			var $r;
-			var int3 = 2;
-			$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
+			var int11 = 2;
+			$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
 			return $r;
 		}($this));
 		return $r;
@@ -659,7 +933,7 @@ scenes.GameScene = function() {
 	this.addChild(hud.HudManager.getInstance());
 	this.addChild(popin.PopinManager.getInstance());
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this.doAction));
-	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this.resize));
+	Main.getInstance().addEventListener("Event.RESIZE",$bind(this,this.resize));
 };
 $hxClasses["scenes.GameScene"] = scenes.GameScene;
 scenes.GameScene.__name__ = ["scenes","GameScene"];
@@ -667,16 +941,17 @@ scenes.GameScene.getInstance = function() {
 	if(scenes.GameScene.instance == null) scenes.GameScene.instance = new scenes.GameScene();
 	return scenes.GameScene.instance;
 };
-scenes.GameScene.__super__ = PIXI.DisplayObjectContainer;
-scenes.GameScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+scenes.GameScene.__super__ = pixi.display.DisplayObjectContainer;
+scenes.GameScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	doAction: function() {
 	}
 	,resize: function() {
+		console.log(this);
 	}
 	,__class__: scenes.GameScene
 });
 scenes.LoaderScene = function() {
-	PIXI.DisplayObjectContainer.call(this);
+	pixi.display.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	var img = new PIXI.Sprite(PIXI.Texture.fromImage("assets/LoaderScene.png"));
@@ -713,8 +988,8 @@ scenes.LoaderScene.getInstance = function() {
 	if(scenes.LoaderScene.instance == null) scenes.LoaderScene.instance = new scenes.LoaderScene();
 	return scenes.LoaderScene.instance;
 };
-scenes.LoaderScene.__super__ = PIXI.DisplayObjectContainer;
-scenes.LoaderScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+scenes.LoaderScene.__super__ = pixi.display.DisplayObjectContainer;
+scenes.LoaderScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	__class__: scenes.LoaderScene
 });
 scenes.ScenesManager = function() {
@@ -727,9 +1002,9 @@ scenes.ScenesManager.getInstance = function() {
 };
 scenes.ScenesManager.prototype = {
 	loadScene: function(sceneName) {
-		if(this.isThereAScene) Main.getInstance().getStage().removeChild(this.currentScene);
+		if(this.isThereAScene) Main.getStage().removeChild(this.currentScene);
 		this.currentScene = Type.createInstance(Type.resolveClass("scenes." + sceneName),[]);
-		Main.getInstance().getStage().addChild(this.currentScene);
+		Main.getStage().addChild(this.currentScene);
 		this.isThereAScene = true;
 	}
 	,__class__: scenes.ScenesManager
@@ -784,8 +1059,8 @@ sprites.Ambulance.prototype = $extend(PIXI.MovieClip.prototype,{
 				return $r;
 			}($this)) / (function($this) {
 				var $r;
-				var int3 = 2;
-				$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
+				var int11 = 2;
+				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
 				return $r;
 			}($this));
 			return $r;
@@ -834,16 +1109,8 @@ String.prototype.__class__ = $hxClasses.String = String;
 String.__name__ = ["String"];
 $hxClasses.Array = Array;
 Array.__name__ = ["Array"];
-var Int = $hxClasses.Int = { __name__ : ["Int"]};
-var Dynamic = $hxClasses.Dynamic = { __name__ : ["Dynamic"]};
-var Float = $hxClasses.Float = Number;
-Float.__name__ = ["Float"];
-var Bool = Boolean;
-Bool.__ename__ = ["Bool"];
-var Class = $hxClasses.Class = { __name__ : ["Class"]};
-var Enum = { };
 GameInfo.preloadAssets = ["assets/preload.png","assets/preload_bg.png","assets/LoaderScene.png"];
-GameInfo.loadAsstes = ["assets/TitleCard.png","assets/HudBuild.png","assets/Screen0.png","assets/Screen1.png","assets/Popin0.png","assets/Popin1.png","assets/PopinOkCancel.png","assets/alpha_bg.png","assets/black_bg.png","assets/game.png","assets/Hud_TL.png","assets/Hud_TR.png","assets/Hud_B.png","assets/closeButton.png","assets/ambulance.json"];
+GameInfo.loadAssets = ["assets/HUD/HudIconBuildActive.png","assets/HUD/HudIconBuildNormal.png","assets/HUD/HudIconInventoryActive.png","assets/HUD/HudIconInventoryNormal.png","assets/HUD/HudIconOptionActive.png","assets/HUD/HudIconOptionNormal.png","assets/HUD/HudIconQuestNormal.png","assets/HUD/HudIconShopActive.png","assets/HUD/HudIconShopNormal.png","assets/HUD/HudIconStockActive.png","assets/HUD/HudIconStockNormal.png","assets/HudBuild.png","assets/Hud_B.png","assets/Hud_TL.png","assets/Hud_TR.png","assets/LoaderScene.png","assets/Popin0.png","assets/Popin1.png","assets/PopinBuild.png","assets/PopinOkCancel.png","assets/Popins/HudIconRessource1.png","assets/Popins/HudIconRessource2.png","assets/Popins/HudIconRessource3.png","assets/Popins/HudIconRessource4.png","assets/Popins/HudIconRessource5.png","assets/Popins/HudIconRessource6.png","assets/Popins/HudInventoryCloseButtonActive.png","assets/Popins/HudInventoryCloseButtonNormal.png","assets/Popins/HudInventoryScrollingBar.png","assets/Popins/HudInventoryScrollingTruc.png","assets/Popins/HudInventoryTitle.png","assets/Popins/PopInBackground.png","assets/Popins/PopInBuiltArticleBgRessources.png","assets/Popins/PopInBuiltArticleEmptyRessource.png","assets/Popins/PopInBuiltBgArticle.png","assets/Popins/PopInBuiltHardActive.png","assets/Popins/PopInBuiltHardNormal.png","assets/Popins/PopInBuiltSoftActive.png","assets/Popins/PopInBuiltSoftNormal.png","assets/Popins/PopInHeaderConstruction.png","assets/Popins/PopInHeaderEglise.png","assets/Popins/PopInOngletButtonActive.png","assets/Popins/PopInOngletButtonNormal.png","assets/Popins/PopInScrollBackground.png","assets/Popins/PopInScrollOverlay.png","assets/Popins/PopInTitleFusees.png","assets/Popins/PopInTitleNiches.png","assets/Popins/PopInTitleUtilitaires.png","assets/Popins/PopInBuiltArticleSoftRessource.png","assets/Popins/PopInBuiltArticleHardRessource.png","assets/Popins/PopInBuiltArticlePreview.png","assets/Screen0.png","assets/Screen1.png","assets/TitleCard.png","assets/alpha_bg.png","assets/ambulance.png","assets/black_bg.png","assets/closeButton.png","assets/game.png","assets/preload.png","assets/preload_bg.png"];
 GameInfo.userWidth = 1920;
 GameInfo.userHeight = 1000;
 Main.CONFIG_PATH = "config.json";

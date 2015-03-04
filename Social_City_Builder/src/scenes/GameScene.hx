@@ -38,14 +38,14 @@ class GameScene extends DisplayObjectContainer
 		addChild(PopinManager.getInstance());
 
 		Main.getInstance().addEventListener(Event.GAME_LOOP, doAction);
-		Main.getInstance().addEventListener(Event.GAME_LOOP, resize);
+		Main.getInstance().addEventListener(Event.RESIZE, resize);
 	}
 
 	public function doAction (): Void {
 
 	}
 	public function resize ():Void {
-		/*scale.x = DeviceCapabilities.width / GameInfo.userWidth;
-		scale.y = DeviceCapabilities.height / GameInfo.userHeight;*/
+		trace(this);
+		/*scale.x = scale.y = DeviceCapabilities.width < DeviceCapabilities.height ? DeviceCapabilities.width / GameInfo.userWidth:DeviceCapabilities.height / GameInfo.userHeight;*/
 	}
 }

@@ -23,10 +23,10 @@ class ScenesManager
 
 	public function loadScene (sceneName:String){
 		if(isThereAScene){
-			Main.getInstance().getStage().removeChild(currentScene);
+			Main.getStage().removeChild(currentScene);
 		}
 		currentScene = Type.createInstance( Type.resolveClass("scenes."+sceneName), [] );
-		Main.getInstance().getStage().addChild(currentScene);
+		Main.getStage().addChild(currentScene);
 		isThereAScene = true;
 	}
 	

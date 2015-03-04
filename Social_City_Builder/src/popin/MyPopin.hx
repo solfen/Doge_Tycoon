@@ -5,70 +5,64 @@ import pixi.display.DisplayObjectContainer;
 import pixi.InteractionData;
 import pixi.textures.Texture;
 import pixi.display.Sprite;
+import utils.system.DeviceCapabilities;
+import pixi.text.BitmapText;
 
 //Base PopIn class, all popIn will inherit from this
 // it's a DisplayObjectContainer, has a base x & y, clickEvent and a destroy method that destroy the popin (and its icons)
 class MyPopin extends DisplayObjectContainer
 {
-	private static var instance: MyPopin;
 	private var background:Sprite;
 	private var modalZone:Sprite;
 	private var childs:Map<String, Sprite> = new Map();
 	private var currentChild:Sprite;
-	private var texturePath:String;
 	
-	public static function getInstance (?startX:Float,?startY:Float, ?textureName:String): MyPopin {
-		if (instance == null) {
-			instance = new MyPopin(startX,startY, textureName);
-		}
-		return instance;
-	}
-
-	public function new(?startX:Float=0,?startY:Float=0, ?textureName:String, ?isModal:Bool=true) 
+	public function new(startX:Float=0,startY:Float=0, texturePath:String, ?isModal:Bool=true) 
 	{
 		super();
-		x=startX;
-		y=startY;
+		// *width so that it's in % of screen
+		x=startX*DeviceCapabilities.width;
+		y=startY*DeviceCapabilities.height;
 
 		if(isModal){
 			modalZone = new Sprite(Texture.fromImage("assets/alpha_bg.png"));
-			modalZone.x=-startX;
-			modalZone.y=-startY;
-			modalZone.width = 2500;
-			modalZone.height = 2500;
-			modalZone.interactive = true; // see if elements behind popin have their event fired when interactive = false;
+			modalZone.x= -startX*DeviceCapabilities.width;
+			modalZone.y= -startY*DeviceCapabilities.height;
+			modalZone.width = DeviceCapabilities.width;
+			modalZone.height = DeviceCapabilities.height;
+			modalZone.interactive = true; // if false, things behind are clickable
 			modalZone.click = stopClickEventPropagation;
 			childs["modal"] = modalZone;
 			addChild(modalZone);
 		}
 
-		//if we dont have a textureName then we take it from the class name
-		if(textureName == null){
-			var lCompleteClassName : String = Type.getClassName(Type.getClass(this));
-			var lClassName: String = lCompleteClassName.substr(lCompleteClassName.lastIndexOf(".") + 1);
-			textureName = lClassName;
-		}
-		background = new Sprite(Texture.fromImage("assets/"+textureName+".png"));
+		//if we dont have a texturePath then we take it from the class name
+
+		background = new Sprite(Texture.fromImage(texturePath));
 		background.anchor.set(0.5, 0.5);
 		childs["background"] = background;
 		addChild(background);
 	}
 
 	// creates an IconPopin and puts it in the childs array
-	private function addIcon(x:Float,y:Float, textureName:String, ?name:String, ?isInteractive:Bool=true){
-		if(name == null){
-			name = textureName;
-		}
-		currentChild = new IconPopin(x,y,textureName,name,isInteractive);
+	private function addIcon(x:Float,y:Float, texturePath:String, name:String, ?isInteractive:Bool=true){
+		currentChild = new IconPopin(x*background.width-background.width/2,y*background.height-background.height/2,texturePath,name,isInteractive);
 		if(isInteractive){
 			currentChild.click = childClick;
 		}
 		childs[name] = currentChild;
 		addChild(currentChild);
 	}
-
+	function addText(x:Float,y:Float,font:String,fontSize:String,txt:String,name:String,?pAlign:String="center"){
+		//new BitmapText( text : String , style : pixi.text.BitmapTextStyle )
+		var style:BitmapTextStyle = {font:fontSize+" "+font,align:pAlign};
+		var tempText = new BitmapText(txt, style);
+		tempText.position.x = x*DeviceCapabilities.width; //- bitmapFontText.width - 20;
+		tempText.position.y = y*DeviceCapabilities.height; //20;
+		addChild(tempText);
+	}
 	//empty function so that the interactive Icons are automaticly binded to this function
-	//the popin will inherit from this class and then can overide this function to configure the child click action
+	//the popin will inherit from this class and then can overide this function to configure the childs click action
 	private function childClick(pEvent:InteractionData){
 
 	}

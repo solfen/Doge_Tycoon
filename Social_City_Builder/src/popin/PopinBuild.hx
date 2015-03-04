@@ -7,18 +7,24 @@ import pixi.InteractionData;
 //PopinBuild inherit form MyPopin who is the base class of all popin
 //Basicly any Popin is just a configuration of Mypopin
 class PopinBuild extends MyPopin
-{
-	private static var instance: PopinBuild;
-
-	public static function getInstance (?startX:Float,?startY:Float, ?texture:String): PopinBuild {
-		if (instance == null) instance = new PopinBuild(startX,startY, texture);
-		return instance;
-	}
-	
-	private function new(?startX:Float,?startY:Float, ?texture:String) 
+{	
+	private function new(?startX:Float,?startY:Float) 
 	{
-		super(startX,startY, texture);
-		addIcon(0,0,"closeButton","closeButton");
+		super(startX,startY, "assets/Popins/PopInBackground.png");
+		
+		addIcon(-0.15,-0.15,'assets/Popins/PopInHeaderConstruction.png',"header",false);
+		addIcon(0.65,0.05,'assets/Popins/PopInTitleNiches.png',"category",false);
+		addIcon(0.10,0.15,'assets/Popins/PopInScrollBackground.png',"contentBackground",false);
+		addIcon(0.125,0.175,'assets/Popins/PopInBuiltBgArticle.png',"articleBase",false);
+		addIcon(0.14,0.1875,'assets/Popins/PopInBuiltArticlePreview.png',"ArticlePreview",false);
+		addIcon(0.3,0.275,'assets/Popins/PopInBuiltArticleBgRessources.png',"ArticleRessourcesBack",false);
+		addIcon(0.305,0.28,'assets/Popins/PopInBuiltArticleSoftRessource.png',"SoftRessource1",false);
+		addIcon(0.755,0.28,'assets/Popins/PopInBuiltArticleHardRessource.png',"HardRessource",false);
+		addIcon(0.695,0.2875,'assets/Popins/PopInBuiltSoftNormal.png',"ArticleBgRessources",false);
+		addIcon(0.82,0.2875,'assets/Popins/PopInBuiltHardNormal.png',"ArticleBgRessources",false);
+		addIcon(0.95,0,'assets/Popins/HudInventoryCloseButtonNormal.png',"closeButton");
+		addIcon(0.10,0.15,'assets/Popins/PopInScrollOverlay.png',"contentBackground",false);
+		//addText(0 , 0 , "Futura_STD" , "35px" , "test" , "testString" );
 	}
 
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)

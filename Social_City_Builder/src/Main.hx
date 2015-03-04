@@ -10,6 +10,8 @@ import pixi.display.Stage;
 import pixi.loaders.AssetLoader;
 import pixi.renderers.webgl.WebGLRenderer;
 import pixi.utils.Detector;
+import externs.FB;
+import haxe.Timer;
 
 /**
  * Classe d'initialisation et lancement du jeu
@@ -26,7 +28,7 @@ class Main extends EventDispatcher
 	private static var stats: Dynamic;
 	private static var instance: Main;
 	public var renderer:WebGLRenderer;
-	private var stage:Stage;
+	private static var stage:Stage;
 	
 
 	private static function main ():Void {
@@ -43,7 +45,7 @@ class Main extends EventDispatcher
 	}
 
 	//return the stage. The stage is the container where we add all our graphics and containers
-	public function getStage() : Stage {
+	public static function getStage() : Stage {
 		return stage;
 	}
 
@@ -62,7 +64,7 @@ class Main extends EventDispatcher
 		stats.domElement.style.top = "0px";
 		gameLoop(0);
 		Browser.window.addEventListener("resize", resize);
-		preloadAssets();
+		Timer.delay(preloadAssets,10);
 	}
 	
 	/**
@@ -81,7 +83,7 @@ class Main extends EventDispatcher
 		pEvent.target.removeEventListener("onComplete", loadAssets);
 		ScenesManager.getInstance().loadScene("LoaderScene");
 		
-		var lLoader:AssetLoader = new AssetLoader(GameInfo.preloadAssets);
+		var lLoader:AssetLoader = new AssetLoader(GameInfo.loadAssets);
 		lLoader.addEventListener("onProgress", onLoadProgress);
 		lLoader.addEventListener("onComplete", onLoadComplete);
 		lLoader.load();
@@ -96,6 +98,20 @@ class Main extends EventDispatcher
 		pEvent.target.removeEventListener("onProgress", onLoadProgress);
 		pEvent.target.removeEventListener("onComplete", onLoadComplete);
 		ScenesManager.getInstance().loadScene("GameScene");
+		//FB.getLoginStatus(onFacebookConnect);
+	}
+	private function onFacebookConnect(pResponse:Dynamic){
+		trace(pResponse.status);
+		if(pResponse.status == 'connected'){
+			trace("awww yeah ! you're in !");
+			FB.ui({method: 'share',href: 'https://developers.facebook.com/docs'},test);
+		}
+		else if(pResponse.status == 'not_authorized'){
+			trace("Oh no ! you're not identified");
+		}
+	}
+	private function test(){
+		trace("succes");
 	}
 	
 	/**

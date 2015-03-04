@@ -10,7 +10,7 @@ class IconPopin extends Sprite
 	private var _name:String;
 	public function new(pX:Float,pY:Float, pTexturePath:String,pName:String,isInteractive:Bool) 
 	{
-		super(Texture.fromImage("assets/"+pTexturePath+".png"));
+		super(Texture.fromImage(pTexturePath));	
 		x = pX;
 		y = pY;
 		_name = pName;
