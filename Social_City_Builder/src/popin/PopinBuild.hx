@@ -2,29 +2,45 @@ package popin;
 import popin.MyPopin;
 import popin.PopinManager;
 import pixi.InteractionData;
+import pixi.textures.Texture;
 
 //PopinBuild is lauched on HudBuild click (and ambulance click right now)
 //PopinBuild inherit form MyPopin who is the base class of all popin
 //Basicly any Popin is just a configuration of Mypopin
 class PopinBuild extends MyPopin
 {	
+	private var articleHeight:Float = Texture.fromImage("assets/UI/PopInBuilt/PopInBuiltBgArticle.png").height;
+	private var articleInterline:Float = 0.03;
+	private var hasVerticalScrollBar:Bool = false;
 	private function new(?startX:Float,?startY:Float) 
 	{
-		super(startX,startY, "assets/Popins/PopInBackground.png");
-		
-		addIcon(-0.15,-0.15,'assets/Popins/PopInHeaderConstruction.png',"header",false);
-		addIcon(0.65,0.05,'assets/Popins/PopInTitleNiches.png',"category",false);
-		addIcon(0.10,0.15,'assets/Popins/PopInScrollBackground.png',"contentBackground",false);
-		addIcon(0.125,0.175,'assets/Popins/PopInBuiltBgArticle.png',"articleBase",false);
-		addIcon(0.14,0.1875,'assets/Popins/PopInBuiltArticlePreview.png',"ArticlePreview",false);
-		addIcon(0.3,0.275,'assets/Popins/PopInBuiltArticleBgRessources.png',"ArticleRessourcesBack",false);
-		addIcon(0.305,0.28,'assets/Popins/PopInBuiltArticleSoftRessource.png',"SoftRessource1",false);
-		addIcon(0.755,0.28,'assets/Popins/PopInBuiltArticleHardRessource.png',"HardRessource",false);
-		addIcon(0.695,0.2875,'assets/Popins/PopInBuiltSoftNormal.png',"ArticleBgRessources",false);
-		addIcon(0.82,0.2875,'assets/Popins/PopInBuiltHardNormal.png',"ArticleBgRessources",false);
-		addIcon(0.95,0,'assets/Popins/HudInventoryCloseButtonNormal.png',"closeButton");
-		addIcon(0.10,0.15,'assets/Popins/PopInScrollOverlay.png',"contentBackground",false);
-		//addText(0 , 0 , "Futura_STD" , "35px" , "test" , "testString" );
+		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
+		articleHeight /= background.height; // background is defiened in MyPopin
+		addIcon(0.95, 0,'assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png',"closeButton",this,true);
+		addIcon(-0.15,-0.15,'assets/UI/PopInBuilt/PopInTitleConstruction.png',"popInTitle",this,false);
+		addIcon(0.65,0.05,'assets/UI/PopInBuilt/PopInHeaderNiches.png',"categoryHeader",this,false);
+		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollBackground.png',"contentBackground",this,false);
+		addContainer("VertivalScrollContainer",this,-10,0);
+		addMask(childs["contentBackground"].x, childs["contentBackground"].y+3, childs["contentBackground"].width, childs["contentBackground"].height-6,containers["VertivalScrollContainer"]);
+		addIconsFromConfig(GameInfo.buildMenuArticles.niches);
+		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollOverlay.png',"scrollOverlay",this,false);
+		//containers["VertivalScrollContainer"].y += 150;
+	}
+
+	// the items in this popin are defined in GameInfo
+	private function addIconsFromConfig(ItemsConfig:Array<Dynamic>){
+		var cpt:Int = 0;
+		for (i in ItemsConfig){
+			var typedItem:Array<Dynamic> = i.sprites;
+			if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > childs["contentBackground"].height ){
+				addVerticalScrollBar();
+			}
+			for(j in typedItem){
+				var y:Float = j.y+(cpt*(articleHeight+articleInterline));
+				addIcon(j.x , y , j.sprite, j.name ,containers["VertivalScrollContainer"], j.isInteractive );
+			}
+			cpt++;
+		}
 	}
 
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)

@@ -16,7 +16,7 @@ function find_files($path, $pattern, $callback)
     }
 }
 function my_handler($filename) {
-  echo "'".$filename."',"."\r\n";
+  echo "'".$filename."',"."\n";
 }
 find_files('bin/assets', '/png$/', 'my_handler');
 ?> 

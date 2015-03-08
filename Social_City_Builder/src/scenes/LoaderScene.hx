@@ -18,7 +18,7 @@ class LoaderScene extends DisplayObjectContainer
 		super();
 		x=0;
 		y=0;
-		var img = new Sprite(Texture.fromImage("assets/LoaderScene.png"));
+		var img = new Sprite(Texture.fromImage("assets/UI/SplashScreen/IconsSplash.jpg"));
 		img.anchor.set(0.5, 0.5);
 		img.x = DeviceCapabilities.width/2;
 		img.y = DeviceCapabilities.height/2;

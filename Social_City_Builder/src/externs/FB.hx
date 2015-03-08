@@ -1,7 +1,5 @@
 package externs;
 
-//ScenesManger can load new scenes just with a scene name
-
 @:native("FB")
 extern class FB 
 {	

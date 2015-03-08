@@ -85,6 +85,7 @@ utils.events.EventDispatcher.prototype = {
 	,__class__: utils.events.EventDispatcher
 };
 var Main = function() {
+	var _g = this;
 	utils.events.EventDispatcher.call(this);
 	Main.stage = new PIXI.Stage(4160694);
 	this.renderer = PIXI.autoDetectRenderer((function($this) {
@@ -107,7 +108,10 @@ var Main = function() {
 	Main.stats.domElement.style.top = "0px";
 	this.gameLoop(0);
 	window.addEventListener("resize",$bind(this,this.resize));
-	haxe.Timer.delay($bind(this,this.preloadAssets),10);
+	this.WebFontConfig = { custom : { families : ["FuturaSTD"], urls : ["fonts.css"]}, active : function() {
+		_g.preloadAssets();
+	}};
+	WebFont.load(this.WebFontConfig);
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
@@ -248,32 +252,6 @@ Type.createInstance = function(cl,args) {
 	return null;
 };
 var haxe = {};
-haxe.Timer = function(time_ms) {
-	var me = this;
-	this.id = setInterval(function() {
-		me.run();
-	},time_ms);
-};
-$hxClasses["haxe.Timer"] = haxe.Timer;
-haxe.Timer.__name__ = ["haxe","Timer"];
-haxe.Timer.delay = function(f,time_ms) {
-	var t = new haxe.Timer(time_ms);
-	t.run = function() {
-		t.stop();
-		f();
-	};
-	return t;
-};
-haxe.Timer.prototype = {
-	stop: function() {
-		if(this.id == null) return;
-		clearInterval(this.id);
-		this.id = null;
-	}
-	,run: function() {
-	}
-	,__class__: haxe.Timer
-};
 haxe.ds = {};
 haxe.ds.StringMap = function() {
 	this.h = { };
@@ -372,7 +350,7 @@ hud.IconHud.prototype = $extend(PIXI.Sprite.prototype,{
 	,__class__: hud.IconHud
 });
 hud.HudBuild = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconBuildNormal.png","assets/HUD/HudIconBuildActive.png");
+	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudIconBuildNormal.png","assets/UI/Hud/HudIconBuildActive.png");
 	this.interactive = true;
 	this.buttonMode = true;
 	this.click = $bind(this,this.onClick);
@@ -395,7 +373,7 @@ hud.HudBuild.prototype = $extend(hud.IconHud.prototype,{
 	,__class__: hud.HudBuild
 });
 hud.HudInventory = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconInventoryNormal.png","assets/HUD/HudIconInventoryActive.png");
+	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudIconInventoryNormal.png","assets/UI/Hud/HudIconInventoryActive.png");
 	this.interactive = true;
 	this.buttonMode = true;
 	this.click = $bind(this,this.onClick);
@@ -481,7 +459,7 @@ hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype
 	,__class__: hud.HudManager
 });
 hud.HudOptions = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconOptionNormal.png","assets/HUD/HudIconOptionActive.png");
+	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudIconOptionNormal.png","assets/UI/Hud/HudIconOptionActive.png");
 	this.interactive = true;
 	this.buttonMode = true;
 	this.click = $bind(this,this.onClick);
@@ -534,10 +512,12 @@ hud.HudOptions.prototype = $extend(hud.IconHud.prototype,{
 	,__class__: hud.HudOptions
 });
 hud.HudQuests = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconQuestNormal.png");
+	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudIconQuestNormal.png","assets/UI/Hud/HudIconQuestActive.png");
 	this.interactive = true;
 	this.buttonMode = true;
 	this.click = $bind(this,this.onClick);
+	this.mouseover = $bind(this,this.onMouseOver);
+	this.mouseout = $bind(this,this.onMouseOut);
 };
 $hxClasses["hud.HudQuests"] = hud.HudQuests;
 hud.HudQuests.__name__ = ["hud","HudQuests"];
@@ -576,10 +556,16 @@ hud.HudQuests.prototype = $extend(hud.IconHud.prototype,{
 			return $r;
 		}(this)));
 	}
+	,onMouseOver: function(pData) {
+		this.changeTexture("active");
+	}
+	,onMouseOut: function(pData) {
+		this.changeTexture("normal");
+	}
 	,__class__: hud.HudQuests
 });
 hud.HudShop = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"assets/HUD/HudIconShopNormal.png","assets/HUD/HudIconShopActive.png");
+	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudIconShopNormal.png","assets/UI/Hud/HudIconShopActive.png");
 	this.interactive = true;
 	this.buttonMode = true;
 	this.click = $bind(this,this.onClick);
@@ -731,6 +717,8 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 	if(isModal == null) isModal = true;
 	if(startY == null) startY = 0;
 	if(startX == null) startX = 0;
+	this.scrollDragging = false;
+	this.containers = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
 	pixi.display.DisplayObjectContainer.call(this);
 	var _g1 = startX;
@@ -770,8 +758,8 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 		var this1 = utils.system.DeviceCapabilities.get_width();
 		var int4 = this1;
 		if(int4 < 0) this.modalZone.width = 4294967296.0 + int4; else this.modalZone.width = int4 + 0.0;
-		var this2 = utils.system.DeviceCapabilities.get_height();
-		var int5 = this2;
+		var this11 = utils.system.DeviceCapabilities.get_height();
+		var int5 = this11;
 		if(int5 < 0) this.modalZone.height = 4294967296.0 + int5; else this.modalZone.height = int5 + 0.0;
 		this.modalZone.interactive = true;
 		this.modalZone.click = $bind(this,this.stopClickEventPropagation);
@@ -791,36 +779,67 @@ $hxClasses["popin.MyPopin"] = popin.MyPopin;
 popin.MyPopin.__name__ = ["popin","MyPopin"];
 popin.MyPopin.__super__ = pixi.display.DisplayObjectContainer;
 popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
-	addIcon: function(x,y,texturePath,name,isInteractive) {
+	addIcon: function(x,y,texturePath,name,target,isInteractive) {
 		if(isInteractive == null) isInteractive = true;
 		this.currentChild = new popin.IconPopin(x * this.background.width - this.background.width / 2,y * this.background.height - this.background.height / 2,texturePath,name,isInteractive);
 		if(isInteractive) this.currentChild.click = $bind(this,this.childClick);
 		var v = this.currentChild;
 		this.childs.set(name,v);
 		v;
-		this.addChild(this.currentChild);
+		target.addChild(this.currentChild);
 	}
 	,addText: function(x,y,font,fontSize,txt,name,pAlign) {
 		if(pAlign == null) pAlign = "center";
 		var style = { font : fontSize + " " + font, align : pAlign};
-		var tempText = new PIXI.BitmapText(txt,style);
-		var _g1 = x;
-		var _g = utils.system.DeviceCapabilities.get_width();
-		tempText.position.x = (function($this) {
-			var $r;
-			var $int = _g;
-			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-			return $r;
-		}(this)) * _g1;
-		var _g3 = y;
-		var _g2 = utils.system.DeviceCapabilities.get_height();
-		tempText.position.y = (function($this) {
-			var $r;
-			var int1 = _g2;
-			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-			return $r;
-		}(this)) * _g3;
+		var tempText = new PIXI.Text(txt,style);
+		tempText.position.x = x * this.background.width - this.background.width / 2;
+		tempText.position.y = y * this.background.height - this.background.height / 2;
+		this.childs.set(name,tempText);
+		tempText;
 		this.addChild(tempText);
+	}
+	,addMask: function(x,y,width,height,target) {
+		this.graphics = new PIXI.Graphics();
+		this.addChild(this.graphics);
+		this.graphics.beginFill(16724736);
+		this.graphics.drawRect(x,y,width,height);
+		this.graphics.endFill();
+		target.mask = this.graphics;
+	}
+	,addVerticalScrollBar: function() {
+		var _g = this;
+		this.addIcon(0.91,0.15,"assets/UI/PopIn/PopInScrollingBar.png","scrollingBar",this,false);
+		this.scrollIndicator = new popin.IconPopin(0.933 * this.background.width - this.background.width / 2,0.23 * this.background.height - this.background.height / 2,"assets/UI/PopIn/PopInScrollingTruc.png","scrollingIndicator",true);
+		this.scrollIndicator.mousedown = function(data) {
+			_g.scrollDragging = true;
+			_g.scrollDragSy = data.getLocalPosition(_g.scrollIndicator).y * _g.scrollIndicator.scale.y;
+		};
+		this.scrollIndicator.mouseup = this.scrollIndicator.mouseupoutside = function(data1) {
+			_g.scrollDragging = false;
+		};
+		this.scrollIndicator.mousemove = function(data2) {
+			var newY = data2.getLocalPosition(_g.scrollIndicator.parent).y - _g.scrollDragSy;
+			if(_g.scrollDragging && newY > 0.23 * _g.background.height - _g.background.height / 2 && newY < 0.635 * _g.background.height - _g.background.height / 2) {
+				var interval = 0.635 * _g.background.height - _g.background.height / 2 - (0.23 * _g.background.height - _g.background.height / 2);
+				var maxScroll = _g.containers.get("VertivalScrollContainer").height - _g.childs.get("contentBackground").height + 100;
+				_g.scrollIndicator.y = newY;
+				_g.containers.get("VertivalScrollContainer").y = -((newY - (0.23 * _g.background.height - _g.background.height / 2)) * maxScroll / interval);
+			}
+		};
+		var v = this.scrollIndicator;
+		this.childs.set("scrollingIndicator",v);
+		v;
+		this.addChild(this.scrollIndicator);
+	}
+	,addContainer: function(name,target,x,y) {
+		if(y == null) y = 0;
+		if(x == null) x = 0;
+		var temp = new pixi.display.DisplayObjectContainer();
+		temp.x = x;
+		temp.y = y;
+		this.containers.set(name,temp);
+		temp;
+		target.addChild(temp);
 	}
 	,childClick: function(pEvent) {
 	}
@@ -831,25 +850,43 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 	,__class__: popin.MyPopin
 });
 popin.PopinBuild = function(startX,startY) {
-	popin.MyPopin.call(this,startX,startY,"assets/Popins/PopInBackground.png");
-	this.addIcon(-0.15,-0.15,"assets/Popins/PopInHeaderConstruction.png","header",false);
-	this.addIcon(0.65,0.05,"assets/Popins/PopInTitleNiches.png","category",false);
-	this.addIcon(0.10,0.15,"assets/Popins/PopInScrollBackground.png","contentBackground",false);
-	this.addIcon(0.125,0.175,"assets/Popins/PopInBuiltBgArticle.png","articleBase",false);
-	this.addIcon(0.14,0.1875,"assets/Popins/PopInBuiltArticlePreview.png","ArticlePreview",false);
-	this.addIcon(0.3,0.275,"assets/Popins/PopInBuiltArticleBgRessources.png","ArticleRessourcesBack",false);
-	this.addIcon(0.305,0.28,"assets/Popins/PopInBuiltArticleSoftRessource.png","SoftRessource1",false);
-	this.addIcon(0.755,0.28,"assets/Popins/PopInBuiltArticleHardRessource.png","HardRessource",false);
-	this.addIcon(0.695,0.2875,"assets/Popins/PopInBuiltSoftNormal.png","ArticleBgRessources",false);
-	this.addIcon(0.82,0.2875,"assets/Popins/PopInBuiltHardNormal.png","ArticleBgRessources",false);
-	this.addIcon(0.95,0,"assets/Popins/HudInventoryCloseButtonNormal.png","closeButton");
-	this.addIcon(0.10,0.15,"assets/Popins/PopInScrollOverlay.png","contentBackground",false);
+	this.hasVerticalScrollBar = false;
+	this.articleInterline = 0.03;
+	this.articleHeight = PIXI.Texture.fromImage("assets/UI/PopInBuilt/PopInBuiltBgArticle.png").height;
+	popin.MyPopin.call(this,startX,startY,"assets/UI/PopIn/PopInBackground.png");
+	this.articleHeight /= this.background.height;
+	this.addIcon(0.95,0,"assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","closeButton",this,true);
+	this.addIcon(-0.15,-0.15,"assets/UI/PopInBuilt/PopInTitleConstruction.png","popInTitle",this,false);
+	this.addIcon(0.65,0.05,"assets/UI/PopInBuilt/PopInHeaderNiches.png","categoryHeader",this,false);
+	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollBackground.png","contentBackground",this,false);
+	this.addContainer("VertivalScrollContainer",this,-10,0);
+	this.addMask(this.childs.get("contentBackground").x,this.childs.get("contentBackground").y + 3,this.childs.get("contentBackground").width,this.childs.get("contentBackground").height - 6,this.containers.get("VertivalScrollContainer"));
+	this.addIconsFromConfig(GameInfo.buildMenuArticles.niches);
+	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollOverlay.png","scrollOverlay",this,false);
 };
 $hxClasses["popin.PopinBuild"] = popin.PopinBuild;
 popin.PopinBuild.__name__ = ["popin","PopinBuild"];
 popin.PopinBuild.__super__ = popin.MyPopin;
 popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
-	childClick: function(pEvent) {
+	addIconsFromConfig: function(ItemsConfig) {
+		var cpt = 0;
+		var _g = 0;
+		while(_g < ItemsConfig.length) {
+			var i = ItemsConfig[_g];
+			++_g;
+			var typedItem = i.sprites;
+			if((cpt * (this.articleHeight + this.articleInterline) + this.articleHeight) * this.background.height > this.childs.get("contentBackground").height) this.addVerticalScrollBar();
+			var _g1 = 0;
+			while(_g1 < typedItem.length) {
+				var j = typedItem[_g1];
+				++_g1;
+				var y = j.y + cpt * (this.articleHeight + this.articleInterline);
+				this.addIcon(j.x,y,j.sprite,j.name,this.containers.get("VertivalScrollContainer"),j.isInteractive);
+			}
+			cpt++;
+		}
+	}
+	,childClick: function(pEvent) {
 		if(pEvent.target._name == "closeButton") popin.PopinManager.getInstance().closePopin("PopinBuild");
 	}
 	,__class__: popin.PopinBuild
@@ -954,7 +991,7 @@ scenes.LoaderScene = function() {
 	pixi.display.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
-	var img = new PIXI.Sprite(PIXI.Texture.fromImage("assets/LoaderScene.png"));
+	var img = new PIXI.Sprite(PIXI.Texture.fromImage("assets/UI/SplashScreen/IconsSplash.jpg"));
 	img.anchor.set(0.5,0.5);
 	var a = utils.system.DeviceCapabilities.get_width();
 	img.x = (function($this) {
@@ -1109,8 +1146,9 @@ String.prototype.__class__ = $hxClasses.String = String;
 String.__name__ = ["String"];
 $hxClasses.Array = Array;
 Array.__name__ = ["Array"];
-GameInfo.preloadAssets = ["assets/preload.png","assets/preload_bg.png","assets/LoaderScene.png"];
-GameInfo.loadAssets = ["assets/HUD/HudIconBuildActive.png","assets/HUD/HudIconBuildNormal.png","assets/HUD/HudIconInventoryActive.png","assets/HUD/HudIconInventoryNormal.png","assets/HUD/HudIconOptionActive.png","assets/HUD/HudIconOptionNormal.png","assets/HUD/HudIconQuestNormal.png","assets/HUD/HudIconShopActive.png","assets/HUD/HudIconShopNormal.png","assets/HUD/HudIconStockActive.png","assets/HUD/HudIconStockNormal.png","assets/HudBuild.png","assets/Hud_B.png","assets/Hud_TL.png","assets/Hud_TR.png","assets/LoaderScene.png","assets/Popin0.png","assets/Popin1.png","assets/PopinBuild.png","assets/PopinOkCancel.png","assets/Popins/HudIconRessource1.png","assets/Popins/HudIconRessource2.png","assets/Popins/HudIconRessource3.png","assets/Popins/HudIconRessource4.png","assets/Popins/HudIconRessource5.png","assets/Popins/HudIconRessource6.png","assets/Popins/HudInventoryCloseButtonActive.png","assets/Popins/HudInventoryCloseButtonNormal.png","assets/Popins/HudInventoryScrollingBar.png","assets/Popins/HudInventoryScrollingTruc.png","assets/Popins/HudInventoryTitle.png","assets/Popins/PopInBackground.png","assets/Popins/PopInBuiltArticleBgRessources.png","assets/Popins/PopInBuiltArticleEmptyRessource.png","assets/Popins/PopInBuiltBgArticle.png","assets/Popins/PopInBuiltHardActive.png","assets/Popins/PopInBuiltHardNormal.png","assets/Popins/PopInBuiltSoftActive.png","assets/Popins/PopInBuiltSoftNormal.png","assets/Popins/PopInHeaderConstruction.png","assets/Popins/PopInHeaderEglise.png","assets/Popins/PopInOngletButtonActive.png","assets/Popins/PopInOngletButtonNormal.png","assets/Popins/PopInScrollBackground.png","assets/Popins/PopInScrollOverlay.png","assets/Popins/PopInTitleFusees.png","assets/Popins/PopInTitleNiches.png","assets/Popins/PopInTitleUtilitaires.png","assets/Popins/PopInBuiltArticleSoftRessource.png","assets/Popins/PopInBuiltArticleHardRessource.png","assets/Popins/PopInBuiltArticlePreview.png","assets/Screen0.png","assets/Screen1.png","assets/TitleCard.png","assets/alpha_bg.png","assets/ambulance.png","assets/black_bg.png","assets/closeButton.png","assets/game.png","assets/preload.png","assets/preload_bg.png"];
+GameInfo.preloadAssets = ["assets/UI/SplashScreen/IconsSplash.jpg"];
+GameInfo.loadAssets = ["assets/Dogs/DogCasino.png","assets/Dogs/DogChurch.png","assets/Dogs/DogHangarWorkshop.png","assets/Dogs/DogMusee.png","assets/Dogs/DogNiche.png","assets/Dogs/DogPasDeTir.png","assets/UI/Bulles/HudBulle.png","assets/UI/Cursor/curseur_down.png","assets/UI/Cursor/curseur_up.png","assets/UI/Hud/HudBuildFill.png","assets/UI/Hud/HudBuildFillBar.png","assets/UI/Hud/HudIconBuild.png","assets/UI/Hud/HudIconBuildActive.png","assets/UI/Hud/HudIconBuildNormal.png","assets/UI/Hud/HudIconDestroyActive.png","assets/UI/Hud/HudIconDestroyNormal.png","assets/UI/Hud/HudIconInventory.png","assets/UI/Hud/HudIconInventoryActive.png","assets/UI/Hud/HudIconInventoryNormal.png","assets/UI/Hud/HudIconMarketActive.png","assets/UI/Hud/HudIconMarketNormal.png","assets/UI/Hud/HudIconObservatoryActive.png","assets/UI/Hud/HudIconObservatoryNormal.png","assets/UI/Hud/HudIconOptionActive.png","assets/UI/Hud/HudIconOptionNormal.png","assets/UI/Hud/HudIconPop.png","assets/UI/Hud/HudIconQuestActive.png","assets/UI/Hud/HudIconQuestNormal.png","assets/UI/Hud/HudIconShopActive.png","assets/UI/Hud/HudIconShopNormal.png","assets/UI/Hud/HudInventoryFill.png","assets/UI/Hud/HudInventoryFillBar.png","assets/UI/Hud/HudMoneyHard.png","assets/UI/Hud/HudMoneySoft.png","assets/UI/Hud/HudPopFill.png","assets/UI/Hud/HudPopFillBar.png","assets/UI/Icons/Artefacts/IconArtefactsDbz1.png","assets/UI/Icons/Artefacts/IconArtefactsDbz2.png","assets/UI/Icons/Artefacts/IconArtefactsDbz3.png","assets/UI/Icons/Artefacts/IconArtefactsLotr1.png","assets/UI/Icons/Artefacts/IconArtefactsLotr2.png","assets/UI/Icons/Artefacts/IconArtefactsLotr3.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons1.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons2.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons3.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars1.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars2.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars3.png","assets/UI/Icons/Artefacts/IconArtefactsTerre1.png","assets/UI/Icons/Artefacts/IconArtefactsTerre2.png","assets/UI/Icons/Artefacts/IconArtefactsTerre3.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland1.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland2.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland3.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewCasino.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewLabo.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewMusee.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png","assets/UI/Icons/Dogs/IconDogAstro.png","assets/UI/Icons/Dogs/IconDogCasino.png","assets/UI/Icons/Dogs/IconDogChurch.png","assets/UI/Icons/Dogs/IconDogMusee.png","assets/UI/Icons/Dogs/IconDogNiche.png","assets/UI/Icons/Dogs/IconDogWorkshop.png","assets/UI/Icons/Fusee/Bleu3.png","assets/UI/Icons/Fusee/IconFuseeBleu1.png","assets/UI/Icons/Fusee/IconFuseeBleu2.png","assets/UI/Icons/Fusee/IconFuseeCyan1.png","assets/UI/Icons/Fusee/IconFuseeCyan2.png","assets/UI/Icons/Fusee/IconFuseeCyan3.png","assets/UI/Icons/Fusee/IconFuseeFB1.png","assets/UI/Icons/Fusee/IconFuseeFB2.png","assets/UI/Icons/Fusee/IconFuseeFB3.png","assets/UI/Icons/Fusee/IconFuseeJaune1.png","assets/UI/Icons/Fusee/IconFuseeJaune2.png","assets/UI/Icons/Fusee/IconFuseeJaune3.png","assets/UI/Icons/Fusee/IconFuseeOrange1.png","assets/UI/Icons/Fusee/IconFuseeOrange2.png","assets/UI/Icons/Fusee/IconFuseeOrange3.png","assets/UI/Icons/Fusee/IconFuseeVert1.png","assets/UI/Icons/Fusee/IconFuseeVert2.png","assets/UI/Icons/Fusee/IconFuseeVert3.png","assets/UI/Icons/Fusee/IconFuseeViolet1.png","assets/UI/Icons/Fusee/IconFuseeViolet2.png","assets/UI/Icons/Fusee/IconFuseeViolet3.png","assets/UI/Icons/IconsRessources/IconBlueMineral.png","assets/UI/Icons/IconsRessources/IconCyanMineral.png","assets/UI/Icons/IconsRessources/IconDogeflooz.png","assets/UI/Icons/IconsRessources/IconGreenMineral.png","assets/UI/Icons/IconsRessources/IconOsDor.png","assets/UI/Icons/IconsRessources/IconPurpleMineral.png","assets/UI/Icons/IconsRessources/IconRedMineral.png","assets/UI/Icons/IconsRessources/IconYellowMineral.png","assets/UI/Icons/Planet/IconNamek.png","assets/UI/Icons/Planet/IconPlaneteDesEtoiles.png","assets/UI/Icons/Planet/IconPlaneteMilieu.png","assets/UI/Icons/Planet/IconSpringfield.png","assets/UI/Icons/Planet/IconTerre.png","assets/UI/Icons/Planet/IconWonderland.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewBlueMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewCyanMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewGreenMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewPurpleMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewRedMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewYellowMineral.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Os.png","assets/UI/PopIn/ContourNotAfford.png","assets/UI/PopIn/ContourRessourceInsuffisant.png","assets/UI/PopIn/Overlay.png","assets/UI/PopIn/PopInArticleLock.png","assets/UI/PopIn/PopInBackground.png","assets/UI/PopIn/PopInCloseButtonActivel.png","assets/UI/PopIn/PopInCloseButtonNormal.png","assets/UI/PopIn/PopInScrollBackground.png","assets/UI/PopIn/PopInScrollOverlay.png","assets/UI/PopIn/PopInScrollingBar.png","assets/UI/PopIn/PopInScrollingTruc.png","assets/UI/PopInBuilt/PopInBuiltArticleEmptyRessource.png","assets/UI/PopInBuilt/PopInBuiltBgArticle.png","assets/UI/PopInBuilt/PopInBuiltHardActive.png","assets/UI/PopInBuilt/PopInBuiltHardNormal.png","assets/UI/PopInBuilt/PopInBuiltSoftActive.png","assets/UI/PopInBuilt/PopInBuiltSoftNormal.png","assets/UI/PopInBuilt/PopInBuiltSoftNotDispo.png","assets/UI/PopInBuilt/PopInHeaderFusees.png","assets/UI/PopInBuilt/PopInHeaderNiches.png","assets/UI/PopInBuilt/PopInHeaderUtilitaires.png","assets/UI/PopInBuilt/PopInOngletFuseeActive.png","assets/UI/PopInBuilt/PopInOngletFuseeNormal.png","assets/UI/PopInBuilt/PopInOngletNicheActive.png","assets/UI/PopInBuilt/PopInOngletNicheNormal.png","assets/UI/PopInBuilt/PopInOngletUtilitairesActive.png","assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png","assets/UI/PopInBuilt/PopInTitleConstruction.png","assets/UI/PopInInventory/PopInInventoryArticleBg.png","assets/UI/PopInInventory/PopInInventoryBackground.png","assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png","assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","assets/UI/PopInInventory/PopInInventoryScrollingBar.png","assets/UI/PopInInventory/PopInInventoryScrollingTruc.png","assets/UI/PopInInventory/PopInInventoryTitle.png","assets/UI/PopInMarket/PopInHeaderBuy.png","assets/UI/PopInMarket/PopInHeaderSell.png","assets/UI/PopInMarket/PopInMarketBgArticle.png","assets/UI/PopInMarket/PopInMarketNbArticleActivel.png","assets/UI/PopInMarket/PopInMarketNbArticleNormal.png","assets/UI/PopInMarket/PopInMarketValidActive.png","assets/UI/PopInMarket/PopInMarketValidNormal.png","assets/UI/PopInMarket/PopInOngletBuyActive.png","assets/UI/PopInMarket/PopInOngletBuyNormal.png","assets/UI/PopInMarket/PopInOngletSellActive.png","assets/UI/PopInMarket/PopInOngletSellNormal.png","assets/UI/PopInMarket/PopInTitleMarket.png","assets/UI/PopInObservatory/PopInObservatoryArticle.png","assets/UI/PopInObservatory/PopInScrollOverlay.png","assets/UI/PopInObservatory/PopInScrollingBar.png","assets/UI/PopInObservatory/PopInScrollingTruc.png","assets/UI/PopInObservatory/PopInTitleObservatory.png","assets/UI/PopInQuest/PopInQuestBgArticle.png","assets/UI/PopInQuest/PopInQuestOngletEnCoursActive.png","assets/UI/PopInQuest/PopInQuestOngletEnCoursNormal.png","assets/UI/PopInQuest/PopInQuestOngletFinishActive.png","assets/UI/PopInQuest/PopInQuestOngletFinishNormal.png","assets/UI/PopInQuest/PopInTitleQuest.png","assets/UI/PopInSocial/PopInShop/PopInHeaderDogflooz.png","assets/UI/PopInSocial/PopInShop/PopInHeaderOsDOr.png","assets/UI/PopInSocial/PopInShop/PopInMarketValidActive.png","assets/UI/PopInSocial/PopInShop/PopInMarketValidNormal.png","assets/UI/PopInSocial/PopInShop/PopInOngletHardActive.png","assets/UI/PopInSocial/PopInShop/PopInOngletHardNormal.png","assets/UI/PopInSocial/PopInShop/PopInOngletSoftActive.png","assets/UI/PopInSocial/PopInShop/PopInOngletSotNormal.png","assets/UI/PopInSocial/PopInShop/PopInShopBgArticle.png","assets/UI/PopInSocial/PopInShop/PopInShopButtonConfirmActive.png","assets/UI/PopInSocial/PopInShop/PopInShopButtonConfirmNormal.png","assets/UI/PopInSocial/PopInShop/PopInTitleShop.png","assets/UI/PopInSocial/PopInSocialArticleBg.png","assets/UI/PopInSocial/PopInSocialBg.png","assets/UI/PopInSocial/PopInSocialButtonDownActivel.png","assets/UI/PopInSocial/PopInSocialButtonDownNormal.png","assets/UI/PopInSocial/PopInSocialButtonTradeActivel.png","assets/UI/PopInSocial/PopInSocialButtonTradeNormal.png","assets/UI/PopInSocial/PopInSocialButtonUpActive.png","assets/UI/PopInSocial/PopInSocialButtonUpNormal.png","assets/UI/PopInSocial/PopInSocialButtonVisitActive.png","assets/UI/PopInSocial/PopInSocialButtonVisitNormal.png","assets/UI/PopInSocial/PopInSocialPhotoBorders.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet0.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow3.png","assets/UI/PopInWorkshop/PopInTitleWorkshop.png","assets/UI/PopInWorkshop/PopInWorkshopArticleBG.png","assets/UI/PopInWorkshop/PopInWorkshopBgPlanet.png","assets/UI/PopInWorkshop/PopInWorkshopCancelButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopCancelButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopDestroyButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopDestroyButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopHeader.png","assets/UI/PopInWorkshop/PopInWorkshopLaunchButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopLaunchButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFill1.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFill2.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFillBar.png","assets/UI/PopInWorkshop/PopInWorkshopLoadIcon.png","assets/UI/PopInWorkshop/PopInWorkshopParticule.png","assets/UI/PopInWorkshop/PopInWorkshopTextBG.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle01.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle02.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle03.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle04.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle05.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle06.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle07.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle08.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle09.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle10.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick01.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick02.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick03.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick04.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick05.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick06.png","assets/UI/SplashScreen/LoadingFill01.png","assets/UI/SplashScreen/LoadingFill02.png","assets/UI/SplashScreen/LoadingFill03.png","assets/UI/SplashScreen/LoadingFillBar.png","assets/UI/SplashScreen/Planet.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow01.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow02.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow03.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow04.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow05.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow06.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow07.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow08.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow09.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow10.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow11.png","assets/UI/SplashScreen/PlanetLight.png","assets/UI/SplashScreen/Title.png"];
+GameInfo.buildMenuArticles = { niches : [{ sprites : [{ x : 0.125, y : 0.175, sprite : "assets/UI/PopInBuilt/PopInBuiltBgArticle.png", name : "articleBase", isInteractive : false},{ x : 0.14, y : 0.1875, sprite : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png", name : "ArticlePreview", isInteractive : false},{ x : 0.308, y : 0.3, sprite : "assets/UI/Icons/IconsRessources/IconDogeflooz.png", name : "SoftRessource1", isInteractive : false},{ x : 0.758, y : 0.3, sprite : "assets/UI/Icons/IconsRessources/IconOsDor.png", name : "HardRessource", isInteractive : false},{ x : 0.697, y : 0.309, sprite : "assets/UI/PopInBuilt/PopInBuiltSoftNormal.png", name : "ArticleBgRessources", isInteractive : false},{ x : 0.825, y : 0.309, sprite : "assets/UI/PopInBuilt/PopInBuiltHardNormal.png", name : "ArticleBgRessources", isInteractive : false}], text : [{ x : 0.31, y : 0.19, font : "FuturaSTD", fontSize : "25px", txt : "Dog House", name : "title"},{ x : 0.31, y : 0.25, font : "FuturaSTD", fontSize : "15px", txt : "Standard dog habitation", name : "description"}]},{ sprites : [{ x : 0.125, y : 0.175, sprite : "assets/UI/PopInBuilt/PopInBuiltBgArticle.png", name : "articleBase", isInteractive : false},{ x : 0.14, y : 0.1875, sprite : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png", name : "ArticlePreview", isInteractive : false},{ x : 0.308, y : 0.3, sprite : "assets/UI/Icons/IconsRessources/IconDogeflooz.png", name : "SoftRessource1", isInteractive : false},{ x : 0.758, y : 0.3, sprite : "assets/UI/Icons/IconsRessources/IconOsDor.png", name : "HardRessource", isInteractive : false},{ x : 0.697, y : 0.309, sprite : "assets/UI/PopInBuilt/PopInBuiltSoftNormal.png", name : "ArticleBgRessources", isInteractive : false},{ x : 0.825, y : 0.309, sprite : "assets/UI/PopInBuilt/PopInBuiltHardNormal.png", name : "ArticleBgRessources", isInteractive : false}], text : [{ x : 0.31, y : 0.19, font : "FuturaSTD", fontSize : "25px", txt : "Dog House", name : "title"},{ x : 0.31, y : 0.25, font : "FuturaSTD", fontSize : "15px", txt : "Standard dog habitation", name : "description"}]}]};
 GameInfo.userWidth = 1920;
 GameInfo.userHeight = 1000;
 Main.CONFIG_PATH = "config.json";

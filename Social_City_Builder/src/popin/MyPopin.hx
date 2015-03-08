@@ -6,16 +6,23 @@ import pixi.InteractionData;
 import pixi.textures.Texture;
 import pixi.display.Sprite;
 import utils.system.DeviceCapabilities;
-import pixi.text.BitmapText;
+import pixi.text.Text;
+import pixi.primitives.Graphics;
 
 //Base PopIn class, all popIn will inherit from this
 // it's a DisplayObjectContainer, has a base x & y, clickEvent and a destroy method that destroy the popin (and its icons)
+// TODO : remove functions + MAJ description
 class MyPopin extends DisplayObjectContainer
 {
 	private var background:Sprite;
 	private var modalZone:Sprite;
 	private var childs:Map<String, Sprite> = new Map();
+	private var containers:Map<String, DisplayObjectContainer> = new Map();
 	private var currentChild:Sprite;
+	private var scrollIndicator:Sprite;
+	private var graphics:Graphics;
+	private var scrollDragging:Bool = false;
+	private var scrollDragSy:Float;
 	
 	public function new(startX:Float=0,startY:Float=0, texturePath:String, ?isModal:Bool=true) 
 	{
@@ -45,21 +52,60 @@ class MyPopin extends DisplayObjectContainer
 	}
 
 	// creates an IconPopin and puts it in the childs array
-	private function addIcon(x:Float,y:Float, texturePath:String, name:String, ?isInteractive:Bool=true){
+	private function addIcon(x:Float,y:Float, texturePath:String, name:String, target:DisplayObjectContainer,?isInteractive:Bool=true):Void{
 		currentChild = new IconPopin(x*background.width-background.width/2,y*background.height-background.height/2,texturePath,name,isInteractive);
 		if(isInteractive){
 			currentChild.click = childClick;
 		}
 		childs[name] = currentChild;
-		addChild(currentChild);
+		target.addChild(currentChild);
 	}
-	function addText(x:Float,y:Float,font:String,fontSize:String,txt:String,name:String,?pAlign:String="center"){
-		//new BitmapText( text : String , style : pixi.text.BitmapTextStyle )
-		var style:BitmapTextStyle = {font:fontSize+" "+font,align:pAlign};
-		var tempText = new BitmapText(txt, style);
-		tempText.position.x = x*DeviceCapabilities.width; //- bitmapFontText.width - 20;
-		tempText.position.y = y*DeviceCapabilities.height; //20;
+	private function addText(x:Float,y:Float,font:String,fontSize:String,txt:String,name:String,?pAlign:String="center"):Void{
+		var style:TextStyle = {font:fontSize+" "+font,align:pAlign};
+		var tempText:Text = new Text(txt, style);
+		tempText.position.x = x*background.width-background.width/2;
+		tempText.position.y = y*background.height-background.height/2; 
+		childs[name] = tempText;
 		addChild(tempText);
+	}
+	// put a mask on a container so if its childs are outside of the mask they wont be rendered
+	private function addMask(x:Float,y:Float,width:Float,height:Float,target:DisplayObjectContainer){
+		graphics = new Graphics();
+		addChild(graphics); // if we dont add grphics, the position will be relative to the screen and not to the popin
+		graphics.beginFill(0xFF3300); //random color, doesn't matter as it wont be visible
+		graphics.drawRect(x, y, width, height);
+		graphics.endFill();
+		target.mask = graphics; // this line assign the mask at the container and all of his childrens (present past and future)
+	}
+	private function addVerticalScrollBar(){
+		addIcon(0.91,0.15,'assets/UI/PopIn/PopInScrollingBar.png',"scrollingBar",this,false);
+		scrollIndicator = new IconPopin(0.933*background.width-background.width/2,0.23*background.height-background.height/2,'assets/UI/PopIn/PopInScrollingTruc.png',"scrollingIndicator",true);
+		scrollIndicator.mousedown = function(data) {
+			scrollDragging = true;
+			scrollDragSy = data.getLocalPosition(scrollIndicator).y * scrollIndicator.scale.y;	
+		};
+		scrollIndicator.mouseup = scrollIndicator.mouseupoutside = function(data) {
+			scrollDragging = false;
+		};
+		scrollIndicator.mousemove = function(data){
+			var newY:Float = data.getLocalPosition(scrollIndicator.parent).y - scrollDragSy;
+			if(scrollDragging && newY > 0.23*background.height-background.height/2 && newY < 0.635*background.height-background.height/2) {
+				var interval:Float = (0.635*background.height-background.height/2) - (0.23*background.height-background.height/2 );
+				var maxScroll:Float = containers["VertivalScrollContainer"].height-childs["contentBackground"].height + 100;
+				scrollIndicator.y = newY;
+				containers["VertivalScrollContainer"].y =  - ((newY - (0.23*background.height-background.height/2)) * maxScroll  / interval); // math stuff fait à l'arrache (plus ou moins)
+			}
+		}
+		childs["scrollingIndicator"] = scrollIndicator;
+		addChild(scrollIndicator);
+	}
+	// add a DisplayObjectContainer à la popin. attention : Les containers ne sont pas dans childs mais dans containers
+	private function addContainer(name:String,target:DisplayObjectContainer,?x:Float=0,?y:Float=0){
+		var temp:DisplayObjectContainer = new DisplayObjectContainer();
+		temp.x = x;
+		temp.y = y;
+		containers[name] = temp;
+		target.addChild(temp);
 	}
 	//empty function so that the interactive Icons are automaticly binded to this function
 	//the popin will inherit from this class and then can overide this function to configure the childs click action

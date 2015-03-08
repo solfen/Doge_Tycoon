@@ -15,7 +15,7 @@ class HudShop extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/HUD/HudIconShopNormal.png',"assets/HUD/HudIconShopActive.png");		
+		super(startX,startY,'assets/UI/Hud/HudIconShopNormal.png',"assets/UI/Hud/HudIconShopActive.png");		
 		interactive = true;
 		buttonMode 	= true;
 		click 		= onClick;

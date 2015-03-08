@@ -15,7 +15,7 @@ class HudOptions extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/HUD/HudIconOptionNormal.png',"assets/HUD/HudIconOptionActive.png");		
+		super(startX,startY,'assets/UI/Hud/HudIconOptionNormal.png',"assets/UI/Hud/HudIconOptionActive.png");		
 		interactive = true;
 		buttonMode 	= true;
 		click 		= onClick;

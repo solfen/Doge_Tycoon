@@ -11,7 +11,9 @@ import pixi.loaders.AssetLoader;
 import pixi.renderers.webgl.WebGLRenderer;
 import pixi.utils.Detector;
 import externs.FB;
+import externs.WebFontLoader;
 import haxe.Timer;
+import pixi.text.Text;
 
 /**
  * Classe d'initialisation et lancement du jeu
@@ -29,6 +31,7 @@ class Main extends EventDispatcher
 	private static var instance: Main;
 	public var renderer:WebGLRenderer;
 	private static var stage:Stage;
+	private var WebFontConfig:Dynamic;
 	
 
 	private static function main ():Void {
@@ -64,7 +67,17 @@ class Main extends EventDispatcher
 		stats.domElement.style.top = "0px";
 		gameLoop(0);
 		Browser.window.addEventListener("resize", resize);
-		Timer.delay(preloadAssets,10);
+		WebFontConfig = {
+		    custom: {
+		    	families: ['FuturaSTD'],
+		    	urls: ['fonts.css'],
+		    },
+
+			active: function() {
+			    preloadAssets();
+			}
+		};
+		WebFontLoader.load(WebFontConfig);
 	}
 	
 	/**
