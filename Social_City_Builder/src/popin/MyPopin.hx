@@ -28,8 +28,8 @@ class MyPopin extends DisplayObjectContainer
 	{
 		super();
 		// *width so that it's in % of screen
-		x=startX*DeviceCapabilities.width;
-		y=startY*DeviceCapabilities.height;
+		x=Std.int(startX*DeviceCapabilities.width);
+		y=Std.int(startY*DeviceCapabilities.height);
 
 		if(isModal){
 			modalZone = new Sprite(Texture.fromImage("assets/alpha_bg.png"));
@@ -53,7 +53,8 @@ class MyPopin extends DisplayObjectContainer
 
 	// creates an IconPopin and puts it in the childs array
 	private function addIcon(x:Float,y:Float, texturePath:String, name:String, target:DisplayObjectContainer,?isInteractive:Bool=true):Void{
-		currentChild = new IconPopin(x*background.width-background.width/2,y*background.height-background.height/2,texturePath,name,isInteractive);
+		//int cast because Float pos = blurry images
+		currentChild = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive);
 		if(isInteractive){
 			currentChild.click = childClick;
 		}
@@ -63,8 +64,8 @@ class MyPopin extends DisplayObjectContainer
 	private function addText(x:Float,y:Float,font:String,fontSize:String,txt:String,name:String,?pAlign:String="center"):Void{
 		var style:TextStyle = {font:fontSize+" "+font,align:pAlign};
 		var tempText:Text = new Text(txt, style);
-		tempText.position.x = x*background.width-background.width/2;
-		tempText.position.y = y*background.height-background.height/2; 
+		tempText.position.x = Std.int(x*background.width-background.width/2);
+		tempText.position.y = Std.int(y*background.height-background.height/2); 
 		childs[name] = tempText;
 		addChild(tempText);
 	}
@@ -77,9 +78,11 @@ class MyPopin extends DisplayObjectContainer
 		graphics.endFill();
 		target.mask = graphics; // this line assign the mask at the container and all of his childrens (present past and future)
 	}
+
+	//place a vertical scrollBar, the scroll action is automaticly added to containers["VertivalScrollContainer"]
 	private function addVerticalScrollBar(){
 		addIcon(0.91,0.15,'assets/UI/PopIn/PopInScrollingBar.png',"scrollingBar",this,false);
-		scrollIndicator = new IconPopin(0.933*background.width-background.width/2,0.23*background.height-background.height/2,'assets/UI/PopIn/PopInScrollingTruc.png',"scrollingIndicator",true);
+		scrollIndicator = new IconPopin(Std.int(0.933*background.width-background.width/2),Std.int(0.23*background.height-background.height/2),'assets/UI/PopIn/PopInScrollingTruc.png',"scrollingIndicator",true);
 		scrollIndicator.mousedown = function(data) {
 			scrollDragging = true;
 			scrollDragSy = data.getLocalPosition(scrollIndicator).y * scrollIndicator.scale.y;	
@@ -91,13 +94,18 @@ class MyPopin extends DisplayObjectContainer
 			var newY:Float = data.getLocalPosition(scrollIndicator.parent).y - scrollDragSy;
 			if(scrollDragging && newY > 0.23*background.height-background.height/2 && newY < 0.635*background.height-background.height/2) {
 				var interval:Float = (0.635*background.height-background.height/2) - (0.23*background.height-background.height/2 );
-				var maxScroll:Float = containers["VertivalScrollContainer"].height-childs["contentBackground"].height + 100;
+				var maxScroll:Float = containers["VertivalScrollContainer"].height-childs["contentBackground"].height + 100; // 100 is totaly changeable
 				scrollIndicator.y = newY;
-				containers["VertivalScrollContainer"].y =  - ((newY - (0.23*background.height-background.height/2)) * maxScroll  / interval); // math stuff fait à l'arrache (plus ou moins)
+				containers["VertivalScrollContainer"].y =  - Std.int(((newY - (0.23*background.height-background.height/2)) * maxScroll  / interval)); // math stuff fait à l'arrache (plus ou moins)
 			}
 		}
 		childs["scrollingIndicator"] = scrollIndicator;
 		addChild(scrollIndicator);
+	}
+	private function removeVerticalScrollBar(){
+		removeChild(childs["scrollingIndicator"]);
+		removeChild(childs["scrollingBar"]);
+		scrollIndicator = childs["scrollingIndicator"] = childs["scrollingBar"] = null;
 	}
 	// add a DisplayObjectContainer à la popin. attention : Les containers ne sont pas dans childs mais dans containers
 	private function addContainer(name:String,target:DisplayObjectContainer,?x:Float=0,?y:Float=0){
