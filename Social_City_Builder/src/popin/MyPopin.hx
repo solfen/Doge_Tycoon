@@ -52,9 +52,9 @@ class MyPopin extends DisplayObjectContainer
 	}
 
 	// creates an IconPopin and puts it in the childs array
-	private function addIcon(x:Float,y:Float, texturePath:String, name:String, target:DisplayObjectContainer,?isInteractive:Bool=true):Void{
+	private function addIcon(x:Float,y:Float, texturePath:String, name:String, target:DisplayObjectContainer,?isInteractive:Bool=true,?texturePathActive:String):Void{
 		//int cast because Float pos = blurry images
-		currentChild = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive);
+		currentChild = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive,texturePathActive);
 		if(isInteractive){
 			currentChild.click = childClick;
 		}

@@ -702,19 +702,32 @@ pixi.renderers.IRenderer.prototype = {
 	__class__: pixi.renderers.IRenderer
 };
 var popin = {};
-popin.IconPopin = function(pX,pY,pTexturePath,pName,isInteractive) {
-	PIXI.Sprite.call(this,PIXI.Texture.fromImage(pTexturePath));
+popin.IconPopin = function(pX,pY,texturePathNormal,pName,isInteractive,texturePathActive) {
+	this.activeTexture = null;
+	this.normalTexture = PIXI.Texture.fromImage(texturePathNormal);
+	if(texturePathActive != null) this.activeTexture = PIXI.Texture.fromImage(texturePathActive);
+	PIXI.Sprite.call(this,this.normalTexture);
 	this.x = pX;
 	this.y = pY;
 	this._name = pName;
 	this.interactive = isInteractive;
 	this.buttonMode = isInteractive;
+	if(isInteractive) {
+		this.mouseover = $bind(this,this.onMouseOver);
+		this.mouseout = $bind(this,this.onMouseOut);
+	}
 };
 $hxClasses["popin.IconPopin"] = popin.IconPopin;
 popin.IconPopin.__name__ = ["popin","IconPopin"];
 popin.IconPopin.__super__ = PIXI.Sprite;
 popin.IconPopin.prototype = $extend(PIXI.Sprite.prototype,{
-	__class__: popin.IconPopin
+	onMouseOver: function(pData) {
+		if(this.activeTexture != null) this.setTexture(this.activeTexture);
+	}
+	,onMouseOut: function(pData) {
+		this.setTexture(this.normalTexture);
+	}
+	,__class__: popin.IconPopin
 });
 popin.MyPopin = function(startX,startY,texturePath,isModal) {
 	if(isModal == null) isModal = true;
@@ -790,9 +803,9 @@ $hxClasses["popin.MyPopin"] = popin.MyPopin;
 popin.MyPopin.__name__ = ["popin","MyPopin"];
 popin.MyPopin.__super__ = pixi.display.DisplayObjectContainer;
 popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
-	addIcon: function(x,y,texturePath,name,target,isInteractive) {
+	addIcon: function(x,y,texturePath,name,target,isInteractive,texturePathActive) {
 		if(isInteractive == null) isInteractive = true;
-		this.currentChild = new popin.IconPopin(x * this.background.width - this.background.width / 2 | 0,y * this.background.height - this.background.height / 2 | 0,texturePath,name,isInteractive);
+		this.currentChild = new popin.IconPopin(x * this.background.width - this.background.width / 2 | 0,y * this.background.height - this.background.height / 2 | 0,texturePath,name,isInteractive,texturePathActive);
 		if(isInteractive) this.currentChild.click = $bind(this,this.childClick);
 		var v = this.currentChild;
 		this.childs.set(name,v);
@@ -879,10 +892,10 @@ popin.PopinBuild = function(startX,startY) {
 	this.addIcon(-0.15,-0.15,"assets/UI/PopInBuilt/PopInTitleConstruction.png","popInTitle",this,false);
 	this.addIcon(0.65,0.05,"assets/UI/PopInBuilt/PopInHeaderNiches.png","categoryHeader",this,false);
 	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollBackground.png","contentBackground",this,false);
-	this.addIcon(-0.02,0.17,"assets/UI/PopInBuilt/PopInOngletNicheNormal.png","nicheTab",this,true);
-	this.addIcon(-0.02,0.29,"assets/UI/PopInBuilt/PopInOngletFuseeNormal.png","spaceshipTab",this,true);
-	this.addIcon(-0.02,0.41,"assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png","utilitairesTab",this,true);
-	this.addIcon(0.95,0,"assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","closeButton",this,true);
+	this.addIcon(-0.02,0.17,"assets/UI/PopInBuilt/PopInOngletNicheNormal.png","nicheTab",this,true,"assets/UI/PopInBuilt/PopInOngletNicheActive.png");
+	this.addIcon(-0.02,0.29,"assets/UI/PopInBuilt/PopInOngletFuseeNormal.png","spaceshipTab",this,true,"assets/UI/PopInBuilt/PopInOngletFuseeActive.png");
+	this.addIcon(-0.02,0.41,"assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png","utilitairesTab",this,true,"assets/UI/PopInBuilt/PopInOngletUtilitairesActive.png");
+	this.addIcon(0.95,0,"assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","closeButton",this,true,"assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png");
 	this.addContainer("VertivalScrollContainer",this,0,0);
 	this.addMask(this.childs.get("contentBackground").x,this.childs.get("contentBackground").y + 3,this.childs.get("contentBackground").width,this.childs.get("contentBackground").height - 6,this.containers.get("VertivalScrollContainer"));
 	this.addIconsFromConfig(GameInfo.buildMenuArticles.niches);

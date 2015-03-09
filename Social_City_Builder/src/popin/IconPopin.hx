@@ -8,13 +8,32 @@ import pixi.display.Sprite;
 class IconPopin extends Sprite
 {
 	private var _name:String;
-	public function new(pX:Float,pY:Float, pTexturePath:String,pName:String,isInteractive:Bool) 
+	private var normalTexture:Texture;
+	private var activeTexture:Texture = null;
+
+	public function new(pX:Float,pY:Float, texturePathNormal:String,pName:String,isInteractive:Bool,?texturePathActive:String) 
 	{
-		super(Texture.fromImage(pTexturePath));	
+		normalTexture = Texture.fromImage(texturePathNormal);
+		if(texturePathActive != null){
+			activeTexture = Texture.fromImage(texturePathActive);
+		}
+		super(normalTexture);	
 		x = pX;
 		y = pY;
 		_name = pName;
 		interactive = isInteractive;
 		buttonMode = isInteractive;
+		if(isInteractive){
+			mouseover 	= onMouseOver;
+			mouseout  	= onMouseOut;
+		}
+	}
+	private function onMouseOver (pData:InteractionData): Void {
+		if(activeTexture != null){
+			setTexture(activeTexture);
+		}
+	}
+	private function onMouseOut (pData:InteractionData): Void {
+		setTexture(normalTexture);
 	}
 }

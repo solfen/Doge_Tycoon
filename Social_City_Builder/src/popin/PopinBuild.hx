@@ -22,10 +22,11 @@ class PopinBuild extends MyPopin
 		addIcon(0.65,0.05,'assets/UI/PopInBuilt/PopInHeaderNiches.png',"categoryHeader",this,false);
 		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollBackground.png',"contentBackground",this,false);
 
-		addIcon(-0.02,0.17,'assets/UI/PopInBuilt/PopInOngletNicheNormal.png',"nicheTab",this,true);
-		addIcon(-0.02,0.29,'assets/UI/PopInBuilt/PopInOngletFuseeNormal.png',"spaceshipTab",this,true);
-		addIcon(-0.02,0.41,'assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png',"utilitairesTab",this,true);
-		addIcon(0.95, 0,'assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png',"closeButton",this,true);
+		addIcon(-0.02,0.17,'assets/UI/PopInBuilt/PopInOngletNicheNormal.png',"nicheTab",this,true,'assets/UI/PopInBuilt/PopInOngletNicheActive.png');
+		addIcon(-0.02,0.29,'assets/UI/PopInBuilt/PopInOngletFuseeNormal.png',"spaceshipTab",this,true,'assets/UI/PopInBuilt/PopInOngletFuseeActive.png');
+		addIcon(-0.02,0.41,'assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png',"utilitairesTab",this,true,'assets/UI/PopInBuilt/PopInOngletUtilitairesActive.png');
+		addIcon(0.95, 0,'assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png',"closeButton",this,true,'assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png');
+
 		addContainer("VertivalScrollContainer",this,0,0);
 		addMask(childs["contentBackground"].x, childs["contentBackground"].y+3, childs["contentBackground"].width, childs["contentBackground"].height-6,containers["VertivalScrollContainer"]);
 		addIconsFromConfig(GameInfo.buildMenuArticles.niches);
