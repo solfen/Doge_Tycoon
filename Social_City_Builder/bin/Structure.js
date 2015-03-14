@@ -148,14 +148,14 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 		scenes.ScenesManager.getInstance().loadScene("GameScene");
 	}
 	,onFacebookConnect: function(pResponse) {
-		console.log(pResponse.status);
+		haxe.Log.trace(pResponse.status,{ fileName : "Main.hx", lineNumber : 117, className : "Main", methodName : "onFacebookConnect"});
 		if(pResponse.status == "connected") {
-			console.log("awww yeah ! you're in !");
+			haxe.Log.trace("awww yeah ! you're in !",{ fileName : "Main.hx", lineNumber : 119, className : "Main", methodName : "onFacebookConnect"});
 			FB.ui({ method : "share", href : "https://developers.facebook.com/docs"},$bind(this,this.test));
-		} else if(pResponse.status == "not_authorized") console.log("Oh no ! you're not identified");
+		} else if(pResponse.status == "not_authorized") haxe.Log.trace("Oh no ! you're not identified",{ fileName : "Main.hx", lineNumber : 123, className : "Main", methodName : "onFacebookConnect"});
 	}
 	,test: function() {
-		console.log("succes");
+		haxe.Log.trace("succes",{ fileName : "Main.hx", lineNumber : 127, className : "Main", methodName : "test"});
 	}
 	,gameLoop: function(timestamp) {
 		Main.stats.begin();
@@ -193,6 +193,7 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 var IMap = function() { };
 $hxClasses["IMap"] = IMap;
 IMap.__name__ = ["IMap"];
+Math.__name__ = ["Math"];
 var Reflect = function() { };
 $hxClasses["Reflect"] = Reflect;
 Reflect.__name__ = ["Reflect"];
@@ -255,6 +256,12 @@ Type.createInstance = function(cl,args) {
 	return null;
 };
 var haxe = {};
+haxe.Log = function() { };
+$hxClasses["haxe.Log"] = haxe.Log;
+haxe.Log.__name__ = ["haxe","Log"];
+haxe.Log.trace = function(v,infos) {
+	js.Boot.__trace(v,infos);
+};
 haxe.ds = {};
 haxe.ds.StringMap = function() {
 	this.h = { };
@@ -348,7 +355,7 @@ hud.IconHud.__name__ = ["hud","IconHud"];
 hud.IconHud.__super__ = PIXI.Sprite;
 hud.IconHud.prototype = $extend(PIXI.Sprite.prototype,{
 	changeTexture: function(state) {
-		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "hover" && this.hoverTexture != null) this.setTexture(this.hoverTexture); else if(state == "normal") this.setTexture(this.normalTexture); else console.log("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state);
+		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "hover" && this.hoverTexture != null) this.setTexture(this.hoverTexture); else if(state == "normal") this.setTexture(this.normalTexture); else haxe.Log.trace("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state,{ fileName : "IconHud.hx", lineNumber : 43, className : "hud.IconHud", methodName : "changeTexture"});
 	}
 	,__class__: hud.IconHud
 });
@@ -624,6 +631,25 @@ var js = {};
 js.Boot = function() { };
 $hxClasses["js.Boot"] = js.Boot;
 js.Boot.__name__ = ["js","Boot"];
+js.Boot.__unhtml = function(s) {
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+};
+js.Boot.__trace = function(v,i) {
+	var msg;
+	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	msg += js.Boot.__string_rec(v,"");
+	if(i != null && i.customParams != null) {
+		var _g = 0;
+		var _g1 = i.customParams;
+		while(_g < _g1.length) {
+			var v1 = _g1[_g];
+			++_g;
+			msg += "," + js.Boot.__string_rec(v1,"");
+		}
+	}
+	var d;
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js.Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+};
 js.Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -918,8 +944,8 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 			var y = cpt * (this.articleHeight + this.articleInterline);
 			var ressources = i.ressources;
 			this.addIcon(0.125,0.175 + y,"assets/UI/PopInBuilt/PopInBuiltBgArticle.png","articleBase",this.containers.get("verticalScroller"),false);
-			this.addIcon(0.697,0.309 + y,"assets/UI/PopInBuilt/PopInBuiltSoftNormal.png","ArticleBgRessources",this.containers.get("verticalScroller"),false);
-			this.addIcon(0.825,0.309 + y,"assets/UI/PopInBuilt/PopInBuiltHardNormal.png","ArticleBgRessources",this.containers.get("verticalScroller"),false);
+			this.addIcon(0.697,0.309 + y,"assets/UI/PopInBuilt/PopInBuiltSoftNormal.png","buildSoft",this.containers.get("verticalScroller"),true);
+			this.addIcon(0.825,0.309 + y,"assets/UI/PopInBuilt/PopInBuiltHardNormal.png","buildHard",this.containers.get("verticalScroller"),true);
 			this.addIcon(0.14,0.1875 + y,"assets/UI/Icons/Buildings/" + Std.string(i.img) + ".png","ArticlePreview",this.containers.get("verticalScroller"),false);
 			this.addIcon(0.758,0.3 + y,"assets/UI/Icons/IconsRessources/IconOsDor.png","HardRessource",this.containers.get("verticalScroller"),false);
 			this.addText(0.78,0.34 + y,"FuturaStdHeavy","15px",i.hardPrice,"HardRessourcePrice",this.containers.get("verticalScroller"));
@@ -953,6 +979,12 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 			this.containers.get("verticalScroller").position.set(0,0);
 			this.addBuildArticles(GameInfo.buildMenuArticles.utilitaires);
 			this.currentTab = "utilitairesTab";
+		} else if(pEvent.target._name == "buildSoft") {
+			var index = Math.round(((pEvent.target.y + this.background.height / 2) / this.background.height - 0.309) / (this.articleHeight + this.articleInterline));
+			if(this.currentTab == "nicheTab") haxe.Log.trace("trying to buy the article : " + index + " here's the ressources needed : ",{ fileName : "PopinBuild.hx", lineNumber : 95, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.niches[index].ressources]}); else if(this.currentTab == "spaceshipTab") haxe.Log.trace("trying to buy the article : " + index + " here's the ressources needed : ",{ fileName : "PopinBuild.hx", lineNumber : 97, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.spacechips[index].ressources]}); else if(this.currentTab == "utilitairesTab") haxe.Log.trace("trying to buy the article : " + index + " here's the ressources needed : ",{ fileName : "PopinBuild.hx", lineNumber : 99, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.utilitaires[index].ressources]});
+		} else if(pEvent.target._name == "buildHard") {
+			var index1 = Math.round(((pEvent.target.y + this.background.height / 2) / this.background.height - 0.309) / (this.articleHeight + this.articleInterline));
+			if(this.currentTab == "nicheTab") haxe.Log.trace("trying to buy the article : " + index1 + " here's the hard price : ",{ fileName : "PopinBuild.hx", lineNumber : 105, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.niches[index1].hardPrice]}); else if(this.currentTab == "spaceshipTab") haxe.Log.trace("trying to buy the article : " + index1 + " here's the hard price : ",{ fileName : "PopinBuild.hx", lineNumber : 107, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.spacechips[index1].hardPrice]}); else if(this.currentTab == "utilitairesTab") haxe.Log.trace("trying to buy the article : " + index1 + " here's the hard price : ",{ fileName : "PopinBuild.hx", lineNumber : 109, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.utilitaires[index1].hardPrice]});
 		}
 	}
 	,__class__: popin.PopinBuild
@@ -1049,7 +1081,7 @@ scenes.GameScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototy
 	doAction: function() {
 	}
 	,resize: function() {
-		console.log(this);
+		haxe.Log.trace(this,{ fileName : "GameScene.hx", lineNumber : 48, className : "scenes.GameScene", methodName : "resize"});
 	}
 	,__class__: scenes.GameScene
 });
@@ -1208,6 +1240,16 @@ utils.system.DeviceCapabilities.get_width = function() {
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
+Math.NaN = Number.NaN;
+Math.NEGATIVE_INFINITY = Number.NEGATIVE_INFINITY;
+Math.POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
+$hxClasses.Math = Math;
+Math.isFinite = function(i) {
+	return isFinite(i);
+};
+Math.isNaN = function(i1) {
+	return isNaN(i1);
+};
 String.prototype.__class__ = $hxClasses.String = String;
 String.__name__ = ["String"];
 $hxClasses.Array = Array;

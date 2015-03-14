@@ -45,8 +45,8 @@ class PopinBuild extends MyPopin
 			var y:Float = cpt*(articleHeight+articleInterline);
 			var ressources:Array<Dynamic> = i.ressources;
 			addIcon(0.125,0.175+y,'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"articleBase",containers["verticalScroller"],false);
-			addIcon(0.697,0.309+y,'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"ArticleBgRessources",containers["verticalScroller"],false);
-			addIcon(0.825,0.309+y,'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"ArticleBgRessources",containers["verticalScroller"],false);
+			addIcon(0.697,0.309+y,'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"buildSoft",containers["verticalScroller"],true);
+			addIcon(0.825,0.309+y,'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"buildHard",containers["verticalScroller"],true);
 			addIcon(0.14,0.1875+y,'assets/UI/Icons/Buildings/'+i.img+'.png',"ArticlePreview",containers["verticalScroller"],false);
 			addIcon(0.758,0.3+y,'assets/UI/Icons/IconsRessources/IconOsDor.png',"HardRessource",containers["verticalScroller"],false);
 			addText(0.78,0.34+y,'FuturaStdHeavy','15px',i.hardPrice,'HardRessourcePrice',containers["verticalScroller"]);
@@ -87,6 +87,26 @@ class PopinBuild extends MyPopin
 			containers["verticalScroller"].position.set(0,0);
 			addBuildArticles(GameInfo.buildMenuArticles.utilitaires);
 			currentTab = "utilitairesTab";
+		}
+		else if(pEvent.target._name == "buildSoft"){
+			//we deduce the index of the article (first article in list is 0) from its position
+			var index:Int = Math.round(((pEvent.target.y+background.height/2)/background.height - 0.309)/(articleHeight+articleInterline));
+			if(currentTab == "nicheTab")
+				trace("trying to buy the article : " + index + " here's the ressources needed : ", GameInfo.buildMenuArticles.niches[index].ressources);
+			else if(currentTab == "spaceshipTab")
+				trace("trying to buy the article : " + index + " here's the ressources needed : ", GameInfo.buildMenuArticles.spacechips[index].ressources);
+			else if(currentTab == "utilitairesTab")
+				trace("trying to buy the article : " + index + " here's the ressources needed : ", GameInfo.buildMenuArticles.utilitaires[index].ressources);
+		}
+		else if(pEvent.target._name == "buildHard"){
+			//we deduce the index of the article (first article in list is 0) from its position
+			var index:Int = Math.round(((pEvent.target.y+background.height/2)/background.height - 0.309)/(articleHeight+articleInterline));
+			if(currentTab == "nicheTab")
+				trace("trying to buy the article : " + index + " here's the hard price : ", GameInfo.buildMenuArticles.niches[index].hardPrice);
+			else if(currentTab == "spaceshipTab")
+				trace("trying to buy the article : " + index + " here's the hard price : ", GameInfo.buildMenuArticles.spacechips[index].hardPrice);
+			else if(currentTab == "utilitairesTab")
+				trace("trying to buy the article : " + index + " here's the hard price : ", GameInfo.buildMenuArticles.utilitaires[index].hardPrice);
 		}
 	}
 }

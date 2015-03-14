@@ -43,8 +43,6 @@ class MyPopin extends DisplayObjectContainer
 			addChild(modalZone);
 		}
 
-		//if we dont have a texturePath then we take it from the class name
-
 		background = new Sprite(Texture.fromImage(texturePath));
 		background.anchor.set(0.5, 0.5);
 		childs["background"] = background;
@@ -52,6 +50,7 @@ class MyPopin extends DisplayObjectContainer
 	}
 
 	// creates an IconPopin and puts it in the childs array
+	// TODO : create textures and stock them so that if we ask for the same we dont have to recreate it
 	private function addIcon(x:Float,y:Float, texturePath:String, name:String, target:DisplayObjectContainer,?isInteractive:Bool=true,?texturePathActive:String):Void{
 		//int cast because Float pos = blurry images
 		currentChild = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive,texturePathActive);
