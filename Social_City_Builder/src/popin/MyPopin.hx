@@ -61,13 +61,13 @@ class MyPopin extends DisplayObjectContainer
 		childs[name] = currentChild;
 		target.addChild(currentChild);
 	}
-	private function addText(x:Float,y:Float,font:String,fontSize:String,txt:String,name:String,?pAlign:String="center"):Void{
+	private function addText(x:Float,y:Float,font:String,fontSize:String,txt:String,name:String,target:DisplayObjectContainer,?pAlign:String="left"):Void{
 		var style:TextStyle = {font:fontSize+" "+font,align:pAlign};
 		var tempText:Text = new Text(txt, style);
 		tempText.position.x = Std.int(x*background.width-background.width/2);
 		tempText.position.y = Std.int(y*background.height-background.height/2); 
 		childs[name] = tempText;
-		addChild(tempText);
+		target.addChild(tempText);
 	}
 	// put a mask on a container so if its childs are outside of the mask they wont be rendered
 	private function addMask(x:Float,y:Float,width:Float,height:Float,target:DisplayObjectContainer){
@@ -79,7 +79,7 @@ class MyPopin extends DisplayObjectContainer
 		target.mask = graphics; // this line assign the mask at the container and all of his childrens (present past and future)
 	}
 
-	//place a vertical scrollBar, the scroll action is automaticly added to containers["VertivalScrollContainer"]
+	//place a vertical scrollBar, the scroll action is automaticly added to containers["verticalScroller"]
 	private function addVerticalScrollBar(){
 		addIcon(0.91,0.15,'assets/UI/PopIn/PopInScrollingBar.png',"scrollingBar",this,false);
 		scrollIndicator = new IconPopin(Std.int(0.933*background.width-background.width/2),Std.int(0.23*background.height-background.height/2),'assets/UI/PopIn/PopInScrollingTruc.png',"scrollingIndicator",true);
@@ -94,9 +94,9 @@ class MyPopin extends DisplayObjectContainer
 			var newY:Float = data.getLocalPosition(scrollIndicator.parent).y - scrollDragSy;
 			if(scrollDragging && newY > 0.23*background.height-background.height/2 && newY < 0.635*background.height-background.height/2) {
 				var interval:Float = (0.635*background.height-background.height/2) - (0.23*background.height-background.height/2 );
-				var maxScroll:Float = containers["VertivalScrollContainer"].height-childs["contentBackground"].height + 100; // 100 is totaly changeable
+				var maxScroll:Float = containers["verticalScroller"].height-childs["contentBackground"].height + 100; // 100 is totaly changeable
 				scrollIndicator.y = newY;
-				containers["VertivalScrollContainer"].y =  - Std.int(((newY - (0.23*background.height-background.height/2)) * maxScroll  / interval)); // math stuff fait à l'arrache (plus ou moins)
+				containers["verticalScroller"].y =  - Std.int(((newY - (0.23*background.height-background.height/2)) * maxScroll  / interval)); // math stuff fait à l'arrache (plus ou moins)
 			}
 		}
 		childs["scrollingIndicator"] = scrollIndicator;

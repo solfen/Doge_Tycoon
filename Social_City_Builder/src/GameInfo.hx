@@ -331,127 +331,89 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  	public static var buildMenuArticles:Dynamic = {
  		"niches": [
  			{
- 				"sprites": [
-	 				{"x":0.125,"y":0.175,"sprite":'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"name":"articleBase","isInteractive":false},
-					{"x":0.14, "y":0.1875,"sprite": 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png',"name":"ArticlePreview","isInteractive":false},
-					{"x":0.308,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconDogeflooz.png',"name":"SoftRessource1","isInteractive":false},
-					{"x":0.758,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconOsDor.png',"name":"HardRessource","isInteractive":false},
-					{"x":0.697,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-					{"x":0.825,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-
- 				],
- 				"text":[
-					{"x":0.31 ,"y": 0.19 ,"font": "FuturaSTD", "fontSize": "25px" , "txt": "Dog House" , "name":"title" },
-					{"x":0.31 ,"y": 0.25 ,"font": "FuturaSTD" ,"fontSize": "15px" , "txt": "Standard dog habitation" , "name": "description" }
- 				]
- 			},
- 			{
- 				"sprites": [
-	 				{"x":0.125,"y":0.175,"sprite":'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"name":"articleBase","isInteractive":false},
-					{"x":0.14, "y":0.1875,"sprite": 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png',"name":"ArticlePreview","isInteractive":false},
-					{"x":0.308,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconDogeflooz.png',"name":"SoftRessource1","isInteractive":false},
-					{"x":0.758,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconOsDor.png',"name":"HardRessource","isInteractive":false},
-					{"x":0.697,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-					{"x":0.825,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-
- 				],
- 				"text":[
-					{"x":0.31 ,"y": 0.19 ,"font": "FuturaSTD", "fontSize": "25px" , "txt": "Dog House" , "name":"title" },
-					{"x":0.31 ,"y": 0.25 ,"font": "FuturaSTD" ,"fontSize": "15px" , "txt": "Standard dog habitation" , "name": "description" }
+ 				img: 'PopInBuiltArticlePreviewNiche',
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
  				]
  			},
  		],
  		"spacechips": [
- 			{
- 				"sprites": [
-	 				{"x":0.125,"y":0.175,"sprite":'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"name":"articleBase","isInteractive":false},
-					{"x":0.14, "y":0.1875,"sprite": 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png',"name":"ArticlePreview","isInteractive":false},
-					{"x":0.308,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconDogeflooz.png',"name":"SoftRessource1","isInteractive":false},
-					{"x":0.758,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconOsDor.png',"name":"HardRessource","isInteractive":false},
-					{"x":0.697,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-					{"x":0.825,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-
- 				],
- 				"text":[
-					{"x":0.31 ,"y": 0.19 ,"font": "FuturaSTD", "fontSize": "25px" , "txt": "Dog House" , "name":"title" },
-					{"x":0.31 ,"y": 0.25 ,"font": "FuturaSTD" ,"fontSize": "15px" , "txt": "Standard dog habitation" , "name": "description" }
+ 			 {
+ 				img: 'PopInBuiltArticlePreviewHangar1',
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
  				]
  			},
  			{
- 				"sprites": [
-	 				{"x":0.125,"y":0.175,"sprite":'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"name":"articleBase","isInteractive":false},
-					{"x":0.14, "y":0.1875,"sprite": 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png',"name":"ArticlePreview","isInteractive":false},
-					{"x":0.308,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconDogeflooz.png',"name":"SoftRessource1","isInteractive":false},
-					{"x":0.758,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconOsDor.png',"name":"HardRessource","isInteractive":false},
-					{"x":0.697,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-					{"x":0.825,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-
- 				],
- 				"text":[
-					{"x":0.31 ,"y": 0.19 ,"font": "FuturaSTD", "fontSize": "25px" , "txt": "Dog House" , "name":"title" },
-					{"x":0.31 ,"y": 0.25 ,"font": "FuturaSTD" ,"fontSize": "15px" , "txt": "Standard dog habitation" , "name": "description" }
+ 				img: 'PopInBuiltArticlePreviewHangar2',
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
  				]
  			},
  			{
- 				"sprites": [
-	 				{"x":0.125,"y":0.175,"sprite":'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"name":"articleBase","isInteractive":false},
-					{"x":0.14, "y":0.1875,"sprite": 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png',"name":"ArticlePreview","isInteractive":false},
-					{"x":0.308,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconDogeflooz.png',"name":"SoftRessource1","isInteractive":false},
-					{"x":0.758,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconOsDor.png',"name":"HardRessource","isInteractive":false},
-					{"x":0.697,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-					{"x":0.825,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-
- 				],
- 				"text":[
-					{"x":0.31 ,"y": 0.19 ,"font": "FuturaSTD", "fontSize": "25px" , "txt": "Dog House" , "name":"title" },
-					{"x":0.31 ,"y": 0.25 ,"font": "FuturaSTD" ,"fontSize": "15px" , "txt": "Standard dog habitation" , "name": "description" }
+ 				img: 'PopInBuiltArticlePreviewHangar3',
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 				]
+ 			}, 			
+ 			{
+ 				img: 'PopInBuiltArticlePreviewHangar4',
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
  				]
  			},
+ 			{
+ 				img: 'PopInBuiltArticlePreviewHangar5',
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 				]
+ 			},
+ 			
  		],
  		"utilitaires": [
  			{
- 				"sprites": [
-	 				{"x":0.125,"y":0.175,"sprite":'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"name":"articleBase","isInteractive":false},
-					{"x":0.14, "y":0.1875,"sprite": 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewCasino.png',"name":"ArticlePreview","isInteractive":false},
-					{"x":0.308,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconDogeflooz.png',"name":"SoftRessource1","isInteractive":false},
-					{"x":0.758,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconOsDor.png',"name":"HardRessource","isInteractive":false},
-					{"x":0.697,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-					{"x":0.825,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-
- 				],
- 				"text":[
-					{"x":0.31 ,"y": 0.19 ,"font": "FuturaSTD", "fontSize": "25px" , "txt": "Dog House" , "name":"title" },
-					{"x":0.31 ,"y": 0.25 ,"font": "FuturaSTD" ,"fontSize": "15px" , "txt": "Standard dog habitation" , "name": "description" }
+ 				img: 'PopInBuiltArticlePreviewCasino',
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
  				]
  			},
  			{
- 				"sprites": [
-	 				{"x":0.125,"y":0.175,"sprite":'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"name":"articleBase","isInteractive":false},
-					{"x":0.14, "y":0.1875,"sprite": 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png',"name":"ArticlePreview","isInteractive":false},
-					{"x":0.308,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconDogeflooz.png',"name":"SoftRessource1","isInteractive":false},
-					{"x":0.758,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconOsDor.png',"name":"HardRessource","isInteractive":false},
-					{"x":0.697,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-					{"x":0.825,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-
- 				],
- 				"text":[
-					{"x":0.31 ,"y": 0.19 ,"font": "FuturaSTD", "fontSize": "25px" , "txt": "Dog House" , "name":"title" },
-					{"x":0.31 ,"y": 0.25 ,"font": "FuturaSTD" ,"fontSize": "15px" , "txt": "Standard dog habitation" , "name": "description" }
+ 				img: 'PopInBuiltArticlePreviewEglise',
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
  				]
  			},
  			{
- 				"sprites": [
-	 				{"x":0.125,"y":0.175,"sprite":'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"name":"articleBase","isInteractive":false},
-					{"x":0.14, "y":0.1875,"sprite": 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png',"name":"ArticlePreview","isInteractive":false},
-					{"x":0.308,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconDogeflooz.png',"name":"SoftRessource1","isInteractive":false},
-					{"x":0.758,"y":0.3,"sprite":'assets/UI/Icons/IconsRessources/IconOsDor.png',"name":"HardRessource","isInteractive":false},
-					{"x":0.697,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-					{"x":0.825,"y":0.309,"sprite":'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"name":"ArticleBgRessources","isInteractive":false},
-
- 				],
- 				"text":[
-					{"x":0.31 ,"y": 0.19 ,"font": "FuturaSTD", "fontSize": "25px" , "txt": "Dog House" , "name":"title" },
-					{"x":0.31 ,"y": 0.25 ,"font": "FuturaSTD" ,"fontSize": "15px" , "txt": "Standard dog habitation" , "name": "description" }
+ 				img: 'PopInBuiltArticlePreviewEntrepot',
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
  				]
  			},
  		],

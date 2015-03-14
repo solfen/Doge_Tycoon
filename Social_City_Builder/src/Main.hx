@@ -69,7 +69,7 @@ class Main extends EventDispatcher
 		Browser.window.addEventListener("resize", resize);
 		WebFontConfig = {
 		    custom: {
-		    	families: ['FuturaSTD'],
+		    	families: ['FuturaStdMedium','FuturaStdHeavy'],
 		    	urls: ['fonts.css'],
 		    },
 
