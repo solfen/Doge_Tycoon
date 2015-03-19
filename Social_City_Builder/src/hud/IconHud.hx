@@ -21,11 +21,10 @@ class IconHud extends Sprite {
 			hoverTexture = Texture.fromImage(texturePathHover);
 		}
 
-		// create the icon add params it
+		// create the icon add params it trasform to int because float position = horrible canvas perf and blurry images
 		super(normalTexture);
-		anchor.set(0.5, 0.5);
-		x = startX*DeviceCapabilities.width;
-		y = startY*DeviceCapabilities.height;
+		x = Std.int(startX*DeviceCapabilities.width);
+		y = Std.int(startY*DeviceCapabilities.height);
 	}
 
 	//check the state and if we have the according texture

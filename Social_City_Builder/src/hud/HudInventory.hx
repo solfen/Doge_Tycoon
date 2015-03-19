@@ -1,7 +1,6 @@
 package hud;
 
 import hud.IconHud;
-import utils.system.DeviceCapabilities;
 import popin.PopinManager;
 import pixi.InteractionData;
 
@@ -24,7 +23,7 @@ class HudInventory extends IconHud
 	}
 	
 	private function onClick (pData:InteractionData) : Void {
-		PopinManager.getInstance().openPopin("PopinBuild", DeviceCapabilities.width/2, DeviceCapabilities.height/2);
+		PopinManager.getInstance().openPopin("PopinInventory", 0.5, 0.5);
 	}
 	private function onMouseOver (pData:InteractionData): Void {
 		changeTexture("active");

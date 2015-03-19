@@ -45,7 +45,6 @@ class GameScene extends DisplayObjectContainer
 
 	}
 	public function resize ():Void {
-		trace(this);
 		/*scale.x = scale.y = DeviceCapabilities.width < DeviceCapabilities.height ? DeviceCapabilities.width / GameInfo.userWidth:DeviceCapabilities.height / GameInfo.userHeight;*/
 	}
 }

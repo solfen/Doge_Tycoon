@@ -418,6 +418,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  		],
  	};
- 	public static var userWidth=1920;
- 	public static var userHeight=1000;
+ 	public static var userWidth:Float=1920;
+ 	public static var userHeight:Float=1000;
+ 	public static var fric:Float = 15000;
+ 	public static var hardMoney:Float = 150;
 }

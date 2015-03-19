@@ -1,7 +1,6 @@
 package hud;
 
 import hud.IconHud;
-import utils.system.DeviceCapabilities;
 import popin.PopinManager;
 import pixi.InteractionData;
 
