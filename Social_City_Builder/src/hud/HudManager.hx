@@ -14,7 +14,7 @@ class HudManager extends DisplayObjectContainer
 	private var currentChild: IconHud;
 	private var hudWidthInterval = 0.05;
 	private var hudTopY = 0.025;
-	private var hudBottomY = 0.9;
+	private var hudBottomY = 0;
 	private var lastX:Float = 0;
 	
 	public static function getInstance (): HudManager {
@@ -37,18 +37,21 @@ class HudManager extends DisplayObjectContainer
 		addContainer(0.94,0,'HudLeft',0.05,0.05,'right');
 		addHud(new HudOptions(0,hudTopY),"HudOptions",'HudLeft');
 		
-		addContainer(0.24,0,'HudBottom',0.75,0.01,'right');
+		addContainer(0.01,0.9,'HudBottom',.98,0.01,'right');
 		addHud(new HudDestroy(0,hudBottomY),"HudDestroy", 'HudBottom');
-		addHud(new HudObservatory(0,hudBottomY),"HudObservatory", 'HudBottom');
 		addHud(new HudInventory(0,hudBottomY),"HudInventory", 'HudBottom');
 		addHud(new HudQuests(0,hudBottomY),"HudQuests", 'HudBottom');
 		addHud(new HudMarket(0,hudBottomY),"HudMarket", 'HudBottom');
 		addHud(new HudShop(0,hudBottomY),"HudShop", 'HudBottom');
 		addHud(new HudBuild(0,hudBottomY),"HudBuild", 'HudBottom');
+		addHud(new HudObservatory(0,hudBottomY),"HudObservatory", 'HudBottom');
 
 		resizeHud();
 		Main.getInstance().addEventListener(Event.RESIZE, resizeHud);
 	}
+	// this fonction will resize and reposition all the hud
+	// TODO : too greedy find a way to enchange the perfs
+	//TODO : resize y
 	private function resizeHud(){
 		for(container in containers){
 			container.obj.scale.x = container.obj.scale.y = 1.0;
@@ -74,6 +77,7 @@ class HudManager extends DisplayObjectContainer
 
 				container.obj.position.x = Std.int(tempX*DeviceCapabilities.width);
 			}
+			container.obj.position.y = Math.min(Std.int(container.startY*DeviceCapabilities.height),DeviceCapabilities.height-container.obj.children[0].height);
 		}
 	}
 	private function addContainer(x:Float,y:Float,name:String,maxWidth:Float,interval:Float,?align:String='left'){
@@ -84,6 +88,7 @@ class HudManager extends DisplayObjectContainer
 		containers[name].maxWidth = maxWidth;
 		containers[name].interval = interval;
 		containers[name].startX = x;
+		containers[name].startY = y;
 		containers[name].align = align;
 		addChild(container);
 	}

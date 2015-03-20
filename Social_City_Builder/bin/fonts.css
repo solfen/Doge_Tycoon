@@ -1,14 +1,10 @@
 @font-face {
 	font-family: 'FuturaStdMedium';
 	src: url('assets/fonts/FUTURASTD-MEDIUM.ttf') format('truetype'), url('fonts/FUTURASTD-MEDIUM.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
 }
 @font-face {
 	font-family: 'FuturaStdHeavy';
 	src: url('assets/fonts/FUTURASTD-HEAVY.ttf') format('truetype'), url('fonts/FUTURASTD-HEAVY.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
 }
 
 
