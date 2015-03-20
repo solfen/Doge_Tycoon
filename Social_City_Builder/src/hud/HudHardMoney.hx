@@ -11,14 +11,21 @@ import pixi.text.Text;
 class HudHardMoney extends IconHud
 {
 	private var hardMoneyText:Text;
+	private var lastHardMoney:Float = GameInfo.hardMoney;
 
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
 		super(startX,startY,'assets/UI/Hud/HudMoneyHard.png');
-		hardMoneyText = new Text(GameInfo.hardMoney+'', {font:"35px FuturaStdHeavy",fill:"white"});
-		hardMoneyText.position.x = width*0.95 - hardMoneyText.width;
-		hardMoneyText.position.y = height/2 - hardMoneyText.height/2; 	
+		hardMoneyText = new Text(lastHardMoney+'', {font:"35px FuturaStdHeavy",fill:"white"});
+		hardMoneyText.position.x = Std.int(width*0.95 - hardMoneyText.width);
+		hardMoneyText.position.y = Std.int(height/2 - hardMoneyText.height/2); 	
 		addChild(hardMoneyText);
+	}
+	override public function updateInfo(){
+		if(lastHardMoney != GameInfo.hardMoney){
+			lastHardMoney = GameInfo.hardMoney;
+			hardMoneyText.setText(lastHardMoney+'');
+		}
 	}	
 }

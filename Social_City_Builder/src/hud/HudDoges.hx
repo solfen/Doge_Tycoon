@@ -10,15 +10,22 @@ import pixi.text.Text;
 // IconHud is a pixi.Sprite tuned for the HUD use.
 class HudDoges extends IconHud
 {
-	private var hardMoneyText:Text;
+	private var dogeNumberText:Text;
+	private var lastDogeNumber:Float = GameInfo.dogeNumber;
 
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudPopFillBar.png');
-		hardMoneyText = new Text(GameInfo.hardMoney+'', {font:"35px FuturaStdHeavy",fill:"white"});
-		hardMoneyText.position.x = width*0.95 - hardMoneyText.width;
-		hardMoneyText.position.y = height/2 - hardMoneyText.height/2; 	
-		addChild(hardMoneyText);
+		super(startX,startY,'assets/UI/Hud/HudPopFillBar.png',null,null,true);
+		dogeNumberText = new Text(lastDogeNumber+'', {font:"35px FuturaStdHeavy",fill:"white"});
+		dogeNumberText.position.x = Std.int(width*0.95 - dogeNumberText.width);
+		dogeNumberText.position.y = Std.int(height/2 - dogeNumberText.height/2); 	
+		addChild(dogeNumberText);
+	}
+	override public function updateInfo(){
+		if(lastDogeNumber != GameInfo.dogeNumber){
+			lastDogeNumber = GameInfo.dogeNumber;
+			dogeNumberText.setText(lastDogeNumber+'');
+		}
 	}	
 }

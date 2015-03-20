@@ -10,8 +10,9 @@ class IconHud extends Sprite {
 	private var normalTexture:Texture;
 	private var activeTexture:Texture = null;
 	private var hoverTexture:Texture = null;
+	public var isUpdatable:Bool;
 
-	public function new(startX:Float,startY:Float, texturePathNormal:String, ?texturePathActive:String, ?texturePathHover:String) {
+	public function new(startX:Float,startY:Float, texturePathNormal:String, ?texturePathActive:String, ?texturePathHover:String, ?pIsUpdatable:Bool=false) {
 		//textures creation. Has to have at least the normal state the others are optionals
 		normalTexture = Texture.fromImage(texturePathNormal);
 		if(texturePathActive != null){
@@ -25,6 +26,7 @@ class IconHud extends Sprite {
 		super(normalTexture);
 		x = Std.int(startX*DeviceCapabilities.width);
 		y = Std.int(startY*DeviceCapabilities.height);
+		isUpdatable = pIsUpdatable;
 	}
 
 	//check the state and if we have the according texture
@@ -41,5 +43,8 @@ class IconHud extends Sprite {
 		else{
 			trace("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: "+state);
 		}
+	}
+	public function updateInfo(){
+		
 	}
 }

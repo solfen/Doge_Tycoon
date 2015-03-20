@@ -10,15 +10,22 @@ import pixi.text.Text;
 // IconHud is a pixi.Sprite tuned for the HUD use.
 class HudStock extends IconHud
 {
-	private var hardMoneyText:Text;
+	private var stockPercentText:Text;
+	private var lastStockPercent:Float = GameInfo.stockPercent;
 
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudPopFillBar.png');
-		hardMoneyText = new Text(GameInfo.hardMoney+'', {font:"35px FuturaStdHeavy",fill:"white"});
-		hardMoneyText.position.x = width*0.95 - hardMoneyText.width;
-		hardMoneyText.position.y = height/2 - hardMoneyText.height/2; 	
-		addChild(hardMoneyText);
-	}	
+		super(startX,startY,'assets/UI/Hud/HudPopFillBar.png',null,null,true);
+		stockPercentText = new Text(lastStockPercent+'%', {font:"35px FuturaStdHeavy",fill:"white"});
+		stockPercentText.position.x = Std.int(width*0.95 - stockPercentText.width);
+		stockPercentText.position.y = Std.int(height/2 - stockPercentText.height/2); 	
+		addChild(stockPercentText);
+	}
+	override public function updateInfo(){
+		if(lastStockPercent != GameInfo.stockPercent){
+			lastStockPercent = GameInfo.stockPercent;
+			stockPercentText.setText(lastStockPercent+'%');
+		}
+	}
 }

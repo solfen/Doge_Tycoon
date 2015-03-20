@@ -262,6 +262,19 @@ haxe.Log.__name__ = ["haxe","Log"];
 haxe.Log.trace = function(v,infos) {
 	js.Boot.__trace(v,infos);
 };
+haxe.Timer = function(time_ms) {
+	var me = this;
+	this.id = setInterval(function() {
+		me.run();
+	},time_ms);
+};
+$hxClasses["haxe.Timer"] = haxe.Timer;
+haxe.Timer.__name__ = ["haxe","Timer"];
+haxe.Timer.prototype = {
+	run: function() {
+	}
+	,__class__: haxe.Timer
+};
 haxe.ds = {};
 haxe.ds.StringMap = function() {
 	this.h = { };
@@ -333,7 +346,8 @@ pixi.display.DisplayObjectContainer.prototype = $extend(PIXI.DisplayObjectContai
 	,__class__: pixi.display.DisplayObjectContainer
 });
 var hud = {};
-hud.IconHud = function(startX,startY,texturePathNormal,texturePathActive,texturePathHover) {
+hud.IconHud = function(startX,startY,texturePathNormal,texturePathActive,texturePathHover,pIsUpdatable) {
+	if(pIsUpdatable == null) pIsUpdatable = false;
 	this.hoverTexture = null;
 	this.activeTexture = null;
 	this.normalTexture = PIXI.Texture.fromImage(texturePathNormal);
@@ -364,13 +378,16 @@ hud.IconHud = function(startX,startY,texturePathNormal,texturePathActive,texture
 		}($this)) * _g3;
 		return $r;
 	}(this)));
+	this.isUpdatable = pIsUpdatable;
 };
 $hxClasses["hud.IconHud"] = hud.IconHud;
 hud.IconHud.__name__ = ["hud","IconHud"];
 hud.IconHud.__super__ = PIXI.Sprite;
 hud.IconHud.prototype = $extend(PIXI.Sprite.prototype,{
 	changeTexture: function(state) {
-		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "hover" && this.hoverTexture != null) this.setTexture(this.hoverTexture); else if(state == "normal") this.setTexture(this.normalTexture); else haxe.Log.trace("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state,{ fileName : "IconHud.hx", lineNumber : 42, className : "hud.IconHud", methodName : "changeTexture"});
+		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "hover" && this.hoverTexture != null) this.setTexture(this.hoverTexture); else if(state == "normal") this.setTexture(this.normalTexture); else haxe.Log.trace("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state,{ fileName : "IconHud.hx", lineNumber : 44, className : "hud.IconHud", methodName : "changeTexture"});
+	}
+	,updateInfo: function() {
 	}
 	,__class__: hud.IconHud
 });
@@ -420,43 +437,64 @@ hud.HudDestroy.prototype = $extend(hud.IconHud.prototype,{
 	,__class__: hud.HudDestroy
 });
 hud.HudDoges = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudPopFillBar.png");
-	this.hardMoneyText = new PIXI.Text(GameInfo.hardMoney + "",{ font : "35px FuturaStdHeavy", fill : "white"});
-	this.hardMoneyText.position.x = this.width * 0.95 - this.hardMoneyText.width;
-	this.hardMoneyText.position.y = this.height / 2 - this.hardMoneyText.height / 2;
-	this.addChild(this.hardMoneyText);
+	this.lastDogeNumber = GameInfo.dogeNumber;
+	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudPopFillBar.png",null,null,true);
+	this.dogeNumberText = new PIXI.Text(this.lastDogeNumber + "",{ font : "35px FuturaStdHeavy", fill : "white"});
+	this.dogeNumberText.position.x = this.width * 0.95 - this.dogeNumberText.width | 0;
+	this.dogeNumberText.position.y = this.height / 2 - this.dogeNumberText.height / 2 | 0;
+	this.addChild(this.dogeNumberText);
 };
 $hxClasses["hud.HudDoges"] = hud.HudDoges;
 hud.HudDoges.__name__ = ["hud","HudDoges"];
 hud.HudDoges.__super__ = hud.IconHud;
 hud.HudDoges.prototype = $extend(hud.IconHud.prototype,{
-	__class__: hud.HudDoges
+	updateInfo: function() {
+		if(this.lastDogeNumber != GameInfo.dogeNumber) {
+			this.lastDogeNumber = GameInfo.dogeNumber;
+			this.dogeNumberText.setText(this.lastDogeNumber + "");
+		}
+	}
+	,__class__: hud.HudDoges
 });
 hud.HudFric = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudMoneySoft.png");
-	this.fricText = new PIXI.Text(GameInfo.fric + "",{ font : "35px FuturaStdHeavy", fill : "white"});
-	this.fricText.position.x = this.width * 0.95 - this.fricText.width;
-	this.fricText.position.y = this.height / 2 - this.fricText.height / 2;
+	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudMoneySoft.png",null,null,true);
+	this.lastFric = GameInfo.fric;
+	this.fricText = new PIXI.Text(this.lastFric + "",{ font : "35px FuturaStdHeavy", fill : "white"});
+	this.fricText.position.x = this.width * 0.95 - this.fricText.width | 0;
+	this.fricText.position.y = this.height / 2 - this.fricText.height / 2 | 0;
 	this.addChild(this.fricText);
 };
 $hxClasses["hud.HudFric"] = hud.HudFric;
 hud.HudFric.__name__ = ["hud","HudFric"];
 hud.HudFric.__super__ = hud.IconHud;
 hud.HudFric.prototype = $extend(hud.IconHud.prototype,{
-	__class__: hud.HudFric
+	updateInfo: function() {
+		if(this.lastFric != GameInfo.fric) {
+			this.fricText.setText(GameInfo.fric + "");
+			this.lastFric = GameInfo.fric;
+		}
+	}
+	,__class__: hud.HudFric
 });
 hud.HudHardMoney = function(startX,startY) {
+	this.lastHardMoney = GameInfo.hardMoney;
 	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudMoneyHard.png");
-	this.hardMoneyText = new PIXI.Text(GameInfo.hardMoney + "",{ font : "35px FuturaStdHeavy", fill : "white"});
-	this.hardMoneyText.position.x = this.width * 0.95 - this.hardMoneyText.width;
-	this.hardMoneyText.position.y = this.height / 2 - this.hardMoneyText.height / 2;
+	this.hardMoneyText = new PIXI.Text(this.lastHardMoney + "",{ font : "35px FuturaStdHeavy", fill : "white"});
+	this.hardMoneyText.position.x = this.width * 0.95 - this.hardMoneyText.width | 0;
+	this.hardMoneyText.position.y = this.height / 2 - this.hardMoneyText.height / 2 | 0;
 	this.addChild(this.hardMoneyText);
 };
 $hxClasses["hud.HudHardMoney"] = hud.HudHardMoney;
 hud.HudHardMoney.__name__ = ["hud","HudHardMoney"];
 hud.HudHardMoney.__super__ = hud.IconHud;
 hud.HudHardMoney.prototype = $extend(hud.IconHud.prototype,{
-	__class__: hud.HudHardMoney
+	updateInfo: function() {
+		if(this.lastHardMoney != GameInfo.hardMoney) {
+			this.lastHardMoney = GameInfo.hardMoney;
+			this.hardMoneyText.setText(this.lastHardMoney + "");
+		}
+	}
+	,__class__: hud.HudHardMoney
 });
 hud.HudInventory = function(startX,startY) {
 	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudIconInventoryNormal.png","assets/UI/Hud/HudIconInventoryActive.png");
@@ -482,8 +520,9 @@ hud.HudInventory.prototype = $extend(hud.IconHud.prototype,{
 	,__class__: hud.HudInventory
 });
 hud.HudManager = function() {
+	this.refreshChildsInterval = 1000;
 	this.lastX = 0;
-	this.hudBottomY = 0.9;
+	this.hudBottomY = 0;
 	this.hudTopY = 0.025;
 	this.hudWidthInterval = 0.05;
 	this.containers = new haxe.ds.StringMap();
@@ -496,16 +535,18 @@ hud.HudManager = function() {
 	this.addHud(new hud.HudStock(0,this.hudTopY),"HudStock","HudTop");
 	this.addContainer(0.94,0,"HudLeft",0.05,0.05,"right");
 	this.addHud(new hud.HudOptions(0,this.hudTopY),"HudOptions","HudLeft");
-	this.addContainer(0.24,0,"HudBottom",0.75,0.01,"right");
+	this.addContainer(0.01,0.9,"HudBottom",.98,0.01,"right");
 	this.addHud(new hud.HudDestroy(0,this.hudBottomY),"HudDestroy","HudBottom");
-	this.addHud(new hud.HudObservatory(0,this.hudBottomY),"HudObservatory","HudBottom");
 	this.addHud(new hud.HudInventory(0,this.hudBottomY),"HudInventory","HudBottom");
 	this.addHud(new hud.HudQuests(0,this.hudBottomY),"HudQuests","HudBottom");
 	this.addHud(new hud.HudMarket(0,this.hudBottomY),"HudMarket","HudBottom");
 	this.addHud(new hud.HudShop(0,this.hudBottomY),"HudShop","HudBottom");
 	this.addHud(new hud.HudBuild(0,this.hudBottomY),"HudBuild","HudBottom");
+	this.addHud(new hud.HudObservatory(0,this.hudBottomY),"HudObservatory","HudBottom");
 	this.resizeHud();
 	Main.getInstance().addEventListener("Event.RESIZE",$bind(this,this.resizeHud));
+	this.refreshChildsInfoTimer = new haxe.Timer(this.refreshChildsInterval);
+	this.refreshChildsInfoTimer.run = $bind(this,this.updateChildText);
 };
 $hxClasses["hud.HudManager"] = hud.HudManager;
 hud.HudManager.__name__ = ["hud","HudManager"];
@@ -598,6 +639,34 @@ hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype
 					return $r;
 				}(this)));
 			}
+			container.obj.position.y = Math.min(Std["int"]((function($this) {
+				var $r;
+				var this12;
+				{
+					var b2 = utils.system.DeviceCapabilities.get_height();
+					this12 = container.startY * b2;
+				}
+				var int8 = this12;
+				$r = int8 < 0?4294967296.0 + int8:int8 + 0.0;
+				return $r;
+			}(this))),(function($this) {
+				var $r;
+				var a = utils.system.DeviceCapabilities.get_height();
+				$r = (function($this) {
+					var $r;
+					var int9 = a;
+					$r = int9 < 0?4294967296.0 + int9:int9 + 0.0;
+					return $r;
+				}($this)) - container.obj.children[0].height;
+				return $r;
+			}(this)));
+		}
+	}
+	,updateChildText: function() {
+		var $it0 = this.childs.iterator();
+		while( $it0.hasNext() ) {
+			var child = $it0.next();
+			if(child.isUpdatable) child.updateInfo();
 		}
 	}
 	,addContainer: function(x,y,name,maxWidth,interval,align) {
@@ -633,6 +702,7 @@ hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype
 		this.containers.get(name).maxWidth = maxWidth;
 		this.containers.get(name).interval = interval;
 		this.containers.get(name).startX = x;
+		this.containers.get(name).startY = y;
 		this.containers.get(name).align = align;
 		this.addChild(container);
 	}
@@ -768,17 +838,24 @@ hud.HudShop.prototype = $extend(hud.IconHud.prototype,{
 	,__class__: hud.HudShop
 });
 hud.HudStock = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudPopFillBar.png");
-	this.hardMoneyText = new PIXI.Text(GameInfo.hardMoney + "",{ font : "35px FuturaStdHeavy", fill : "white"});
-	this.hardMoneyText.position.x = this.width * 0.95 - this.hardMoneyText.width;
-	this.hardMoneyText.position.y = this.height / 2 - this.hardMoneyText.height / 2;
-	this.addChild(this.hardMoneyText);
+	this.lastStockPercent = GameInfo.stockPercent;
+	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudPopFillBar.png",null,null,true);
+	this.stockPercentText = new PIXI.Text(this.lastStockPercent + "%",{ font : "35px FuturaStdHeavy", fill : "white"});
+	this.stockPercentText.position.x = this.width * 0.95 - this.stockPercentText.width | 0;
+	this.stockPercentText.position.y = this.height / 2 - this.stockPercentText.height / 2 | 0;
+	this.addChild(this.stockPercentText);
 };
 $hxClasses["hud.HudStock"] = hud.HudStock;
 hud.HudStock.__name__ = ["hud","HudStock"];
 hud.HudStock.__super__ = hud.IconHud;
 hud.HudStock.prototype = $extend(hud.IconHud.prototype,{
-	__class__: hud.HudStock
+	updateInfo: function() {
+		if(this.lastStockPercent != GameInfo.stockPercent) {
+			this.lastStockPercent = GameInfo.stockPercent;
+			this.stockPercentText.setText(this.lastStockPercent + "%");
+		}
+	}
+	,__class__: hud.HudStock
 });
 var js = {};
 js.Boot = function() { };
@@ -961,8 +1038,8 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 		var this1 = utils.system.DeviceCapabilities.get_width();
 		var int4 = this1;
 		if(int4 < 0) this.modalZone.width = 4294967296.0 + int4; else this.modalZone.width = int4 + 0.0;
-		var this2 = utils.system.DeviceCapabilities.get_height();
-		var int5 = this2;
+		var this11 = utils.system.DeviceCapabilities.get_height();
+		var int5 = this11;
 		if(int5 < 0) this.modalZone.height = 4294967296.0 + int5; else this.modalZone.height = int5 + 0.0;
 		this.modalZone.interactive = true;
 		this.modalZone.click = $bind(this,this.stopClickEventPropagation);
@@ -1263,8 +1340,8 @@ scenes.LoaderScene = function() {
 		return $r;
 	}(this)) / (function($this) {
 		var $r;
-		var int3 = 2;
-		$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
+		var int11 = 2;
+		$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
 		return $r;
 	}(this));
 	this.addChild(img);
@@ -1413,6 +1490,9 @@ GameInfo.userWidth = 1920;
 GameInfo.userHeight = 1000;
 GameInfo.fric = 15000;
 GameInfo.hardMoney = 150;
+GameInfo.dogeNumber = 10;
+GameInfo.dogeMaxNumber = 50;
+GameInfo.stockPercent = 50;
 Main.CONFIG_PATH = "config.json";
 sprites.Ambulance.images = ["E","SE","S","SW","W","NW","N","NE"];
 utils.events.Event.COMPLETE = "Event.COMPLETE";

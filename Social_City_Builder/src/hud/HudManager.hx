@@ -4,6 +4,7 @@ import utils.system.DeviceCapabilities;
 import pixi.display.DisplayObjectContainer;
 import hud.IconHud;
 import utils.events.Event;
+import haxe.Timer;
 
 // HudManger serves as a container for the HUD, spwans the HudIcons and manage their resize
 class HudManager extends DisplayObjectContainer
@@ -16,6 +17,8 @@ class HudManager extends DisplayObjectContainer
 	private var hudTopY = 0.025;
 	private var hudBottomY = 0;
 	private var lastX:Float = 0;
+	private var refreshChildsInfoTimer:Timer;
+	private var refreshChildsInterval:Int = 1000;
 	
 	public static function getInstance (): HudManager {
 		if (instance == null) instance = new HudManager();
@@ -48,10 +51,11 @@ class HudManager extends DisplayObjectContainer
 
 		resizeHud();
 		Main.getInstance().addEventListener(Event.RESIZE, resizeHud);
+		refreshChildsInfoTimer = new haxe.Timer(refreshChildsInterval);
+		refreshChildsInfoTimer.run = updateChildText;
 	}
-	// this fonction will resize and reposition all the hud
+	// this fonction resize and reposition all the hud
 	// TODO : too greedy find a way to enchange the perfs
-	//TODO : resize y
 	private function resizeHud(){
 		for(container in containers){
 			container.obj.scale.x = container.obj.scale.y = 1.0;
@@ -80,6 +84,13 @@ class HudManager extends DisplayObjectContainer
 			container.obj.position.y = Math.min(Std.int(container.startY*DeviceCapabilities.height),DeviceCapabilities.height-container.obj.children[0].height);
 		}
 	}
+	private function updateChildText(){
+		for(child in childs){
+			if(child.isUpdatable){
+				child.updateInfo();
+			}
+		}
+	}
 	private function addContainer(x:Float,y:Float,name:String,maxWidth:Float,interval:Float,?align:String='left'){
 		var container = new DisplayObjectContainer();
 		container.position.set(Std.int(x*DeviceCapabilities.width),Std.int(y*DeviceCapabilities.height));
@@ -105,5 +116,4 @@ class HudManager extends DisplayObjectContainer
 	 	childs = new Map(); // destroys all the instances of the childs
 		instance = null;
 	}
-
 }
