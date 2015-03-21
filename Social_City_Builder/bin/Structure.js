@@ -1425,6 +1425,76 @@ popin.PopinMarket.prototype = $extend(popin.MyPopin.prototype,{
 	}
 	,__class__: popin.PopinMarket
 });
+popin.PopinQuests = function(startX,startY) {
+	this.currentTab = "currentQuestsTab";
+	this.hasVerticalScrollBar = false;
+	this.articleInterline = 0.03;
+	this.articleHeight = PIXI.Texture.fromImage("assets/UI/PopInQuest/PopInQuestBgArticle.png").height;
+	popin.MyPopin.call(this,startX,startY,"assets/UI/PopIn/PopInBackground.png");
+	this.articleHeight /= this.background.height;
+	this.addIcon(-0.15,-0.15,"assets/UI/PopInQuest/PopInTitleQuest.png","popInTitle",this,false);
+	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollBackground.png","contentBackground",this,false);
+	this.addIcon(-0.02,0.17,"assets/UI/PopInQuest/PopInQuestOngletEnCoursNormal.png","currentQuestsTab",this,true,"assets/UI/PopInQuest/PopInQuestOngletEnCoursActive.png",true);
+	this.addIcon(-0.02,0.29,"assets/UI/PopInQuest/PopInQuestOngletFinishNormal.png","finishedQuestsTab",this,true,"assets/UI/PopInQuest/PopInQuestOngletFinishActive.png",true);
+	this.addIcon(0.95,0,"assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","closeButton",this,true,"assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png",true);
+	this.addContainer("verticalScroller",this,0,0);
+	this.addMask(this.icons.get("contentBackground").x,this.icons.get("contentBackground").y + 3,this.icons.get("contentBackground").width,this.icons.get("contentBackground").height - 6,this.containers.get("verticalScroller"));
+	this.addBuildArticles(GameInfo.questsArticles.current);
+	this.icons.get("currentQuestsTab").setTextureToActive();
+	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollOverlay.png","scrollOverlay",this,false);
+};
+$hxClasses["popin.PopinQuests"] = popin.PopinQuests;
+popin.PopinQuests.__name__ = ["popin","PopinQuests"];
+popin.PopinQuests.__super__ = popin.MyPopin;
+popin.PopinQuests.prototype = $extend(popin.MyPopin.prototype,{
+	addBuildArticles: function(ItemsConfig) {
+		var cpt = 0;
+		if(this.hasVerticalScrollBar) {
+			this.removeVerticalScrollBar();
+			this.hasVerticalScrollBar = false;
+		}
+		var _g = 0;
+		while(_g < ItemsConfig.length) {
+			var i = ItemsConfig[_g];
+			++_g;
+			var y = cpt * (this.articleHeight + this.articleInterline);
+			var rewards = i.rewards;
+			this.addIcon(0.115,0.175 + y,"assets/UI/PopInQuest/PopInQuestBgArticle.png","articleBase",this.containers.get("verticalScroller"),false);
+			this.addIcon(0.13,0.1875 + y,"assets/UI/Icons/Dogs/" + Std.string(i.previewImg) + ".png","ArticlePreview",this.containers.get("verticalScroller"),false);
+			this.addText(0.298,0.175 + y,"FuturaStdHeavy","25px",i.title,"titleText",this.containers.get("verticalScroller"));
+			this.addText(0.298,0.225 + y,"FuturaStdMedium","12px",i.description,"Description",this.containers.get("verticalScroller"));
+			this.addText(0.71,0.215 + y,"FuturaStdHeavy","18px","Récompenses","rewarsText",this.containers.get("verticalScroller"));
+			var _g2 = 0;
+			var _g1 = rewards.length;
+			while(_g2 < _g1) {
+				var j = _g2++;
+				this.addIcon(0.72 + 0.07 * j,0.287 + y,GameInfo.ressources.get(rewards[j].name).iconImg,"reaward" + j,this.containers.get("verticalScroller"),false);
+				this.addText(0.728 + 0.07 * j,0.335 + y,"FuturaStdHeavy","13px",rewards[j].quantity,"rawardQuantity" + j,this.containers.get("verticalScroller"),"white");
+			}
+			if((cpt * (this.articleHeight + this.articleInterline) + this.articleHeight) * this.background.height > this.icons.get("contentBackground").height && !this.hasVerticalScrollBar) {
+				this.addVerticalScrollBar();
+				this.hasVerticalScrollBar = true;
+			}
+			cpt++;
+		}
+	}
+	,childClick: function(pEvent) {
+		if(pEvent.target._name == "closeButton") popin.PopinManager.getInstance().closePopin("PopinQuests"); else if(pEvent.target._name == "currentQuestsTab" && this.currentTab != "currentQuestsTab") {
+			this.containers.get("verticalScroller").children = [];
+			this.containers.get("verticalScroller").position.set(0,0);
+			this.addBuildArticles(GameInfo.questsArticles.current);
+			this.currentTab = "currentQuestsTab";
+			this.icons.get("finishedQuestsTab").setTextureToNormal();
+		} else if(pEvent.target._name == "finishedQuestsTab" && this.currentTab != "finishedQuestsTab") {
+			this.containers.get("verticalScroller").children = [];
+			this.containers.get("verticalScroller").position.set(0,0);
+			this.addBuildArticles(GameInfo.questsArticles.finished);
+			this.currentTab = "finishedQuestsTab";
+			this.icons.get("currentQuestsTab").setTextureToNormal();
+		}
+	}
+	,__class__: popin.PopinQuests
+});
 var scenes = {};
 scenes.GameScene = function() {
 	pixi.display.DisplayObjectContainer.call(this);
@@ -1668,6 +1738,7 @@ GameInfo.ressources = (function($this) {
 	$r = _g;
 	return $r;
 }(this));
+GameInfo.questsArticles = { current : [{ previewImg : "IconDogNiche", title : "Première niche", description : "Pas de niches, pas d'employés.Pas d'employés, pas\nde fusées.Pas de fusées... pas de fusées.\nOuvrez-donc le menu de construction.\nPuis achetez et construisez une niche !", rewards : [{ name : "fric", quantity : "100"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogWorkshop", title : "Premier hangar", description : "Les hangars servent à construire les fussées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les batiments peuvent être\nachetés depuis le menu de construction", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogWorkshop", title : "Première fusée", description : "Construire votre première fusée est maintenant possible !\nCliquez sur votre hangar et comencez la\n construction de la fusée. N'oubliez pas de fouett..\n*hum* motiver vos employés en cliquant sur\n l'icone dans le hangar", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogAstro", title : "La conquète de l'espace !", description : "Votre première fusée est prète à partir !\nVous n'avez plus qu'a appuyer sur le gros\nboutton vert pour la lancer. Ca ne devrait pas être\ntrop compliqué non ?", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogCasino", title : "Black jack and...", description : "Vos employés veulent se détendre, vous voulez\n vous remplir les poches.\nUn casino semble le parfait compromis", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogMusee", title : "La culture ça rapporte", description : "Les artefacts que vous trouvez sur les planètes\nsont incroyablement rares Et comme ce qui est\nrare est cher, les billets ne sont pas donnés. Entre la\nboutique de souvenirs et les entrées, vous allez\nencaisser sec !", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]}], finished : { }};
 GameInfo.buildMenuArticles = { niches : [{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png", title : "Niche en Bois", description : "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]}], spacechips : [{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png", title : "Hangar Destination SprungField", description : "Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre2", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png", title : "Hangar Destination Modor", description : "Ce hangar construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre5", quantity : "250"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png", title : "Hangar Destination Namok", description : "Dans ce hangar les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre3", quantity : "10"},{ name : "poudre4", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png", title : "Hangar Destination Terre", description : "Dans ce hangar, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png", title : "Hangar Destination Wundërland", description : "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png", title : "Hangar Destination StarWat", description : "Ce hangar utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]}], utilitaires : [{ previewImg : "assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png", title : "Casino", description : "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png", title : "Église", description : "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png", title : "Entrepot", description : "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]}]};
 GameInfo.userWidth = 1920;
 GameInfo.userHeight = 1000;

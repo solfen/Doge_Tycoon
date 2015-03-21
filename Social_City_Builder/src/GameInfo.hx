@@ -402,6 +402,67 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			userPossion: 150,
  		}
  	];
+ 	public static var questsArticles:Dynamic = {
+ 		'current':[
+ 			{
+ 				previewImg: 'IconDogNiche',
+ 				title: 'Première niche',
+ 				description: "Pas de niches, pas d'employés.Pas d'employés, pas\nde fusées.Pas de fusées... pas de fusées.\nOuvrez-donc le menu de construction.\nPuis achetez et construisez une niche !",
+ 				rewards: [
+ 					{"name":"fric","quantity":"100"},
+ 					{"name":"poudre0","quantity":"10"},
+ 				]
+ 			},
+ 			{
+ 				previewImg: 'IconDogWorkshop',
+ 				title: 'Premier hangar',
+ 				description: "Les hangars servent à construire les fussées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les batiments peuvent être\nachetés depuis le menu de construction",
+ 				rewards: [
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 				]
+ 			},
+ 			{
+ 				previewImg: 'IconDogWorkshop',
+ 				title: "Première fusée",
+ 				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre hangar et comencez la\n construction de la fusée. N'oubliez pas de fouett..\n*hum* motiver vos employés en cliquant sur\n l'icone dans le hangar",
+ 				rewards: [
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 				]
+ 			},
+ 			{
+ 				previewImg: 'IconDogAstro',
+ 				title: "La conquète de l'espace !",
+ 				description: "Votre première fusée est prète à partir !\nVous n'avez plus qu'a appuyer sur le gros\nboutton vert pour la lancer. Ca ne devrait pas être\ntrop compliqué non ?",
+ 				rewards: [
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 				]
+ 			},
+ 			{
+ 				previewImg: 'IconDogCasino',
+ 				title: "Black jack and...",
+ 				description: "Vos employés veulent se détendre, vous voulez\n vous remplir les poches.\nUn casino semble le parfait compromis",
+ 				rewards: [
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 				]
+ 			},
+ 			{
+ 				previewImg: 'IconDogMusee',
+ 				title: "La culture ça rapporte",
+ 				description: "Les artefacts que vous trouvez sur les planètes\nsont incroyablement rares Et comme ce qui est\nrare est cher, les billets ne sont pas donnés. Entre la\nboutique de souvenirs et les entrées, vous allez\nencaisser sec !",
+ 				rewards: [
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 				]
+ 			},
+ 		],
+ 		finished:{
+ 			
+ 		}
+ 	}
  	public static var buildMenuArticles:Dynamic = {
  		"niches": [
  			{
