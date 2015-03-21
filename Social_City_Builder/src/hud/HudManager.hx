@@ -42,12 +42,12 @@ class HudManager extends DisplayObjectContainer
 		
 		addContainer(0.01,0.9,'HudBottom',.98,0.01,'right');
 		addHud(new HudDestroy(0,hudBottomY),"HudDestroy", 'HudBottom');
+		addHud(new HudObservatory(0,hudBottomY),"HudObservatory", 'HudBottom');
 		addHud(new HudInventory(0,hudBottomY),"HudInventory", 'HudBottom');
 		addHud(new HudQuests(0,hudBottomY),"HudQuests", 'HudBottom');
 		addHud(new HudMarket(0,hudBottomY),"HudMarket", 'HudBottom');
 		addHud(new HudShop(0,hudBottomY),"HudShop", 'HudBottom');
 		addHud(new HudBuild(0,hudBottomY),"HudBuild", 'HudBottom');
-		addHud(new HudObservatory(0,hudBottomY),"HudObservatory", 'HudBottom');
 
 		resizeHud();
 		Main.getInstance().addEventListener(Event.RESIZE, resizeHud);

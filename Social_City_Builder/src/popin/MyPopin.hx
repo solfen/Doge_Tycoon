@@ -60,8 +60,8 @@ class MyPopin extends DisplayObjectContainer
 		childs[name] = currentChild;
 		target.addChild(currentChild);
 	}
-	private function addText(x:Float,y:Float,font:String,fontSize:String,txt:String,name:String,target:DisplayObjectContainer,?pAlign:String="left"):Void{
-		var style:TextStyle = {font:fontSize+" "+font,align:pAlign};
+	private function addText(x:Float,y:Float,font:String,fontSize:String,txt:String,name:String,target:DisplayObjectContainer,?color:String="black",?pAlign:String="left"):Void{
+		var style:TextStyle = {font:fontSize+" "+font,align:pAlign,fill:color};
 		var tempText:Text = new Text(txt, style);
 		tempText.position.x = Std.int(x*background.width-background.width/2);
 		tempText.position.y = Std.int(y*background.height-background.height/2); 

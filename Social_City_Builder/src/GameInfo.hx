@@ -332,6 +332,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  		"niches": [
  			{
  				img: 'PopInBuiltArticlePreviewNiche',
+ 				title: 'Niche en Bois',
+ 				description: "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.",
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},
@@ -343,6 +345,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  		"spacechips": [
  			 {
  				img: 'PopInBuiltArticlePreviewHangar1',
+ 				title: 'Hangar Destination <Temp>',
+ 				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},
@@ -352,6 +356,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				img: 'PopInBuiltArticlePreviewHangar2',
+ 				title: 'Hangar Destination <Temp>',
+ 				description: "Ce hangar construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},
@@ -361,6 +367,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				img: 'PopInBuiltArticlePreviewHangar3',
+ 				title: 'Hangar Destination <Temp>',
+ 				description: "Dans ce hangar les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},
@@ -370,6 +378,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			}, 			
  			{
  				img: 'PopInBuiltArticlePreviewHangar4',
+ 				title: 'Hangar Destination <Temp>',
+ 				description: "Dans ce hangar, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},
@@ -379,6 +389,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				img: 'PopInBuiltArticlePreviewHangar5',
+ 				title: 'Hangar Destination <Temp>',
+ 				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},
@@ -391,6 +403,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  		"utilitaires": [
  			{
  				img: 'PopInBuiltArticlePreviewCasino',
+ 				title: 'Casino',
+ 				description: "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.",
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},
@@ -400,6 +414,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				img: 'PopInBuiltArticlePreviewEglise',
+ 				title: 'Église',
+ 				description: "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.",
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},
@@ -409,6 +425,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				img: 'PopInBuiltArticlePreviewEntrepot',
+ 				title: 'Entrepot',
+ 				description: "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.",
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},

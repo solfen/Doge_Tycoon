@@ -49,11 +49,13 @@ class PopinBuild extends MyPopin
 			addIcon(0.825,0.309+y,'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"buildHard",containers["verticalScroller"],true);
 			addIcon(0.14,0.1875+y,'assets/UI/Icons/Buildings/'+i.img+'.png',"ArticlePreview",containers["verticalScroller"],false);
 			addIcon(0.758,0.3+y,'assets/UI/Icons/IconsRessources/IconOsDor.png',"HardRessource",containers["verticalScroller"],false);
-			addText(0.78,0.34+y,'FuturaStdHeavy','15px',i.hardPrice,'HardRessourcePrice',containers["verticalScroller"]);
+			addText(0.78,0.34+y,'FuturaStdHeavy','15px',i.hardPrice,'HardRessourcePrice',containers["verticalScroller"],'white');
+			addText(0.308,0.18+y,'FuturaStdHeavy','25px',i.title,'titleText',containers["verticalScroller"]);
+			addText(0.308,0.23+y,'FuturaStdMedium','12px',i.description,'Description',containers["verticalScroller"]);
 
 			for(j in 0...ressources.length){
 				addIcon(0.308+0.065*j,0.3+y,'assets/UI/Icons/IconsRessources/'+ressources[j].img+'.png',"SoftRessource"+j,containers["verticalScroller"],false);
-				addText(0.315+0.065*j,0.34+y,'FuturaStdHeavy','15px',ressources[j].price,"SoftRessourcePrice"+j,containers["verticalScroller"]);
+				addText(0.315+0.065*j,0.345+y,'FuturaStdHeavy','13px',ressources[j].price,"SoftRessourcePrice"+j,containers["verticalScroller"],'white');
 			}
 
 			if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > childs["contentBackground"].height){
