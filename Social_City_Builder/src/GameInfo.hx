@@ -345,7 +345,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  		"spacechips": [
  			 {
  				img: 'PopInBuiltArticlePreviewHangar1',
- 				title: 'Hangar Destination <Temp>',
+ 				title: 'Hangar Destination SprungField',
  				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
  				hardPrice: 3,
  				ressources: [
@@ -356,7 +356,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				img: 'PopInBuiltArticlePreviewHangar2',
- 				title: 'Hangar Destination <Temp>',
+ 				title: 'Hangar Destination Modor',
  				description: "Ce hangar construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
  				hardPrice: 3,
  				ressources: [
@@ -367,7 +367,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				img: 'PopInBuiltArticlePreviewHangar3',
- 				title: 'Hangar Destination <Temp>',
+ 				title: 'Hangar Destination Namok',
  				description: "Dans ce hangar les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
  				hardPrice: 3,
  				ressources: [
@@ -378,7 +378,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			}, 			
  			{
  				img: 'PopInBuiltArticlePreviewHangar4',
- 				title: 'Hangar Destination <Temp>',
+ 				title: 'Hangar Destination Terre',
  				description: "Dans ce hangar, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
  				hardPrice: 3,
  				ressources: [
@@ -389,8 +389,19 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				img: 'PopInBuiltArticlePreviewHangar5',
- 				title: 'Hangar Destination <Temp>',
+ 				title: 'Hangar Destination Wundërland',
  				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"img":"IconDogeflooz","price":"1000"},
+ 				]
+ 			},
+ 			{
+ 				img: 'PopInBuiltArticlePreviewHangar6',
+ 				title: 'Hangar Destination StarWat',
+ 				description: "Ce hangar utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",
  				hardPrice: 3,
  				ressources: [
  					{"img":"IconDogeflooz","price":"1000"},

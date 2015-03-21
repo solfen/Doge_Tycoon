@@ -45,8 +45,8 @@ class PopinBuild extends MyPopin
 			var y:Float = cpt*(articleHeight+articleInterline);
 			var ressources:Array<Dynamic> = i.ressources;
 			addIcon(0.125,0.175+y,'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"articleBase",containers["verticalScroller"],false);
-			addIcon(0.697,0.309+y,'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"buildSoft",containers["verticalScroller"],true);
-			addIcon(0.825,0.309+y,'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"buildHard",containers["verticalScroller"],true);
+			addIcon(0.697,0.309+y,'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"buildSoft",containers["verticalScroller"],true,'assets/UI/PopInBuilt/PopInBuiltSoftActive.png');
+			addIcon(0.825,0.309+y,'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"buildHard",containers["verticalScroller"],true,'assets/UI/PopInBuilt/PopInBuiltHardActive.png');
 			addIcon(0.14,0.1875+y,'assets/UI/Icons/Buildings/'+i.img+'.png',"ArticlePreview",containers["verticalScroller"],false);
 			addIcon(0.758,0.3+y,'assets/UI/Icons/IconsRessources/IconOsDor.png',"HardRessource",containers["verticalScroller"],false);
 			addText(0.78,0.34+y,'FuturaStdHeavy','15px',i.hardPrice,'HardRessourcePrice',containers["verticalScroller"],'white');
