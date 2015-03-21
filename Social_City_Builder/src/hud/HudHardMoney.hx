@@ -6,12 +6,11 @@ import pixi.InteractionData;
 import pixi.text.Text;
 
 // HudHardMoney is the hard money bar of the Hud, it display the current number of soft money
-// fric car fric = pognon référence 3615 Usul
 // IconHud is a pixi.Sprite tuned for the HUD use.
 class HudHardMoney extends IconHud
 {
 	private var hardMoneyText:Text;
-	private var lastHardMoney:Float = GameInfo.hardMoney;
+	private var lastHardMoney:Float = GameInfo.ressources['hardMoney'].userPossion;
 
 	private function new(startX:Float,startY:Float) 
 	{
@@ -23,8 +22,8 @@ class HudHardMoney extends IconHud
 		addChild(hardMoneyText);
 	}
 	override public function updateInfo(){
-		if(lastHardMoney != GameInfo.hardMoney){
-			lastHardMoney = GameInfo.hardMoney;
+		if(lastHardMoney != GameInfo.ressources['hardMoney'].userPossion){
+			lastHardMoney = GameInfo.ressources['hardMoney'].userPossion;
 			hardMoneyText.setText(lastHardMoney+'');
 		}
 	}	

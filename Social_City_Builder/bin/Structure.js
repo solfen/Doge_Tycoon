@@ -6,12 +6,58 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var IMap = function() { };
+$hxClasses["IMap"] = IMap;
+IMap.__name__ = ["IMap"];
+var haxe = {};
+haxe.ds = {};
+haxe.ds.StringMap = function() {
+	this.h = { };
+};
+$hxClasses["haxe.ds.StringMap"] = haxe.ds.StringMap;
+haxe.ds.StringMap.__name__ = ["haxe","ds","StringMap"];
+haxe.ds.StringMap.__interfaces__ = [IMap];
+haxe.ds.StringMap.prototype = {
+	set: function(key,value) {
+		this.h["$" + key] = value;
+	}
+	,get: function(key) {
+		return this.h["$" + key];
+	}
+	,remove: function(key) {
+		key = "$" + key;
+		if(!this.h.hasOwnProperty(key)) return false;
+		delete(this.h[key]);
+		return true;
+	}
+	,keys: function() {
+		var a = [];
+		for( var key in this.h ) {
+		if(this.h.hasOwnProperty(key)) a.push(key.substr(1));
+		}
+		return HxOverrides.iter(a);
+	}
+	,iterator: function() {
+		return { ref : this.h, it : this.keys(), hasNext : function() {
+			return this.it.hasNext();
+		}, next : function() {
+			var i = this.it.next();
+			return this.ref["$" + i];
+		}};
+	}
+	,__class__: haxe.ds.StringMap
+};
 var GameInfo = function() { };
 $hxClasses["GameInfo"] = GameInfo;
 GameInfo.__name__ = ["GameInfo"];
 var HxOverrides = function() { };
 $hxClasses["HxOverrides"] = HxOverrides;
 HxOverrides.__name__ = ["HxOverrides"];
+HxOverrides.cca = function(s,index) {
+	var x = s.charCodeAt(index);
+	if(x != x) return undefined;
+	return x;
+};
 HxOverrides.substr = function(s,pos,len) {
 	if(pos != null && pos != 0 && len != null && len < 0) return "";
 	if(len == null) len = s.length;
@@ -190,9 +236,6 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 	}
 	,__class__: Main
 });
-var IMap = function() { };
-$hxClasses["IMap"] = IMap;
-IMap.__name__ = ["IMap"];
 Math.__name__ = ["Math"];
 var Reflect = function() { };
 $hxClasses["Reflect"] = Reflect;
@@ -212,6 +255,12 @@ Std.string = function(s) {
 };
 Std["int"] = function(x) {
 	return x | 0;
+};
+Std.parseInt = function(x) {
+	var v = parseInt(x,10);
+	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
+	if(isNaN(v)) return null;
+	return v;
 };
 var Type = function() { };
 $hxClasses["Type"] = Type;
@@ -255,7 +304,6 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
-var haxe = {};
 haxe.Log = function() { };
 $hxClasses["haxe.Log"] = haxe.Log;
 haxe.Log.__name__ = ["haxe","Log"];
@@ -274,43 +322,6 @@ haxe.Timer.prototype = {
 	run: function() {
 	}
 	,__class__: haxe.Timer
-};
-haxe.ds = {};
-haxe.ds.StringMap = function() {
-	this.h = { };
-};
-$hxClasses["haxe.ds.StringMap"] = haxe.ds.StringMap;
-haxe.ds.StringMap.__name__ = ["haxe","ds","StringMap"];
-haxe.ds.StringMap.__interfaces__ = [IMap];
-haxe.ds.StringMap.prototype = {
-	set: function(key,value) {
-		this.h["$" + key] = value;
-	}
-	,get: function(key) {
-		return this.h["$" + key];
-	}
-	,remove: function(key) {
-		key = "$" + key;
-		if(!this.h.hasOwnProperty(key)) return false;
-		delete(this.h[key]);
-		return true;
-	}
-	,keys: function() {
-		var a = [];
-		for( var key in this.h ) {
-		if(this.h.hasOwnProperty(key)) a.push(key.substr(1));
-		}
-		return HxOverrides.iter(a);
-	}
-	,iterator: function() {
-		return { ref : this.h, it : this.keys(), hasNext : function() {
-			return this.it.hasNext();
-		}, next : function() {
-			var i = this.it.next();
-			return this.ref["$" + i];
-		}};
-	}
-	,__class__: haxe.ds.StringMap
 };
 var pixi = {};
 pixi.display = {};
@@ -466,27 +477,28 @@ hud.HudDoges.prototype = $extend(hud.IconHud.prototype,{
 	,__class__: hud.HudDoges
 });
 hud.HudFric = function(startX,startY) {
+	this.lastFric = GameInfo.ressources.get("fric").userPossesion;
 	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudMoneySoft.png",null,null,true);
-	this.lastFric = GameInfo.fric;
 	this.fricText = new PIXI.Text(this.lastFric + "",{ font : "35px FuturaStdHeavy", fill : "white"});
 	this.fricText.position.x = this.width * 0.95 - this.fricText.width | 0;
 	this.fricText.position.y = this.height / 2 - this.fricText.height / 2 | 0;
 	this.addChild(this.fricText);
+	this.updateInfo();
 };
 $hxClasses["hud.HudFric"] = hud.HudFric;
 hud.HudFric.__name__ = ["hud","HudFric"];
 hud.HudFric.__super__ = hud.IconHud;
 hud.HudFric.prototype = $extend(hud.IconHud.prototype,{
 	updateInfo: function() {
-		if(this.lastFric != GameInfo.fric) {
-			this.fricText.setText(GameInfo.fric + "");
-			this.lastFric = GameInfo.fric;
+		if(this.lastFric != GameInfo.ressources.get("fric").userPossion) {
+			this.lastFric = GameInfo.ressources.get("fric").userPossion;
+			this.fricText.setText(this.lastFric + "");
 		}
 	}
 	,__class__: hud.HudFric
 });
 hud.HudHardMoney = function(startX,startY) {
-	this.lastHardMoney = GameInfo.hardMoney;
+	this.lastHardMoney = GameInfo.ressources.get("hardMoney").userPossion;
 	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudMoneyHard.png");
 	this.hardMoneyText = new PIXI.Text(this.lastHardMoney + "",{ font : "35px FuturaStdHeavy", fill : "white"});
 	this.hardMoneyText.position.x = this.width * 0.95 - this.hardMoneyText.width | 0;
@@ -498,8 +510,8 @@ hud.HudHardMoney.__name__ = ["hud","HudHardMoney"];
 hud.HudHardMoney.__super__ = hud.IconHud;
 hud.HudHardMoney.prototype = $extend(hud.IconHud.prototype,{
 	updateInfo: function() {
-		if(this.lastHardMoney != GameInfo.hardMoney) {
-			this.lastHardMoney = GameInfo.hardMoney;
+		if(this.lastHardMoney != GameInfo.ressources.get("hardMoney").userPossion) {
+			this.lastHardMoney = GameInfo.ressources.get("hardMoney").userPossion;
 			this.hardMoneyText.setText(this.lastHardMoney + "");
 		}
 	}
@@ -975,9 +987,13 @@ pixi.renderers.IRenderer.prototype = {
 	__class__: pixi.renderers.IRenderer
 };
 var popin = {};
-popin.IconPopin = function(pX,pY,texturePathNormal,pName,isInteractive,texturePathActive) {
+popin.IconPopin = function(pX,pY,texturePathNormal,pName,isInteractive,texturePathActive,pIsSelectButton) {
+	if(pIsSelectButton == null) pIsSelectButton = false;
+	this.isCurrentTextureNormal = true;
+	this.isSelectButton = false;
 	this.activeTexture = null;
 	this.normalTexture = PIXI.Texture.fromImage(texturePathNormal);
+	this.isSelectButton = pIsSelectButton;
 	if(texturePathActive != null) this.activeTexture = PIXI.Texture.fromImage(texturePathActive);
 	PIXI.Sprite.call(this,this.normalTexture);
 	this.x = pX;
@@ -985,20 +1001,31 @@ popin.IconPopin = function(pX,pY,texturePathNormal,pName,isInteractive,texturePa
 	this._name = pName;
 	this.interactive = isInteractive;
 	this.buttonMode = isInteractive;
-	if(isInteractive) {
+	if(isInteractive && !this.isSelectButton) {
 		this.mouseover = $bind(this,this.onMouseOver);
 		this.mouseout = $bind(this,this.onMouseOut);
-	}
+	} else if(this.isSelectButton) this.mousedown = $bind(this,this.onClick);
 };
 $hxClasses["popin.IconPopin"] = popin.IconPopin;
 popin.IconPopin.__name__ = ["popin","IconPopin"];
 popin.IconPopin.__super__ = PIXI.Sprite;
 popin.IconPopin.prototype = $extend(PIXI.Sprite.prototype,{
 	onMouseOver: function(pData) {
-		if(this.activeTexture != null) this.setTexture(this.activeTexture);
+		if(this.activeTexture == null) return;
+		this.setTexture(this.activeTexture);
 	}
 	,onMouseOut: function(pData) {
 		this.setTexture(this.normalTexture);
+	}
+	,onClick: function(pData) {
+		if(this.activeTexture == null) return;
+		this.setTexture(this.activeTexture);
+	}
+	,setTextureToNormal: function() {
+		this.setTexture(this.normalTexture);
+	}
+	,setTextureToActive: function() {
+		this.setTexture(this.activeTexture);
 	}
 	,__class__: popin.IconPopin
 });
@@ -1008,6 +1035,7 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 	if(startX == null) startX = 0;
 	this.scrollDragging = false;
 	this.containers = new haxe.ds.StringMap();
+	this.icons = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
 	pixi.display.DisplayObjectContainer.call(this);
 	this.x = Std["int"]((function($this) {
@@ -1076,14 +1104,19 @@ $hxClasses["popin.MyPopin"] = popin.MyPopin;
 popin.MyPopin.__name__ = ["popin","MyPopin"];
 popin.MyPopin.__super__ = pixi.display.DisplayObjectContainer;
 popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
-	addIcon: function(x,y,texturePath,name,target,isInteractive,texturePathActive) {
-		if(isInteractive == null) isInteractive = true;
-		this.currentChild = new popin.IconPopin(x * this.background.width - this.background.width / 2 | 0,y * this.background.height - this.background.height / 2 | 0,texturePath,name,isInteractive,texturePathActive);
-		if(isInteractive) this.currentChild.click = $bind(this,this.childClick);
-		var v = this.currentChild;
-		this.childs.set(name,v);
-		v;
-		target.addChild(this.currentChild);
+	addIcon: function(x,y,texturePath,name,target,isInteractive,texturePathActive,pIsSelectButton) {
+		if(pIsSelectButton == null) pIsSelectButton = false;
+		if(isInteractive == null) isInteractive = false;
+		var icon = new popin.IconPopin(x * this.background.width - this.background.width / 2 | 0,y * this.background.height - this.background.height / 2 | 0,texturePath,name,isInteractive,texturePathActive,pIsSelectButton);
+		if(isInteractive) icon.click = $bind(this,this.childClick);
+		this.icons.set(name,icon);
+		icon;
+		target.addChild(icon);
+	}
+	,addHeader: function(x,y,startTexture) {
+		this.header = new PIXI.Sprite(startTexture);
+		this.header.position.set(x * this.background.width - this.background.width / 2 | 0,y * this.background.height - this.background.height / 2 | 0);
+		this.addChild(this.header);
 	}
 	,addText: function(x,y,font,fontSize,txt,name,target,color,pAlign) {
 		if(pAlign == null) pAlign = "left";
@@ -1119,24 +1152,24 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 			var newY = data2.getLocalPosition(_g.scrollIndicator.parent).y - _g.scrollDragSy;
 			if(_g.scrollDragging && newY > 0.23 * _g.background.height - _g.background.height / 2 && newY < 0.635 * _g.background.height - _g.background.height / 2) {
 				var interval = 0.635 * _g.background.height - _g.background.height / 2 - (0.23 * _g.background.height - _g.background.height / 2);
-				var maxScroll = _g.containers.get("verticalScroller").height - _g.childs.get("contentBackground").height + 100;
+				var maxScroll = _g.containers.get("verticalScroller").height - _g.icons.get("contentBackground").height + 100;
 				_g.scrollIndicator.y = newY;
 				_g.containers.get("verticalScroller").y = -((newY - (0.23 * _g.background.height - _g.background.height / 2)) * maxScroll / interval | 0);
 			}
 		};
 		var v = this.scrollIndicator;
-		this.childs.set("scrollingIndicator",v);
+		this.icons.set("scrollingIndicator",v);
 		v;
 		this.addChild(this.scrollIndicator);
 	}
 	,removeVerticalScrollBar: function() {
-		this.removeChild(this.childs.get("scrollingIndicator"));
-		this.removeChild(this.childs.get("scrollingBar"));
-		var v;
-		this.childs.set("scrollingBar",null);
-		v = null;
-		this.childs.set("scrollingIndicator",v);
-		this.scrollIndicator = v;
+		this.removeChild(this.icons.get("scrollingIndicator"));
+		this.removeChild(this.icons.get("scrollingBar"));
+		this.scrollIndicator = null;
+		this.icons.set("scrollingIndicator",null);
+		null;
+		this.icons.set("scrollingBar",null);
+		null;
 	}
 	,addContainer: function(name,target,x,y) {
 		if(y == null) y = 0;
@@ -1162,17 +1195,23 @@ popin.PopinBuild = function(startX,startY) {
 	this.articleInterline = 0.03;
 	this.articleHeight = PIXI.Texture.fromImage("assets/UI/PopInBuilt/PopInBuiltBgArticle.png").height;
 	popin.MyPopin.call(this,startX,startY,"assets/UI/PopIn/PopInBackground.png");
+	var _g = new haxe.ds.StringMap();
+	_g.set("niches",PIXI.Texture.fromImage("assets/UI/PopInBuilt/PopInHeaderNiches.png"));
+	_g.set("spaceships",PIXI.Texture.fromImage("assets/UI/PopInBuilt/PopInHeaderFusees.png"));
+	_g.set("utilitaire",PIXI.Texture.fromImage("assets/UI/PopInBuilt/PopInHeaderUtilitaires.png"));
+	this.headerTextures = _g;
 	this.articleHeight /= this.background.height;
+	this.addHeader(0.65,0.05,this.headerTextures.get("niches"));
 	this.addIcon(-0.15,-0.15,"assets/UI/PopInBuilt/PopInTitleConstruction.png","popInTitle",this,false);
-	this.addIcon(0.65,0.05,"assets/UI/PopInBuilt/PopInHeaderNiches.png","categoryHeader",this,false);
 	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollBackground.png","contentBackground",this,false);
-	this.addIcon(-0.02,0.17,"assets/UI/PopInBuilt/PopInOngletNicheNormal.png","nicheTab",this,true,"assets/UI/PopInBuilt/PopInOngletNicheActive.png");
-	this.addIcon(-0.02,0.29,"assets/UI/PopInBuilt/PopInOngletFuseeNormal.png","spaceshipTab",this,true,"assets/UI/PopInBuilt/PopInOngletFuseeActive.png");
-	this.addIcon(-0.02,0.41,"assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png","utilitairesTab",this,true,"assets/UI/PopInBuilt/PopInOngletUtilitairesActive.png");
-	this.addIcon(0.95,0,"assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","closeButton",this,true,"assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png");
+	this.addIcon(-0.02,0.17,"assets/UI/PopInBuilt/PopInOngletNicheNormal.png","nicheTab",this,true,"assets/UI/PopInBuilt/PopInOngletNicheActive.png",true);
+	this.addIcon(-0.02,0.29,"assets/UI/PopInBuilt/PopInOngletFuseeNormal.png","spaceshipTab",this,true,"assets/UI/PopInBuilt/PopInOngletFuseeActive.png",true);
+	this.addIcon(-0.02,0.41,"assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png","utilitairesTab",this,true,"assets/UI/PopInBuilt/PopInOngletUtilitairesActive.png",true);
+	this.addIcon(0.95,0,"assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","closeButton",this,true,"assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png",true);
 	this.addContainer("verticalScroller",this,0,0);
-	this.addMask(this.childs.get("contentBackground").x,this.childs.get("contentBackground").y + 3,this.childs.get("contentBackground").width,this.childs.get("contentBackground").height - 6,this.containers.get("verticalScroller"));
+	this.addMask(this.icons.get("contentBackground").x,this.icons.get("contentBackground").y + 3,this.icons.get("contentBackground").width,this.icons.get("contentBackground").height - 6,this.containers.get("verticalScroller"));
 	this.addBuildArticles(GameInfo.buildMenuArticles.niches);
+	this.icons.get("nicheTab").setTextureToActive();
 	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollOverlay.png","scrollOverlay",this,false);
 };
 $hxClasses["popin.PopinBuild"] = popin.PopinBuild;
@@ -1191,22 +1230,22 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 			++_g;
 			var y = cpt * (this.articleHeight + this.articleInterline);
 			var ressources = i.ressources;
-			this.addIcon(0.125,0.175 + y,"assets/UI/PopInBuilt/PopInBuiltBgArticle.png","articleBase",this.containers.get("verticalScroller"),false);
-			this.addIcon(0.697,0.309 + y,"assets/UI/PopInBuilt/PopInBuiltSoftNormal.png","buildSoft",this.containers.get("verticalScroller"),true,"assets/UI/PopInBuilt/PopInBuiltSoftActive.png");
-			this.addIcon(0.825,0.309 + y,"assets/UI/PopInBuilt/PopInBuiltHardNormal.png","buildHard",this.containers.get("verticalScroller"),true,"assets/UI/PopInBuilt/PopInBuiltHardActive.png");
-			this.addIcon(0.14,0.1875 + y,"assets/UI/Icons/Buildings/" + Std.string(i.img) + ".png","ArticlePreview",this.containers.get("verticalScroller"),false);
-			this.addIcon(0.758,0.3 + y,"assets/UI/Icons/IconsRessources/IconOsDor.png","HardRessource",this.containers.get("verticalScroller"),false);
-			this.addText(0.78,0.34 + y,"FuturaStdHeavy","15px",i.hardPrice,"HardRessourcePrice",this.containers.get("verticalScroller"),"white");
-			this.addText(0.308,0.18 + y,"FuturaStdHeavy","25px",i.title,"titleText",this.containers.get("verticalScroller"));
-			this.addText(0.308,0.23 + y,"FuturaStdMedium","12px",i.description,"Description",this.containers.get("verticalScroller"));
+			this.addIcon(0.115,0.175 + y,"assets/UI/PopInBuilt/PopInBuiltBgArticle.png","articleBase",this.containers.get("verticalScroller"),false);
+			this.addIcon(0.687,0.309 + y,"assets/UI/PopInBuilt/PopInBuiltSoftNormal.png","buildSoft" + cpt,this.containers.get("verticalScroller"),true,"assets/UI/PopInBuilt/PopInBuiltSoftActive.png");
+			this.addIcon(0.815,0.309 + y,"assets/UI/PopInBuilt/PopInBuiltHardNormal.png","buildHard" + cpt,this.containers.get("verticalScroller"),true,"assets/UI/PopInBuilt/PopInBuiltHardActive.png");
+			this.addIcon(0.13,0.1875 + y,i.previewImg,"ArticlePreview",this.containers.get("verticalScroller"),false);
+			this.addIcon(0.748,0.3 + y,GameInfo.ressources.get("hardMoney").iconImg,"HardRessource",this.containers.get("verticalScroller"),false);
+			this.addText(0.77,0.34 + y,"FuturaStdHeavy","15px",i.hardPrice,"HardRessourcePrice",this.containers.get("verticalScroller"),"white");
+			this.addText(0.298,0.18 + y,"FuturaStdHeavy","25px",i.title,"titleText",this.containers.get("verticalScroller"));
+			this.addText(0.298,0.23 + y,"FuturaStdMedium","12px",i.description,"Description",this.containers.get("verticalScroller"));
 			var _g2 = 0;
 			var _g1 = ressources.length;
 			while(_g2 < _g1) {
 				var j = _g2++;
-				this.addIcon(0.308 + 0.065 * j,0.3 + y,"assets/UI/Icons/IconsRessources/" + ressources[j].img + ".png","SoftRessource" + j,this.containers.get("verticalScroller"),false);
-				this.addText(0.315 + 0.065 * j,0.345 + y,"FuturaStdHeavy","13px",ressources[j].price,"SoftRessourcePrice" + j,this.containers.get("verticalScroller"),"white");
+				this.addIcon(0.298 + 0.065 * j,0.3 + y,GameInfo.ressources.get(ressources[j].name).iconImg,"SoftRessource" + j,this.containers.get("verticalScroller"),false);
+				this.addText(0.305 + 0.065 * j,0.345 + y,"FuturaStdHeavy","13px",ressources[j].quantity,"SoftRessourcePrice" + j,this.containers.get("verticalScroller"),"white");
 			}
-			if((cpt * (this.articleHeight + this.articleInterline) + this.articleHeight) * this.background.height > this.childs.get("contentBackground").height) {
+			if((cpt * (this.articleHeight + this.articleInterline) + this.articleHeight) * this.background.height > this.icons.get("contentBackground").height && !this.hasVerticalScrollBar) {
 				this.addVerticalScrollBar();
 				this.hasVerticalScrollBar = true;
 			}
@@ -1219,22 +1258,31 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 			this.containers.get("verticalScroller").position.set(0,0);
 			this.addBuildArticles(GameInfo.buildMenuArticles.niches);
 			this.currentTab = "nicheTab";
+			this.header.setTexture(this.headerTextures.get("niches"));
+			this.icons.get("spaceshipTab").setTextureToNormal();
+			this.icons.get("utilitairesTab").setTextureToNormal();
 		} else if(pEvent.target._name == "spaceshipTab" && this.currentTab != "spaceshipTab") {
 			this.containers.get("verticalScroller").children = [];
 			this.containers.get("verticalScroller").position.set(0,0);
 			this.addBuildArticles(GameInfo.buildMenuArticles.spacechips);
 			this.currentTab = "spaceshipTab";
+			this.header.setTexture(this.headerTextures.get("spaceships"));
+			this.icons.get("nicheTab").setTextureToNormal();
+			this.icons.get("utilitairesTab").setTextureToNormal();
 		} else if(pEvent.target._name == "utilitairesTab" && this.currentTab != "utilitairesTab") {
 			this.containers.get("verticalScroller").children = [];
 			this.containers.get("verticalScroller").position.set(0,0);
 			this.addBuildArticles(GameInfo.buildMenuArticles.utilitaires);
 			this.currentTab = "utilitairesTab";
-		} else if(pEvent.target._name == "buildSoft") {
-			var index = Math.round(((pEvent.target.y + this.background.height / 2) / this.background.height - 0.309) / (this.articleHeight + this.articleInterline));
-			if(this.currentTab == "nicheTab") haxe.Log.trace("trying to buy the article : " + index + " here's the ressources needed : ",{ fileName : "PopinBuild.hx", lineNumber : 97, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.niches[index].ressources]}); else if(this.currentTab == "spaceshipTab") haxe.Log.trace("trying to buy the article : " + index + " here's the ressources needed : ",{ fileName : "PopinBuild.hx", lineNumber : 99, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.spacechips[index].ressources]}); else if(this.currentTab == "utilitairesTab") haxe.Log.trace("trying to buy the article : " + index + " here's the ressources needed : ",{ fileName : "PopinBuild.hx", lineNumber : 101, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.utilitaires[index].ressources]});
-		} else if(pEvent.target._name == "buildHard") {
-			var index1 = Math.round(((pEvent.target.y + this.background.height / 2) / this.background.height - 0.309) / (this.articleHeight + this.articleInterline));
-			if(this.currentTab == "nicheTab") haxe.Log.trace("trying to buy the article : " + index1 + " here's the hard price : ",{ fileName : "PopinBuild.hx", lineNumber : 107, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.niches[index1].hardPrice]}); else if(this.currentTab == "spaceshipTab") haxe.Log.trace("trying to buy the article : " + index1 + " here's the hard price : ",{ fileName : "PopinBuild.hx", lineNumber : 109, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.spacechips[index1].hardPrice]}); else if(this.currentTab == "utilitairesTab") haxe.Log.trace("trying to buy the article : " + index1 + " here's the hard price : ",{ fileName : "PopinBuild.hx", lineNumber : 111, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.utilitaires[index1].hardPrice]});
+			this.header.setTexture(this.headerTextures.get("utilitaire"));
+			this.icons.get("nicheTab").setTextureToNormal();
+			this.icons.get("spaceshipTab").setTextureToNormal();
+		} else if(pEvent.target._name.indexOf("buildSoft") != -1) {
+			var index = Std.parseInt(pEvent.target._name.split("buildSoft")[1]);
+			if(this.currentTab == "nicheTab") haxe.Log.trace("trying to buy the article : " + index + " here's the ressources needed : ",{ fileName : "PopinBuild.hx", lineNumber : 114, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.niches[index].ressources]}); else if(this.currentTab == "spaceshipTab") haxe.Log.trace("trying to buy the article : " + index + " here's the ressources needed : ",{ fileName : "PopinBuild.hx", lineNumber : 116, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.spacechips[index].ressources]}); else if(this.currentTab == "utilitairesTab") haxe.Log.trace("trying to buy the article : " + index + " here's the ressources needed : ",{ fileName : "PopinBuild.hx", lineNumber : 118, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.utilitaires[index].ressources]});
+		} else if(pEvent.target._name.indexOf("buildHard") != -1) {
+			var index1 = Std.parseInt(pEvent.target._name.split("buildHard")[1]);
+			if(this.currentTab == "nicheTab") haxe.Log.trace("trying to buy the article : " + index1 + " here's the hard price : ",{ fileName : "PopinBuild.hx", lineNumber : 123, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.niches[index1].hardPrice]}); else if(this.currentTab == "spaceshipTab") haxe.Log.trace("trying to buy the article : " + index1 + " here's the hard price : ",{ fileName : "PopinBuild.hx", lineNumber : 125, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.spacechips[index1].hardPrice]}); else if(this.currentTab == "utilitairesTab") haxe.Log.trace("trying to buy the article : " + index1 + " here's the hard price : ",{ fileName : "PopinBuild.hx", lineNumber : 127, className : "popin.PopinBuild", methodName : "childClick", customParams : [GameInfo.buildMenuArticles.utilitaires[index1].hardPrice]});
 		}
 	}
 	,__class__: popin.PopinBuild
@@ -1275,6 +1323,107 @@ popin.PopinManager.prototype = $extend(pixi.display.DisplayObjectContainer.proto
 		popin.PopinManager.instance = null;
 	}
 	,__class__: popin.PopinManager
+});
+popin.PopinMarket = function(startX,startY) {
+	this.currentTab = "buyTab";
+	this.hasVerticalScrollBar = false;
+	this.articleInterline = 0.03;
+	this.articleHeight = PIXI.Texture.fromImage("assets/UI/PopInMarket/PopInMarketBgArticle.png").height;
+	popin.MyPopin.call(this,startX,startY,"assets/UI/PopIn/PopInBackground.png");
+	var _g = new haxe.ds.StringMap();
+	_g.set("buy",PIXI.Texture.fromImage("assets/UI/PopInMarket/PopInHeaderBuy.png"));
+	_g.set("sell",PIXI.Texture.fromImage("assets/UI/PopInMarket/PopInHeaderSell.png"));
+	this.headerTextures = _g;
+	this.articleHeight /= this.background.height;
+	this.addHeader(0.65,0.05,this.headerTextures.get("buy"));
+	this.addIcon(-0.15,-0.15,"assets/UI/PopInMarket/PopInTitleMarket.png","popInTitle",this,false);
+	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollBackground.png","contentBackground",this,false);
+	this.addIcon(-0.02,0.17,"assets/UI/PopInMarket/PopInOngletBuyNormal.png","buyTab",this,true,"assets/UI/PopInMarket/PopInOngletBuyActive.png",true);
+	this.addIcon(-0.02,0.29,"assets/UI/PopInMarket/PopInOngletSellNormal.png","sellTab",this,true,"assets/UI/PopInMarket/PopInOngletSellActive.png",true);
+	this.addIcon(0.95,0,"assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","closeButton",this,true,"assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png");
+	this.addContainer("verticalScroller",this,0,0);
+	this.addMask(this.icons.get("contentBackground").x,this.icons.get("contentBackground").y + 3,this.icons.get("contentBackground").width,this.icons.get("contentBackground").height - 6,this.containers.get("verticalScroller"));
+	this.addMarketArticles(GameInfo.ressources);
+	this.icons.get("buyTab").setTextureToActive();
+	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollOverlay.png","scrollOverlay",this,false);
+};
+$hxClasses["popin.PopinMarket"] = popin.PopinMarket;
+popin.PopinMarket.__name__ = ["popin","PopinMarket"];
+popin.PopinMarket.__super__ = popin.MyPopin;
+popin.PopinMarket.prototype = $extend(popin.MyPopin.prototype,{
+	addMarketArticles: function(ItemsConfig) {
+		var cpt = 0;
+		if(this.hasVerticalScrollBar) {
+			this.removeVerticalScrollBar();
+			this.hasVerticalScrollBar = false;
+		}
+		var $it0 = ItemsConfig.keys();
+		while( $it0.hasNext() ) {
+			var i = $it0.next();
+			if(i.indexOf("poudre") == -1) continue;
+			var article = GameInfo.ressources.get(i);
+			var y = cpt * (this.articleHeight + this.articleInterline);
+			this.addIcon(0.115,0.17 + y,"assets/UI/PopInMarket/PopInMarketBgArticle.png","articleBase",this.containers.get("verticalScroller"),false);
+			this.addIcon(0.13,0.1875 + y,article.previewImg,"ArticlePreview",this.containers.get("verticalScroller"),false);
+			this.addText(0.298,0.18 + y,"FuturaStdHeavy","25px",article.name,"titleText",this.containers.get("verticalScroller"));
+			this.addIcon(0.42,0.253 + y,"assets/UI/PopInMarket/PopInMarketNbArticleNormal.png","1unit" + cpt,this.containers.get("verticalScroller"),true,"assets/UI/PopInMarket/PopInMarketNbArticleActive.png",true);
+			this.addText(0.45,0.263 + y,"FuturaStdHeavy","25px","x1","1unitText",this.containers.get("verticalScroller"));
+			this.addIcon(0.52,0.253 + y,"assets/UI/PopInMarket/PopInMarketNbArticleNormal.png","10unit" + cpt,this.containers.get("verticalScroller"),true,"assets/UI/PopInMarket/PopInMarketNbArticleActive.png",true);
+			this.addText(0.535,0.263 + y,"FuturaStdHeavy","25px","x10","10unitText",this.containers.get("verticalScroller"));
+			this.addIcon(0.62,0.253 + y,"assets/UI/PopInMarket/PopInMarketNbArticleNormal.png","100unit" + cpt,this.containers.get("verticalScroller"),true,"assets/UI/PopInMarket/PopInMarketNbArticleActive.png",true);
+			this.addText(0.625,0.263 + y,"FuturaStdHeavy","25px","x100","100unitText",this.containers.get("verticalScroller"));
+			this.addIcon(0.757,0.24 + y,"assets/UI/PopInMarket/PopInMarketValidNormal.png","validBtn" + cpt,this.containers.get("verticalScroller"),true,"assets/UI/PopInMarket/PopInMarketValidActive.png",true);
+			this.addIcon(0.31,0.253 + y,GameInfo.ressources.get("fric").iconImg,"SoftRessource",this.containers.get("verticalScroller"),false);
+			var cost;
+			article.lastQuantityBuy = 0;
+			article.lastQuantitySell = 0;
+			if(this.currentTab == "buyTab") cost = article.buyCost; else cost = article.sellCost;
+			this.addText(0.317,0.3 + y,"FuturaStdHeavy","13px",cost + "","SoftRessourcePrice",this.containers.get("verticalScroller"),"white");
+			if((cpt * (this.articleHeight + this.articleInterline) + this.articleHeight) * this.background.height > this.icons.get("contentBackground").height && !this.hasVerticalScrollBar) {
+				this.addVerticalScrollBar();
+				this.hasVerticalScrollBar = true;
+			}
+			cpt++;
+		}
+	}
+	,childClick: function(pEvent) {
+		var name = pEvent.target._name;
+		if(name == "closeButton") popin.PopinManager.getInstance().closePopin("PopinMarket"); else if(name == "buyTab" && this.currentTab != "buyTab") {
+			this.currentTab = "buyTab";
+			this.containers.get("verticalScroller").children = [];
+			this.containers.get("verticalScroller").position.set(0,0);
+			this.addMarketArticles(GameInfo.ressources);
+			this.header.setTexture(this.headerTextures.get("buy"));
+			this.icons.get("sellTab").setTextureToNormal();
+		} else if(name == "sellTab" && this.currentTab != "sellTab") {
+			this.currentTab = "sellTab";
+			this.containers.get("verticalScroller").children = [];
+			this.containers.get("verticalScroller").position.set(0,0);
+			this.addMarketArticles(GameInfo.ressources);
+			this.header.setTexture(this.headerTextures.get("sell"));
+			this.icons.get("buyTab").setTextureToNormal();
+		} else if(name.indexOf("1unit") != -1) {
+			var index = Std.parseInt(name.split("1unit")[1]);
+			this.icons.get("10unit" + index).setTextureToNormal();
+			this.icons.get("100unit" + index).setTextureToNormal();
+			if(this.currentTab == "buyTab") GameInfo.ressources.get("poudre" + index).lastQuantityBuy = 1; else GameInfo.ressources.get("poudre" + index).lastQuantitySell = 1;
+		} else if(name.indexOf("10unit") != -1) {
+			var index1 = Std.parseInt(name.split("10unit")[1]);
+			this.icons.get("1unit" + index1).setTextureToNormal();
+			this.icons.get("100unit" + index1).setTextureToNormal();
+			if(this.currentTab == "buyTab") GameInfo.ressources.get("poudre" + index1).lastQuantityBuy = 10; else GameInfo.ressources.get("poudre" + index1).lastQuantitySell = 10;
+		} else if(name.indexOf("100unit") != -1) {
+			var index2 = Std.parseInt(name.split("100unit")[1]);
+			this.icons.get("1unit" + index2).setTextureToNormal();
+			this.icons.get("10unit" + index2).setTextureToNormal();
+			if(this.currentTab == "buyTab") GameInfo.ressources.get("poudre" + index2).lastQuantityBuy = 100; else GameInfo.ressources.get("poudre" + index2).lastQuantitySell = 100;
+		} else if(name.indexOf("validBtn") != -1) {
+			var index3 = Std.parseInt(name.split("validBtn")[1]);
+			this.icons.get("validBtn" + index3).setTextureToNormal();
+			if(this.currentTab == "buyTab") haxe.Log.trace("article : " + "poudre" + index3 + " cost : " + Std.string(GameInfo.ressources.get("poudre" + index3).buyCost) + "quantity ",{ fileName : "PopinMarket.hx", lineNumber : 138, className : "popin.PopinMarket", methodName : "childClick", customParams : [GameInfo.ressources.get("poudre" + index3).lastQuantityBuy]}); else if(this.currentTab == "sellTab") haxe.Log.trace("article : " + "poudre" + index3 + " cost : " + Std.string(GameInfo.ressources.get("poudre" + index3).sellCost) + "quantity ",{ fileName : "PopinMarket.hx", lineNumber : 140, className : "popin.PopinMarket", methodName : "childClick", customParams : [GameInfo.ressources.get("poudre" + index3).lastQuantitySell]});
+		}
+	}
+	,__class__: popin.PopinMarket
 });
 var scenes = {};
 scenes.GameScene = function() {
@@ -1504,12 +1653,24 @@ String.__name__ = ["String"];
 $hxClasses.Array = Array;
 Array.__name__ = ["Array"];
 GameInfo.preloadAssets = ["assets/UI/SplashScreen/IconsSplash.jpg"];
-GameInfo.loadAssets = ["assets/Dogs/DogCasino.png","assets/Dogs/DogChurch.png","assets/Dogs/DogHangarWorkshop.png","assets/Dogs/DogMusee.png","assets/Dogs/DogNiche.png","assets/Dogs/DogPasDeTir.png","assets/UI/Bulles/HudBulle.png","assets/UI/Cursor/curseur_down.png","assets/UI/Cursor/curseur_up.png","assets/UI/Hud/HudBuildFill.png","assets/UI/Hud/HudBuildFillBar.png","assets/UI/Hud/HudIconBuild.png","assets/UI/Hud/HudIconBuildActive.png","assets/UI/Hud/HudIconBuildNormal.png","assets/UI/Hud/HudIconDestroyActive.png","assets/UI/Hud/HudIconDestroyNormal.png","assets/UI/Hud/HudIconInventory.png","assets/UI/Hud/HudIconInventoryActive.png","assets/UI/Hud/HudIconInventoryNormal.png","assets/UI/Hud/HudIconMarketActive.png","assets/UI/Hud/HudIconMarketNormal.png","assets/UI/Hud/HudIconObservatoryActive.png","assets/UI/Hud/HudIconObservatoryNormal.png","assets/UI/Hud/HudIconOptionActive.png","assets/UI/Hud/HudIconOptionNormal.png","assets/UI/Hud/HudIconPop.png","assets/UI/Hud/HudIconQuestActive.png","assets/UI/Hud/HudIconQuestNormal.png","assets/UI/Hud/HudIconShopActive.png","assets/UI/Hud/HudIconShopNormal.png","assets/UI/Hud/HudInventoryFill.png","assets/UI/Hud/HudInventoryFillBar.png","assets/UI/Hud/HudMoneyHard.png","assets/UI/Hud/HudMoneySoft.png","assets/UI/Hud/HudPopFill.png","assets/UI/Hud/HudPopFillBar.png","assets/UI/Icons/Artefacts/IconArtefactsDbz1.png","assets/UI/Icons/Artefacts/IconArtefactsDbz2.png","assets/UI/Icons/Artefacts/IconArtefactsDbz3.png","assets/UI/Icons/Artefacts/IconArtefactsLotr1.png","assets/UI/Icons/Artefacts/IconArtefactsLotr2.png","assets/UI/Icons/Artefacts/IconArtefactsLotr3.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons1.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons2.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons3.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars1.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars2.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars3.png","assets/UI/Icons/Artefacts/IconArtefactsTerre1.png","assets/UI/Icons/Artefacts/IconArtefactsTerre2.png","assets/UI/Icons/Artefacts/IconArtefactsTerre3.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland1.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland2.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland3.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewCasino.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewLabo.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewMusee.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png","assets/UI/Icons/Dogs/IconDogAstro.png","assets/UI/Icons/Dogs/IconDogCasino.png","assets/UI/Icons/Dogs/IconDogChurch.png","assets/UI/Icons/Dogs/IconDogMusee.png","assets/UI/Icons/Dogs/IconDogNiche.png","assets/UI/Icons/Dogs/IconDogWorkshop.png","assets/UI/Icons/Fusee/Bleu3.png","assets/UI/Icons/Fusee/IconFuseeBleu1.png","assets/UI/Icons/Fusee/IconFuseeBleu2.png","assets/UI/Icons/Fusee/IconFuseeCyan1.png","assets/UI/Icons/Fusee/IconFuseeCyan2.png","assets/UI/Icons/Fusee/IconFuseeCyan3.png","assets/UI/Icons/Fusee/IconFuseeFB1.png","assets/UI/Icons/Fusee/IconFuseeFB2.png","assets/UI/Icons/Fusee/IconFuseeFB3.png","assets/UI/Icons/Fusee/IconFuseeJaune1.png","assets/UI/Icons/Fusee/IconFuseeJaune2.png","assets/UI/Icons/Fusee/IconFuseeJaune3.png","assets/UI/Icons/Fusee/IconFuseeOrange1.png","assets/UI/Icons/Fusee/IconFuseeOrange2.png","assets/UI/Icons/Fusee/IconFuseeOrange3.png","assets/UI/Icons/Fusee/IconFuseeVert1.png","assets/UI/Icons/Fusee/IconFuseeVert2.png","assets/UI/Icons/Fusee/IconFuseeVert3.png","assets/UI/Icons/Fusee/IconFuseeViolet1.png","assets/UI/Icons/Fusee/IconFuseeViolet2.png","assets/UI/Icons/Fusee/IconFuseeViolet3.png","assets/UI/Icons/IconsRessources/IconBlueMineral.png","assets/UI/Icons/IconsRessources/IconCyanMineral.png","assets/UI/Icons/IconsRessources/IconDogeflooz.png","assets/UI/Icons/IconsRessources/IconGreenMineral.png","assets/UI/Icons/IconsRessources/IconOsDor.png","assets/UI/Icons/IconsRessources/IconPurpleMineral.png","assets/UI/Icons/IconsRessources/IconRedMineral.png","assets/UI/Icons/IconsRessources/IconYellowMineral.png","assets/UI/Icons/Planet/IconNamek.png","assets/UI/Icons/Planet/IconPlaneteDesEtoiles.png","assets/UI/Icons/Planet/IconPlaneteMilieu.png","assets/UI/Icons/Planet/IconSpringfield.png","assets/UI/Icons/Planet/IconTerre.png","assets/UI/Icons/Planet/IconWonderland.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewBlueMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewCyanMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewGreenMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewPurpleMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewRedMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewYellowMineral.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Os.png","assets/UI/PopIn/ContourNotAfford.png","assets/UI/PopIn/ContourRessourceInsuffisant.png","assets/UI/PopIn/Overlay.png","assets/UI/PopIn/PopInArticleLock.png","assets/UI/PopIn/PopInBackground.png","assets/UI/PopIn/PopInCloseButtonActivel.png","assets/UI/PopIn/PopInCloseButtonNormal.png","assets/UI/PopIn/PopInScrollBackground.png","assets/UI/PopIn/PopInScrollOverlay.png","assets/UI/PopIn/PopInScrollingBar.png","assets/UI/PopIn/PopInScrollingTruc.png","assets/UI/PopInBuilt/PopInBuiltArticleEmptyRessource.png","assets/UI/PopInBuilt/PopInBuiltBgArticle.png","assets/UI/PopInBuilt/PopInBuiltHardActive.png","assets/UI/PopInBuilt/PopInBuiltHardNormal.png","assets/UI/PopInBuilt/PopInBuiltSoftActive.png","assets/UI/PopInBuilt/PopInBuiltSoftNormal.png","assets/UI/PopInBuilt/PopInBuiltSoftNotDispo.png","assets/UI/PopInBuilt/PopInHeaderFusees.png","assets/UI/PopInBuilt/PopInHeaderNiches.png","assets/UI/PopInBuilt/PopInHeaderUtilitaires.png","assets/UI/PopInBuilt/PopInOngletFuseeActive.png","assets/UI/PopInBuilt/PopInOngletFuseeNormal.png","assets/UI/PopInBuilt/PopInOngletNicheActive.png","assets/UI/PopInBuilt/PopInOngletNicheNormal.png","assets/UI/PopInBuilt/PopInOngletUtilitairesActive.png","assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png","assets/UI/PopInBuilt/PopInTitleConstruction.png","assets/UI/PopInInventory/PopInInventoryArticleBg.png","assets/UI/PopInInventory/PopInInventoryBackground.png","assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png","assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","assets/UI/PopInInventory/PopInInventoryScrollingBar.png","assets/UI/PopInInventory/PopInInventoryScrollingTruc.png","assets/UI/PopInInventory/PopInInventoryTitle.png","assets/UI/PopInMarket/PopInHeaderBuy.png","assets/UI/PopInMarket/PopInHeaderSell.png","assets/UI/PopInMarket/PopInMarketBgArticle.png","assets/UI/PopInMarket/PopInMarketNbArticleActivel.png","assets/UI/PopInMarket/PopInMarketNbArticleNormal.png","assets/UI/PopInMarket/PopInMarketValidActive.png","assets/UI/PopInMarket/PopInMarketValidNormal.png","assets/UI/PopInMarket/PopInOngletBuyActive.png","assets/UI/PopInMarket/PopInOngletBuyNormal.png","assets/UI/PopInMarket/PopInOngletSellActive.png","assets/UI/PopInMarket/PopInOngletSellNormal.png","assets/UI/PopInMarket/PopInTitleMarket.png","assets/UI/PopInObservatory/PopInObservatoryArticle.png","assets/UI/PopInObservatory/PopInScrollOverlay.png","assets/UI/PopInObservatory/PopInScrollingBar.png","assets/UI/PopInObservatory/PopInScrollingTruc.png","assets/UI/PopInObservatory/PopInTitleObservatory.png","assets/UI/PopInQuest/PopInQuestBgArticle.png","assets/UI/PopInQuest/PopInQuestOngletEnCoursActive.png","assets/UI/PopInQuest/PopInQuestOngletEnCoursNormal.png","assets/UI/PopInQuest/PopInQuestOngletFinishActive.png","assets/UI/PopInQuest/PopInQuestOngletFinishNormal.png","assets/UI/PopInQuest/PopInTitleQuest.png","assets/UI/PopInSocial/PopInShop/PopInHeaderDogflooz.png","assets/UI/PopInSocial/PopInShop/PopInHeaderOsDOr.png","assets/UI/PopInSocial/PopInShop/PopInMarketValidActive.png","assets/UI/PopInSocial/PopInShop/PopInMarketValidNormal.png","assets/UI/PopInSocial/PopInShop/PopInOngletHardActive.png","assets/UI/PopInSocial/PopInShop/PopInOngletHardNormal.png","assets/UI/PopInSocial/PopInShop/PopInOngletSoftActive.png","assets/UI/PopInSocial/PopInShop/PopInOngletSotNormal.png","assets/UI/PopInSocial/PopInShop/PopInShopBgArticle.png","assets/UI/PopInSocial/PopInShop/PopInShopButtonConfirmActive.png","assets/UI/PopInSocial/PopInShop/PopInShopButtonConfirmNormal.png","assets/UI/PopInSocial/PopInShop/PopInTitleShop.png","assets/UI/PopInSocial/PopInSocialArticleBg.png","assets/UI/PopInSocial/PopInSocialBg.png","assets/UI/PopInSocial/PopInSocialButtonDownActivel.png","assets/UI/PopInSocial/PopInSocialButtonDownNormal.png","assets/UI/PopInSocial/PopInSocialButtonTradeActivel.png","assets/UI/PopInSocial/PopInSocialButtonTradeNormal.png","assets/UI/PopInSocial/PopInSocialButtonUpActive.png","assets/UI/PopInSocial/PopInSocialButtonUpNormal.png","assets/UI/PopInSocial/PopInSocialButtonVisitActive.png","assets/UI/PopInSocial/PopInSocialButtonVisitNormal.png","assets/UI/PopInSocial/PopInSocialPhotoBorders.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet0.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow3.png","assets/UI/PopInWorkshop/PopInTitleWorkshop.png","assets/UI/PopInWorkshop/PopInWorkshopArticleBG.png","assets/UI/PopInWorkshop/PopInWorkshopBgPlanet.png","assets/UI/PopInWorkshop/PopInWorkshopCancelButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopCancelButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopDestroyButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopDestroyButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopHeader.png","assets/UI/PopInWorkshop/PopInWorkshopLaunchButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopLaunchButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFill1.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFill2.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFillBar.png","assets/UI/PopInWorkshop/PopInWorkshopLoadIcon.png","assets/UI/PopInWorkshop/PopInWorkshopParticule.png","assets/UI/PopInWorkshop/PopInWorkshopTextBG.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle01.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle02.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle03.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle04.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle05.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle06.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle07.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle08.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle09.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle10.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick01.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick02.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick03.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick04.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick05.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick06.png","assets/UI/SplashScreen/LoadingFill01.png","assets/UI/SplashScreen/LoadingFill02.png","assets/UI/SplashScreen/LoadingFill03.png","assets/UI/SplashScreen/LoadingFillBar.png","assets/UI/SplashScreen/Planet.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow01.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow02.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow03.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow04.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow05.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow06.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow07.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow08.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow09.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow10.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow11.png","assets/UI/SplashScreen/PlanetLight.png","assets/UI/SplashScreen/Title.png"];
-GameInfo.buildMenuArticles = { niches : [{ img : "PopInBuiltArticlePreviewNiche", title : "Niche en Bois", description : "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]}], spacechips : [{ img : "PopInBuiltArticlePreviewHangar1", title : "Hangar Destination SprungField", description : "Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]},{ img : "PopInBuiltArticlePreviewHangar2", title : "Hangar Destination Modor", description : "Ce hangar construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]},{ img : "PopInBuiltArticlePreviewHangar3", title : "Hangar Destination Namok", description : "Dans ce hangar les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]},{ img : "PopInBuiltArticlePreviewHangar4", title : "Hangar Destination Terre", description : "Dans ce hangar, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]},{ img : "PopInBuiltArticlePreviewHangar5", title : "Hangar Destination Wundërland", description : "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]},{ img : "PopInBuiltArticlePreviewHangar6", title : "Hangar Destination StarWat", description : "Ce hangar utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]}], utilitaires : [{ img : "PopInBuiltArticlePreviewCasino", title : "Casino", description : "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]},{ img : "PopInBuiltArticlePreviewEglise", title : "Église", description : "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]},{ img : "PopInBuiltArticlePreviewEntrepot", title : "Entrepot", description : "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.", hardPrice : 3, ressources : [{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"},{ img : "IconDogeflooz", price : "1000"}]}]};
+GameInfo.loadAssets = ["assets/Dogs/DogCasino.png","assets/Dogs/DogChurch.png","assets/Dogs/DogHangarWorkshop.png","assets/Dogs/DogMusee.png","assets/Dogs/DogNiche.png","assets/Dogs/DogPasDeTir.png","assets/UI/Bulles/HudBulle.png","assets/UI/Cursor/curseur_down.png","assets/UI/Cursor/curseur_up.png","assets/UI/Hud/HudBuildFill.png","assets/UI/Hud/HudBuildFillBar.png","assets/UI/Hud/HudIconBuild.png","assets/UI/Hud/HudIconBuildActive.png","assets/UI/Hud/HudIconBuildNormal.png","assets/UI/Hud/HudIconDestroyActive.png","assets/UI/Hud/HudIconDestroyNormal.png","assets/UI/Hud/HudIconInventory.png","assets/UI/Hud/HudIconInventoryActive.png","assets/UI/Hud/HudIconInventoryNormal.png","assets/UI/Hud/HudIconMarketActive.png","assets/UI/Hud/HudIconMarketNormal.png","assets/UI/Hud/HudIconObservatoryActive.png","assets/UI/Hud/HudIconObservatoryNormal.png","assets/UI/Hud/HudIconOptionActive.png","assets/UI/Hud/HudIconOptionNormal.png","assets/UI/Hud/HudIconPop.png","assets/UI/Hud/HudIconQuestActive.png","assets/UI/Hud/HudIconQuestNormal.png","assets/UI/Hud/HudIconShopActive.png","assets/UI/Hud/HudIconShopNormal.png","assets/UI/Hud/HudInventoryFill.png","assets/UI/Hud/HudInventoryFillBar.png","assets/UI/Hud/HudMoneyHard.png","assets/UI/Hud/HudMoneySoft.png","assets/UI/Hud/HudPopFill.png","assets/UI/Hud/HudPopFillBar.png","assets/UI/Icons/Artefacts/IconArtefactsDbz1.png","assets/UI/Icons/Artefacts/IconArtefactsDbz2.png","assets/UI/Icons/Artefacts/IconArtefactsDbz3.png","assets/UI/Icons/Artefacts/IconArtefactsLotr1.png","assets/UI/Icons/Artefacts/IconArtefactsLotr2.png","assets/UI/Icons/Artefacts/IconArtefactsLotr3.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons1.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons2.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons3.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars1.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars2.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars3.png","assets/UI/Icons/Artefacts/IconArtefactsTerre1.png","assets/UI/Icons/Artefacts/IconArtefactsTerre2.png","assets/UI/Icons/Artefacts/IconArtefactsTerre3.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland1.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland2.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland3.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewCasino.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewLabo.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewMusee.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png","assets/UI/Icons/Dogs/IconDogAstro.png","assets/UI/Icons/Dogs/IconDogCasino.png","assets/UI/Icons/Dogs/IconDogChurch.png","assets/UI/Icons/Dogs/IconDogMusee.png","assets/UI/Icons/Dogs/IconDogNiche.png","assets/UI/Icons/Dogs/IconDogWorkshop.png","assets/UI/Icons/Fusee/Bleu3.png","assets/UI/Icons/Fusee/IconFuseeBleu1.png","assets/UI/Icons/Fusee/IconFuseeBleu2.png","assets/UI/Icons/Fusee/IconFuseeCyan1.png","assets/UI/Icons/Fusee/IconFuseeCyan2.png","assets/UI/Icons/Fusee/IconFuseeCyan3.png","assets/UI/Icons/Fusee/IconFuseeFB1.png","assets/UI/Icons/Fusee/IconFuseeFB2.png","assets/UI/Icons/Fusee/IconFuseeFB3.png","assets/UI/Icons/Fusee/IconFuseeJaune1.png","assets/UI/Icons/Fusee/IconFuseeJaune2.png","assets/UI/Icons/Fusee/IconFuseeJaune3.png","assets/UI/Icons/Fusee/IconFuseeOrange1.png","assets/UI/Icons/Fusee/IconFuseeOrange2.png","assets/UI/Icons/Fusee/IconFuseeOrange3.png","assets/UI/Icons/Fusee/IconFuseeVert1.png","assets/UI/Icons/Fusee/IconFuseeVert2.png","assets/UI/Icons/Fusee/IconFuseeVert3.png","assets/UI/Icons/Fusee/IconFuseeViolet1.png","assets/UI/Icons/Fusee/IconFuseeViolet2.png","assets/UI/Icons/Fusee/IconFuseeViolet3.png","assets/UI/Icons/IconsRessources/IconBlueMineral.png","assets/UI/Icons/IconsRessources/IconCyanMineral.png","assets/UI/Icons/IconsRessources/IconDogeflooz.png","assets/UI/Icons/IconsRessources/IconGreenMineral.png","assets/UI/Icons/IconsRessources/IconOsDor.png","assets/UI/Icons/IconsRessources/IconPurpleMineral.png","assets/UI/Icons/IconsRessources/IconRedMineral.png","assets/UI/Icons/IconsRessources/IconYellowMineral.png","assets/UI/Icons/Planet/IconNamek.png","assets/UI/Icons/Planet/IconPlaneteDesEtoiles.png","assets/UI/Icons/Planet/IconPlaneteMilieu.png","assets/UI/Icons/Planet/IconSpringfield.png","assets/UI/Icons/Planet/IconTerre.png","assets/UI/Icons/Planet/IconWonderland.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewBlueMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewCyanMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewGreenMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewPurpleMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewRedMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewYellowMineral.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Os.png","assets/UI/PopIn/ContourNotAfford.png","assets/UI/PopIn/ContourRessourceInsuffisant.png","assets/UI/PopIn/Overlay.png","assets/UI/PopIn/PopInArticleLock.png","assets/UI/PopIn/PopInBackground.png","assets/UI/PopIn/PopInCloseButtonActivel.png","assets/UI/PopIn/PopInCloseButtonNormal.png","assets/UI/PopIn/PopInScrollBackground.png","assets/UI/PopIn/PopInScrollOverlay.png","assets/UI/PopIn/PopInScrollingBar.png","assets/UI/PopIn/PopInScrollingTruc.png","assets/UI/PopInBuilt/PopInBuiltArticleEmptyRessource.png","assets/UI/PopInBuilt/PopInBuiltBgArticle.png","assets/UI/PopInBuilt/PopInBuiltHardActive.png","assets/UI/PopInBuilt/PopInBuiltHardNormal.png","assets/UI/PopInBuilt/PopInBuiltSoftActive.png","assets/UI/PopInBuilt/PopInBuiltSoftNormal.png","assets/UI/PopInBuilt/PopInBuiltSoftNotDispo.png","assets/UI/PopInBuilt/PopInHeaderFusees.png","assets/UI/PopInBuilt/PopInHeaderNiches.png","assets/UI/PopInBuilt/PopInHeaderUtilitaires.png","assets/UI/PopInBuilt/PopInOngletFuseeActive.png","assets/UI/PopInBuilt/PopInOngletFuseeNormal.png","assets/UI/PopInBuilt/PopInOngletNicheActive.png","assets/UI/PopInBuilt/PopInOngletNicheNormal.png","assets/UI/PopInBuilt/PopInOngletUtilitairesActive.png","assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png","assets/UI/PopInBuilt/PopInTitleConstruction.png","assets/UI/PopInInventory/PopInInventoryArticleBg.png","assets/UI/PopInInventory/PopInInventoryBackground.png","assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png","assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","assets/UI/PopInInventory/PopInInventoryScrollingBar.png","assets/UI/PopInInventory/PopInInventoryScrollingTruc.png","assets/UI/PopInInventory/PopInInventoryTitle.png","assets/UI/PopInMarket/PopInHeaderBuy.png","assets/UI/PopInMarket/PopInHeaderSell.png","assets/UI/PopInMarket/PopInMarketBgArticle.png","assets/UI/PopInMarket/PopInMarketNbArticleActive.png","assets/UI/PopInMarket/PopInMarketNbArticleNormal.png","assets/UI/PopInMarket/PopInMarketValidActive.png","assets/UI/PopInMarket/PopInMarketValidNormal.png","assets/UI/PopInMarket/PopInOngletBuyActive.png","assets/UI/PopInMarket/PopInOngletBuyNormal.png","assets/UI/PopInMarket/PopInOngletSellActive.png","assets/UI/PopInMarket/PopInOngletSellNormal.png","assets/UI/PopInMarket/PopInTitleMarket.png","assets/UI/PopInObservatory/PopInObservatoryArticle.png","assets/UI/PopInObservatory/PopInScrollOverlay.png","assets/UI/PopInObservatory/PopInScrollingBar.png","assets/UI/PopInObservatory/PopInScrollingTruc.png","assets/UI/PopInObservatory/PopInTitleObservatory.png","assets/UI/PopInQuest/PopInQuestBgArticle.png","assets/UI/PopInQuest/PopInQuestOngletEnCoursActive.png","assets/UI/PopInQuest/PopInQuestOngletEnCoursNormal.png","assets/UI/PopInQuest/PopInQuestOngletFinishActive.png","assets/UI/PopInQuest/PopInQuestOngletFinishNormal.png","assets/UI/PopInQuest/PopInTitleQuest.png","assets/UI/PopInSocial/PopInShop/PopInHeaderDogflooz.png","assets/UI/PopInSocial/PopInShop/PopInHeaderOsDOr.png","assets/UI/PopInSocial/PopInShop/PopInMarketValidActive.png","assets/UI/PopInSocial/PopInShop/PopInMarketValidNormal.png","assets/UI/PopInSocial/PopInShop/PopInOngletHardActive.png","assets/UI/PopInSocial/PopInShop/PopInOngletHardNormal.png","assets/UI/PopInSocial/PopInShop/PopInOngletSoftActive.png","assets/UI/PopInSocial/PopInShop/PopInOngletSotNormal.png","assets/UI/PopInSocial/PopInShop/PopInShopBgArticle.png","assets/UI/PopInSocial/PopInShop/PopInShopButtonConfirmActive.png","assets/UI/PopInSocial/PopInShop/PopInShopButtonConfirmNormal.png","assets/UI/PopInSocial/PopInShop/PopInTitleShop.png","assets/UI/PopInSocial/PopInSocialArticleBg.png","assets/UI/PopInSocial/PopInSocialBg.png","assets/UI/PopInSocial/PopInSocialButtonDownActivel.png","assets/UI/PopInSocial/PopInSocialButtonDownNormal.png","assets/UI/PopInSocial/PopInSocialButtonTradeActivel.png","assets/UI/PopInSocial/PopInSocialButtonTradeNormal.png","assets/UI/PopInSocial/PopInSocialButtonUpActive.png","assets/UI/PopInSocial/PopInSocialButtonUpNormal.png","assets/UI/PopInSocial/PopInSocialButtonVisitActive.png","assets/UI/PopInSocial/PopInSocialButtonVisitNormal.png","assets/UI/PopInSocial/PopInSocialPhotoBorders.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet0.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow3.png","assets/UI/PopInWorkshop/PopInTitleWorkshop.png","assets/UI/PopInWorkshop/PopInWorkshopArticleBG.png","assets/UI/PopInWorkshop/PopInWorkshopBgPlanet.png","assets/UI/PopInWorkshop/PopInWorkshopCancelButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopCancelButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopDestroyButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopDestroyButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopHeader.png","assets/UI/PopInWorkshop/PopInWorkshopLaunchButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopLaunchButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFill1.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFill2.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFillBar.png","assets/UI/PopInWorkshop/PopInWorkshopLoadIcon.png","assets/UI/PopInWorkshop/PopInWorkshopParticule.png","assets/UI/PopInWorkshop/PopInWorkshopTextBG.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle01.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle02.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle03.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle04.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle05.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle06.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle07.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle08.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle09.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle10.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick01.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick02.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick03.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick04.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick05.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick06.png","assets/UI/SplashScreen/LoadingFill01.png","assets/UI/SplashScreen/LoadingFill02.png","assets/UI/SplashScreen/LoadingFill03.png","assets/UI/SplashScreen/LoadingFillBar.png","assets/UI/SplashScreen/Planet.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow01.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow02.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow03.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow04.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow05.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow06.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow07.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow08.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow09.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow10.png","assets/UI/SplashScreen/PlanetGlow/PlanetGlow11.png","assets/UI/SplashScreen/PlanetLight.png","assets/UI/SplashScreen/Title.png"];
+GameInfo.ressources = (function($this) {
+	var $r;
+	var _g = new haxe.ds.StringMap();
+	_g.set("poudre0",{ name : "PLPP Yellow", previewImg : "assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewYellowMineral.png", iconImg : "assets/UI/Icons/IconsRessources/IconYellowMineral.png", userPossion : 5, buyCost : 10, sellCost : 5, lastQuantityBuy : 0, lastQuantitySell : 0});
+	_g.set("poudre1",{ name : "PLPP Green", previewImg : "assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewGreenMineral.png", iconImg : "assets/UI/Icons/IconsRessources/IconGreenMineral.png", userPossion : 3, buyCost : 25, sellCost : 10, lastQuantityBuy : 0, lastQuantitySell : 0});
+	_g.set("poudre2",{ name : "PLPP Cyan", previewImg : "assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewCyanMineral.png", iconImg : "assets/UI/Icons/IconsRessources/IconCyanMineral.png", userPossion : 5, buyCost : 50, sellCost : 25, lastQuantityBuy : 0, lastQuantitySell : 0});
+	_g.set("poudre3",{ name : "PLPP Blue", previewImg : "assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewBlueMineral.png", iconImg : "assets/UI/Icons/IconsRessources/IconBlueMineral.png", userPossion : 5, buyCost : 100, sellCost : 40, lastQuantityBuy : 0, lastQuantitySell : 0});
+	_g.set("poudre4",{ name : "PLPP Purple", previewImg : "assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewPurpleMineral.png", iconImg : "assets/UI/Icons/IconsRessources/IconPurpleMineral.png", userPossion : 5, buyCost : 300, sellCost : 200, lastQuantityBuy : 0, lastQuantitySell : 0});
+	_g.set("poudre5",{ name : "PLPP Red", previewImg : "assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewRedMineral.png", iconImg : "assets/UI/Icons/IconsRessources/IconRedMineral.png", userPossion : 5, buyCost : 1000, sellCost : 700, lastQuantityBuy : 0, lastQuantitySell : 0});
+	_g.set("fric",{ name : "Dogeflooz", previewImg : "assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png", iconImg : "assets/UI/Icons/IconsRessources/IconDogeflooz.png", userPossion : 15000});
+	_g.set("hardMoney",{ name : "Os D'or", previewImg : "assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png", iconImg : "assets/UI/Icons/IconsRessources/IconOsDor.png", userPossion : 150});
+	$r = _g;
+	return $r;
+}(this));
+GameInfo.buildMenuArticles = { niches : [{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png", title : "Niche en Bois", description : "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]}], spacechips : [{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png", title : "Hangar Destination SprungField", description : "Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre2", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png", title : "Hangar Destination Modor", description : "Ce hangar construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre5", quantity : "250"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png", title : "Hangar Destination Namok", description : "Dans ce hangar les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre3", quantity : "10"},{ name : "poudre4", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png", title : "Hangar Destination Terre", description : "Dans ce hangar, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png", title : "Hangar Destination Wundërland", description : "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png", title : "Hangar Destination StarWat", description : "Ce hangar utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]}], utilitaires : [{ previewImg : "assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png", title : "Casino", description : "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png", title : "Église", description : "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]},{ previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png", title : "Entrepot", description : "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.", hardPrice : 3, ressources : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"},{ name : "poudre1", quantity : "25"}]}]};
 GameInfo.userWidth = 1920;
 GameInfo.userHeight = 1000;
-GameInfo.fric = 15000;
-GameInfo.hardMoney = 150;
 GameInfo.dogeNumber = 20;
 GameInfo.dogeMaxNumber = 25;
 GameInfo.stockPercent = 50;

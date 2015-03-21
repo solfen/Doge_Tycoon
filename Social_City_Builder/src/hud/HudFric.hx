@@ -11,22 +11,22 @@ class HudFric extends IconHud
 {
 	
 	private var fricText:Text;
-	private var lastFric:Float;
+	private var lastFric:Float = GameInfo.ressources['fric'].userPossesion;
 
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
 		super(startX,startY,'assets/UI/Hud/HudMoneySoft.png',null,null,true);
-		lastFric = GameInfo.fric;
 		fricText = new Text(lastFric+'', {font:"35px FuturaStdHeavy",fill:"white"});
 		fricText.position.x = Std.int(width*0.95 - fricText.width);
 		fricText.position.y = Std.int(height/2 - fricText.height/2); 	
 		addChild(fricText);
+		updateInfo();
 	}
 	override public function updateInfo(){
-		if(lastFric != GameInfo.fric){
-			fricText.setText(GameInfo.fric+'');
-			lastFric = GameInfo.fric;
+		if(lastFric != GameInfo.ressources['fric'].userPossion){
+			lastFric = GameInfo.ressources['fric'].userPossion;
+			fricText.setText(lastFric+'');
 		}
 	}	
 }

@@ -192,7 +192,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
 	'assets/UI/PopInMarket/PopInHeaderBuy.png',
 	'assets/UI/PopInMarket/PopInHeaderSell.png',
 	'assets/UI/PopInMarket/PopInMarketBgArticle.png',
-	'assets/UI/PopInMarket/PopInMarketNbArticleActivel.png',
+	'assets/UI/PopInMarket/PopInMarketNbArticleActive.png',
 	'assets/UI/PopInMarket/PopInMarketNbArticleNormal.png',
 	'assets/UI/PopInMarket/PopInMarketValidActive.png',
 	'assets/UI/PopInMarket/PopInMarketValidNormal.png',
@@ -328,129 +328,201 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
 	'assets/UI/SplashScreen/PlanetLight.png',
 	'assets/UI/SplashScreen/Title.png',
  	];
+ 	public static var ressources:Map<String,Dynamic> = [
+ 		'poudre0' => {
+ 			name: 'PLPP Yellow', //plpp stands for perlimpinpin
+ 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewYellowMineral.png',
+ 			iconImg: 'assets/UI/Icons/IconsRessources/IconYellowMineral.png',
+ 			userPossion: 5,
+ 			buyCost: 10,
+ 			sellCost: 5,
+ 			lastQuantityBuy: 0,
+ 			lastQuantitySell: 0
+ 		},
+ 		'poudre1' => {
+ 			name: 'PLPP Green',
+ 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewGreenMineral.png',
+ 			iconImg: 'assets/UI/Icons/IconsRessources/IconGreenMineral.png',
+ 			userPossion: 3,
+ 			buyCost: 25,
+ 			sellCost: 10,
+ 			lastQuantityBuy: 0,
+ 			lastQuantitySell: 0
+ 		},
+ 		'poudre2' => {
+ 			name: 'PLPP Cyan',
+ 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewCyanMineral.png',
+ 			iconImg: 'assets/UI/Icons/IconsRessources/IconCyanMineral.png',
+ 			userPossion: 5,
+ 			buyCost: 50,
+ 			sellCost: 25,
+ 			lastQuantityBuy: 0,
+ 			lastQuantitySell: 0
+ 		},
+ 		'poudre3' => { 
+ 			name: 'PLPP Blue',
+ 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewBlueMineral.png',
+ 			iconImg: 'assets/UI/Icons/IconsRessources/IconBlueMineral.png',
+ 			userPossion: 5,
+ 			buyCost: 100,
+ 			sellCost: 40,
+ 			lastQuantityBuy: 0,
+ 			lastQuantitySell: 0
+ 		}, 		
+ 		'poudre4' => {
+ 			name: 'PLPP Purple',
+ 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewPurpleMineral.png',
+ 			iconImg: 'assets/UI/Icons/IconsRessources/IconPurpleMineral.png',
+ 			userPossion: 5,
+ 			buyCost: 300,
+ 			sellCost: 200,
+ 			lastQuantityBuy: 0,
+ 			lastQuantitySell: 0
+ 		},
+ 		'poudre5' => {
+ 			name: 'PLPP Red',
+ 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewRedMineral.png',
+ 			iconImg: 'assets/UI/Icons/IconsRessources/IconRedMineral.png',
+ 			userPossion: 5,
+ 			buyCost: 1000,
+ 			sellCost: 700,
+ 			lastQuantityBuy: 0,
+ 			lastQuantitySell: 0
+ 		},
+ 		'fric' => {
+ 			name: 'Dogeflooz',
+ 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png',
+ 			iconImg: 'assets/UI/Icons/IconsRessources/IconDogeflooz.png',
+ 			userPossion: 15000,
+ 		},
+ 		'hardMoney' => {
+ 			name: "Os D'or",
+ 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png',
+ 			iconImg: 'assets/UI/Icons/IconsRessources/IconOsDor.png',
+ 			userPossion: 150,
+ 		}
+ 	];
  	public static var buildMenuArticles:Dynamic = {
  		"niches": [
  			{
- 				img: 'PopInBuiltArticlePreviewNiche',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png',
  				title: 'Niche en Bois',
  				description: "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.",
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"poudre1","quantity":"25"},
  				]
  			},
  		],
  		"spacechips": [
  			 {
- 				img: 'PopInBuiltArticlePreviewHangar1',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png',
  				title: 'Hangar Destination SprungField',
  				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre2","quantity":"10"},
+ 					{"name":"poudre1","quantity":"25"},
  				]
  			},
  			{
- 				img: 'PopInBuiltArticlePreviewHangar2',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png',
  				title: 'Hangar Destination Modor',
  				description: "Ce hangar construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"poudre5","quantity":"250"},
  				]
  			},
  			{
- 				img: 'PopInBuiltArticlePreviewHangar3',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png',
  				title: 'Hangar Destination Namok',
  				description: "Dans ce hangar les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre3","quantity":"10"},
+ 					{"name":"poudre4","quantity":"25"},
  				]
  			}, 			
  			{
- 				img: 'PopInBuiltArticlePreviewHangar4',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png',
  				title: 'Hangar Destination Terre',
  				description: "Dans ce hangar, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"poudre1","quantity":"25"},
  				]
  			},
  			{
- 				img: 'PopInBuiltArticlePreviewHangar5',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png',
  				title: 'Hangar Destination Wundërland',
  				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"poudre1","quantity":"25"},
  				]
  			},
  			{
- 				img: 'PopInBuiltArticlePreviewHangar6',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png',
  				title: 'Hangar Destination StarWat',
  				description: "Ce hangar utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"poudre1","quantity":"25"},
  				]
  			},
  			
  		],
  		"utilitaires": [
  			{
- 				img: 'PopInBuiltArticlePreviewCasino',
+ 				previewImg: 'assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png',
  				title: 'Casino',
  				description: "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.",
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"poudre1","quantity":"25"},
  				]
  			},
  			{
- 				img: 'PopInBuiltArticlePreviewEglise',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png',
  				title: 'Église',
  				description: "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.",
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"poudre1","quantity":"25"},
  				]
  			},
  			{
- 				img: 'PopInBuiltArticlePreviewEntrepot',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png',
  				title: 'Entrepot',
  				description: "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.",
  				hardPrice: 3,
  				ressources: [
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
- 					{"img":"IconDogeflooz","price":"1000"},
+ 					{"name":"fric","quantity":"1000"},
+ 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"poudre1","quantity":"25"},
  				]
  			},
  		],
  	};
  	public static var userWidth:Float=1920;
  	public static var userHeight:Float=1000;
- 	public static var fric:Float = 15000;
- 	public static var hardMoney:Float = 150;
  	public static var dogeNumber:Float = 20;
  	public static var dogeMaxNumber:Float = 25;
  	public static var stockPercent:Float = 50;

@@ -17,12 +17,15 @@ class MyPopin extends DisplayObjectContainer
 	private var background:Sprite;
 	private var modalZone:Sprite;
 	private var childs:Map<String, Sprite> = new Map();
+	private var icons:Map<String, IconPopin> = new Map();
 	private var containers:Map<String, DisplayObjectContainer> = new Map();
 	private var currentChild:Sprite;
-	private var scrollIndicator:Sprite;
+	private var scrollIndicator:IconPopin;
 	private var graphics:Graphics;
 	private var scrollDragging:Bool = false;
 	private var scrollDragSy:Float;
+	private var header:Sprite;
+	private var headerTextures:Map<String,Texture>;
 	
 	public function new(startX:Float=0,startY:Float=0, texturePath:String, ?isModal:Bool=true) 
 	{
@@ -50,15 +53,20 @@ class MyPopin extends DisplayObjectContainer
 	}
 
 	// creates an IconPopin and puts it in the childs array
-	// TODO : create textures and stock them so that if we ask for the same we dont have to recreate it
-	private function addIcon(x:Float,y:Float, texturePath:String, name:String, target:DisplayObjectContainer,?isInteractive:Bool=true,?texturePathActive:String):Void{
+	// TODO : create textures and stock them so that if we ask for the same we dont have to recreate it (unless pixi does it already)
+	private function addIcon(x:Float,y:Float, texturePath:String, name:String, target:DisplayObjectContainer,?isInteractive:Bool=false,?texturePathActive:String,?pIsSelectButton:Bool=false):Void{
 		//int cast because Float pos = blurry images
-		currentChild = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive,texturePathActive);
+		var icon:IconPopin = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive,texturePathActive,pIsSelectButton);
 		if(isInteractive){
-			currentChild.click = childClick;
+			icon.click = childClick;
 		}
-		childs[name] = currentChild;
-		target.addChild(currentChild);
+		icons[name] = icon;
+		target.addChild(icon);
+	}
+	private function addHeader(x:Float,y:Float,startTexture:Texture){
+		header = new Sprite(startTexture);
+		header.position.set(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2));
+		addChild(header);
 	}
 	private function addText(x:Float,y:Float,font:String,fontSize:String,txt:String,name:String,target:DisplayObjectContainer,?color:String="black",?pAlign:String="left"):Void{
 		var style:TextStyle = {font:fontSize+" "+font,align:pAlign,fill:color};
@@ -93,18 +101,20 @@ class MyPopin extends DisplayObjectContainer
 			var newY:Float = data.getLocalPosition(scrollIndicator.parent).y - scrollDragSy;
 			if(scrollDragging && newY > 0.23*background.height-background.height/2 && newY < 0.635*background.height-background.height/2) {
 				var interval:Float = (0.635*background.height-background.height/2) - (0.23*background.height-background.height/2 );
-				var maxScroll:Float = containers["verticalScroller"].height-childs["contentBackground"].height + 100; // 100 is totaly changeable
+				var maxScroll:Float = containers["verticalScroller"].height-icons["contentBackground"].height + 100; // 100 is totaly changeable
 				scrollIndicator.y = newY;
 				containers["verticalScroller"].y =  - Std.int(((newY - (0.23*background.height-background.height/2)) * maxScroll  / interval)); // math stuff fait à l'arrache (plus ou moins)
 			}
 		}
-		childs["scrollingIndicator"] = scrollIndicator;
+		icons["scrollingIndicator"] = scrollIndicator;
 		addChild(scrollIndicator);
 	}
 	private function removeVerticalScrollBar(){
-		removeChild(childs["scrollingIndicator"]);
-		removeChild(childs["scrollingBar"]);
-		scrollIndicator = childs["scrollingIndicator"] = childs["scrollingBar"] = null;
+		removeChild(icons["scrollingIndicator"]);
+		removeChild(icons["scrollingBar"]);
+		scrollIndicator = null;
+		icons["scrollingIndicator"] = null;
+		icons["scrollingBar"] = null;
 	}
 	// add a DisplayObjectContainer à la popin. attention : Les containers ne sont pas dans childs mais dans containers
 	private function addContainer(name:String,target:DisplayObjectContainer,?x:Float=0,?y:Float=0){
@@ -116,17 +126,11 @@ class MyPopin extends DisplayObjectContainer
 	}
 	//empty function so that the interactive Icons are automaticly binded to this function
 	//the popin will inherit from this class and then can overide this function to configure the childs click action
-	private function childClick(pEvent:InteractionData){
-
-	}
+	private function childClick(pEvent:InteractionData){}
 
 	// empty function so that we can capture the clickEvent on the modal and not on anythingBelow
-	private function stopClickEventPropagation(pEvent:InteractionData){
-
-	}
+	private function stopClickEventPropagation(pEvent:InteractionData){}
 	
 	// !! ask mathieu if when we destroy a popin it destroy its childs too !!
-	public function destroy (): Void {
-
-	}
+	public function destroy (): Void {}
 }

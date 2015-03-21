@@ -10,10 +10,13 @@ class IconPopin extends Sprite
 	private var _name:String;
 	private var normalTexture:Texture;
 	private var activeTexture:Texture = null;
+	private var isSelectButton:Bool = false;
+	private var isCurrentTextureNormal:Bool = true;
 
-	public function new(pX:Float,pY:Float, texturePathNormal:String,pName:String,isInteractive:Bool,?texturePathActive:String) 
+	public function new(pX:Float,pY:Float, texturePathNormal:String,pName:String,isInteractive:Bool,?texturePathActive:String,?pIsSelectButton:Bool=false) 
 	{
 		normalTexture = Texture.fromImage(texturePathNormal);
+		isSelectButton=pIsSelectButton;
 		if(texturePathActive != null){
 			activeTexture = Texture.fromImage(texturePathActive);
 		}
@@ -23,17 +26,33 @@ class IconPopin extends Sprite
 		_name = pName;
 		interactive = isInteractive;
 		buttonMode = isInteractive;
-		if(isInteractive){
-			mouseover 	= onMouseOver;
-			mouseout  	= onMouseOut;
+		if(isInteractive && !isSelectButton){
+			mouseover = onMouseOver;
+			mouseout  = onMouseOut;
+		}
+		else if(isSelectButton){
+			mousedown = onClick; //mousedown because click is binded on childClick in MyPopin
 		}
 	}
 	private function onMouseOver (pData:InteractionData): Void {
-		if(activeTexture != null){
-			setTexture(activeTexture);
+		if(activeTexture == null){
+			return;
 		}
+		setTexture(activeTexture);
 	}
 	private function onMouseOut (pData:InteractionData): Void {
 		setTexture(normalTexture);
+	}
+	private function onClick (pData:InteractionData): Void {
+		if(activeTexture == null){
+			return;
+		}
+		setTexture(activeTexture);
+	}
+	public function setTextureToNormal():Void{
+		setTexture(normalTexture);
+	}
+	public function setTextureToActive():Void{
+		setTexture(activeTexture);
 	}
 }
