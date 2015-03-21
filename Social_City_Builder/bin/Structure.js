@@ -437,21 +437,30 @@ hud.HudDestroy.prototype = $extend(hud.IconHud.prototype,{
 	,__class__: hud.HudDestroy
 });
 hud.HudDoges = function(startX,startY) {
-	this.lastDogeNumber = GameInfo.dogeNumber;
 	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudPopFillBar.png",null,null,true);
-	this.dogeNumberText = new PIXI.Text(this.lastDogeNumber + "",{ font : "35px FuturaStdHeavy", fill : "white"});
-	this.dogeNumberText.position.x = this.width * 0.95 - this.dogeNumberText.width | 0;
-	this.dogeNumberText.position.y = this.height / 2 - this.dogeNumberText.height / 2 | 0;
+	this.barFill = new PIXI.Sprite(PIXI.Texture.fromImage("assets/UI/Hud/HudPopFill.png"));
+	this.barFill.position.set(0.23 * this.width | 0,0.3 * this.height | 0);
+	this.barFill.width = this.lastDogeNumber / this.lastDogeMaxNumber * this.width * .725 | 0;
+	this.addChild(this.barFill);
+	this.dogeIcon = new PIXI.Sprite(PIXI.Texture.fromImage("assets/UI/Hud/HudIconPop.png"));
+	this.dogeIcon.position.set(0,0.05 * this.height | 0);
+	this.addChild(this.dogeIcon);
+	this.dogeNumberText = new PIXI.Text("",{ font : "22px FuturaStdHeavy", fill : "white"});
 	this.addChild(this.dogeNumberText);
+	this.updateInfo();
 };
 $hxClasses["hud.HudDoges"] = hud.HudDoges;
 hud.HudDoges.__name__ = ["hud","HudDoges"];
 hud.HudDoges.__super__ = hud.IconHud;
 hud.HudDoges.prototype = $extend(hud.IconHud.prototype,{
 	updateInfo: function() {
-		if(this.lastDogeNumber != GameInfo.dogeNumber) {
+		if(this.lastDogeNumber != GameInfo.dogeNumber || this.lastDogeMaxNumber != GameInfo.dogeMaxNumber) {
 			this.lastDogeNumber = GameInfo.dogeNumber;
-			this.dogeNumberText.setText(this.lastDogeNumber + "");
+			this.lastDogeMaxNumber = GameInfo.dogeMaxNumber;
+			this.barFill.width = this.lastDogeNumber / this.lastDogeMaxNumber * this.width * .72 | 0;
+			this.dogeNumberText.setText(this.lastDogeNumber + "/" + this.lastDogeMaxNumber);
+			var xPos = Math.max(this.dogeIcon.x + this.dogeIcon.width,this.barFill.width - this.dogeNumberText.width + this.barFill.x - this.width * 0.02);
+			this.dogeNumberText.position.set(xPos | 0,this.height / 1.8 - this.dogeNumberText.height / 2 | 0);
 		}
 	}
 	,__class__: hud.HudDoges
@@ -838,12 +847,17 @@ hud.HudShop.prototype = $extend(hud.IconHud.prototype,{
 	,__class__: hud.HudShop
 });
 hud.HudStock = function(startX,startY) {
-	this.lastStockPercent = GameInfo.stockPercent;
-	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudPopFillBar.png",null,null,true);
-	this.stockPercentText = new PIXI.Text(this.lastStockPercent + "%",{ font : "35px FuturaStdHeavy", fill : "white"});
-	this.stockPercentText.position.x = this.width * 0.95 - this.stockPercentText.width | 0;
-	this.stockPercentText.position.y = this.height / 2 - this.stockPercentText.height / 2 | 0;
-	this.addChild(this.stockPercentText);
+	hud.IconHud.call(this,startX,startY,"assets/UI/Hud/HudInventoryFillBar.png",null,null,true);
+	this.barFill = new PIXI.Sprite(PIXI.Texture.fromImage("assets/UI/Hud/HudInventoryFill.png"));
+	this.barFill.position.set(0.23 * this.width | 0,0.3 * this.height | 0);
+	this.barFill.width = this.lastStockPercent / 100 * this.width * .725 | 0;
+	this.addChild(this.barFill);
+	this.inventoryIcon = new PIXI.Sprite(PIXI.Texture.fromImage("assets/UI/Hud/HudIconInventory.png"));
+	this.inventoryIcon.position.set(0,0.05 * this.height | 0);
+	this.addChild(this.inventoryIcon);
+	this.lastStockPercentText = new PIXI.Text("",{ font : "22px FuturaStdHeavy", fill : "white"});
+	this.addChild(this.lastStockPercentText);
+	this.updateInfo();
 };
 $hxClasses["hud.HudStock"] = hud.HudStock;
 hud.HudStock.__name__ = ["hud","HudStock"];
@@ -852,7 +866,10 @@ hud.HudStock.prototype = $extend(hud.IconHud.prototype,{
 	updateInfo: function() {
 		if(this.lastStockPercent != GameInfo.stockPercent) {
 			this.lastStockPercent = GameInfo.stockPercent;
-			this.stockPercentText.setText(this.lastStockPercent + "%");
+			this.barFill.width = this.lastStockPercent / 100 * this.width * .72 | 0;
+			this.lastStockPercentText.setText(this.lastStockPercent + "%");
+			var xPos = Math.max(this.inventoryIcon.x + this.inventoryIcon.width,this.barFill.width - this.lastStockPercentText.width + this.barFill.x - this.width * 0.02);
+			this.lastStockPercentText.position.set(xPos | 0,this.height / 1.8 - this.lastStockPercentText.height / 2 | 0);
 		}
 	}
 	,__class__: hud.HudStock
@@ -1490,8 +1507,8 @@ GameInfo.userWidth = 1920;
 GameInfo.userHeight = 1000;
 GameInfo.fric = 15000;
 GameInfo.hardMoney = 150;
-GameInfo.dogeNumber = 10;
-GameInfo.dogeMaxNumber = 50;
+GameInfo.dogeNumber = 20;
+GameInfo.dogeMaxNumber = 25;
 GameInfo.stockPercent = 50;
 Main.CONFIG_PATH = "config.json";
 sprites.Ambulance.images = ["E","SE","S","SW","W","NW","N","NE"];

@@ -422,7 +422,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  	public static var userHeight:Float=1000;
  	public static var fric:Float = 15000;
  	public static var hardMoney:Float = 150;
- 	public static var dogeNumber:Float = 10;
- 	public static var dogeMaxNumber:Float = 50;
+ 	public static var dogeNumber:Float = 20;
+ 	public static var dogeMaxNumber:Float = 25;
  	public static var stockPercent:Float = 50;
 }
