@@ -5,6 +5,8 @@ import pixi.display.MovieClip;
 import pixi.InteractionData;
 import pixi.display.Sprite;
 import pixi.textures.Texture;
+import pixi.textures.BaseTexture;
+import pixi.geom.Rectangle;
 
 /**
  * ...
@@ -12,22 +14,21 @@ import pixi.textures.Texture;
  */
 class Building extends MovieClip
 {
+	public static var CASINO 		: Int 	=	0x01;
+	public static var EGLISE 		: Int 	=	0x02;
+	public static var HANGAR_1 		: Int 	=	0x03;
+	public static var HANGAR_2 		: Int 	=	0x04;
+	public static var HANGAR_3 		: Int 	=	0x05;
+	public static var HANGAR_4 		: Int 	=	0x06;
+	public static var HANGAR_5 		: Int 	=	0x07;
+	public static var HANGAR_6 		: Int 	=	0x08;
+	public static var LABO 			: Int 	=	0x09;
+	public static var NICHE 		: Int 	=	0x0a;
+	public static var PAS_DE_TIR 	: Int 	=	0x0b;
 
-	public static var CASINO: Int =		0x01;
-	public static var EGLISE: Int =		0x02;
-	public static var HANGAR_1: Int =	0x03;
-	public static var HANGAR_2: Int =	0x04;
-	public static var HANGAR_3: Int =	0x05;
-	public static var HANGAR_4: Int =	0x06;
-	public static var HANGAR_5: Int =	0x07;
-	public static var HANGAR_6: Int =	0x08;
-	public static var LABO: Int =		0x09;
-	public static var NICHE: Int =		0x0a;
-	public static var PAS_DE_TIR: Int = 0x0b;
-
-	public static var LVL_1: Int = 		0x100;
-	public static var LVL_2: Int = 		0x200;
-	public static var LVL_3: Int = 		0x300;
+	public static var LVL_1 		: Int 	= 	0x100;
+	public static var LVL_2 		: Int 	= 	0x200;
+	public static var LVL_3 		: Int 	=	0x300;
 
 	public static var IMG_FOLDER_PATH: String = "./assets/Buildings/";
 	public static var IMG_EXTENSION: String = ".png";
@@ -165,6 +166,7 @@ class Building extends MovieClip
 	private function _on_click (p_data: InteractionData): Void
 	{
 		trace('click on building '+get_id());
+		// dispatch event here?
 	}
 	
 	/**
