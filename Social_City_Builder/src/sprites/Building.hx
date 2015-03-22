@@ -128,7 +128,7 @@ class Building extends MovieClip
 	public var width_in_tiles_nb: Int; // en nombre de tiles
 	public var height_in_tiles_nb: Int;
 	public var building_time: Int;
-	public var config: Dynamic<Int>;
+	public var config: Dynamic<String>;
 
 	//private images // ou fonction par lvl ?
 

@@ -15,7 +15,7 @@ class IconHud extends Sprite {
 
 	public function new(startX:Float,startY:Float, texturePathNormal:String, ?texturePathActive:String, ?pIsUpdatable:Bool=false, ?isInteractive:Bool=true) {
 		//textures creation. Has to have at least the normal state the others are optionals
-		normalTexture = Texture.fromImage(texturePathNormal);
+		normalTexture = Texture.fromFrame(texturePathNormal);
 		if(texturePathActive != null){
 			activeTexture = Texture.fromImage(texturePathActive);
 		}
