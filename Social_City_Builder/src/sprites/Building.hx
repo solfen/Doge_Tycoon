@@ -144,9 +144,9 @@ class Building extends MovieClip
 		col = p_col;
 		row = p_row;
 
-		config = BUILDINGS_CONFIG[get_id()];
-		width_in_tiles_nb = config.width;
-		height_in_tiles_nb = config.height;
+		config = GameInfo.BUILDINGS_CONFIG[get_id()];
+		width_in_tiles_nb = Std.int(config.width);
+		height_in_tiles_nb = Std.int(config.height);
 
 		super(_get_texture());
 		anchor.set(0, 1);
@@ -177,6 +177,15 @@ class Building extends MovieClip
 	{
 		var textures: Array<Texture> = new Array<Texture>();
 		
+		if (Std.int(config.frames_nb) == 1)
+		{
+
+		}
+		else
+		{
+			var i: Int = Std.int(config.frames_nb);
+			
+		}
 		//for (i in 0...BUILDINGS_IMG[config.img_i])
 		//{
 			textures.push(Texture.fromFrame(IMG_FOLDER_PATH + BUILDINGS_IMG[config.img_i] + IMG_EXTENSION));
