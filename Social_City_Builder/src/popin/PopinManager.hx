@@ -24,7 +24,8 @@ class PopinManager extends DisplayObjectContainer
 		super();
 	}
 	
-	//instantiate any popIn just with its name so that anywhere in the code we can open a popin just by doing PopinManager.getInstance().openPopin("popinName")
+	//instantiate any popIn just with its name so that anywhere in the code we can open a popin with a string
+	// by doing PopinManager.getInstance().openPopin("popinName")
 	public function openPopin(popinName:String, ?pX:Float, ?pY:Float){
 		childs[popinName] = Type.createInstance( Type.resolveClass("popin."+popinName), [pX,pY] );
 		addChild(childs[popinName]);

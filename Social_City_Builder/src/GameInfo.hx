@@ -478,7 +478,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  		],
  		"spacechips": [
- 			 {
+ 			{
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png',
  				title: 'Atelier Destination SprungField',
  				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
@@ -582,6 +582,19 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  		],
  	};
+ 	public static var buildings:Map<String,Dynamic> = [ //temp, à changer avec le merge lucien
+ 		'hangarNamok'=> {
+ 			destination:'Namok',
+ 			previewImg: 'assets/UI/Icons/Planet/IconNamek.png',
+ 			level: 1,
+ 			ressources: [
+ 				{"name":"fric","quantity":"1000"},
+ 				{"name":"poudre0","quantity":"10"},
+ 				{"name":"poudre1","quantity":"25"},
+ 			],
+
+ 		}
+ 	];
  	public static var userWidth:Float=1920;
  	public static var userHeight:Float=1000;
  	public static var dogeNumber:Float = 20;
