@@ -283,272 +283,275 @@ class GameInfo
  	public static var can_map_update: Bool = true;
  	
 
-	public static var BUILDINGS_CONFIG: Map<Int, Dynamic<String>> = [
+ 	public static var BUILDINGS_IMG_FOLDER_PATH: String = "assets/Buildings/";
+	public static var BUILDINGS_IMG_EXTENSION: String = ".png";
+
+	public static var BUILDINGS_CONFIG: Map<Int, Dynamic> = [
 		/* img format : "XXX_NN.png" */
 
 		Building.CASINO | Building.LVL_1 => {
-			width: "3",
-			height: "3",
-			vertical_dir: "0",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv1.png"
+			width: 3,
+			height: 3,
+			vertical_dir: 0,
+			building_time: 30,
+			frames_nb: 25,
+			img: "CasinoLv1"
 		},
 		Building.CASINO | Building.LVL_2 => {
-			width: "3",
-			height: "3",
-			vertical_dir: "0",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv2.png"
+			width: 3,
+			height: 3,
+			vertical_dir: 0,
+			building_time: 60,
+			frames_nb: 18,
+			img: "CasinoLv2"
 		},
 		Building.CASINO | Building.LVL_3 => {
-			width: "3",
-			height: "3",
-			vertical_dir: "0",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv3.png"
+			width: 3,
+			height: 3,
+			vertical_dir: 0,
+			building_time: 90,
+			frames_nb: 12,
+			img: "CasinoLv3"
 		},
 		Building.EGLISE | Building.LVL_1 => {
-			width: "3",
-			height: "3",
-			vertical_dir: "0",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv1.png"
+			width: 3,
+			height: 3,
+			vertical_dir: 0,
+			building_time: 30,
+			frames_nb: 1,
+			img: "CasinoLv1"
 		},
 		Building.EGLISE | Building.LVL_2 => {
-			width: "3",
-			height: "3",
-			vertical_dir: "0",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv2.png"
+			width: 3,
+			height: 3,
+			vertical_dir: 0,
+			building_time: 0,
+			frames_nb: 1,
+			img: "CasinoLv2"
 		},
 		Building.EGLISE | Building.LVL_3 => {
-			width: "3",
-			height: "3",
-			vertical_dir: "0",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv3.png"
+			width: 3,
+			height: 3,
+			vertical_dir: 0,
+			building_time: 90,
+			frames_nb: 1,
+			img: "CasinoLv3"
 		},
 		Building.HANGAR_1 | Building.LVL_1 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv1.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 30,
+			frames_nb: 1,
+			img: "Hangar1Lv1"
 		},
 		Building.HANGAR_1 | Building.LVL_2 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv2.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 60,
+			frames_nb: 1,
+			img: "Hangar1Lv2"
 		},
 		Building.HANGAR_1 | Building.LVL_3 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv3.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 90,
+			frames_nb: 1,
+			img: "Hangar1Lv3"
 		},
 		Building.HANGAR_2 | Building.LVL_1 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv1.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 30,
+			frames_nb: 1,
+			img: "Hangar1Lv1"
 		},
 		Building.HANGAR_2 | Building.LVL_2 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv2.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 60,
+			frames_nb: 1,
+			img: "Hangar1Lv2"
 		},
 		Building.HANGAR_2 | Building.LVL_3 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv3.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 90,
+			frames_nb: 1,
+			img: "Hangar1Lv3"
 		},
 		Building.HANGAR_3 | Building.LVL_1 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv1.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 30,
+			frames_nb: 1,
+			img: "Hangar1Lv1"
 		},
 		Building.HANGAR_3 | Building.LVL_2 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv2.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 60,
+			frames_nb: 1,
+			img: "Hangar1Lv2"
 		},
 		Building.HANGAR_3 | Building.LVL_3 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv3.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 90,
+			frames_nb: 1,
+			img: "Hangar1Lv3"
 		},
 		Building.HANGAR_4 | Building.LVL_1 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv1.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 30,
+			frames_nb: 1,
+			img: "Hangar1Lv1"
 		},
 		Building.HANGAR_4 | Building.LVL_2 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv2.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 60,
+			frames_nb: 1,
+			img: "Hangar1Lv2"
 		},
 		Building.HANGAR_4 | Building.LVL_3 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv3.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 90,
+			frames_nb: 1,
+			img: "Hangar1Lv3"
 		},
 		Building.HANGAR_5 | Building.LVL_1 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv1.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 30,
+			frames_nb: 1,
+			img: "Hangar1Lv1"
 		},
 		Building.HANGAR_5 | Building.LVL_2 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv2.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 60,
+			frames_nb: 1,
+			img: "Hangar1Lv2"
 		},
 		Building.HANGAR_5 | Building.LVL_3 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv3.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 90,
+			frames_nb: 1,
+			img: "Hangar1Lv3"
 		},
 		Building.HANGAR_6 | Building.LVL_1 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv1.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 30,
+			frames_nb: 1,
+			img: "Hangar1Lv1"
 		},
 		Building.HANGAR_6 | Building.LVL_2 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv2.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 60,
+			frames_nb: 1,
+			img: "Hangar1Lv2"
 		},
 		Building.HANGAR_6 | Building.LVL_3 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "-1",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/Hangar1Lv3.png"
+			width: 3,
+			height: 2,
+			vertical_dir: -1,
+			building_time: 90,
+			frames_nb: 1,
+			img: "Hangar1Lv3"
 		},
 		Building.LABO | Building.LVL_1 => {
-			width: "2",
-			height: "2",
-			vertical_dir: "0",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv1.png"
+			width: 2,
+			height: 2,
+			vertical_dir: 0,
+			building_time: 30,
+			frames_nb: 1,
+			img: "CasinoLv1"
 		},
 		Building.LABO | Building.LVL_2 => {
-			width: "2",
-			height: "2",
-			vertical_dir: "0",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv2.png"
+			width: 2,
+			height: 2,
+			vertical_dir: 0,
+			building_time: 60,
+			frames_nb: 1,
+			img: "CasinoLv2"
 		},
 		Building.LABO | Building.LVL_3 => {
-			width: "3",
-			height: "2",
-			vertical_dir: "1",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv3.png"
+			width: 3,
+			height: 2,
+			vertical_dir: 1,
+			building_time: 90,
+			frames_nb: 1,
+			img: "CasinoLv3"
 		},
 		Building.NICHE | Building.LVL_1 => {
-			width: "1",
-			height: "1",
-			vertical_dir: "0",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv1.png"
+			width: 1,
+			height: 1,
+			vertical_dir: 0,
+			building_time: 30,
+			frames_nb: 1,
+			img: "CasinoLv1"
 		},
 		Building.NICHE | Building.LVL_2 => {
-			width: "1",
-			height: "1",
-			vertical_dir: "0",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv2.png"
+			width: 1,
+			height: 1,
+			vertical_dir: 0,
+			building_time: 60,
+			frames_nb: 1,
+			img: "CasinoLv2"
 		},
 		Building.NICHE | Building.LVL_3 => {
-			width: "1",
-			height: "1",
-			vertical_dir: "0",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv3.png"
+			width: 1,
+			height: 1,
+			vertical_dir: 0,
+			building_time: 90,
+			frames_nb: 1,
+			img: "CasinoLv3"
 		},
 		Building.PAS_DE_TIR | Building.LVL_1 => {
-			width: "5",
-			height: "5",
-			vertical_dir: "0",
-			building_time: "30",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv1.png"
+			width: 5,
+			height: 5,
+			vertical_dir: 0,
+			building_time: 30,
+			frames_nb: 1,
+			img: "CasinoLv1"
 		},
 		Building.PAS_DE_TIR | Building.LVL_2 => {
-			width: "5",
-			height: "5",
-			vertical_dir: "0",
-			building_time: "60",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv2.png"
+			width: 5,
+			height: 5,
+			vertical_dir: 0,
+			building_time: 60,
+			frames_nb: 1,
+			img: "CasinoLv2"
 		},
 		Building.PAS_DE_TIR | Building.LVL_3 => {
-			width: "5",
-			height: "5",
-			vertical_dir: "0",
-			building_time: "90",
-			frames_nb: "1",
-			img: "./assets/Buildings/CasinoLv3.png"
+			width: 5,
+			height: 5,
+			vertical_dir: 0,
+			building_time: 90,
+			frames_nb: 1,
+			img: "CasinoLv3"
 		}
 	];
 
