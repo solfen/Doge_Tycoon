@@ -6,6 +6,47 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var IMap = function() { };
+$hxClasses["IMap"] = IMap;
+IMap.__name__ = ["IMap"];
+var haxe = {};
+haxe.ds = {};
+haxe.ds.StringMap = function() {
+	this.h = { };
+};
+$hxClasses["haxe.ds.StringMap"] = haxe.ds.StringMap;
+haxe.ds.StringMap.__name__ = ["haxe","ds","StringMap"];
+haxe.ds.StringMap.__interfaces__ = [IMap];
+haxe.ds.StringMap.prototype = {
+	set: function(key,value) {
+		this.h["$" + key] = value;
+	}
+	,get: function(key) {
+		return this.h["$" + key];
+	}
+	,remove: function(key) {
+		key = "$" + key;
+		if(!this.h.hasOwnProperty(key)) return false;
+		delete(this.h[key]);
+		return true;
+	}
+	,keys: function() {
+		var a = [];
+		for( var key in this.h ) {
+		if(this.h.hasOwnProperty(key)) a.push(key.substr(1));
+		}
+		return HxOverrides.iter(a);
+	}
+	,iterator: function() {
+		return { ref : this.h, it : this.keys(), hasNext : function() {
+			return this.it.hasNext();
+		}, next : function() {
+			var i = this.it.next();
+			return this.ref["$" + i];
+		}};
+	}
+	,__class__: haxe.ds.StringMap
+};
 var GameInfo = function() { };
 $hxClasses["GameInfo"] = GameInfo;
 GameInfo.__name__ = ["GameInfo"];
@@ -41,8 +82,8 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 	this._graphics.lineStyle(1,8965375,1);
 	this.addChild(this._graphics);
 	IsoMap.singleton = this;
-	this._screen_margin = 0.15;
-	this._screen_move_speed = 0.1;
+	this._screen_margin = 0.05;
+	this._screen_move_speed = 0.5;
 	this._is_clicking = false;
 	IsoMap.cols_nb = pCols_nb;
 	IsoMap.rows_nb = pRows_nb;
@@ -53,28 +94,8 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 	this._offset_x = 0;
 	this._offset_y = 0;
 	this._cells_pts = utils.game.IsoTools.all_map_pts_xy(this._offset_x,this._offset_y,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cols_nb * IsoMap.rows_nb,IsoMap.cols_nb);
-	this.x = Std["int"]((function($this) {
-		var $r;
-		var a = utils.system.DeviceCapabilities.get_width();
-		$r = (function($this) {
-			var $r;
-			var $int = a;
-			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-			return $r;
-		}($this)) * 0.5;
-		return $r;
-	}(this)) - this._map_width * 0.5);
-	this.y = Std["int"]((function($this) {
-		var $r;
-		var a1 = utils.system.DeviceCapabilities.get_height();
-		$r = (function($this) {
-			var $r;
-			var int1 = a1;
-			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-			return $r;
-		}($this)) * 0.5;
-		return $r;
-	}(this)) - this._map_height * 0.5);
+	this.x = Std["int"](utils.system.DeviceCapabilities.get_width() * 0.5 - this._map_width * 0.5);
+	this.y = Std["int"](utils.system.DeviceCapabilities.get_height() * 0.5 - this._map_height * 0.5);
 	this.obstacles_layer = new Array();
 	this.buildings_layer = new Array();
 	var i = IsoMap.cols_nb * IsoMap.rows_nb;
@@ -95,96 +116,20 @@ IsoMap.__name__ = ["IsoMap"];
 IsoMap.__super__ = PIXI.DisplayObjectContainer;
 IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	_update: function() {
+		if(!GameInfo.can_map_update) return;
+		GameInfo.building_2_build = sprites.Building.CASINO | sprites.Building.LVL_1;
 		if(this._is_clicking && !utils.game.InputInfos.is_mouse_down) {
 			this._is_clicking = false;
 			this._on_click();
 		} else if(!this._is_clicking && utils.game.InputInfos.is_mouse_down) this._is_clicking = true;
-		if(utils.game.InputInfos.mouse_x < (function($this) {
-			var $r;
-			var a = utils.system.DeviceCapabilities.get_width();
-			$r = (function($this) {
-				var $r;
-				var $int = a;
-				$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-				return $r;
-			}($this)) * $this._screen_margin;
-			return $r;
-		}(this))) this.x += Std["int"](((function($this) {
-			var $r;
-			var a1 = utils.system.DeviceCapabilities.get_width();
-			$r = (function($this) {
-				var $r;
-				var int1 = a1;
-				$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-				return $r;
-			}($this)) * $this._screen_margin;
-			return $r;
-		}(this)) - utils.game.InputInfos.mouse_x) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_x > (function($this) {
-			var $r;
-			var a2 = utils.system.DeviceCapabilities.get_width();
-			$r = (function($this) {
-				var $r;
-				var int2 = a2;
-				$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
-				return $r;
-			}($this)) * (1 - $this._screen_margin);
-			return $r;
-		}(this))) this.x += Std["int"](((function($this) {
-			var $r;
-			var a3 = utils.system.DeviceCapabilities.get_width();
-			$r = (function($this) {
-				var $r;
-				var int3 = a3;
-				$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
-				return $r;
-			}($this)) * (1 - $this._screen_margin);
-			return $r;
-		}(this)) - utils.game.InputInfos.mouse_x) * this._screen_move_speed);
-		if(utils.game.InputInfos.mouse_y < (function($this) {
-			var $r;
-			var a4 = utils.system.DeviceCapabilities.get_height();
-			$r = (function($this) {
-				var $r;
-				var int4 = a4;
-				$r = int4 < 0?4294967296.0 + int4:int4 + 0.0;
-				return $r;
-			}($this)) * $this._screen_margin;
-			return $r;
-		}(this))) this.y += Std["int"](((function($this) {
-			var $r;
-			var a5 = utils.system.DeviceCapabilities.get_height();
-			$r = (function($this) {
-				var $r;
-				var int5 = a5;
-				$r = int5 < 0?4294967296.0 + int5:int5 + 0.0;
-				return $r;
-			}($this)) * $this._screen_margin;
-			return $r;
-		}(this)) - utils.game.InputInfos.mouse_y) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_y > (function($this) {
-			var $r;
-			var a6 = utils.system.DeviceCapabilities.get_height();
-			$r = (function($this) {
-				var $r;
-				var int6 = a6;
-				$r = int6 < 0?4294967296.0 + int6:int6 + 0.0;
-				return $r;
-			}($this)) * (1 - $this._screen_margin);
-			return $r;
-		}(this))) this.y += Std["int"](((function($this) {
-			var $r;
-			var a7 = utils.system.DeviceCapabilities.get_height();
-			$r = (function($this) {
-				var $r;
-				var int7 = a7;
-				$r = int7 < 0?4294967296.0 + int7:int7 + 0.0;
-				return $r;
-			}($this)) * (1 - $this._screen_margin);
-			return $r;
-		}(this)) - utils.game.InputInfos.mouse_y) * this._screen_move_speed);
+		if(utils.game.InputInfos.mouse_x < utils.system.DeviceCapabilities.get_width() * this._screen_margin && this.x < 0) this.x += Std["int"]((utils.system.DeviceCapabilities.get_width() * this._screen_margin - utils.game.InputInfos.mouse_x) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_x > utils.system.DeviceCapabilities.get_width() * (1 - this._screen_margin) && this.x > utils.system.DeviceCapabilities.get_width() - this._map_width) this.x += Std["int"]((utils.system.DeviceCapabilities.get_width() * (1 - this._screen_margin) - utils.game.InputInfos.mouse_x) * this._screen_move_speed);
+		if(utils.game.InputInfos.mouse_y < utils.system.DeviceCapabilities.get_height() * this._screen_margin && this.y < 0) this.y += Std["int"]((utils.system.DeviceCapabilities.get_height() * this._screen_margin - utils.game.InputInfos.mouse_y) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_y > utils.system.DeviceCapabilities.get_height() * (1 - this._screen_margin) && this.y > utils.system.DeviceCapabilities.get_height() - this._map_height) this.y += Std["int"]((utils.system.DeviceCapabilities.get_height() * (1 - this._screen_margin) - utils.game.InputInfos.mouse_y) * this._screen_move_speed);
 	}
 	,_on_click: function() {
-		var tmp_id = sprites.Building.CASINO | sprites.Building.LVL_1;
-		var new_building = this.build_building(tmp_id,utils.game.InputInfos.mouse_x | 0,utils.game.InputInfos.mouse_y | 0);
+		if(GameInfo.building_2_build > 0) {
+			this.build_building(GameInfo.building_2_build,utils.game.InputInfos.mouse_x | 0,utils.game.InputInfos.mouse_y | 0);
+			GameInfo.building_2_build = 0;
+		}
 	}
 	,set_content: function(content) {
 	}
@@ -196,13 +141,10 @@ IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 		var new_y = utils.game.IsoTools.cell_y(row,IsoMap.cell_height,this._offset_y);
 		this.buildings_layer[index] = pBuilding_id;
 		var building = new sprites.Building(pBuilding_id,col,row,new_x,new_y);
-		haxe.Log.trace("index: " + index,{ fileName : "IsoMap.hx", lineNumber : 164, className : "IsoMap", methodName : "build_building"});
-		haxe.Log.trace("col: " + col,{ fileName : "IsoMap.hx", lineNumber : 165, className : "IsoMap", methodName : "build_building"});
-		haxe.Log.trace("row: " + row,{ fileName : "IsoMap.hx", lineNumber : 166, className : "IsoMap", methodName : "build_building"});
 		try {
 			this.getChildAt((row | 0) + 2).addChild(building);
 		} catch( error ) {
-			haxe.Log.trace(error,{ fileName : "IsoMap.hx", lineNumber : 174, className : "IsoMap", methodName : "build_building"});
+			haxe.Log.trace(error,{ fileName : "IsoMap.hx", lineNumber : 184, className : "IsoMap", methodName : "build_building"});
 		}
 		return building;
 	}
@@ -270,19 +212,7 @@ var Main = function() {
 	var _g = this;
 	utils.events.EventDispatcher.call(this);
 	Main.stage = new PIXI.Stage(4160694);
-	this.renderer = PIXI.autoDetectRenderer((function($this) {
-		var $r;
-		var this1 = utils.system.DeviceCapabilities.get_width();
-		var $int = this1;
-		$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-		return $r;
-	}(this)),(function($this) {
-		var $r;
-		var this11 = utils.system.DeviceCapabilities.get_height();
-		var int1 = this11;
-		$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-		return $r;
-	}(this)));
+	this.renderer = PIXI.autoDetectRenderer(utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
 	window.document.body.appendChild(this.renderer.view);
 	Main.stats = new Stats();
 	window.document.body.appendChild(Main.stats.domElement);
@@ -347,19 +277,7 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 		Main.stats.end();
 	}
 	,resize: function(pEvent) {
-		this.renderer.resize((function($this) {
-			var $r;
-			var this1 = utils.system.DeviceCapabilities.get_width();
-			var $int = this1;
-			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-			return $r;
-		}(this)),(function($this) {
-			var $r;
-			var this11 = utils.system.DeviceCapabilities.get_height();
-			var int1 = this11;
-			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-			return $r;
-		}(this)));
+		this.renderer.resize(utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
 		this.dispatchEvent(new utils.events.Event("Event.RESIZE"));
 	}
 	,render: function() {
@@ -372,9 +290,6 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 	}
 	,__class__: Main
 });
-var IMap = function() { };
-$hxClasses["IMap"] = IMap;
-IMap.__name__ = ["IMap"];
 Math.__name__ = ["Math"];
 var Reflect = function() { };
 $hxClasses["Reflect"] = Reflect;
@@ -443,7 +358,6 @@ Type.createInstance = function(cl,args) {
 	}
 	return null;
 };
-var haxe = {};
 haxe.Log = function() { };
 $hxClasses["haxe.Log"] = haxe.Log;
 haxe.Log.__name__ = ["haxe","Log"];
@@ -463,43 +377,6 @@ haxe.Timer.prototype = {
 	}
 	,__class__: haxe.Timer
 };
-haxe.ds = {};
-haxe.ds.StringMap = function() {
-	this.h = { };
-};
-$hxClasses["haxe.ds.StringMap"] = haxe.ds.StringMap;
-haxe.ds.StringMap.__name__ = ["haxe","ds","StringMap"];
-haxe.ds.StringMap.__interfaces__ = [IMap];
-haxe.ds.StringMap.prototype = {
-	set: function(key,value) {
-		this.h["$" + key] = value;
-	}
-	,get: function(key) {
-		return this.h["$" + key];
-	}
-	,remove: function(key) {
-		key = "$" + key;
-		if(!this.h.hasOwnProperty(key)) return false;
-		delete(this.h[key]);
-		return true;
-	}
-	,keys: function() {
-		var a = [];
-		for( var key in this.h ) {
-		if(this.h.hasOwnProperty(key)) a.push(key.substr(1));
-		}
-		return HxOverrides.iter(a);
-	}
-	,iterator: function() {
-		return { ref : this.h, it : this.keys(), hasNext : function() {
-			return this.it.hasNext();
-		}, next : function() {
-			var i = this.it.next();
-			return this.ref["$" + i];
-		}};
-	}
-	,__class__: haxe.ds.StringMap
-};
 var hud = {};
 hud.IconHud = function(startX,startY,texturePathNormal,texturePathActive,pIsUpdatable,isInteractive) {
 	if(isInteractive == null) isInteractive = true;
@@ -509,29 +386,7 @@ hud.IconHud = function(startX,startY,texturePathNormal,texturePathActive,pIsUpda
 	this.normalTexture = PIXI.Texture.fromImage(texturePathNormal);
 	if(texturePathActive != null) this.activeTexture = PIXI.Texture.fromImage(texturePathActive);
 	PIXI.Sprite.call(this,this.normalTexture);
-	this.position.set(Std["int"]((function($this) {
-		var $r;
-		var _g1 = startX;
-		var _g = utils.system.DeviceCapabilities.get_width();
-		$r = (function($this) {
-			var $r;
-			var $int = _g;
-			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-			return $r;
-		}($this)) * _g1;
-		return $r;
-	}(this))),Std["int"]((function($this) {
-		var $r;
-		var _g3 = startY;
-		var _g2 = utils.system.DeviceCapabilities.get_height();
-		$r = (function($this) {
-			var $r;
-			var int1 = _g2;
-			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-			return $r;
-		}($this)) * _g3;
-		return $r;
-	}(this))));
+	this.position.set(Std["int"](startX * utils.system.DeviceCapabilities.get_width()),Std["int"](startY * utils.system.DeviceCapabilities.get_height()));
 	if(isInteractive) {
 		this.interactive = true;
 		this.buttonMode = true;
@@ -713,99 +568,19 @@ hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 			while(_g < childsArr.length) {
 				var i = childsArr[_g];
 				++_g;
-				i.position.x = Std["int"]((function($this) {
-					var $r;
-					var _g2 = childsWidth + container.interval;
-					var _g1 = utils.system.DeviceCapabilities.get_width();
-					$r = (function($this) {
-						var $r;
-						var $int = _g1;
-						$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-						return $r;
-					}($this)) * _g2;
-					return $r;
-				}(this)));
-				childsWidth += (function($this) {
-					var $r;
-					var b;
-					{
-						var this1 = utils.system.DeviceCapabilities.get_width();
-						var int1 = this1;
-						if(int1 < 0) b = 4294967296.0 + int1; else b = int1 + 0.0;
-					}
-					$r = i.width / (function($this) {
-						var $r;
-						var int2 = b;
-						$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
-						return $r;
-					}($this));
-					return $r;
-				}(this)) + container.interval;
+				i.position.x = Std["int"]((childsWidth + container.interval) * utils.system.DeviceCapabilities.get_width());
+				childsWidth += i.width / utils.system.DeviceCapabilities.get_width() + container.interval;
 			}
 			if(childsWidth > container.maxWidth) {
 				container.obj.scale.x = container.maxWidth / childsWidth;
 				container.obj.scale.y = container.maxWidth / childsWidth;
-				container.obj.position.x = Std["int"]((function($this) {
-					var $r;
-					var this11;
-					{
-						var b1 = utils.system.DeviceCapabilities.get_width();
-						this11 = container.startX * b1;
-					}
-					var int3 = this11;
-					$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
-					return $r;
-				}(this)));
+				container.obj.position.x = Std["int"](container.startX * utils.system.DeviceCapabilities.get_width());
 			} else {
 				var tempX;
-				if(container.align == "left") {
-					var int4 = container.startX;
-					if(int4 < 0) tempX = 4294967296.0 + int4; else tempX = int4 + 0.0;
-				} else if(container.align == "center") tempX = (function($this) {
-					var $r;
-					var int5 = container.startX;
-					$r = int5 < 0?4294967296.0 + int5:int5 + 0.0;
-					return $r;
-				}(this)) + (container.maxWidth - childsWidth) / 2; else tempX = (function($this) {
-					var $r;
-					var int6 = container.startX;
-					$r = int6 < 0?4294967296.0 + int6:int6 + 0.0;
-					return $r;
-				}(this)) + container.maxWidth - childsWidth;
-				container.obj.position.x = Std["int"]((function($this) {
-					var $r;
-					var _g11 = tempX;
-					var _g3 = utils.system.DeviceCapabilities.get_width();
-					$r = (function($this) {
-						var $r;
-						var int7 = _g3;
-						$r = int7 < 0?4294967296.0 + int7:int7 + 0.0;
-						return $r;
-					}($this)) * _g11;
-					return $r;
-				}(this)));
+				if(container.align == "left") tempX = container.startX; else if(container.align == "center") tempX = container.startX + (container.maxWidth - childsWidth) / 2; else tempX = container.startX + container.maxWidth - childsWidth;
+				container.obj.position.x = Std["int"](tempX * utils.system.DeviceCapabilities.get_width());
 			}
-			container.obj.position.y = Math.min(Std["int"]((function($this) {
-				var $r;
-				var this12;
-				{
-					var b2 = utils.system.DeviceCapabilities.get_height();
-					this12 = container.startY * b2;
-				}
-				var int8 = this12;
-				$r = int8 < 0?4294967296.0 + int8:int8 + 0.0;
-				return $r;
-			}(this))),(function($this) {
-				var $r;
-				var a = utils.system.DeviceCapabilities.get_height();
-				$r = (function($this) {
-					var $r;
-					var int9 = a;
-					$r = int9 < 0?4294967296.0 + int9:int9 + 0.0;
-					return $r;
-				}($this)) - container.obj.children[0].height;
-				return $r;
-			}(this)));
+			container.obj.position.y = Math.min(Std["int"](container.startY * utils.system.DeviceCapabilities.get_height()),utils.system.DeviceCapabilities.get_height() - container.obj.children[0].height);
 		}
 	}
 	,updateChildText: function() {
@@ -818,29 +593,7 @@ hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	,addContainer: function(x,y,name,maxWidth,interval,align) {
 		if(align == null) align = "left";
 		var container = new PIXI.DisplayObjectContainer();
-		container.position.set(Std["int"]((function($this) {
-			var $r;
-			var _g1 = x;
-			var _g = utils.system.DeviceCapabilities.get_width();
-			$r = (function($this) {
-				var $r;
-				var $int = _g;
-				$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-				return $r;
-			}($this)) * _g1;
-			return $r;
-		}(this))),Std["int"]((function($this) {
-			var $r;
-			var _g3 = y;
-			var _g2 = utils.system.DeviceCapabilities.get_height();
-			$r = (function($this) {
-				var $r;
-				var int1 = _g2;
-				$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-				return $r;
-			}($this)) * _g3;
-			return $r;
-		}(this))));
+		container.position.set(Std["int"](x * utils.system.DeviceCapabilities.get_width()),Std["int"](y * utils.system.DeviceCapabilities.get_height()));
 		var v = { };
 		this.containers.set(name,v);
 		v;
@@ -1106,54 +859,14 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 	this.icons = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
 	PIXI.DisplayObjectContainer.call(this);
-	this.x = Std["int"]((function($this) {
-		var $r;
-		var _g1 = startX;
-		var _g = utils.system.DeviceCapabilities.get_width();
-		$r = (function($this) {
-			var $r;
-			var $int = _g;
-			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-			return $r;
-		}($this)) * _g1;
-		return $r;
-	}(this)));
-	this.y = Std["int"]((function($this) {
-		var $r;
-		var _g3 = startY;
-		var _g2 = utils.system.DeviceCapabilities.get_height();
-		$r = (function($this) {
-			var $r;
-			var int1 = _g2;
-			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-			return $r;
-		}($this)) * _g3;
-		return $r;
-	}(this)));
+	this.x = Std["int"](startX * utils.system.DeviceCapabilities.get_width());
+	this.y = Std["int"](startY * utils.system.DeviceCapabilities.get_height());
 	if(isModal) {
 		this.modalZone = new PIXI.Sprite(PIXI.Texture.fromImage("assets/alpha_bg.png"));
-		var _g5 = -startX;
-		var _g4 = utils.system.DeviceCapabilities.get_width();
-		this.modalZone.x = (function($this) {
-			var $r;
-			var int2 = _g4;
-			$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
-			return $r;
-		}(this)) * _g5;
-		var _g7 = -startY;
-		var _g6 = utils.system.DeviceCapabilities.get_height();
-		this.modalZone.y = (function($this) {
-			var $r;
-			var int3 = _g6;
-			$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
-			return $r;
-		}(this)) * _g7;
-		var this1 = utils.system.DeviceCapabilities.get_width();
-		var int4 = this1;
-		if(int4 < 0) this.modalZone.width = 4294967296.0 + int4; else this.modalZone.width = int4 + 0.0;
-		var this11 = utils.system.DeviceCapabilities.get_height();
-		var int5 = this11;
-		if(int5 < 0) this.modalZone.height = 4294967296.0 + int5; else this.modalZone.height = int5 + 0.0;
+		this.modalZone.x = -startX * utils.system.DeviceCapabilities.get_width();
+		this.modalZone.y = -startY * utils.system.DeviceCapabilities.get_height();
+		this.modalZone.width = utils.system.DeviceCapabilities.get_width();
+		this.modalZone.height = utils.system.DeviceCapabilities.get_height();
 		this.modalZone.interactive = true;
 		this.modalZone.click = $bind(this,this.stopClickEventPropagation);
 		var v = this.modalZone;
@@ -1617,28 +1330,8 @@ scenes.GameScene = function() {
 	this.x = 0;
 	this.y = 0;
 	new utils.game.InputInfos(true,true);
-	utils.game.InputInfos.mouse_x = Std["int"]((function($this) {
-		var $r;
-		var a = utils.system.DeviceCapabilities.get_width();
-		$r = (function($this) {
-			var $r;
-			var $int = a;
-			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-			return $r;
-		}($this)) * 0.5;
-		return $r;
-	}(this)));
-	utils.game.InputInfos.mouse_y = Std["int"]((function($this) {
-		var $r;
-		var a1 = utils.system.DeviceCapabilities.get_height();
-		$r = (function($this) {
-			var $r;
-			var int1 = a1;
-			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-			return $r;
-		}($this)) * 0.5;
-		return $r;
-	}(this)));
+	utils.game.InputInfos.mouse_x = Std["int"](utils.system.DeviceCapabilities.get_width() * 0.5);
+	utils.game.InputInfos.mouse_y = Std["int"](utils.system.DeviceCapabilities.get_height() * 0.5);
 	new IsoMap("assets/BG.jpg",64,64,128,64);
 	this.addChild(IsoMap.singleton);
 	this.addChild(hud.HudManager.getInstance());
@@ -1666,30 +1359,8 @@ scenes.LoaderScene = function() {
 	this.y = 0;
 	var img = new PIXI.Sprite(PIXI.Texture.fromImage("assets/UI/SplashScreen/IconsSplash.jpg"));
 	img.anchor.set(0.5,0.5);
-	var a = utils.system.DeviceCapabilities.get_width();
-	img.x = (function($this) {
-		var $r;
-		var $int = a;
-		$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-		return $r;
-	}(this)) / (function($this) {
-		var $r;
-		var int1 = 2;
-		$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-		return $r;
-	}(this));
-	var a1 = utils.system.DeviceCapabilities.get_height();
-	img.y = (function($this) {
-		var $r;
-		var int2 = a1;
-		$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
-		return $r;
-	}(this)) / (function($this) {
-		var $r;
-		var int11 = 2;
-		$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
-		return $r;
-	}(this));
+	img.x = utils.system.DeviceCapabilities.get_width() / 2;
+	img.y = utils.system.DeviceCapabilities.get_height() / 2;
 	this.addChild(img);
 };
 $hxClasses["scenes.LoaderScene"] = scenes.LoaderScene;
@@ -1744,37 +1415,7 @@ sprites.Ambulance.getTexture = function() {
 sprites.Ambulance.__super__ = PIXI.MovieClip;
 sprites.Ambulance.prototype = $extend(PIXI.MovieClip.prototype,{
 	onClick: function(pData) {
-		popin.PopinManager.getInstance().openPopin("PopinBuild",(function($this) {
-			var $r;
-			var a = utils.system.DeviceCapabilities.get_width();
-			$r = (function($this) {
-				var $r;
-				var $int = a;
-				$r = $int < 0?4294967296.0 + $int:$int + 0.0;
-				return $r;
-			}($this)) / (function($this) {
-				var $r;
-				var int1 = 2;
-				$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-				return $r;
-			}($this));
-			return $r;
-		}(this)),(function($this) {
-			var $r;
-			var a1 = utils.system.DeviceCapabilities.get_height();
-			$r = (function($this) {
-				var $r;
-				var int2 = a1;
-				$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
-				return $r;
-			}($this)) / (function($this) {
-				var $r;
-				var int11 = 2;
-				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
-				return $r;
-			}($this));
-			return $r;
-		}(this)));
+		popin.PopinManager.getInstance().openPopin("PopinBuild",utils.system.DeviceCapabilities.get_width() / 2,utils.system.DeviceCapabilities.get_height() / 2);
 	}
 	,__class__: sprites.Ambulance
 });
@@ -1956,10 +1597,10 @@ utils.system.DeviceCapabilities = function() { };
 $hxClasses["utils.system.DeviceCapabilities"] = utils.system.DeviceCapabilities;
 utils.system.DeviceCapabilities.__name__ = ["utils","system","DeviceCapabilities"];
 utils.system.DeviceCapabilities.get_height = function() {
-	return window.innerHeight;
+	return window.innerHeight | 0;
 };
 utils.system.DeviceCapabilities.get_width = function() {
-	return window.innerWidth;
+	return window.innerWidth | 0;
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
@@ -2007,6 +1648,8 @@ GameInfo.userHeight = 1000;
 GameInfo.dogeNumber = 20;
 GameInfo.dogeMaxNumber = 25;
 GameInfo.stockPercent = 50;
+GameInfo.building_2_build = 0;
+GameInfo.can_map_update = true;
 Main.CONFIG_PATH = "config.json";
 sprites.Ambulance.images = ["E","SE","S","SW","W","NW","N","NE"];
 sprites.Building.CASINO = 1;

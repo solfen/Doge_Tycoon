@@ -648,4 +648,6 @@ class GameInfo
  	public static var dogeNumber:Float = 20;
  	public static var dogeMaxNumber:Float = 25;
  	public static var stockPercent:Float = 50;
+ 	public static var building_2_build: Int = 0;
+ 	public static var can_map_update: Bool = true;
 }

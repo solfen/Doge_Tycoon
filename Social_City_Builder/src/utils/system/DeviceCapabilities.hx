@@ -14,19 +14,21 @@ class DeviceCapabilities
 	/**
 	  * hauteur du Canvas (change avec l'orientation)
 	  */
-	public static var height (get, never) : UInt;
+	public static var height (get, never) : Int;
 	
-	private static function get_height () {
-		return Browser.window.innerHeight;
+	private static function get_height () : Int
+	{
+		return Std.int(Browser.window.innerHeight);
 	}
 	
 	/**
 	  * largeur du Canvas (change avec l'orientation)
 	  */
-	public static var width (get, never) : UInt;
+	public static var width (get, never) : Int;
 	
-	private static function get_width () {
-		return Browser.window.innerWidth;
+	private static function get_width () : Int
+	{
+		return Std.int(Browser.window.innerWidth);
 	}
 	
 

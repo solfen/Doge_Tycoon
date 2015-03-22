@@ -53,8 +53,8 @@ class IsoMap extends DisplayObjectContainer
 
 		singleton = this;
 
-		_screen_margin = 0.15;
-		_screen_move_speed = 0.1;
+		_screen_margin = 0.05;
+		_screen_move_speed = 0.5;
 		_is_clicking = false;
 
 		cols_nb = pCols_nb;
@@ -97,6 +97,14 @@ class IsoMap extends DisplayObjectContainer
 
 	private function _update (): Void
 	{
+
+		if (!GameInfo.can_map_update)
+		{
+			return;
+		}
+
+		GameInfo.building_2_build = Building.CASINO | Building.LVL_1; // tmp here
+
 		if (_is_clicking && !InputInfos.is_mouse_down)
 		{
 			_is_clicking = false;
@@ -107,20 +115,20 @@ class IsoMap extends DisplayObjectContainer
 			_is_clicking = true;
 		}
 
-		if (InputInfos.mouse_x < DeviceCapabilities.width*_screen_margin /*&& x > -_map_width*0.5*/) // left
+		if (InputInfos.mouse_x < DeviceCapabilities.width*_screen_margin && x < 0) // left
 		{
 			x += Std.int((DeviceCapabilities.width*_screen_margin-InputInfos.mouse_x)*_screen_move_speed);
 		}
-		else if (InputInfos.mouse_x > DeviceCapabilities.width*(1-_screen_margin) /*&& x < _map_width*0.5*/) // right
+		else if (InputInfos.mouse_x > DeviceCapabilities.width*(1-_screen_margin) && x > DeviceCapabilities.width-_map_width) // right
 		{
 			x += Std.int((DeviceCapabilities.width*(1-_screen_margin)-InputInfos.mouse_x)*_screen_move_speed);
 		}
 
-		if (InputInfos.mouse_y < DeviceCapabilities.height*_screen_margin /*&& y > -_map_height*0.5*/) // up
+		if (InputInfos.mouse_y < DeviceCapabilities.height*_screen_margin && y < 0) // up
 		{
 			y += Std.int((DeviceCapabilities.height*_screen_margin-InputInfos.mouse_y)*_screen_move_speed);
 		}
-		else if (InputInfos.mouse_y > DeviceCapabilities.height*(1-_screen_margin) /*&& y < _map_height*0.5*/) // down
+		else if (InputInfos.mouse_y > DeviceCapabilities.height*(1-_screen_margin) && y > DeviceCapabilities.height-_map_height) // down
 		{
 			y += Std.int((DeviceCapabilities.height*(1-_screen_margin)-InputInfos.mouse_y)*_screen_move_speed);
 		}
@@ -129,9 +137,11 @@ class IsoMap extends DisplayObjectContainer
 
 	private function _on_click (): Void
 	{
-		var tmp_id: Int = Building.CASINO | Building.LVL_1; // need a public var for the building id to build
-
-		var new_building: Building = build_building( tmp_id , Std.int(InputInfos.mouse_x), Std.int(InputInfos.mouse_y));
+		if (GameInfo.building_2_build > 0)
+		{
+			build_building(GameInfo.building_2_build , Std.int(InputInfos.mouse_x), Std.int(InputInfos.mouse_y));
+			GameInfo.building_2_build = 0;
+		}
 	}
 
 	// todo:
@@ -161,9 +171,9 @@ class IsoMap extends DisplayObjectContainer
 
 		var building: Building = new Building(pBuilding_id, col, row, new_x, new_y);
 		
-		trace("index: "+index);
-		trace("col: "+col);
-		trace("row: "+row);
+		//trace("index: "+index);
+		//trace("col: "+col);
+		//trace("row: "+row);
 
 		try
 		{	// todo: trouver mieux comme technique...
@@ -176,36 +186,6 @@ class IsoMap extends DisplayObjectContainer
 
 		return building;
 	}
-
-	/*public static function swap_sprites_children_index (a: Dynamic, b: Dynamic): Void
-	{
-		var tmp: Int = a.parent.getChildIndex(a);
-
-		a.parent.setChildIndex(a, b.parent.getChildIndex(b));
-		b.parent.setChildIndex(b, tmp);
-	}
-
-	public static function quick_sort_sprites_children (arr: Array<Dynamic>, prop: String, start: Int, end: Int): Void
-	{
-		if (start >= end) return;
-		var left: Int = start - 1;
-		var right: Int = end + 1;
-		var pivot: Int = Reflect.field(arr[start], prop);
-
-		while (true)
-		{
-			do {right--;} while(Reflect.field(arr[right], prop) > pivot);
-			do {left++;} while(Reflect.field(arr[left], prop) < pivot);
-
-			if(left < right)
-				arr[left].parent.swapChildren(arr[left], arr[right]);
-			    //swap_sprites_children_index(arr[left], arr[right]);
-			else break;
-		}
-
-		quick_sort_sprites_children(arr, prop, start, right);
-		quick_sort_sprites_children(arr, prop, right+1, end);
-	}*/
 
 	public function destroy_building (pX: Int, pY: Int) : Void
 	{
