@@ -1,0 +1,30 @@
+{
+"frames": {
+	"Echafaudage01.png": {
+		"frame": {"x":162, "y":0, "w":160, "h":194},
+		"spriteSourceSize": {"x":0,"y":0,"w":160,"h":194},
+		"sourceSize": {"w":160,"h":194}
+	},
+	"Echafaudage2.png": {
+		"frame": {"x":162, "y":195, "w":160, "h":193},
+		"spriteSourceSize": {"x":0,"y":0,"w":160,"h":193},
+		"sourceSize": {"w":160,"h":193}
+	},
+	"Echafaudage3.png": {
+		"frame": {"x":0, "y":205, "w":160, "h":192},
+		"spriteSourceSize": {"x":0,"y":0,"w":160,"h":192},
+		"sourceSize": {"w":160,"h":192}
+	},
+	"Echafaudage_1case.png": {
+		"frame": {"x":0, "y":0, "w":161, "h":204},
+		"spriteSourceSize": {"x":0,"y":0,"w":161,"h":204},
+		"sourceSize": {"w":161,"h":204}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 323, "h": 398},
+	"scale": "1"
+}
+}
