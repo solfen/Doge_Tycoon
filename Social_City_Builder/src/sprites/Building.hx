@@ -29,7 +29,7 @@ class Building extends MovieClip
 	public static var LVL_2: Int = 		0x200;
 	public static var LVL_3: Int = 		0x300;
 
-	public static var IMG_FOLDER_PATH: String = "./assets/Buildings/";
+	public static var IMG_FOLDER_PATH: String = "assets/Buildings/";
 	public static var IMG_EXTENSION: String = ".png";
 
 	public static var BUILDINGS_IMG: Array<String> = [

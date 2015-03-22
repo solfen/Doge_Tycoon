@@ -34,7 +34,8 @@ class GameScene extends DisplayObjectContainer
 
 		new IsoMap("assets/BG.jpg", 64, 64, 128, 64);
 		addChild(IsoMap.singleton);
-
+		/*var testTexture:Texture = Texture.fromFrame('CasinoLv2_01.png');
+		addChild(new Sprite(testTexture));*/
 		addChild(HudManager.getInstance());
 		addChild(PopinManager.getInstance());
 

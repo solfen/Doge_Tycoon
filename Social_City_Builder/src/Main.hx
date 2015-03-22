@@ -84,7 +84,7 @@ class Main extends EventDispatcher
 	 * charge les assets graphiques du preloader principal
 	 */
 	private function preloadAssets():Void {
-		var lLoader:AssetLoader = new AssetLoader(GameInfo.preloadAssets);
+		var lLoader:AssetLoader = new AssetLoader(LoadInfo.preloadAssets);
 		lLoader.addEventListener("onComplete", loadAssets);
 		lLoader.load();
 	}	
@@ -95,8 +95,7 @@ class Main extends EventDispatcher
 	private function loadAssets (pEvent:Event): Void {
 		pEvent.target.removeEventListener("onComplete", loadAssets);
 		ScenesManager.getInstance().loadScene("LoaderScene");
-		
-		var lLoader:AssetLoader = new AssetLoader(GameInfo.loadAssets);
+		var lLoader:AssetLoader = new AssetLoader(LoadInfo.loadAssets);
 		lLoader.addEventListener("onProgress", onLoadProgress);
 		lLoader.addEventListener("onComplete", onLoadComplete);
 		lLoader.load();
