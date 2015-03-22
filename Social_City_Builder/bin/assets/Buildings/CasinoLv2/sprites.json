@@ -1,46 +1,46 @@
 {
 "frames": {
-	"CasinoLv2_01.png": {
+	"CasinoLv2_1.png": {
 		"frame": {"x":0, "y":0, "w":387, "h":298},
 		"spriteSourceSize": {"x":0,"y":89,"w":387,"h":419},
 		"sourceSize": {"w":387,"h":419}
 	},
-	"CasinoLv2_02.png": {
+	"CasinoLv2_2.png": {
 		"frame": {"x":0, "y":0, "w":387, "h":298},
 		"spriteSourceSize": {"x":0,"y":89,"w":387,"h":419},
 		"sourceSize": {"w":387,"h":419}
 	},
-	"CasinoLv2_03.png": {
+	"CasinoLv2_3.png": {
 		"frame": {"x":0, "y":299, "w":387, "h":298},
 		"spriteSourceSize": {"x":0,"y":89,"w":387,"h":419},
 		"sourceSize": {"w":387,"h":419}
 	},
-	"CasinoLv2_04.png": {
+	"CasinoLv2_4.png": {
 		"frame": {"x":388, "y":598, "w":387, "h":298},
 		"spriteSourceSize": {"x":0,"y":89,"w":387,"h":419},
 		"sourceSize": {"w":387,"h":419}
 	},
-	"CasinoLv2_05.png": {
+	"CasinoLv2_5.png": {
 		"frame": {"x":776, "y":897, "w":387, "h":298},
 		"spriteSourceSize": {"x":0,"y":89,"w":387,"h":419},
 		"sourceSize": {"w":387,"h":419}
 	},
-	"CasinoLv2_06.png": {
+	"CasinoLv2_6.png": {
 		"frame": {"x":776, "y":598, "w":387, "h":298},
 		"spriteSourceSize": {"x":0,"y":89,"w":387,"h":419},
 		"sourceSize": {"w":387,"h":419}
 	},
-	"CasinoLv2_07.png": {
+	"CasinoLv2_7.png": {
 		"frame": {"x":776, "y":299, "w":387, "h":298},
 		"spriteSourceSize": {"x":0,"y":89,"w":387,"h":419},
 		"sourceSize": {"w":387,"h":419}
 	},
-	"CasinoLv2_08.png": {
+	"CasinoLv2_8.png": {
 		"frame": {"x":776, "y":0, "w":387, "h":298},
 		"spriteSourceSize": {"x":0,"y":89,"w":387,"h":419},
 		"sourceSize": {"w":387,"h":419}
 	},
-	"CasinoLv2_09.png": {
+	"CasinoLv2_9.png": {
 		"frame": {"x":388, "y":1196, "w":387, "h":298},
 		"spriteSourceSize": {"x":0,"y":89,"w":387,"h":419},
 		"sourceSize": {"w":387,"h":419}
