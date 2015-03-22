@@ -27,11 +27,13 @@ class PopinManager extends DisplayObjectContainer
 	//instantiate any popIn just with its name so that anywhere in the code we can open a popin with a string
 	// by doing PopinManager.getInstance().openPopin("popinName")
 	public function openPopin(popinName:String, ?pX:Float, ?pY:Float){
+		GameInfo.can_map_update = false;
 		childs[popinName] = Type.createInstance( Type.resolveClass("popin."+popinName), [pX,pY] );
 		addChild(childs[popinName]);
 	}
 
 	public function closePopin(popinName:String){
+		GameInfo.can_map_update = true;
 		removeChild(childs[popinName]);
 		childs.remove(popinName);
 	}
