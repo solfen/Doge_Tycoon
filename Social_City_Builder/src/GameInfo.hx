@@ -9,6 +9,53 @@ class GameInfo
 	];
  	public static var loadAssets:Array<String> = [
 
+ 		/*
+		 ____                 ___       __                                
+		/\  _`\           __ /\_ \     /\ \  __                           
+		\ \ \L\ \  __  __/\_\\//\ \    \_\ \/\_\    ___      __     ____  
+		 \ \  _ <'/\ \/\ \/\ \ \ \ \   /'_` \/\ \ /' _ `\  /'_ `\  /',__\ 
+		  \ \ \L\ \ \ \_\ \ \ \ \_\ \_/\ \L\ \ \ \/\ \/\ \/\ \L\ \/\__, `\
+		   \ \____/\ \____/\ \_\/\____\ \___,_\ \_\ \_\ \_\ \____ \/\____/
+		    \/___/  \/___/  \/_/\/____/\/__,_ /\/_/\/_/\/_/\/___L\ \/___/ 
+		                                                     /\____/      
+		                                                     \_/__/
+		*/
+ 		"./assets/alpha_bg.png",
+		"./assets/BG.jpg",
+		"./assets/black_bg.png",
+		"./assets/Buildings/CasinoLv1.png",
+		"./assets/Buildings/CasinoLv2.png",
+		"./assets/Buildings/CasinoLv3.png",
+		"./assets/Buildings/EgliseLv1.png",
+		"./assets/Buildings/EgliseLv2.png",
+		"./assets/Buildings/EgliseLv3.png",
+		"./assets/Buildings/Hangar1Lv1.png",
+		"./assets/Buildings/Hangar1Lv2.png",
+		"./assets/Buildings/Hangar1Lv3.png",
+		"./assets/Buildings/Hangar2Lv1.png",
+		"./assets/Buildings/Hangar2Lv2.png",
+		"./assets/Buildings/Hangar2Lv3.png",
+		"./assets/Buildings/Hangar3Lv1.png",
+		"./assets/Buildings/Hangar3Lv2.png",
+		"./assets/Buildings/Hangar3Lv3.png",
+		"./assets/Buildings/Hangar4Lv1.png",
+		"./assets/Buildings/Hangar4Lv2.png",
+		"./assets/Buildings/Hangar4Lv3.png",
+		"./assets/Buildings/Hangar5Lv1.png",
+		"./assets/Buildings/Hangar5Lv2.png",
+		"./assets/Buildings/Hangar5Lv3.png",
+		"./assets/Buildings/Hangar6Lv1.png",
+		"./assets/Buildings/Hangar6Lv2.png",
+		"./assets/Buildings/Hangar6Lv3.png",
+		"./assets/Buildings/Labo1.png",
+		"./assets/Buildings/Labo2.png",
+		"./assets/Buildings/Labo3.png",
+		"./assets/Buildings/NicheLv1.png",
+		"./assets/Buildings/NicheLv2.png",
+		"./assets/Buildings/NicheLv3.png",
+		"./assets/Buildings/PasDeTir1.png",
+		"./assets/Buildings/PasDeTir2.png",
+		"./assets/Buildings/PasDeTir3.png",
 	 	/*
 		oooooooooo.     .oooooo.     .oooooo.     .oooooo..o 
 		`888'   `Y8b   d8P'  `Y8b   d8P'  `Y8b   d8P'    `Y8 

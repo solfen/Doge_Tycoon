@@ -20,7 +20,7 @@ class GameScene extends DisplayObjectContainer
 	{
 		if (instance == null) instance = new GameScene();
 		return instance;
-	}	
+	}
 	
 	public function new (): Void
 	{
