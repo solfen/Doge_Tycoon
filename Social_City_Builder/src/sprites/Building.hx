@@ -68,7 +68,7 @@ class Building extends MovieClip
 		"PasDeTir2",
 		"PasDeTir3"
 	];
-	public static var BUILDINGS_CONFIG: Array<Dynamic<Int>> = GET_BUILDINGS_CONFIG();
+	//public static var BUILDINGS_CONFIG: Array<Dynamic<Int>> = GET_BUILDINGS_CONFIG();
 
 	public static inline function GET_BUILDINGS_CONFIG () : Array<Dynamic<Int>>
 	{
@@ -128,7 +128,7 @@ class Building extends MovieClip
 	public var width_in_tiles_nb: Int; // en nombre de tiles
 	public var height_in_tiles_nb: Int;
 	public var building_time: Int;
-	public var config: Dynamic<String>;
+	public var config: Dynamic;
 
 	//private images // ou fonction par lvl ?
 
@@ -145,8 +145,16 @@ class Building extends MovieClip
 		row = p_row;
 
 		config = GameInfo.BUILDINGS_CONFIG[get_id()];
-		width_in_tiles_nb = Std.int(config.width);
-		height_in_tiles_nb = Std.int(config.height);
+		/*for (val in config)
+		{
+			if (val != "img")
+			{
+				val = Std.parseInt(val);
+			}
+		}*/
+
+		width_in_tiles_nb = config.width;
+		height_in_tiles_nb = config.height;
 
 		super(_get_texture());
 		anchor.set(0, 1);
@@ -177,18 +185,22 @@ class Building extends MovieClip
 	{
 		var textures: Array<Texture> = new Array<Texture>();
 		
-		if (Std.int(config.frames_nb) == 1)
+		if (config.frames_nb == 1)
 		{
-
+			textures.push(Texture.fromFrame(GameInfo.BUILDINGS_IMG_FOLDER_PATH + config.img + GameInfo.BUILDINGS_IMG_EXTENSION));
 		}
 		else
 		{
-			var i: Int = Std.int(config.frames_nb);
+			var i: Int = config.frames_nb;
+
+			while (i-->0)
+			{
+				textures.push(Texture.fromFrame(config.img + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
+			}
 			
 		}
 		//for (i in 0...BUILDINGS_IMG[config.img_i])
 		//{
-			textures.push(Texture.fromFrame(IMG_FOLDER_PATH + BUILDINGS_IMG[config.img_i] + IMG_EXTENSION));
 		//}
 		return textures;
 	}
