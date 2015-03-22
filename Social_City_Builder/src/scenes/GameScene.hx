@@ -32,23 +32,22 @@ class GameScene extends DisplayObjectContainer
 		InputInfos.mouse_x = Std.int(DeviceCapabilities.width*0.5);
 		InputInfos.mouse_y = Std.int(DeviceCapabilities.height*0.5);
 
-		new IsoMap("assets/BG.jpg", 64, 64, 128, 64); //64
+		new IsoMap("assets/BG.jpg", 64, 64, 128, 64);
 		addChild(IsoMap.singleton);
 
 		addChild(HudManager.getInstance());
 		addChild(PopinManager.getInstance());
 
 		Main.getInstance().addEventListener(Event.GAME_LOOP, doAction);
-		Main.getInstance().addEventListener(Event.GAME_LOOP, resize);
+		Main.getInstance().addEventListener(Event.RESIZE, resize);
 	}
 
 	public function doAction (): Void
 	{
 
 	}
-	public function resize (): Void
-	{
-		/*scale.x = DeviceCapabilities.width / GameInfo.userWidth;
-		scale.y = DeviceCapabilities.height / GameInfo.userHeight;*/
+
+	public function resize ():Void {
+		/*scale.x = scale.y = DeviceCapabilities.width < DeviceCapabilities.height ? DeviceCapabilities.width / GameInfo.userWidth:DeviceCapabilities.height / GameInfo.userHeight;*/
 	}
 }

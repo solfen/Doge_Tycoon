@@ -1,23 +1,21 @@
 package hud;
 
 import hud.IconHud;
-import utils.system.DeviceCapabilities;
 import popin.PopinManager;
 import pixi.InteractionData;
 
 // HudBuild is the BuildIcon of the Hud, it opens the build menu
 // IconHud is a pixi.Sprite tuned for the HUD use.
+// if the change texture repeats itself among all the HUD it will be put in IconHUD
 class HudBuild extends IconHud
 {
-	private static var instance: HudBuild;
-
-	private function new(startX:Float,startY:Float, ?texture:String) 
+	private function new(startX:Float,startY:Float) 
 	{
-		super(startX,startY, texture);
+		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
+		super(startX,startY,'assets/UI/Hud/HudIconBuildNormal.png',"assets/UI/Hud/HudIconBuildActive.png");
 	}
-
-	// IconHud has already binded the click on the method Onclick so we just have to overide it to code the action
+	
 	override private function onClick (pData:InteractionData) : Void {
-		PopinManager.getInstance().openPopin("PopinBuild", DeviceCapabilities.width/2, DeviceCapabilities.height/2);
-	}	
+		PopinManager.getInstance().openPopin("PopinBuild", 0.5, 0.5);
+	}
 }
