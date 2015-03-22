@@ -650,44 +650,10 @@ class GameInfo
  	public static var stockPercent:Float = 50;
  	public static var building_2_build: Int = 0;
  	public static var can_map_update: Bool = true;
-
- 	/*public static var BUILDINGS_IMG: Array<String> = [
-		"CasinoLv1",
-		"CasinoLv2",
-		"CasinoLv3",
-		"EgliseLv1",
-		"EgliseLv2",
-		"EgliseLv3",
-		"Hangar1Lv1",
-		"Hangar1Lv2",
-		"Hangar1Lv3",
-		"Hangar2Lv1",
-		"Hangar2Lv2",
-		"Hangar2Lv3",
-		"Hangar3Lv1",
-		"Hangar3Lv2",
-		"Hangar3Lv3",
-		"Hangar4Lv1",
-		"Hangar4Lv2",
-		"Hangar4Lv3",
-		"Hangar5Lv1",
-		"Hangar5Lv2",
-		"Hangar5Lv3",
-		"Hangar6Lv1",
-		"Hangar6Lv2",
-		"Hangar6Lv3",
-		"Labo1",
-		"Labo2",
-		"Labo3",
-		"NicheLv1",
-		"NicheLv2",
-		"NicheLv3",
-		"PasDeTir1",
-		"PasDeTir2",
-		"PasDeTir3"
-	];*/
+ 	
 
 	public static var BUILDINGS_CONFIG: Map<Int, Dynamic<String>> = [
+		/* img format : "XXX_NN.png" */
 
 		Building.CASINO | Building.LVL_1 => {
 			width: "3",
@@ -882,16 +848,16 @@ class GameInfo
 			img: "./assets/Buildings/Hangar1Lv3.png"
 		},
 		Building.LABO | Building.LVL_1 => {
-			width: "3",
-			height: "3",
+			width: "2",
+			height: "2",
 			vertical_dir: "0",
 			building_time: "30",
 			frames_nb: "1",
 			img: "./assets/Buildings/CasinoLv1.png"
 		},
 		Building.LABO | Building.LVL_2 => {
-			width: "3",
-			height: "3",
+			width: "2",
+			height: "2",
 			vertical_dir: "0",
 			building_time: "60",
 			frames_nb: "1",
@@ -899,55 +865,55 @@ class GameInfo
 		},
 		Building.LABO | Building.LVL_3 => {
 			width: "3",
-			height: "3",
-			vertical_dir: "0",
+			height: "2",
+			vertical_dir: "1",
 			building_time: "90",
 			frames_nb: "1",
 			img: "./assets/Buildings/CasinoLv3.png"
 		},
 		Building.NICHE | Building.LVL_1 => {
-			width: "3",
-			height: "3",
+			width: "1",
+			height: "1",
 			vertical_dir: "0",
 			building_time: "30",
 			frames_nb: "1",
 			img: "./assets/Buildings/CasinoLv1.png"
 		},
 		Building.NICHE | Building.LVL_2 => {
-			width: "3",
-			height: "3",
+			width: "1",
+			height: "1",
 			vertical_dir: "0",
 			building_time: "60",
 			frames_nb: "1",
 			img: "./assets/Buildings/CasinoLv2.png"
 		},
 		Building.NICHE | Building.LVL_3 => {
-			width: "3",
-			height: "3",
+			width: "1",
+			height: "1",
 			vertical_dir: "0",
 			building_time: "90",
 			frames_nb: "1",
 			img: "./assets/Buildings/CasinoLv3.png"
 		},
 		Building.PAS_DE_TIR | Building.LVL_1 => {
-			width: "3",
-			height: "3",
+			width: "5",
+			height: "5",
 			vertical_dir: "0",
 			building_time: "30",
 			frames_nb: "1",
 			img: "./assets/Buildings/CasinoLv1.png"
 		},
 		Building.PAS_DE_TIR | Building.LVL_2 => {
-			width: "3",
-			height: "3",
+			width: "5",
+			height: "5",
 			vertical_dir: "0",
 			building_time: "60",
 			frames_nb: "1",
 			img: "./assets/Buildings/CasinoLv2.png"
 		},
 		Building.PAS_DE_TIR | Building.LVL_3 => {
-			width: "3",
-			height: "3",
+			width: "5",
+			height: "5",
 			vertical_dir: "0",
 			building_time: "90",
 			frames_nb: "1",

@@ -11,8 +11,10 @@ class InputInfos
 	public static var singleton: InputInfos;
 	public static var mouse_x: Int;
 	public static var mouse_y: Int;
-	public static var clicked_mouse_x: Int;
-	public static var clicked_mouse_y: Int;
+	public static var last_mouse_down_x: Int;
+	public static var last_mouse_down_y: Int;
+	public static var last_mouse_up_x: Int;
+	public static var last_mouse_up_y: Int;
 	public static var is_mouse_down: Bool;
 
 
@@ -21,8 +23,10 @@ class InputInfos
 		singleton = this;
 		mouse_x = 0;
 		mouse_y = 0;
-		clicked_mouse_x = 0;
-		clicked_mouse_y = 0;
+		last_mouse_down_x = 0;
+		last_mouse_down_y = 0;
+		last_mouse_up_x = 0;
+		last_mouse_up_y = 0;
 		is_mouse_down = false;
 
 		if (listen_click)
@@ -39,13 +43,15 @@ class InputInfos
 	private function _on_mousedown (pData: Dynamic): Void
 	{
 		is_mouse_down = true;
+		last_mouse_down_x = pData.clientX;
+		last_mouse_down_y = pData.clientY;
 	}
 
 	private function _on_mouseup (pData: Dynamic): Void
 	{
 		is_mouse_down = false;
-		clicked_mouse_x = pData.clientX;
-		clicked_mouse_y = pData.clientY;
+		last_mouse_up_x = pData.clientX;
+		last_mouse_up_y = pData.clientY;
 	}
 
 	private function _on_mousemove (pData: Dynamic): Void

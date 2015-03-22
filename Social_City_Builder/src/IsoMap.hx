@@ -29,10 +29,10 @@ class IsoMap extends DisplayObjectContainer
 	private var _graphics: Graphics;
 	private var _screen_margin: Float;
 	private var _screen_move_speed: Float;
-
+	private var _old_x: Float;
+	private var _old_y: Float;
 	private var _offset_x: Int;
 	private var _offset_y: Int;
-
 	private var _cells_pts: Array<Dynamic<Int>>;
 	private var _map_width: Int;
 	private var _map_height: Int;
@@ -43,13 +43,6 @@ class IsoMap extends DisplayObjectContainer
 	public function new (pBG_url: String, pCols_nb: Int, pRows_nb: Int, pCell_width: Int, pCell_height: Int): Void 
 	{
 		super();
-
-		var background: TilingSprite = new TilingSprite(Texture.fromImage(pBG_url), pCols_nb*pCell_width, pRows_nb*pCell_height);
-		addChild(background);
-
-		_graphics = new Graphics();
-		_graphics.lineStyle(1, 0x88ccff, 1);
-		addChild(_graphics);
 
 		singleton = this;
 
@@ -68,11 +61,17 @@ class IsoMap extends DisplayObjectContainer
 		_offset_y = 0;
 		_cells_pts = IsoTools.all_map_pts_xy(_offset_x, _offset_y, cell_width, cell_height, cols_nb*rows_nb, cols_nb);
 		
-		x = Std.int(DeviceCapabilities.width*0.5 - _map_width*0.5);
-		y = Std.int(DeviceCapabilities.height*0.5 - _map_height*0.5);
-		
+		x = _old_x = Std.int(DeviceCapabilities.width*0.5 - _map_width*0.5);
+		y = _old_y = Std.int(DeviceCapabilities.height*0.5 - _map_height*0.5);
+
 		obstacles_layer = new Array<Bool>();
 		buildings_layer = new Array<Int>();
+
+		addChild(new TilingSprite(Texture.fromImage(pBG_url), _map_width, _map_height));
+
+		_graphics = new Graphics();
+		_graphics.lineStyle(1, 0x88ccff, 1);
+		addChild(_graphics);
 		
 		var i: Int = cols_nb * rows_nb;
 		while (i-->0)
@@ -112,7 +111,15 @@ class IsoMap extends DisplayObjectContainer
 		}
 		else if (!_is_clicking && InputInfos.is_mouse_down)
 		{
+			_old_x = x;
+			_old_y = y;
 			_is_clicking = true;
+		}
+
+		if (InputInfos.is_mouse_down)
+		{
+			x = InputInfos.mouse_x - (InputInfos.last_mouse_down_x-_old_x);
+			y = InputInfos.mouse_y - (InputInfos.last_mouse_down_y-_old_y);
 		}
 
 		if (InputInfos.mouse_x < DeviceCapabilities.width*_screen_margin && x < 0) // left
