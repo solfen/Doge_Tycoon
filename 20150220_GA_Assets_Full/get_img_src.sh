@@ -1,0 +1,1 @@
+l=`find .|wc -l`;find .|gawk 'BEGIN {print "{"} match($0,/\/([^\/]+)\.(png|jpe?g)$/,a) {print "\""a[1]"\":\""$0"\"";if(NR<'$l')print ","} END {print "}"}' > img_src.json

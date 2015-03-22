@@ -39,6 +39,7 @@ les modules :
 - inputs (events)
 - (sprites multi-tiles ?)
 - manager d'évenements (pool priorités)
+- scale
 
 - setup des tools!!
 */

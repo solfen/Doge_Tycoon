@@ -79,7 +79,7 @@ class Main extends EventDispatcher
 		pEvent.target.removeEventListener("onComplete", loadAssets);
 		ScenesManager.getInstance().loadScene("LoaderScene");
 		
-		var lLoader:AssetLoader = new AssetLoader(GameInfo.preloadAssets);
+		var lLoader:AssetLoader = new AssetLoader(GameInfo.loadAssets);
 		lLoader.addEventListener("onProgress", onLoadProgress);
 		lLoader.addEventListener("onComplete", onLoadComplete);
 		lLoader.load();

@@ -1,0 +1,4 @@
+features sociales:
+- échanges d'artefacts (visualisation, demande, offre)
+- inviter ses amis a voyager sur sa fusée, offre de la soft currentie
+- 

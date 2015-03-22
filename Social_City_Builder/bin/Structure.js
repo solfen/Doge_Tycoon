@@ -28,6 +28,183 @@ HxOverrides.iter = function(a) {
 		return this.arr[this.cur++];
 	}};
 };
+var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
+	PIXI.DisplayObjectContainer.call(this);
+	var background = new PIXI.TilingSprite(PIXI.Texture.fromImage(pBG_url),pCols_nb * pCell_width,pRows_nb * pCell_height);
+	this.addChild(background);
+	this._graphics = new PIXI.Graphics();
+	this._graphics.lineStyle(1,8965375,1);
+	this.addChild(this._graphics);
+	IsoMap.singleton = this;
+	this._screen_margin = 0.15;
+	this._screen_move_speed = 0.1;
+	this._is_clicking = false;
+	IsoMap.cols_nb = pCols_nb;
+	IsoMap.rows_nb = pRows_nb;
+	IsoMap.cell_width = pCell_width;
+	IsoMap.cell_height = pCell_height;
+	this._map_width = IsoMap.cols_nb * IsoMap.cell_width;
+	this._map_height = IsoMap.rows_nb * IsoMap.cell_height;
+	this._offset_x = 0;
+	this._offset_y = 0;
+	this._cells_pts = utils.game.IsoTools.all_map_pts_xy(this._offset_x,this._offset_y,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cols_nb * IsoMap.rows_nb,IsoMap.cols_nb);
+	this.x = Std["int"]((function($this) {
+		var $r;
+		var a = utils.system.DeviceCapabilities.get_width();
+		$r = (function($this) {
+			var $r;
+			var $int = a;
+			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+			return $r;
+		}($this)) * 0.5;
+		return $r;
+	}(this)) - this._map_width * 0.5);
+	this.y = Std["int"]((function($this) {
+		var $r;
+		var a1 = utils.system.DeviceCapabilities.get_height();
+		$r = (function($this) {
+			var $r;
+			var int1 = a1;
+			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+			return $r;
+		}($this)) * 0.5;
+		return $r;
+	}(this)) - this._map_height * 0.5);
+	this.obstacles_layer = new Array();
+	this.buildings_layer = new Array();
+	var i = IsoMap.cols_nb * IsoMap.rows_nb;
+	while(i-- > 0) {
+		this.obstacles_layer[i] = false;
+		this.buildings_layer[i] = 0;
+		this._graphics.moveTo(this._cells_pts[i].x0,this._cells_pts[i].y0);
+		this._graphics.lineTo(this._cells_pts[i].x1,this._cells_pts[i].y1);
+		this._graphics.lineTo(this._cells_pts[i].x2,this._cells_pts[i].y2);
+		this._graphics.lineTo(this._cells_pts[i].x3,this._cells_pts[i].y3);
+		this._graphics.lineTo(this._cells_pts[i].x0,this._cells_pts[i].y0);
+		if(i / IsoMap.cols_nb - (i / IsoMap.cols_nb | 0) == 0) this.addChild(new PIXI.DisplayObjectContainer());
+	}
+	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this._update));
+};
+$hxClasses["IsoMap"] = IsoMap;
+IsoMap.__name__ = ["IsoMap"];
+IsoMap.__super__ = PIXI.DisplayObjectContainer;
+IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+	_update: function() {
+		if(this._is_clicking && !utils.game.InputInfos.is_mouse_down) {
+			this._is_clicking = false;
+			this._on_click();
+		} else if(!this._is_clicking && utils.game.InputInfos.is_mouse_down) this._is_clicking = true;
+		if(utils.game.InputInfos.mouse_x < (function($this) {
+			var $r;
+			var a = utils.system.DeviceCapabilities.get_width();
+			$r = (function($this) {
+				var $r;
+				var $int = a;
+				$r = $int < 0?4294967296.0 + $int:$int + 0.0;
+				return $r;
+			}($this)) * $this._screen_margin;
+			return $r;
+		}(this)) && this.x > -this._map_width * 0.5) this.x += Std["int"](((function($this) {
+			var $r;
+			var a1 = utils.system.DeviceCapabilities.get_width();
+			$r = (function($this) {
+				var $r;
+				var int1 = a1;
+				$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
+				return $r;
+			}($this)) * $this._screen_margin;
+			return $r;
+		}(this)) - utils.game.InputInfos.mouse_x) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_x > (function($this) {
+			var $r;
+			var a2 = utils.system.DeviceCapabilities.get_width();
+			$r = (function($this) {
+				var $r;
+				var int2 = a2;
+				$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
+				return $r;
+			}($this)) * (1 - $this._screen_margin);
+			return $r;
+		}(this)) && this.x < this._map_width * 0.5) this.x += Std["int"](((function($this) {
+			var $r;
+			var a3 = utils.system.DeviceCapabilities.get_width();
+			$r = (function($this) {
+				var $r;
+				var int3 = a3;
+				$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
+				return $r;
+			}($this)) * (1 - $this._screen_margin);
+			return $r;
+		}(this)) - utils.game.InputInfos.mouse_x) * this._screen_move_speed);
+		if(utils.game.InputInfos.mouse_y < (function($this) {
+			var $r;
+			var a4 = utils.system.DeviceCapabilities.get_height();
+			$r = (function($this) {
+				var $r;
+				var int4 = a4;
+				$r = int4 < 0?4294967296.0 + int4:int4 + 0.0;
+				return $r;
+			}($this)) * $this._screen_margin;
+			return $r;
+		}(this)) && this.y > -this._map_height * 0.5) this.y += Std["int"](((function($this) {
+			var $r;
+			var a5 = utils.system.DeviceCapabilities.get_height();
+			$r = (function($this) {
+				var $r;
+				var int5 = a5;
+				$r = int5 < 0?4294967296.0 + int5:int5 + 0.0;
+				return $r;
+			}($this)) * $this._screen_margin;
+			return $r;
+		}(this)) - utils.game.InputInfos.mouse_y) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_y > (function($this) {
+			var $r;
+			var a6 = utils.system.DeviceCapabilities.get_height();
+			$r = (function($this) {
+				var $r;
+				var int6 = a6;
+				$r = int6 < 0?4294967296.0 + int6:int6 + 0.0;
+				return $r;
+			}($this)) * (1 - $this._screen_margin);
+			return $r;
+		}(this)) && this.y < this._map_height * 0.5) this.y += Std["int"](((function($this) {
+			var $r;
+			var a7 = utils.system.DeviceCapabilities.get_height();
+			$r = (function($this) {
+				var $r;
+				var int7 = a7;
+				$r = int7 < 0?4294967296.0 + int7:int7 + 0.0;
+				return $r;
+			}($this)) * (1 - $this._screen_margin);
+			return $r;
+		}(this)) - utils.game.InputInfos.mouse_y) * this._screen_move_speed);
+	}
+	,_on_click: function() {
+		var tmp_id = sprites.Building.CASINO | sprites.Building.LVL_1;
+		var new_building = this.build_building(tmp_id,utils.game.InputInfos.mouse_x | 0,utils.game.InputInfos.mouse_y | 0);
+	}
+	,set_content: function(content) {
+	}
+	,build_building: function(pBuilding_id,pX,pY) {
+		var index = utils.game.IsoTools.cell_index_from_xy(pX,pY,(this.x | 0) + this._offset_x,(this.y | 0) + this._offset_y,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cols_nb);
+		var col = utils.game.IsoTools.cell_col(index,IsoMap.cols_nb);
+		var row = utils.game.IsoTools.cell_row(index,IsoMap.cols_nb);
+		var new_x = utils.game.IsoTools.cell_x(col,IsoMap.cell_width,this._offset_x);
+		var new_y = utils.game.IsoTools.cell_y(row,IsoMap.cell_height,this._offset_y);
+		this.buildings_layer[index] = pBuilding_id;
+		var building = new sprites.Building(pBuilding_id,col,row,new_x,new_y);
+		console.log("index: " + index);
+		console.log("col: " + col);
+		console.log("row: " + row);
+		try {
+			this.getChildAt((row | 0) + 2).addChild(building);
+		} catch( error ) {
+			console.log(error);
+		}
+		return building;
+	}
+	,destroy_building: function(pX,pY) {
+	}
+	,__class__: IsoMap
+});
 var utils = {};
 utils.events = {};
 utils.events.IEventDispatcher = function() { };
@@ -95,8 +272,8 @@ var Main = function() {
 		return $r;
 	}(this)),(function($this) {
 		var $r;
-		var this2 = utils.system.DeviceCapabilities.get_height();
-		var int1 = this2;
+		var this11 = utils.system.DeviceCapabilities.get_height();
+		var int1 = this11;
 		$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 		return $r;
 	}(this)));
@@ -127,7 +304,7 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 	,loadAssets: function(pEvent) {
 		pEvent.target.removeEventListener("onComplete",$bind(this,this.loadAssets));
 		scenes.ScenesManager.getInstance().loadScene("LoaderScene");
-		var lLoader = new PIXI.AssetLoader(GameInfo.preloadAssets);
+		var lLoader = new PIXI.AssetLoader(GameInfo.loadAssets);
 		lLoader.addEventListener("onProgress",$bind(this,this.onLoadProgress));
 		lLoader.addEventListener("onComplete",$bind(this,this.onLoadComplete));
 		lLoader.load();
@@ -155,8 +332,8 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 			return $r;
 		}(this)),(function($this) {
 			var $r;
-			var this2 = utils.system.DeviceCapabilities.get_height();
-			var int1 = this2;
+			var this11 = utils.system.DeviceCapabilities.get_height();
+			var int1 = this11;
 			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 			return $r;
 		}(this)));
@@ -190,6 +367,9 @@ $hxClasses["Std"] = Std;
 Std.__name__ = ["Std"];
 Std.string = function(s) {
 	return js.Boot.__string_rec(s,"");
+};
+Std["int"] = function(x) {
+	return x | 0;
 };
 var Type = function() { };
 $hxClasses["Type"] = Type;
@@ -321,8 +501,8 @@ hud.HudBuild.prototype = $extend(hud.IconHud.prototype,{
 				return $r;
 			}($this)) / (function($this) {
 				var $r;
-				var int3 = 2;
-				$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
+				var int11 = 2;
+				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
 				return $r;
 			}($this));
 			return $r;
@@ -477,9 +657,6 @@ js.Boot.__cast = function(o,t) {
 	if(js.Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
 };
 var pixi = {};
-pixi.DomDefinitions = function() { };
-$hxClasses["pixi.DomDefinitions"] = pixi.DomDefinitions;
-pixi.DomDefinitions.__name__ = ["pixi","DomDefinitions"];
 pixi.renderers = {};
 pixi.renderers.IRenderer = function() { };
 $hxClasses["pixi.renderers.IRenderer"] = pixi.renderers.IRenderer;
@@ -622,9 +799,8 @@ scenes.GameScene = function() {
 	PIXI.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
-	var background = new PIXI.Sprite(PIXI.Texture.fromImage("assets/game.png"));
-	background.anchor.set(0.5,0.5);
-	background.position.set((function($this) {
+	new utils.game.InputInfos(true,true);
+	utils.game.InputInfos.mouse_x = Std["int"]((function($this) {
 		var $r;
 		var a = utils.system.DeviceCapabilities.get_width();
 		$r = (function($this) {
@@ -632,30 +808,22 @@ scenes.GameScene = function() {
 			var $int = a;
 			$r = $int < 0?4294967296.0 + $int:$int + 0.0;
 			return $r;
-		}($this)) / (function($this) {
-			var $r;
-			var int1 = 2;
-			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
-			return $r;
-		}($this));
+		}($this)) * 0.5;
 		return $r;
-	}(this)),(function($this) {
+	}(this)));
+	utils.game.InputInfos.mouse_y = Std["int"]((function($this) {
 		var $r;
 		var a1 = utils.system.DeviceCapabilities.get_height();
 		$r = (function($this) {
 			var $r;
-			var int2 = a1;
-			$r = int2 < 0?4294967296.0 + int2:int2 + 0.0;
+			var int1 = a1;
+			$r = int1 < 0?4294967296.0 + int1:int1 + 0.0;
 			return $r;
-		}($this)) / (function($this) {
-			var $r;
-			var int3 = 2;
-			$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
-			return $r;
-		}($this));
+		}($this)) * 0.5;
 		return $r;
 	}(this)));
-	this.addChild(background);
+	new IsoMap("assets/BG.jpg",64,64,128,64);
+	this.addChild(IsoMap.singleton);
 	this.addChild(hud.HudManager.getInstance());
 	this.addChild(popin.PopinManager.getInstance());
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this.doAction));
@@ -784,14 +952,93 @@ sprites.Ambulance.prototype = $extend(PIXI.MovieClip.prototype,{
 				return $r;
 			}($this)) / (function($this) {
 				var $r;
-				var int3 = 2;
-				$r = int3 < 0?4294967296.0 + int3:int3 + 0.0;
+				var int11 = 2;
+				$r = int11 < 0?4294967296.0 + int11:int11 + 0.0;
 				return $r;
 			}($this));
 			return $r;
 		}(this)));
 	}
 	,__class__: sprites.Ambulance
+});
+sprites.Building = function(p_type,p_col,p_row,pX,pY) {
+	this.type = p_type;
+	this.lvl = 1;
+	this.col = p_col;
+	this.row = p_row;
+	this.config = sprites.Building.BUILDINGS_CONFIG[this.get_id()];
+	this.width_in_tiles_nb = this.config.width;
+	this.height_in_tiles_nb = this.config.height;
+	PIXI.MovieClip.call(this,this._get_texture());
+	this.anchor.set(0,1);
+	pX = pX - IsoMap.cell_width * (this.width_in_tiles_nb * 0.5 | 0) | 0;
+	pY = pY + IsoMap.cell_height * (this.height_in_tiles_nb * 0.5 + 1 | 0) | 0;
+	this.position.set(pX,pY);
+	this.interactive = true;
+	this.buttonMode = true;
+	this.click = $bind(this,this._on_click);
+};
+$hxClasses["sprites.Building"] = sprites.Building;
+sprites.Building.__name__ = ["sprites","Building"];
+sprites.Building.GET_BUILDINGS_CONFIG = function() {
+	var config = [];
+	config[sprites.Building.CASINO | sprites.Building.LVL_1] = { width : 3, height : 3, vertical_dir : 0, img_i : 0};
+	config[sprites.Building.CASINO | sprites.Building.LVL_2] = { width : 3, height : 3, vertical_dir : 0, img_i : 1};
+	config[sprites.Building.CASINO | sprites.Building.LVL_3] = { width : 3, height : 3, vertical_dir : 0, img_i : 2};
+	config[sprites.Building.EGLISE | sprites.Building.LVL_1] = { width : 3, height : 3, vertical_dir : 0, img_i : 3};
+	config[sprites.Building.EGLISE | sprites.Building.LVL_2] = { width : 3, height : 3, vertical_dir : 0, img_i : 4};
+	config[sprites.Building.EGLISE | sprites.Building.LVL_3] = { width : 3, height : 3, vertical_dir : 0, img_i : 5};
+	config[sprites.Building.HANGAR_1 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 6};
+	config[sprites.Building.HANGAR_1 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 7};
+	config[sprites.Building.HANGAR_1 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 8};
+	config[sprites.Building.HANGAR_2 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 9};
+	config[sprites.Building.HANGAR_2 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 10};
+	config[sprites.Building.HANGAR_2 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 11};
+	config[sprites.Building.HANGAR_3 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 12};
+	config[sprites.Building.HANGAR_3 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 13};
+	config[sprites.Building.HANGAR_3 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 14};
+	config[sprites.Building.HANGAR_4 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 15};
+	config[sprites.Building.HANGAR_4 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 16};
+	config[sprites.Building.HANGAR_4 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 17};
+	config[sprites.Building.HANGAR_5 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 18};
+	config[sprites.Building.HANGAR_5 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 19};
+	config[sprites.Building.HANGAR_5 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 20};
+	config[sprites.Building.HANGAR_6 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 21};
+	config[sprites.Building.HANGAR_6 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 22};
+	config[sprites.Building.HANGAR_6 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 23};
+	config[sprites.Building.LABO | sprites.Building.LVL_1] = { width : 2, height : 2, vertical_dir : 0, img_i : 24};
+	config[sprites.Building.LABO | sprites.Building.LVL_2] = { width : 2, height : 2, vertical_dir : 0, img_i : 25};
+	config[sprites.Building.LABO | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : 1, img_i : 26};
+	config[sprites.Building.NICHE | sprites.Building.LVL_1] = { width : 1, height : 1, vertical_dir : 0, img_i : 27};
+	config[sprites.Building.NICHE | sprites.Building.LVL_2] = { width : 1, height : 1, vertical_dir : 0, img_i : 28};
+	config[sprites.Building.NICHE | sprites.Building.LVL_3] = { width : 1, height : 1, vertical_dir : 0, img_i : 29};
+	config[sprites.Building.PAS_DE_TIR | sprites.Building.LVL_1] = { width : 5, height : 3, vertical_dir : 0, img_i : 30};
+	config[sprites.Building.PAS_DE_TIR | sprites.Building.LVL_2] = { width : 5, height : 3, vertical_dir : 0, img_i : 31};
+	config[sprites.Building.PAS_DE_TIR | sprites.Building.LVL_3] = { width : 5, height : 3, vertical_dir : 0, img_i : 32};
+	return config;
+};
+sprites.Building.get_building_type = function(id) {
+	return id & 255;
+};
+sprites.Building.get_building_lvl = function(id) {
+	return id & 3840;
+};
+sprites.Building.__super__ = PIXI.MovieClip;
+sprites.Building.prototype = $extend(PIXI.MovieClip.prototype,{
+	upgrade: function() {
+	}
+	,get_id: function() {
+		return this.type | this.lvl;
+	}
+	,_on_click: function(p_data) {
+		console.log("click on building " + this.get_id());
+	}
+	,_get_texture: function() {
+		var textures = new Array();
+		textures.push(PIXI.Texture.fromFrame(sprites.Building.IMG_FOLDER_PATH + sprites.Building.BUILDINGS_IMG[this.config.img_i] + sprites.Building.IMG_EXTENSION));
+		return textures;
+	}
+	,__class__: sprites.Building
 });
 utils.events.Event = function(pType) {
 	this.type = pType;
@@ -818,6 +1065,75 @@ utils.events.Event.prototype = {
 	}
 	,__class__: utils.events.Event
 };
+utils.game = {};
+utils.game.InputInfos = function(listen_click,listen_mousemove) {
+	utils.game.InputInfos.singleton = this;
+	utils.game.InputInfos.mouse_x = 0;
+	utils.game.InputInfos.mouse_y = 0;
+	utils.game.InputInfos.clicked_mouse_x = 0;
+	utils.game.InputInfos.clicked_mouse_y = 0;
+	utils.game.InputInfos.is_mouse_down = false;
+	if(listen_click) {
+		window.onmousedown = $bind(this,this._on_mousedown);
+		window.onmouseup = $bind(this,this._on_mouseup);
+	}
+	if(listen_mousemove) window.onmousemove = $bind(this,this._on_mousemove);
+};
+$hxClasses["utils.game.InputInfos"] = utils.game.InputInfos;
+utils.game.InputInfos.__name__ = ["utils","game","InputInfos"];
+utils.game.InputInfos.prototype = {
+	_on_mousedown: function(pData) {
+		utils.game.InputInfos.is_mouse_down = true;
+	}
+	,_on_mouseup: function(pData) {
+		utils.game.InputInfos.is_mouse_down = false;
+		utils.game.InputInfos.clicked_mouse_x = pData.clientX;
+		utils.game.InputInfos.clicked_mouse_y = pData.clientY;
+	}
+	,_on_mousemove: function(pData) {
+		utils.game.InputInfos.mouse_x = pData.clientX;
+		utils.game.InputInfos.mouse_y = pData.clientY;
+	}
+	,__class__: utils.game.InputInfos
+};
+utils.game.IsoTools = function() { };
+$hxClasses["utils.game.IsoTools"] = utils.game.IsoTools;
+utils.game.IsoTools.__name__ = ["utils","game","IsoTools"];
+utils.game.IsoTools.cell_col = function(cell_index,cols_nb) {
+	return (cell_index % cols_nb - (cell_index / cols_nb | 0) + cols_nb - 1) * 0.5;
+};
+utils.game.IsoTools.cell_row = function(cell_index,cols_nb) {
+	return (cell_index % cols_nb + (cell_index / cols_nb | 0)) * 0.5;
+};
+utils.game.IsoTools.cell_x = function(col,cell_w,offset_x) {
+	return col * cell_w + offset_x | 0;
+};
+utils.game.IsoTools.cell_y = function(row,cell_h,offset_y) {
+	return row * cell_h + offset_y | 0;
+};
+utils.game.IsoTools.cell_index_from_cr = function(col,row,cols_nb) {
+	return (row + col - cols_nb * 0.5 + 0.5 | 0) + (row - col + cols_nb * 0.5 - 0.5 | 0) * cols_nb;
+};
+utils.game.IsoTools.cell_index_from_xy = function(x,y,offset_x,offset_y,cell_w,cell_h,cols_nb) {
+	var nX = (x - offset_x) / cell_w;
+	var nY = (y - offset_y) / cell_h;
+	return (nY + nX - cols_nb * 0.5 | 0) + (nY - nX + cols_nb * 0.5 | 0) * cols_nb;
+};
+utils.game.IsoTools.all_map_pts_xy = function(offset_x,offset_y,cell_w,cell_h,cells_nb,cols_nb) {
+	var pts = [];
+	var i = 0;
+	while(i < cells_nb) {
+		pts[i] = { x0 : Std["int"](offset_x + utils.game.IsoTools.cell_col(i,cols_nb) * cell_w), y0 : Std["int"](offset_y + utils.game.IsoTools.cell_row(i,cols_nb) * cell_h + cell_h * 0.5)};
+		pts[i].x1 = pts[i].x0 + cell_w * 0.5 | 0;
+		pts[i].y1 = pts[i].y0 - cell_h * 0.5 | 0;
+		pts[i].x2 = pts[i].x0 + cell_w;
+		pts[i].y2 = pts[i].y0;
+		pts[i].x3 = pts[i].x1;
+		pts[i].y3 = pts[i].y0 + cell_h * 0.5 | 0;
+		i++;
+	}
+	return pts;
+};
 utils.system = {};
 utils.system.DeviceCapabilities = function() { };
 $hxClasses["utils.system.DeviceCapabilities"] = utils.system.DeviceCapabilities;
@@ -843,11 +1159,29 @@ Bool.__ename__ = ["Bool"];
 var Class = $hxClasses.Class = { __name__ : ["Class"]};
 var Enum = { };
 GameInfo.preloadAssets = ["assets/preload.png","assets/preload_bg.png","assets/LoaderScene.png"];
-GameInfo.loadAsstes = ["assets/TitleCard.png","assets/HudBuild.png","assets/Screen0.png","assets/Screen1.png","assets/Popin0.png","assets/Popin1.png","assets/PopinOkCancel.png","assets/alpha_bg.png","assets/black_bg.png","assets/game.png","assets/Hud_TL.png","assets/Hud_TR.png","assets/Hud_B.png","assets/closeButton.png","assets/ambulance.json"];
+GameInfo.loadAssets = ["./assets/alpha_bg.png","./assets/BG.jpg","./assets/black_bg.png","./assets/Buildings/CasinoLv1.png","./assets/Buildings/CasinoLv2.png","./assets/Buildings/CasinoLv3.png","./assets/Buildings/EgliseLv1.png","./assets/Buildings/EgliseLv2.png","./assets/Buildings/EgliseLv3.png","./assets/Buildings/Hangar1Lv1.png","./assets/Buildings/Hangar1Lv2.png","./assets/Buildings/Hangar1Lv3.png","./assets/Buildings/Hangar2Lv1.png","./assets/Buildings/Hangar2Lv2.png","./assets/Buildings/Hangar2Lv3.png","./assets/Buildings/Hangar3Lv1.png","./assets/Buildings/Hangar3Lv2.png","./assets/Buildings/Hangar3Lv3.png","./assets/Buildings/Hangar4Lv1.png","./assets/Buildings/Hangar4Lv2.png","./assets/Buildings/Hangar4Lv3.png","./assets/Buildings/Hangar5Lv1.png","./assets/Buildings/Hangar5Lv2.png","./assets/Buildings/Hangar5Lv3.png","./assets/Buildings/Hangar6Lv1.png","./assets/Buildings/Hangar6Lv2.png","./assets/Buildings/Hangar6Lv3.png","./assets/Buildings/Labo1.png","./assets/Buildings/Labo2.png","./assets/Buildings/Labo3.png","./assets/Buildings/NicheLv1.png","./assets/Buildings/NicheLv2.png","./assets/Buildings/NicheLv3.png","./assets/Buildings/PasDeTir1.png","./assets/Buildings/PasDeTir2.png","./assets/Buildings/PasDeTir3.png","./assets/closeButton.png","./assets/game.png","./assets/HudBuild.png","./assets/Hud_B.png","./assets/Hud_TL.png","./assets/Hud_TR.png","./assets/Popin0.png","./assets/Popin1.png","./assets/PopinBuild.png","./assets/PopinOkCancel.png","./assets/Screen0.png","./assets/Screen1.png","./assets/TitleCard.png"];
 GameInfo.userWidth = 1920;
 GameInfo.userHeight = 1000;
 Main.CONFIG_PATH = "config.json";
 sprites.Ambulance.images = ["E","SE","S","SW","W","NW","N","NE"];
+sprites.Building.CASINO = 1;
+sprites.Building.EGLISE = 2;
+sprites.Building.HANGAR_1 = 3;
+sprites.Building.HANGAR_2 = 4;
+sprites.Building.HANGAR_3 = 5;
+sprites.Building.HANGAR_4 = 6;
+sprites.Building.HANGAR_5 = 7;
+sprites.Building.HANGAR_6 = 8;
+sprites.Building.LABO = 9;
+sprites.Building.NICHE = 10;
+sprites.Building.PAS_DE_TIR = 11;
+sprites.Building.LVL_1 = 256;
+sprites.Building.LVL_2 = 512;
+sprites.Building.LVL_3 = 768;
+sprites.Building.IMG_FOLDER_PATH = "./assets/Buildings/";
+sprites.Building.IMG_EXTENSION = ".png";
+sprites.Building.BUILDINGS_IMG = ["CasinoLv1","CasinoLv2","CasinoLv3","EgliseLv1","EgliseLv2","EgliseLv3","Hangar1Lv1","Hangar1Lv2","Hangar1Lv3","Hangar2Lv1","Hangar2Lv2","Hangar2Lv3","Hangar3Lv1","Hangar3Lv2","Hangar3Lv3","Hangar4Lv1","Hangar4Lv2","Hangar4Lv3","Hangar5Lv1","Hangar5Lv2","Hangar5Lv3","Hangar6Lv1","Hangar6Lv2","Hangar6Lv3","Labo1","Labo2","Labo3","NicheLv1","NicheLv2","NicheLv3","PasDeTir1","PasDeTir2","PasDeTir3"];
+sprites.Building.BUILDINGS_CONFIG = sprites.Building.GET_BUILDINGS_CONFIG();
 utils.events.Event.COMPLETE = "Event.COMPLETE";
 utils.events.Event.GAME_LOOP = "Event.GAME_LOOP";
 utils.events.Event.RESIZE = "Event.RESIZE";

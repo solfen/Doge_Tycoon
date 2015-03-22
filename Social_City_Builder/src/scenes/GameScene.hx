@@ -3,36 +3,37 @@ import utils.system.DeviceCapabilities;
 import pixi.display.DisplayObjectContainer;
 import pixi.display.Sprite;
 import utils.events.Event;
+import utils.game.InputInfos;
+import pixi.InteractionData;
 import pixi.textures.Texture;
 import sprites.Ambulance;
 import hud.HudManager;
 import popin.PopinManager;
+import IsoMap;
+import sprites.Building;
 
 class GameScene extends DisplayObjectContainer 
 {
 	private static var instance: GameScene;
 
-	public static function getInstance (): GameScene {
+	public static function getInstance (): GameScene
+	{
 		if (instance == null) instance = new GameScene();
 		return instance;
 	}	
 	
-	public function new() 
+	public function new (): Void
 	{
 		super();
 		x=0;
 		y=0;
 
-		var background:Sprite = new Sprite(Texture.fromImage("assets/game.png"));
-		background.anchor.set(0.5, 0.5);
-		background.position.set(DeviceCapabilities.width/2,DeviceCapabilities.height/2);
-		addChild(background);
+		new InputInfos(true, true);
+		InputInfos.mouse_x = Std.int(DeviceCapabilities.width*0.5);
+		InputInfos.mouse_y = Std.int(DeviceCapabilities.height*0.5);
 
-		// ambulance later there will be a sprite manager that will be for the doge
-		//there will also be a buildings manger and other things
-		/*var lAmbulance:Ambulance = new Ambulance();
-		lAmbulance.position.set(100, 100);
-		addChild(lAmbulance);*/
+		new IsoMap("assets/BG.jpg", 64, 64, 128, 64); //64
+		addChild(IsoMap.singleton);
 
 		addChild(HudManager.getInstance());
 		addChild(PopinManager.getInstance());
@@ -41,10 +42,12 @@ class GameScene extends DisplayObjectContainer
 		Main.getInstance().addEventListener(Event.GAME_LOOP, resize);
 	}
 
-	public function doAction (): Void {
+	public function doAction (): Void
+	{
 
 	}
-	public function resize ():Void {
+	public function resize (): Void
+	{
 		/*scale.x = DeviceCapabilities.width / GameInfo.userWidth;
 		scale.y = DeviceCapabilities.height / GameInfo.userHeight;*/
 	}
