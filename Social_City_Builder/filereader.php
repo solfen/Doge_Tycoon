@@ -19,4 +19,6 @@ function my_handler($filename) {
   echo "'".$filename."',"."\n";
 }
 find_files('bin/assets', '/png$/', 'my_handler');
+find_files('bin/assets', '/json$/', 'my_handler');
+
 ?> 
