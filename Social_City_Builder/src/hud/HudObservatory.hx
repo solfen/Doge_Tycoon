@@ -15,20 +15,9 @@ class HudObservatory extends IconHud
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
 		super(startX,startY,'assets/UI/Hud/HudIconObservatoryNormal.png',"assets/UI/Hud/HudIconObservatoryActive.png");		
-		interactive = true;
-		buttonMode 	= true;
-		click 		= onClick;
-		mouseover 	= onMouseOver;
-		mouseout  	= onMouseOut;
 	}
 	
-	private function onClick (pData:InteractionData) : Void {
+	override private function onClick (pData:InteractionData) : Void {
 		PopinManager.getInstance().openPopin("PopinObservatory", 0.5, 0.5);
-	}
-	private function onMouseOver (pData:InteractionData): Void {
-		changeTexture("active");
-	}
-	private function onMouseOut (pData:InteractionData): Void {
-		changeTexture("normal");
 	}
 }

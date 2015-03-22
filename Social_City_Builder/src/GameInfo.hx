@@ -415,8 +415,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				previewImg: 'IconDogWorkshop',
- 				title: 'Premier hangar',
- 				description: "Les hangars servent à construire les fussées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les batiments peuvent être\nachetés depuis le menu de construction",
+ 				title: 'Premier atelier',
+ 				description: "Les ateliers servent à construire les fussées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les batiments peuvent être\nachetés depuis le menu de construction",
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
@@ -425,7 +425,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			{
  				previewImg: 'IconDogWorkshop',
  				title: "Première fusée",
- 				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre hangar et comencez la\n construction de la fusée. N'oubliez pas de fouett..\n*hum* motiver vos employés en cliquant sur\n l'icone dans le hangar",
+ 				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et comencez la\n construction de la fusée. N'oubliez pas de fouett..\n*hum* motiver vos employés en cliquant sur\n l'icone dans le atelier",
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
@@ -460,7 +460,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  		],
  		finished:{
- 			
+
  		}
  	}
  	public static var buildMenuArticles:Dynamic = {
@@ -480,7 +480,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  		"spacechips": [
  			 {
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png',
- 				title: 'Hangar Destination SprungField',
+ 				title: 'Atelier Destination SprungField',
  				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
  				hardPrice: 3,
  				ressources: [
@@ -491,8 +491,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png',
- 				title: 'Hangar Destination Modor',
- 				description: "Ce hangar construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
+ 				title: 'Atelier Destination Modor',
+ 				description: "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
  				hardPrice: 3,
  				ressources: [
  					{"name":"fric","quantity":"1000"},
@@ -502,8 +502,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png',
- 				title: 'Hangar Destination Namok',
- 				description: "Dans ce hangar les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
+ 				title: 'Atelier Destination Namok',
+ 				description: "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
  				hardPrice: 3,
  				ressources: [
  					{"name":"fric","quantity":"1000"},
@@ -513,8 +513,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			}, 			
  			{
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png',
- 				title: 'Hangar Destination Terre',
- 				description: "Dans ce hangar, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
+ 				title: 'Atelier Destination Terre',
+ 				description: "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
  				hardPrice: 3,
  				ressources: [
  					{"name":"fric","quantity":"1000"},
@@ -524,7 +524,7 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png',
- 				title: 'Hangar Destination Wundërland',
+ 				title: 'Atelier Destination Wundërland',
  				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
  				hardPrice: 3,
  				ressources: [
@@ -535,8 +535,8 @@ o88o     o8888o o888o  o888o     o888o     o888ooooood8 o888o         `Y8bood8P'
  			},
  			{
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png',
- 				title: 'Hangar Destination StarWat',
- 				description: "Ce hangar utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",
+ 				title: 'Atelier Destination StarWat',
+ 				description: "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",
  				hardPrice: 3,
  				ressources: [
  					{"name":"fric","quantity":"1000"},

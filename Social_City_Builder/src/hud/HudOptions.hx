@@ -15,20 +15,9 @@ class HudOptions extends IconHud
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
 		super(startX,startY,'assets/UI/Hud/HudIconOptionNormal.png',"assets/UI/Hud/HudIconOptionActive.png");		
-		interactive = true;
-		buttonMode 	= true;
-		click 		= onClick;
-		mouseover 	= onMouseOver;
-		mouseout  	= onMouseOut;
 	}
 	
-	private function onClick (pData:InteractionData) : Void {
-		PopinManager.getInstance().openPopin("PopinOptions", 0.5, 0.5);
-	}
-	private function onMouseOver (pData:InteractionData): Void {
-		changeTexture("active");
-	}
-	private function onMouseOut (pData:InteractionData): Void {
-		changeTexture("normal");
+	override private function onClick (pData:InteractionData) : Void {
+		PopinManager.getInstance().openPopin("PopinWorkshop", 0.5, 0.5);
 	}
 }

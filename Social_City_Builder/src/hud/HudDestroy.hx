@@ -15,20 +15,9 @@ class HudDestroy extends IconHud
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
 		super(startX,startY,'assets/UI/Hud/HudIconDestroyNormal.png',"assets/UI/Hud/HudIconDestroyActive.png");		
-		interactive = true;
-		buttonMode 	= true;
-		click 		= onClick;
-		mouseover 	= onMouseOver;
-		mouseout  	= onMouseOut;
 	}
 	
-	private function onClick (pData:InteractionData) : Void {
-		//PopinManager.getInstance().openPopin("Po", DeviceCapabilities.width/2, DeviceCapabilities.height/2);
-	}
-	private function onMouseOver (pData:InteractionData): Void {
-		changeTexture("active");
-	}
-	private function onMouseOut (pData:InteractionData): Void {
-		changeTexture("normal");
+	override private function onClick (pData:InteractionData) : Void {
+		//GameInfo.destructionMode = true;
 	}
 }

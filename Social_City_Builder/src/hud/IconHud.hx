@@ -3,6 +3,7 @@ package hud;
 import pixi.textures.Texture;
 import pixi.display.Sprite;
 import utils.system.DeviceCapabilities;
+import pixi.InteractionData;
 
 // IconHud is a pixi.Sprite tuned for the HUD use.
 class IconHud extends Sprite {
@@ -12,20 +13,27 @@ class IconHud extends Sprite {
 	private var hoverTexture:Texture = null;
 	public var isUpdatable:Bool;
 
-	public function new(startX:Float,startY:Float, texturePathNormal:String, ?texturePathActive:String, ?texturePathHover:String, ?pIsUpdatable:Bool=false) {
+	public function new(startX:Float,startY:Float, texturePathNormal:String, ?texturePathActive:String, ?pIsUpdatable:Bool=false, ?isInteractive:Bool=true) {
 		//textures creation. Has to have at least the normal state the others are optionals
 		normalTexture = Texture.fromImage(texturePathNormal);
 		if(texturePathActive != null){
 			activeTexture = Texture.fromImage(texturePathActive);
 		}
-		if(texturePathHover != null){
+		/*if(texturePathHover != null){
 			hoverTexture = Texture.fromImage(texturePathHover);
-		}
+		}*/
 
 		// create the icon add params it trasform to int because float position = horrible canvas perf and blurry images
 		super(normalTexture);
-		x = Std.int(startX*DeviceCapabilities.width);
-		y = Std.int(startY*DeviceCapabilities.height);
+		position.set(Std.int(startX*DeviceCapabilities.width),Std.int(startY*DeviceCapabilities.height));
+
+		if(isInteractive){
+			interactive = true;
+			buttonMode 	= true;
+			mousedown 	= onMouseDown;
+			mouseup  	= onMouseUp;
+			click 		= onClick;
+		}
 		isUpdatable = pIsUpdatable;
 	}
 
@@ -34,9 +42,9 @@ class IconHud extends Sprite {
 		if(state == "active" && activeTexture != null){
 			setTexture(activeTexture);
 		}
-		else if(state == "hover" && hoverTexture != null){
+		/*else if(state == "hover" && hoverTexture != null){
 			setTexture(hoverTexture);
-		}
+		}*/
 		else if(state == "normal"){
 			setTexture(normalTexture);
 		}
@@ -44,7 +52,14 @@ class IconHud extends Sprite {
 			trace("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: "+state);
 		}
 	}
-	public function updateInfo(){
-		
+	private function onMouseDown(pData:InteractionData){
+		if(activeTexture != null){
+			setTexture(activeTexture);
+		}
 	}
+	private function onMouseUp(pData:InteractionData){
+		setTexture(normalTexture);
+	}
+	private function onClick(pData:InteractionData){}
+	public function updateInfo(){}
 }

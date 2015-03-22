@@ -21,7 +21,7 @@ class HudDoges extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudPopFillBar.png',null,null,true);
+		super(startX,startY,'assets/UI/Hud/HudPopFillBar.png',null,true,false);
 
 		barFill = new Sprite(Texture.fromImage('assets/UI/Hud/HudPopFill.png'));
 		barFill.position.set(Std.int(0.23*width),Std.int(0.3*height));

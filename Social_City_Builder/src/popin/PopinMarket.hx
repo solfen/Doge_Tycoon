@@ -31,7 +31,7 @@ class PopinMarket extends MyPopin
 
 		addIcon(-0.02,0.17,'assets/UI/PopInMarket/PopInOngletBuyNormal.png',"buyTab",this,true,'assets/UI/PopInMarket/PopInOngletBuyActive.png',true);
 		addIcon(-0.02,0.29,'assets/UI/PopInMarket/PopInOngletSellNormal.png',"sellTab",this,true,'assets/UI/PopInMarket/PopInOngletSellActive.png',true);
-		addIcon(0.95, 0,'assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png',"closeButton",this,true,'assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png');
+		addIcon(0.95, 0,'assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png',"closeButton",this,true,'assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png',true);
 
 		addContainer("verticalScroller",this,0,0);
 		addMask(icons["contentBackground"].x, icons["contentBackground"].y+3, icons["contentBackground"].width, icons["contentBackground"].height-6,containers["verticalScroller"]);

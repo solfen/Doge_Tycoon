@@ -15,7 +15,7 @@ class HudHardMoney extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudMoneyHard.png');
+		super(startX,startY,'assets/UI/Hud/HudMoneyHard.png',true,false);
 		hardMoneyText = new Text(lastHardMoney+'', {font:"35px FuturaStdHeavy",fill:"white"});
 		hardMoneyText.position.x = Std.int(width*0.95 - hardMoneyText.width);
 		hardMoneyText.position.y = Std.int(height/2 - hardMoneyText.height/2); 	

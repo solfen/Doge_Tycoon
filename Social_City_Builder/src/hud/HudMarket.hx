@@ -14,21 +14,10 @@ class HudMarket extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudIconMarketNormal.png',"assets/UI/Hud/HudIconMarketActive.png");		
-		interactive = true;
-		buttonMode 	= true;
-		click 		= onClick;
-		mouseover 	= onMouseOver;
-		mouseout  	= onMouseOut;
+		super(startX,startY,'assets/UI/Hud/HudIconMarketNormal.png',"assets/UI/Hud/HudIconMarketActive.png");
 	}
 	
-	private function onClick (pData:InteractionData) : Void {
+	override private function onClick (pData:InteractionData) : Void {
 		PopinManager.getInstance().openPopin("PopinMarket", 0.5, 0.5);
-	}
-	private function onMouseOver (pData:InteractionData): Void {
-		changeTexture("active");
-	}
-	private function onMouseOut (pData:InteractionData): Void {
-		changeTexture("normal");
 	}
 }
