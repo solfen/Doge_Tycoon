@@ -193,7 +193,7 @@ class Building extends MovieClip
 		{
 			var i: Int = config.frames_nb;
 
-			while (i-->0)
+			while (--i>0) // modif la config pour indexer à 0 plutôt
 			{
 				textures.push(Texture.fromFrame(config.img + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
 			}
