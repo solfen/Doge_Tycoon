@@ -14,7 +14,7 @@ class HudObservatory extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudIconObservatoryNormal.png',"assets/UI/Hud/HudIconObservatoryActive.png");		
+		super(startX,startY,'HudIconObservatoryNormal.png',"HudIconObservatoryActive.png");		
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {

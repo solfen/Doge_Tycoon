@@ -14,7 +14,7 @@ class HudInventory extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudIconInventoryNormal.png',"assets/UI/Hud/HudIconInventoryActive.png");		
+		super(startX,startY,'HudIconInventoryNormal.png',"HudIconInventoryActive.png");		
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {

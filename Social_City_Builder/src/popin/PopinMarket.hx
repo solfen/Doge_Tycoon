@@ -140,4 +140,12 @@ class PopinMarket extends MyPopin
 				trace("article : " + 'poudre'+index + " cost : " + GameInfo.ressources['poudre'+index].sellCost + "quantity ",GameInfo.ressources['poudre'+index].lastQuantitySell);
 		}
 	}
+	override private function childUpOutside(pEvent:Dynamic){
+		if(pEvent.target._name == 'buyTab' && currentTab != 'buyTab'){
+			icons['buyTab'].setTextureToNormal();
+		}
+		else if(pEvent.target._name == 'sellTab' && currentTab != 'sellTab'){
+			icons['sellTab'].setTextureToNormal();
+		}
+	}
 }

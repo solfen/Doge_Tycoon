@@ -20,14 +20,14 @@ class HudStock extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudInventoryFillBar.png',null,true,false);
+		super(startX,startY,'HudInventoryFillBar.png',null,true,false);
 
-		barFill = new Sprite(Texture.fromImage('assets/UI/Hud/HudInventoryFill.png'));
+		barFill = new Sprite(Texture.fromImage('HudInventoryFill.png'));
 		barFill.position.set(Std.int(0.23*width),Std.int(0.3*height));
 		barFill.width = Std.int(lastStockPercent/100 * width*.725);
 		addChild(barFill);
 
-		inventoryIcon = new Sprite(Texture.fromImage('assets/UI/Hud/HudIconInventory.png'));
+		inventoryIcon = new Sprite(Texture.fromImage('HudIconInventory.png'));
 		inventoryIcon.position.set(0,Std.int(0.05*height));
 		addChild(inventoryIcon);
 

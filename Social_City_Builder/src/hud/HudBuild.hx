@@ -12,7 +12,7 @@ class HudBuild extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'HudIconBuildNormal.png',"HudIconDestroyActive.png");
+		super(startX,startY,'HudIconBuildNormal.png',"HudIconBuildActive.png");
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {

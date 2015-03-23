@@ -14,7 +14,7 @@ class HudDestroy extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudIconDestroyNormal.png',"assets/UI/Hud/HudIconDestroyActive.png");		
+		super(startX,startY,'HudIconDestroyNormal.png',"HudIconDestroyActive.png");		
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {

@@ -33,6 +33,7 @@ class IconPopin extends Sprite
 		else if(isSelectButton){
 			mousedown = onClick; //mousedown because click is binded on childClick in MyPopin
 		}
+		mouseupoutside = onIconUpOutside;
 	}
 	private function onMouseOver (pData:InteractionData): Void {
 		if(activeTexture == null){
@@ -49,7 +50,10 @@ class IconPopin extends Sprite
 		}
 		setTexture(activeTexture);
 	}
-	public function setTextureToNormal():Void{
+	private function onIconUpOutside(pData:InteractionData){
+
+	}
+	public function setTextureToNormal(?pData:InteractionData):Void{
 		setTexture(normalTexture);
 	}
 	public function setTextureToActive():Void{

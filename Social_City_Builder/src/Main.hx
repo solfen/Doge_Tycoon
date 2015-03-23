@@ -102,8 +102,8 @@ class Main extends EventDispatcher
 	}
 	
 	private function onLoadProgress (pEvent:Event): Void {
-		/*var lLoader:AssetLoader = cast(pEvent.target, AssetLoader);*/
-		//GraphicLoader.getInstance().update((lLoader.assetURLs.length-lLoader.loadCount)/lLoader.assetURLs.length);
+		/*var lLoader:AssetLoader = cast(pEvent.target, AssetLoader);
+		trace( (lLoader.assetURLs.length-lLoader.loadCount)/lLoader.assetURLs.length);*/
 	}
 	
 	private function onLoadComplete (pEvent:Event): Void {

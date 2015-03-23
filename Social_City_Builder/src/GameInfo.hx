@@ -10,7 +10,7 @@ class GameInfo
  			name: 'PLPP Yellow', //plpp stands for perlimpinpin
  			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewYellowMineral.png',
  			iconImg: 'assets/UI/Icons/IconsRessources/IconYellowMineral.png',
- 			userPossion: 5,
+ 			userPossesion: 15000,
  			buyCost: 10,
  			sellCost: 5,
  			lastQuantityBuy: 0,
@@ -20,7 +20,7 @@ class GameInfo
  			name: 'PLPP Green',
  			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewGreenMineral.png',
  			iconImg: 'assets/UI/Icons/IconsRessources/IconGreenMineral.png',
- 			userPossion: 3,
+ 			userPossesion: 15000,
  			buyCost: 25,
  			sellCost: 10,
  			lastQuantityBuy: 0,
@@ -30,7 +30,7 @@ class GameInfo
  			name: 'PLPP Cyan',
  			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewCyanMineral.png',
  			iconImg: 'assets/UI/Icons/IconsRessources/IconCyanMineral.png',
- 			userPossion: 5,
+ 			userPossesion: 15000,
  			buyCost: 50,
  			sellCost: 25,
  			lastQuantityBuy: 0,
@@ -40,7 +40,7 @@ class GameInfo
  			name: 'PLPP Blue',
  			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewBlueMineral.png',
  			iconImg: 'assets/UI/Icons/IconsRessources/IconBlueMineral.png',
- 			userPossion: 5,
+ 			userPossesion: 15000,
  			buyCost: 100,
  			sellCost: 40,
  			lastQuantityBuy: 0,
@@ -50,7 +50,7 @@ class GameInfo
  			name: 'PLPP Purple',
  			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewPurpleMineral.png',
  			iconImg: 'assets/UI/Icons/IconsRessources/IconPurpleMineral.png',
- 			userPossion: 5,
+ 			userPossesion: 15000,
  			buyCost: 300,
  			sellCost: 200,
  			lastQuantityBuy: 0,
@@ -60,7 +60,7 @@ class GameInfo
  			name: 'PLPP Red',
  			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewRedMineral.png',
  			iconImg: 'assets/UI/Icons/IconsRessources/IconRedMineral.png',
- 			userPossion: 5,
+ 			userPossesion: 15000,
  			buyCost: 1000,
  			sellCost: 700,
  			lastQuantityBuy: 0,
@@ -70,13 +70,13 @@ class GameInfo
  			name: 'Dogeflooz',
  			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png',
  			iconImg: 'assets/UI/Icons/IconsRessources/IconDogeflooz.png',
- 			userPossion: 15000,
+ 			userPossesion: 15000,
  		},
  		'hardMoney' => {
  			name: "Os D'or",
  			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png',
  			iconImg: 'assets/UI/Icons/IconsRessources/IconOsDor.png',
- 			userPossion: 150,
+ 			userPossesion: 15000,
  		}
  	];
  	public static var questsArticles:Dynamic = {
@@ -143,118 +143,128 @@ class GameInfo
  	public static var buildMenuArticles:Dynamic = {
  		"niches": [
  			{
+ 				buildingID: Building.NICHE | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png',
  				title: 'Niche en Bois',
  				description: "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
- 					{"name":"poudre1","quantity":"25"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre1","quantity":25},
  				]
  			},
  		],
  		"spacechips": [
  			{
+ 				buildingID: Building.HANGAR_1 | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png',
  				title: 'Atelier Destination SprungField',
  				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre2","quantity":"10"},
- 					{"name":"poudre1","quantity":"25"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre2","quantity":10},
+ 					{"name":"poudre1","quantity":25},
  				]
  			},
  			{
+ 				buildingID: Building.HANGAR_2 | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png',
  				title: 'Atelier Destination Modor',
  				description: "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
- 					{"name":"poudre5","quantity":"250"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre5","quantity":250},
  				]
  			},
  			{
+ 				buildingID: Building.HANGAR_3 | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png',
  				title: 'Atelier Destination Namok',
  				description: "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre3","quantity":"10"},
- 					{"name":"poudre4","quantity":"25"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre3","quantity":10},
+ 					{"name":"poudre4","quantity":25},
  				]
  			}, 			
  			{
+ 				buildingID: Building.HANGAR_4 | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png',
  				title: 'Atelier Destination Terre',
  				description: "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
- 					{"name":"poudre1","quantity":"25"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre1","quantity":25},
  				]
  			},
  			{
+ 				buildingID: Building.HANGAR_5 | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png',
  				title: 'Atelier Destination Wundërland',
  				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
- 					{"name":"poudre1","quantity":"25"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre1","quantity":25},
  				]
  			},
  			{
+ 				buildingID: Building.HANGAR_6 | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png',
  				title: 'Atelier Destination StarWat',
  				description: "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
- 					{"name":"poudre1","quantity":"25"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre1","quantity":25},
  				]
  			},
  			
  		],
  		"utilitaires": [
  			{
+ 				buildingID: Building.CASINO | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png',
  				title: 'Casino',
  				description: "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
- 					{"name":"poudre1","quantity":"25"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre1","quantity":25},
  				]
  			},
  			{
+				buildingID: Building.EGLISE | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png',
  				title: 'Église',
  				description: "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
- 					{"name":"poudre1","quantity":"25"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre1","quantity":25},
  				]
  			},
  			{
+				buildingID: Building.EGLISE | Building.LVL_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png',
  				title: 'Entrepot',
  				description: "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
- 					{"name":"poudre1","quantity":"25"},
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre1","quantity":25},
  				]
  			},
  		],

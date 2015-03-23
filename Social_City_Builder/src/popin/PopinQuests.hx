@@ -93,5 +93,14 @@ class PopinQuests extends MyPopin
 			//header.setTexture(headerTextures['spaceships']);
 			icons['currentQuestsTab'].setTextureToNormal();
 		}
+
+	}
+	override private function childUpOutside(pEvent:Dynamic){
+		if(pEvent.target._name == 'currentQuestsTab' && currentTab != 'currentQuestsTab'){
+			icons['currentQuestsTab'].setTextureToNormal();
+		}
+		else if(pEvent.target._name == 'finishedQuestsTab' && currentTab != 'finishedQuestsTab'){
+			icons['finishedQuestsTab'].setTextureToNormal();
+		}
 	}
 }

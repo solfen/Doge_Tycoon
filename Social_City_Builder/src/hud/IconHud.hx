@@ -28,11 +28,12 @@ class IconHud extends Sprite {
 		position.set(Std.int(startX*DeviceCapabilities.width),Std.int(startY*DeviceCapabilities.height));
 
 		if(isInteractive){
-			interactive = true;
-			buttonMode 	= true;
-			mousedown 	= onMouseDown;
-			mouseup  	= onMouseUp;
-			click 		= onClick;
+			interactive 	= true;
+			buttonMode 		= true;
+			mousedown 		= onMouseDown;
+			mouseup  		= onMouseUp;
+			mouseupoutside 	= onMouseUp;
+			click 			= onClick;
 		}
 		isUpdatable = pIsUpdatable;
 	}

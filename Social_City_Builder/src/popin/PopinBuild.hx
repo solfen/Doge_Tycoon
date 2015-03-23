@@ -54,8 +54,8 @@ class PopinBuild extends MyPopin
 			var y:Float = cpt*(articleHeight+articleInterline);
 			var ressources:Array<Dynamic> = i.ressources;
 			addIcon(0.115,0.175+y,'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"articleBase",containers["verticalScroller"],false);
-			addIcon(0.687,0.309+y,'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"buildSoft"+cpt,containers["verticalScroller"],true,'assets/UI/PopInBuilt/PopInBuiltSoftActive.png');
-			addIcon(0.815,0.309+y,'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"buildHard"+cpt,containers["verticalScroller"],true,'assets/UI/PopInBuilt/PopInBuiltHardActive.png');
+			addIcon(0.687,0.309+y,'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"buildSoft"+cpt,containers["verticalScroller"],true,'assets/UI/PopInBuilt/PopInBuiltSoftActive.png',true);
+			addIcon(0.815,0.309+y,'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"buildHard"+cpt,containers["verticalScroller"],true,'assets/UI/PopInBuilt/PopInBuiltHardActive.png',true);
 			addIcon(0.13,0.1875+y,i.previewImg,"ArticlePreview",containers["verticalScroller"],false);
 			addIcon(0.748,0.3+y,GameInfo.ressources['hardMoney'].iconImg,"HardRessource",containers["verticalScroller"],false);
 			addText(0.77,0.34+y,'FuturaStdHeavy','15px',i.hardPrice,'HardRessourcePrice',containers["verticalScroller"],'white');
@@ -109,22 +109,64 @@ class PopinBuild extends MyPopin
 			icons['spaceshipTab'].setTextureToNormal();
 		}
 		else if(pEvent.target._name.indexOf("buildSoft") != -1){
+			icons[pEvent.target._name].setTextureToNormal();
 			var index:Int = Std.parseInt(pEvent.target._name.split('buildSoft')[1]); // deduce the index from the name
+			var ressources:Array<Dynamic>;
+			var article:Dynamic = {};
+			var canBuy:Bool = true;
+
 			if(currentTab == "nicheTab")
-				trace("trying to buy the article : " + index + " here's the ressources needed : ", GameInfo.buildMenuArticles.niches[index].ressources);
+				article = GameInfo.buildMenuArticles.niches[index];
 			else if(currentTab == "spaceshipTab")
-				trace("trying to buy the article : " + index + " here's the ressources needed : ", GameInfo.buildMenuArticles.spacechips[index].ressources);
+				article = GameInfo.buildMenuArticles.spacechips[index];
 			else if(currentTab == "utilitairesTab")
-				trace("trying to buy the article : " + index + " here's the ressources needed : ", GameInfo.buildMenuArticles.utilitaires[index].ressources);
+				article = GameInfo.buildMenuArticles.utilitaires[index];
+
+			ressources = article.ressources;
+			for(i in ressources){
+				if(GameInfo.ressources[i.name].userPossesion < i.quantity){
+					canBuy = false;
+					break;
+				}
+			}
+			if(canBuy){
+				for(i in ressources){
+					GameInfo.ressources[i.name].userPossesion -= i.quantity;
+				}
+				GameInfo.building_2_build = article.buildingID;
+				PopinManager.getInstance().closePopin("PopinBuild");
+			}
 		}
 		else if(pEvent.target._name.indexOf("buildHard") != -1){
+			icons[pEvent.target._name].setTextureToNormal();
 			var index:Int = Std.parseInt(pEvent.target._name.split('buildHard')[1]);
+			var article:Dynamic = {};
 			if(currentTab == "nicheTab")
-				trace("trying to buy the article : " + index + " here's the hard price : ", GameInfo.buildMenuArticles.niches[index].hardPrice);
+				article = GameInfo.buildMenuArticles.niches[index];
 			else if(currentTab == "spaceshipTab")
-				trace("trying to buy the article : " + index + " here's the hard price : ", GameInfo.buildMenuArticles.spacechips[index].hardPrice);
+				article = GameInfo.buildMenuArticles.spacechips[index];
 			else if(currentTab == "utilitairesTab")
-				trace("trying to buy the article : " + index + " here's the hard price : ", GameInfo.buildMenuArticles.utilitaires[index].hardPrice);
+				article = GameInfo.buildMenuArticles.utilitaires[index];
+
+			if(GameInfo.ressources['hardMoney'].userPossesion >= article.hardPrice){
+				GameInfo.ressources['hardMoney'].userPossesion -= article.hardPrice;
+				GameInfo.building_2_build = article.buildingID;
+				PopinManager.getInstance().closePopin("PopinBuild");
+			}
+		}
+	}
+	override private function childUpOutside(pEvent:Dynamic){
+		if(pEvent.target._name == 'nicheTab' && currentTab != 'nicheTab'){
+			icons['nicheTab'].setTextureToNormal();
+		}
+		else if(pEvent.target._name == 'spaceshipTab' && currentTab != 'spaceshipTab'){
+			icons['spaceshipTab'].setTextureToNormal();
+		}
+		else if(pEvent.target._name == 'utilitairesTab' && currentTab != 'utilitairesTab'){
+			icons['utilitairesTab'].setTextureToNormal();
+		}
+		else if(pEvent.target._name.indexOf("buildHard") != -1 || pEvent.target._name.indexOf("buildSoft") != -1){
+			icons[pEvent.target._name].setTextureToNormal();
 		}
 	}
 }

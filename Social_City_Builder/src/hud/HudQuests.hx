@@ -14,7 +14,7 @@ class HudQuests extends IconHud
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
-		super(startX,startY,'assets/UI/Hud/HudIconQuestNormal.png','assets/UI/Hud/HudIconQuestActive.png');		
+		super(startX,startY,'HudIconQuestNormal.png','HudIconQuestActive.png');		
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {

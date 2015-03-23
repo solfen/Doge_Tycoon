@@ -59,6 +59,7 @@ class MyPopin extends DisplayObjectContainer
 		var icon:IconPopin = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive,texturePathActive,pIsSelectButton);
 		if(isInteractive){
 			icon.click = childClick;
+			icon.mouseupoutside = childUpOutside;
 		}
 		icons[name] = icon;
 		target.addChild(icon);
@@ -127,6 +128,7 @@ class MyPopin extends DisplayObjectContainer
 	//empty function so that the interactive Icons are automaticly binded to this function
 	//the popin will inherit from this class and then can overide this function to configure the childs click action
 	private function childClick(pEvent:InteractionData){}
+	private function childUpOutside(pEvent:InteractionData){}
 
 	// empty function so that we can capture the clickEvent on the modal and not on anythingBelow
 	private function stopClickEventPropagation(pEvent:InteractionData){}
