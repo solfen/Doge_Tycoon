@@ -36,6 +36,27 @@ function Iso (stdlib, foreign, buffer) {
 		return (y+x-cols_nb/2|0) + (y-x+cols_nb/2|0) * cols_nb;
 	}
 
+	function is_inside_map (x, y, offset_x, offset_y, cell_w, cell_h, cells_nb, cols_nb) {
+
+		// left
+		var p0_x = offset_x+cell_col(cells_nb-cols_nb,cols_nb)*cell_w;
+		var p0_y = offset_y+cell_row(cells_nb-cols_nb,cols_nb)*cell_h + cell_h*0.5;
+		// top
+		var p1_x = offset_x+cell_col(0,cols_nb)*cell_w + cell_w*0.5;
+		var p1_y = offset_y+cell_row(0,cols_nb)*cell_h;
+		// right
+		var p2_x = offset_x+cell_col(cols_nb-1,cols_nb)*cell_w + cell_w;
+		var p2_y = offset_y+cell_row(cols_nb-1,cols_nb)*cell_h + cell_h*0.5;
+		// bot
+		var p3_x = offset_x+cell_col(cells_nb-1,cols_nb)*cell_w + cell_w*0.5;
+		var p3_y = offset_y+cell_row(cells_nb-1,cols_nb)*cell_h+cell_h;
+
+		return ((p1_x-p0_x)*(y-p0_y)-(p1_y-p0_y)*(x-p0_x))>0
+			&& ((p2_x-p1_x)*(y-p1_y)-(p2_y-p1_y)*(x-p1_x))>0 
+			&& ((p3_x-p2_x)*(y-p2_y)-(p3_y-p2_y)*(x-p2_x))>0 
+			&& ((p0_x-p3_x)*(y-p3_y)-(p0_y-p3_y)*(x-p3_x))>0;
+	}
+
 	function all_map_pts_xy (offset_x, offset_y, cell_w, cell_h, cells_nb, cols_nb) { // i.e.: to debug
 
 		var pts = [];
@@ -67,6 +88,7 @@ function Iso (stdlib, foreign, buffer) {
 		cell_y: cell_y,
 		cell_index_from_cr: cell_index_from_cr,
 		cell_index_from_xy: cell_index_from_xy,
+		is_inside_map: is_inside_map,
 		all_map_pts_xy: all_map_pts_xy
 	};
 }

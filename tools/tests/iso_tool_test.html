@@ -17,8 +17,8 @@
 		debug = false;
 		mouse_grip = false;
 
-		cols_nb = 50;
-		rows_nb = 50;
+		cols_nb = 16;
+		rows_nb = 8;
 		offset_x = 0;
 		offset_y = 0;
 		offset_x_move = 0;
@@ -168,6 +168,7 @@
 			mouse_grip = false;
 			move_ending();
 			//console.log('cell_index_from_xy(mouse):', iso.cell_index_from_xy(mouse.x, mouse.y, offset_x, offset_y, tile_width, tile_height, cols_nb));
+			console.log('is inside map?', iso.is_inside_map(mouse.x, mouse.y, offset_x, offset_y, tile_width, tile_height, map_length, cols_nb));
 		}
 	}
 

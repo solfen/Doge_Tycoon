@@ -30,87 +30,6 @@ class Building extends MovieClip
 	public static var LVL_2 		: Int 	= 	0x200;
 	public static var LVL_3 		: Int 	=	0x300;
 
-	public static var IMG_FOLDER_PATH: String = "assets/Buildings/";
-	public static var IMG_EXTENSION: String = ".png";
-
-	public static var BUILDINGS_IMG: Array<String> = [
-		"CasinoLv1",
-		"CasinoLv2",
-		"CasinoLv3",
-		"EgliseLv1",
-		"EgliseLv2",
-		"EgliseLv3",
-		"Hangar1Lv1",
-		"Hangar1Lv2",
-		"Hangar1Lv3",
-		"Hangar2Lv1",
-		"Hangar2Lv2",
-		"Hangar2Lv3",
-		"Hangar3Lv1",
-		"Hangar3Lv2",
-		"Hangar3Lv3",
-		"Hangar4Lv1",
-		"Hangar4Lv2",
-		"Hangar4Lv3",
-		"Hangar5Lv1",
-		"Hangar5Lv2",
-		"Hangar5Lv3",
-		"Hangar6Lv1",
-		"Hangar6Lv2",
-		"Hangar6Lv3",
-		"Labo1",
-		"Labo2",
-		"Labo3",
-		"NicheLv1",
-		"NicheLv2",
-		"NicheLv3",
-		"PasDeTir1",
-		"PasDeTir2",
-		"PasDeTir3"
-	];
-	//public static var BUILDINGS_CONFIG: Array<Dynamic<Int>> = GET_BUILDINGS_CONFIG();
-
-	public static inline function GET_BUILDINGS_CONFIG () : Array<Dynamic<Int>>
-	{
-		var config: Array<Dynamic<Int>> = [];
-
-		config[ CASINO | LVL_1 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 0 }; // + (buildingTime -> à récup sur le serveur)
-		config[ CASINO | LVL_2 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 1 };
-		config[ CASINO | LVL_3 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 2 };
-		config[ EGLISE | LVL_1 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 3 };
-		config[ EGLISE | LVL_2 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 4 };
-		config[ EGLISE | LVL_3 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 5 };
-		config[ HANGAR_1 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 6 };
-		config[ HANGAR_1 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 7 };
-		config[ HANGAR_1 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 8 };
-		config[ HANGAR_2 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 9 };
-		config[ HANGAR_2 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 10 };
-		config[ HANGAR_2 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 11 };
-		config[ HANGAR_3 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 12 };
-		config[ HANGAR_3 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 13 };
-		config[ HANGAR_3 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 14 };
-		config[ HANGAR_4 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 15 };
-		config[ HANGAR_4 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 16 };
-		config[ HANGAR_4 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 17 };
-		config[ HANGAR_5 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 18 };
-		config[ HANGAR_5 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 19 };
-		config[ HANGAR_5 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 20 };
-		config[ HANGAR_6 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 21 };
-		config[ HANGAR_6 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 22 };
-		config[ HANGAR_6 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 23 };
-		config[ LABO | LVL_1 ] = 		{ width: 2, height: 2, vertical_dir: 0, img_i: 24 };
-		config[ LABO | LVL_2 ] = 		{ width: 2, height: 2, vertical_dir: 0, img_i: 25 };
-		config[ LABO | LVL_3 ] = 		{ width: 3, height: 2, vertical_dir: 1, img_i: 26 };
-		config[ NICHE | LVL_1 ] = 		{ width: 1, height: 1, vertical_dir: 0, img_i: 27 };
-		config[ NICHE | LVL_2 ] = 		{ width: 1, height: 1, vertical_dir: 0, img_i: 28 };
-		config[ NICHE | LVL_3 ] = 		{ width: 1, height: 1, vertical_dir: 0, img_i: 29 };
-		config[ PAS_DE_TIR | LVL_1 ] = 	{ width: 5, height: 3, vertical_dir: 0, img_i: 30 };
-		config[ PAS_DE_TIR | LVL_2 ] = 	{ width: 5, height: 3, vertical_dir: 0, img_i: 31 };
-		config[ PAS_DE_TIR | LVL_3 ] = 	{ width: 5, height: 3, vertical_dir: 0, img_i: 32 };
-
-		return config;
-	}
-
 	public static function get_building_type (id: Int): Int
 	{
 		return id&0xff;
@@ -130,10 +49,9 @@ class Building extends MovieClip
 	public var building_time: Int;
 	public var config: Dynamic;
 
-	//private images // ou fonction par lvl ?
-
 	public function upgrade () {
 		
+		lvl += 0x100;
 	}
 	
 	
@@ -145,13 +63,6 @@ class Building extends MovieClip
 		row = p_row;
 
 		config = GameInfo.BUILDINGS_CONFIG[get_id()];
-		/*for (val in config)
-		{
-			if (val != "img")
-			{
-				val = Std.parseInt(val);
-			}
-		}*/
 
 		width_in_tiles_nb = config.width;
 		height_in_tiles_nb = config.height;
@@ -163,6 +74,9 @@ class Building extends MovieClip
 		position.set(pX, pY);
 		interactive = true;
 		buttonMode = true;
+		loop = true;
+		animationSpeed = 0.333;
+		play();
 		click = _on_click;
 	}
 
@@ -176,7 +90,7 @@ class Building extends MovieClip
 		trace('click on building '+get_id());
 		// dispatch event here?
 	}
-	
+
 	/**
 	 * Tableau de textures de l'ambulance
 	 * @return le tableau de textures
@@ -193,15 +107,11 @@ class Building extends MovieClip
 		{
 			var i: Int = config.frames_nb;
 
-			while (--i>0) // modif la config pour indexer à 0 plutôt
+			while (i-->0) // modif la config pour indexer à 0 plutôt
 			{
 				textures.push(Texture.fromFrame(config.img + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
 			}
-			
 		}
-		//for (i in 0...BUILDINGS_IMG[config.img_i])
-		//{
-		//}
 		return textures;
 	}
 	

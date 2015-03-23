@@ -20,6 +20,7 @@ class IsoMap extends DisplayObjectContainer
 	public static var singleton: IsoMap;
 	public static var cols_nb: Int;
 	public static var rows_nb: Int;
+	public static var cells_nb: Int;
 	public static var cell_width: Int;
 	public static var cell_height: Int;
 
@@ -52,6 +53,7 @@ class IsoMap extends DisplayObjectContainer
 
 		cols_nb = pCols_nb;
 		rows_nb = pRows_nb;
+		cells_nb = cols_nb * rows_nb;
 		cell_width = pCell_width;
 		cell_height = pCell_height;
 
@@ -73,7 +75,7 @@ class IsoMap extends DisplayObjectContainer
 		_graphics.lineStyle(1, 0x88ccff, 1);
 		addChild(_graphics);
 		
-		var i: Int = cols_nb * rows_nb;
+		var i: Int = cells_nb;
 		while (i-->0)
 		{
 			obstacles_layer[i] = false;
@@ -146,8 +148,12 @@ class IsoMap extends DisplayObjectContainer
 	{
 		if (GameInfo.building_2_build > 0)
 		{
-			build_building(GameInfo.building_2_build , Std.int(InputInfos.mouse_x), Std.int(InputInfos.mouse_y));
-			GameInfo.building_2_build = 0;
+			var new_building: Building = build_building(GameInfo.building_2_build, Std.int(InputInfos.mouse_x), Std.int(InputInfos.mouse_y));
+			
+			if (new_building != null)
+			{
+				GameInfo.building_2_build = 0;
+			}
 		}
 	}
 
@@ -164,9 +170,17 @@ class IsoMap extends DisplayObjectContainer
 
 	public function build_building (pBuilding_id: Int, pX: Int, pY: Int): Building
 	{
-		// todo: verifier l'obstacles_layer
+		var offset_x: Int = Std.int(this.x)+_offset_x;
+		var offset_y: Int = Std.int(this.y)+_offset_y;
+		
+		if (!IsoTools.is_inside_map(pX, pY, offset_x, offset_y, cell_width, cell_height, cells_nb, cols_nb))
+		{
+			return null;
+		}
 
-		var index: Int = IsoTools.cell_index_from_xy(pX, pY, Std.int(this.x)+_offset_x, Std.int(this.y)+_offset_y, cell_width, cell_height, cols_nb);
+		// todo: + verifier l'obstacles_layer
+
+		var index: Int = IsoTools.cell_index_from_xy(pX, pY, offset_x, offset_y, cell_width, cell_height, cols_nb);
 		var col: Float = IsoTools.cell_col(index, cols_nb);
 		var row: Float = IsoTools.cell_row(index, cols_nb);
 		var new_x: Int = IsoTools.cell_x(col, cell_width, _offset_x);

@@ -23,47 +23,13 @@ sprites.Building = function(p_type,p_col,p_row,pX,pY) {
 	this.position.set(pX,pY);
 	this.interactive = true;
 	this.buttonMode = true;
+	this.loop = true;
+	this.animationSpeed = 0.333;
+	this.play();
 	this.click = $bind(this,this._on_click);
 };
 $hxClasses["sprites.Building"] = sprites.Building;
 sprites.Building.__name__ = ["sprites","Building"];
-sprites.Building.GET_BUILDINGS_CONFIG = function() {
-	var config = [];
-	config[sprites.Building.CASINO | sprites.Building.LVL_1] = { width : 3, height : 3, vertical_dir : 0, img_i : 0};
-	config[sprites.Building.CASINO | sprites.Building.LVL_2] = { width : 3, height : 3, vertical_dir : 0, img_i : 1};
-	config[sprites.Building.CASINO | sprites.Building.LVL_3] = { width : 3, height : 3, vertical_dir : 0, img_i : 2};
-	config[sprites.Building.EGLISE | sprites.Building.LVL_1] = { width : 3, height : 3, vertical_dir : 0, img_i : 3};
-	config[sprites.Building.EGLISE | sprites.Building.LVL_2] = { width : 3, height : 3, vertical_dir : 0, img_i : 4};
-	config[sprites.Building.EGLISE | sprites.Building.LVL_3] = { width : 3, height : 3, vertical_dir : 0, img_i : 5};
-	config[sprites.Building.HANGAR_1 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 6};
-	config[sprites.Building.HANGAR_1 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 7};
-	config[sprites.Building.HANGAR_1 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 8};
-	config[sprites.Building.HANGAR_2 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 9};
-	config[sprites.Building.HANGAR_2 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 10};
-	config[sprites.Building.HANGAR_2 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 11};
-	config[sprites.Building.HANGAR_3 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 12};
-	config[sprites.Building.HANGAR_3 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 13};
-	config[sprites.Building.HANGAR_3 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 14};
-	config[sprites.Building.HANGAR_4 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 15};
-	config[sprites.Building.HANGAR_4 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 16};
-	config[sprites.Building.HANGAR_4 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 17};
-	config[sprites.Building.HANGAR_5 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 18};
-	config[sprites.Building.HANGAR_5 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 19};
-	config[sprites.Building.HANGAR_5 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 20};
-	config[sprites.Building.HANGAR_6 | sprites.Building.LVL_1] = { width : 3, height : 2, vertical_dir : -1, img_i : 21};
-	config[sprites.Building.HANGAR_6 | sprites.Building.LVL_2] = { width : 3, height : 2, vertical_dir : -1, img_i : 22};
-	config[sprites.Building.HANGAR_6 | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : -1, img_i : 23};
-	config[sprites.Building.LABO | sprites.Building.LVL_1] = { width : 2, height : 2, vertical_dir : 0, img_i : 24};
-	config[sprites.Building.LABO | sprites.Building.LVL_2] = { width : 2, height : 2, vertical_dir : 0, img_i : 25};
-	config[sprites.Building.LABO | sprites.Building.LVL_3] = { width : 3, height : 2, vertical_dir : 1, img_i : 26};
-	config[sprites.Building.NICHE | sprites.Building.LVL_1] = { width : 1, height : 1, vertical_dir : 0, img_i : 27};
-	config[sprites.Building.NICHE | sprites.Building.LVL_2] = { width : 1, height : 1, vertical_dir : 0, img_i : 28};
-	config[sprites.Building.NICHE | sprites.Building.LVL_3] = { width : 1, height : 1, vertical_dir : 0, img_i : 29};
-	config[sprites.Building.PAS_DE_TIR | sprites.Building.LVL_1] = { width : 5, height : 3, vertical_dir : 0, img_i : 30};
-	config[sprites.Building.PAS_DE_TIR | sprites.Building.LVL_2] = { width : 5, height : 3, vertical_dir : 0, img_i : 31};
-	config[sprites.Building.PAS_DE_TIR | sprites.Building.LVL_3] = { width : 5, height : 3, vertical_dir : 0, img_i : 32};
-	return config;
-};
 sprites.Building.get_building_type = function(id) {
 	return id & 255;
 };
@@ -73,18 +39,19 @@ sprites.Building.get_building_lvl = function(id) {
 sprites.Building.__super__ = PIXI.MovieClip;
 sprites.Building.prototype = $extend(PIXI.MovieClip.prototype,{
 	upgrade: function() {
+		this.lvl += 256;
 	}
 	,get_id: function() {
 		return this.type | this.lvl;
 	}
 	,_on_click: function(p_data) {
-		haxe.Log.trace("click on building " + this.get_id(),{ fileName : "Building.hx", lineNumber : 176, className : "sprites.Building", methodName : "_on_click"});
+		haxe.Log.trace("click on building " + this.get_id(),{ fileName : "Building.hx", lineNumber : 90, className : "sprites.Building", methodName : "_on_click"});
 	}
 	,_get_texture: function() {
 		var textures = new Array();
 		if(this.config.frames_nb == 1) textures.push(PIXI.Texture.fromFrame(GameInfo.BUILDINGS_IMG_FOLDER_PATH + Std.string(this.config.img) + GameInfo.BUILDINGS_IMG_EXTENSION)); else {
 			var i = this.config.frames_nb;
-			while(--i > 0) textures.push(PIXI.Texture.fromFrame(Std.string(this.config.img) + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
+			while(i-- > 0) textures.push(PIXI.Texture.fromFrame(Std.string(this.config.img) + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
 		}
 		return textures;
 	}
@@ -125,6 +92,7 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 	this._is_clicking = false;
 	IsoMap.cols_nb = pCols_nb;
 	IsoMap.rows_nb = pRows_nb;
+	IsoMap.cells_nb = IsoMap.cols_nb * IsoMap.rows_nb;
 	IsoMap.cell_width = pCell_width;
 	IsoMap.cell_height = pCell_height;
 	this._map_width = IsoMap.cols_nb * IsoMap.cell_width;
@@ -140,7 +108,7 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 	this._graphics = new PIXI.Graphics();
 	this._graphics.lineStyle(1,8965375,1);
 	this.addChild(this._graphics);
-	var i = IsoMap.cols_nb * IsoMap.rows_nb;
+	var i = IsoMap.cells_nb;
 	while(i-- > 0) {
 		this.obstacles_layer[i] = false;
 		this.buildings_layer[i] = 0;
@@ -177,14 +145,17 @@ IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	}
 	,_on_click: function() {
 		if(GameInfo.building_2_build > 0) {
-			this.build_building(GameInfo.building_2_build,utils.game.InputInfos.mouse_x | 0,utils.game.InputInfos.mouse_y | 0);
-			GameInfo.building_2_build = 0;
+			var new_building = this.build_building(GameInfo.building_2_build,utils.game.InputInfos.mouse_x | 0,utils.game.InputInfos.mouse_y | 0);
+			if(new_building != null) GameInfo.building_2_build = 0;
 		}
 	}
 	,set_content: function(content) {
 	}
 	,build_building: function(pBuilding_id,pX,pY) {
-		var index = utils.game.IsoTools.cell_index_from_xy(pX,pY,(this.x | 0) + this._offset_x,(this.y | 0) + this._offset_y,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cols_nb);
+		var offset_x = (this.x | 0) + this._offset_x;
+		var offset_y = (this.y | 0) + this._offset_y;
+		if(!utils.game.IsoTools.is_inside_map(pX,pY,offset_x,offset_y,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cells_nb,IsoMap.cols_nb)) return null;
+		var index = utils.game.IsoTools.cell_index_from_xy(pX,pY,offset_x,offset_y,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cols_nb);
 		var col = utils.game.IsoTools.cell_col(index,IsoMap.cols_nb);
 		var row = utils.game.IsoTools.cell_row(index,IsoMap.cols_nb);
 		var new_x = utils.game.IsoTools.cell_x(col,IsoMap.cell_width,this._offset_x);
@@ -194,7 +165,7 @@ IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 		try {
 			this.getChildAt((row | 0) + 2).addChild(building);
 		} catch( error ) {
-			haxe.Log.trace(error,{ fileName : "IsoMap.hx", lineNumber : 191, className : "IsoMap", methodName : "build_building"});
+			haxe.Log.trace(error,{ fileName : "IsoMap.hx", lineNumber : 205, className : "IsoMap", methodName : "build_building"});
 		}
 		return building;
 	}
@@ -1612,6 +1583,17 @@ utils.game.IsoTools.cell_index_from_xy = function(x,y,offset_x,offset_y,cell_w,c
 	var nY = (y - offset_y) / cell_h;
 	return (nY + nX - cols_nb * 0.5 | 0) + (nY - nX + cols_nb * 0.5 | 0) * cols_nb;
 };
+utils.game.IsoTools.is_inside_map = function(x,y,offset_x,offset_y,cell_w,cell_h,cells_nb,cols_nb) {
+	var p0_x = Std["int"](offset_x + utils.game.IsoTools.cell_col(cells_nb - cols_nb,cols_nb) * cell_w);
+	var p0_y = Std["int"](offset_y + utils.game.IsoTools.cell_row(cells_nb - cols_nb,cols_nb) * cell_h + cell_h * 0.5);
+	var p1_x = Std["int"](offset_x + utils.game.IsoTools.cell_col(0,cols_nb) * cell_w + cell_w * 0.5);
+	var p1_y = Std["int"](offset_y + utils.game.IsoTools.cell_row(0,cols_nb) * cell_h);
+	var p2_x = Std["int"](offset_x + utils.game.IsoTools.cell_col(cols_nb - 1,cols_nb) * cell_w + cell_w);
+	var p2_y = Std["int"](offset_y + utils.game.IsoTools.cell_row(cols_nb - 1,cols_nb) * cell_h + cell_h * 0.5);
+	var p3_x = Std["int"](offset_x + utils.game.IsoTools.cell_col(cells_nb - 1,cols_nb) * cell_w + cell_w * 0.5);
+	var p3_y = Std["int"](offset_y + utils.game.IsoTools.cell_row(cells_nb - 1,cols_nb) * cell_h + cell_h);
+	return (p1_x - p0_x) * (y - p0_y) - (p1_y - p0_y) * (x - p0_x) > 0 && (p2_x - p1_x) * (y - p1_y) - (p2_y - p1_y) * (x - p1_x) > 0 && (p3_x - p2_x) * (y - p2_y) - (p3_y - p2_y) * (x - p2_x) > 0 && (p0_x - p3_x) * (y - p3_y) - (p0_y - p3_y) * (x - p3_x) > 0;
+};
 utils.game.IsoTools.all_map_pts_xy = function(offset_x,offset_y,cell_w,cell_h,cells_nb,cols_nb) {
 	var pts = [];
 	var i = 0;
@@ -1667,9 +1649,6 @@ sprites.Building.PAS_DE_TIR = 11;
 sprites.Building.LVL_1 = 256;
 sprites.Building.LVL_2 = 512;
 sprites.Building.LVL_3 = 768;
-sprites.Building.IMG_FOLDER_PATH = "assets/Buildings/";
-sprites.Building.IMG_EXTENSION = ".png";
-sprites.Building.BUILDINGS_IMG = ["CasinoLv1","CasinoLv2","CasinoLv3","EgliseLv1","EgliseLv2","EgliseLv3","Hangar1Lv1","Hangar1Lv2","Hangar1Lv3","Hangar2Lv1","Hangar2Lv2","Hangar2Lv3","Hangar3Lv1","Hangar3Lv2","Hangar3Lv3","Hangar4Lv1","Hangar4Lv2","Hangar4Lv3","Hangar5Lv1","Hangar5Lv2","Hangar5Lv3","Hangar6Lv1","Hangar6Lv2","Hangar6Lv3","Labo1","Labo2","Labo3","NicheLv1","NicheLv2","NicheLv3","PasDeTir1","PasDeTir2","PasDeTir3"];
 GameInfo.ressources = (function($this) {
 	var $r;
 	var _g = new haxe.ds.StringMap();
@@ -1708,7 +1687,7 @@ GameInfo.BUILDINGS_CONFIG = (function($this) {
 	_g.set(sprites.Building.CASINO | sprites.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 25, img : "CasinoLv1"});
 	_g.set(sprites.Building.CASINO | sprites.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 60, frames_nb : 18, img : "CasinoLv2"});
 	_g.set(sprites.Building.CASINO | sprites.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 12, img : "CasinoLv3"});
-	_g.set(sprites.Building.EGLISE | sprites.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "CasinoLv1"});
+	_g.set(sprites.Building.EGLISE | sprites.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "EgliseLv1"});
 	_g.set(sprites.Building.EGLISE | sprites.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 0, frames_nb : 1, img : "CasinoLv2"});
 	_g.set(sprites.Building.EGLISE | sprites.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 1, img : "CasinoLv3"});
 	_g.set(sprites.Building.HANGAR_1 | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "Hangar1Lv1"});

@@ -280,8 +280,7 @@ class GameInfo
  	public static var dogeMaxNumber:Float = 25;
  	public static var stockPercent:Float = 50;
  	public static var building_2_build: Int = 0;
- 	public static var can_map_update: Bool = true;
- 	
+ 	public static var can_map_update: Bool = true; 	
 
  	public static var BUILDINGS_IMG_FOLDER_PATH: String = "assets/Buildings/";
 	public static var BUILDINGS_IMG_EXTENSION: String = ".png";
@@ -319,7 +318,7 @@ class GameInfo
 			vertical_dir: 0,
 			building_time: 30,
 			frames_nb: 1,
-			img: "CasinoLv1"
+			img: "EgliseLv1"
 		},
 		Building.EGLISE | Building.LVL_2 => {
 			width: 3,
