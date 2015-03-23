@@ -16,15 +16,17 @@ class Building extends MovieClip
 {
 	public static var CASINO 		: Int 	=	0x01;
 	public static var EGLISE 		: Int 	=	0x02;
-	public static var HANGAR_1 		: Int 	=	0x03;
-	public static var HANGAR_2 		: Int 	=	0x04;
-	public static var HANGAR_3 		: Int 	=	0x05;
-	public static var HANGAR_4 		: Int 	=	0x06;
-	public static var HANGAR_5 		: Int 	=	0x07;
-	public static var HANGAR_6 		: Int 	=	0x08;
+	public static var HANGAR_BLEU 	: Int 	=	0x03;
+	public static var HANGAR_CYAN 	: Int 	=	0x04;
+	public static var HANGAR_JAUNE 	: Int 	=	0x05;
+	public static var HANGAR_ROUGE 	: Int 	=	0x06;
+	public static var HANGAR_VERT 	: Int 	=	0x07;
+	public static var HANGAR_VIOLET : Int 	=	0x08;
 	public static var LABO 			: Int 	=	0x09;
-	public static var NICHE 		: Int 	=	0x0a;
-	public static var PAS_DE_TIR 	: Int 	=	0x0b;
+	public static var NICHE 		: Int 	=	0x0A;
+	public static var PAS_DE_TIR 	: Int 	=	0x0B;
+	public static var ENTREPOT 		: Int 	=	0x0C;
+	public static var MUSEE 		: Int 	=	0x0D;
 
 	public static var LVL_1 		: Int 	= 	0x100;
 	public static var LVL_2 		: Int 	= 	0x200;
@@ -32,12 +34,12 @@ class Building extends MovieClip
 
 	public static function get_building_type (id: Int): Int
 	{
-		return id&0xff;
+		return id&0xFF;
 	}
 
 	public static function get_building_lvl (id: Int): Int
 	{
-		return id&0xf00;
+		return id&0xF00;
 	}
 	
 	public var type: Int;
@@ -47,6 +49,7 @@ class Building extends MovieClip
 	public var width_in_tiles_nb: Int; // en nombre de tiles
 	public var height_in_tiles_nb: Int;
 	public var building_time: Int;
+	public var is_builded: Bool;
 	public var config: Dynamic;
 
 	public function upgrade () {
@@ -61,6 +64,7 @@ class Building extends MovieClip
 		lvl = 1;
 		col = p_col;
 		row = p_row;
+		is_builded = false;
 
 		config = GameInfo.BUILDINGS_CONFIG[get_id()];
 

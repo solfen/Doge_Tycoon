@@ -6,45 +6,13 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
-var pixi = {};
-pixi.display = {};
-pixi.display.DisplayObject = function() {
-	PIXI.DisplayObject.call(this);
-	this.name = "";
-};
-$hxClasses["pixi.display.DisplayObject"] = pixi.display.DisplayObject;
-pixi.display.DisplayObject.__name__ = ["pixi","display","DisplayObject"];
-pixi.display.DisplayObject.__super__ = PIXI.DisplayObject;
-pixi.display.DisplayObject.prototype = $extend(PIXI.DisplayObject.prototype,{
-	__class__: pixi.display.DisplayObject
-});
-pixi.display.DisplayObjectContainer = function() {
-	PIXI.DisplayObjectContainer.call(this);
-};
-$hxClasses["pixi.display.DisplayObjectContainer"] = pixi.display.DisplayObjectContainer;
-pixi.display.DisplayObjectContainer.__name__ = ["pixi","display","DisplayObjectContainer"];
-pixi.display.DisplayObjectContainer.__super__ = PIXI.DisplayObjectContainer;
-pixi.display.DisplayObjectContainer.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
-	getChildByName: function(name) {
-		var _g1 = 0;
-		var _g = this.children.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			if(this.children[i].name == name) return this.children[i];
-		}
-		return null;
-	}
-	,applyScale: function(pixelRatio) {
-		if(pixelRatio > 0) this.scale.set(1 / pixelRatio,1 / pixelRatio);
-	}
-	,__class__: pixi.display.DisplayObjectContainer
-});
 var sprites = {};
 sprites.Building = function(p_type,p_col,p_row,pX,pY) {
 	this.type = p_type;
 	this.lvl = 1;
 	this.col = p_col;
 	this.row = p_row;
+	this.is_builded = false;
 	var key = this.get_id();
 	this.config = GameInfo.BUILDINGS_CONFIG.get(key);
 	this.width_in_tiles_nb = this.config.width;
@@ -78,7 +46,7 @@ sprites.Building.prototype = $extend(PIXI.MovieClip.prototype,{
 		return this.type | this.lvl;
 	}
 	,_on_click: function(p_data) {
-		haxe.Log.trace("click on building " + this.get_id(),{ fileName : "Building.hx", lineNumber : 90, className : "sprites.Building", methodName : "_on_click"});
+		haxe.Log.trace("click on building " + this.get_id(),{ fileName : "Building.hx", lineNumber : 94, className : "sprites.Building", methodName : "_on_click"});
 	}
 	,_get_texture: function() {
 		var textures = new Array();
@@ -118,7 +86,7 @@ HxOverrides.iter = function(a) {
 	}};
 };
 var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	IsoMap.singleton = this;
 	this._screen_margin = 0.05;
 	this._screen_move_speed = 0.5;
@@ -150,14 +118,14 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 		this._graphics.lineTo(this._cells_pts[i].x2,this._cells_pts[i].y2);
 		this._graphics.lineTo(this._cells_pts[i].x3,this._cells_pts[i].y3);
 		this._graphics.lineTo(this._cells_pts[i].x0,this._cells_pts[i].y0);
-		if(i / IsoMap.cols_nb - (i / IsoMap.cols_nb | 0) == 0) this.addChild(new pixi.display.DisplayObjectContainer());
+		if(i / IsoMap.cols_nb - (i / IsoMap.cols_nb | 0) == 0) this.addChild(new PIXI.DisplayObjectContainer());
 	}
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this._update));
 };
 $hxClasses["IsoMap"] = IsoMap;
 IsoMap.__name__ = ["IsoMap"];
-IsoMap.__super__ = pixi.display.DisplayObjectContainer;
-IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+IsoMap.__super__ = PIXI.DisplayObjectContainer;
+IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	_update: function() {
 		if(!GameInfo.can_map_update) return;
 		GameInfo.building_2_build = sprites.Building.CASINO | sprites.Building.LVL_1;
@@ -642,7 +610,7 @@ hud.HudManager = function() {
 	this.hudWidthInterval = 0.05;
 	this.containers = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.addContainer(0.01,0,"HudTop",0.92,0.05,"center");
 	this.addHud(new hud.HudFric(0,this.hudTopY),"HudFric","HudTop");
 	this.addHud(new hud.HudHardMoney(0,this.hudTopY),"HudHardMoney","HudTop");
@@ -669,8 +637,8 @@ hud.HudManager.getInstance = function() {
 	if(hud.HudManager.instance == null) hud.HudManager.instance = new hud.HudManager();
 	return hud.HudManager.instance;
 };
-hud.HudManager.__super__ = pixi.display.DisplayObjectContainer;
-hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+hud.HudManager.__super__ = PIXI.DisplayObjectContainer;
+hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	resizeHud: function() {
 		var $it0 = this.containers.iterator();
 		while( $it0.hasNext() ) {
@@ -706,7 +674,7 @@ hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype
 	}
 	,addContainer: function(x,y,name,maxWidth,interval,align) {
 		if(align == null) align = "left";
-		var container = new pixi.display.DisplayObjectContainer();
+		var container = new PIXI.DisplayObjectContainer();
 		container.position.set(Std["int"](x * utils.system.DeviceCapabilities.get_width()),Std["int"](y * utils.system.DeviceCapabilities.get_height()));
 		var v = { };
 		this.containers.set(name,v);
@@ -913,9 +881,7 @@ js.Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-pixi.DomDefinitions = function() { };
-$hxClasses["pixi.DomDefinitions"] = pixi.DomDefinitions;
-pixi.DomDefinitions.__name__ = ["pixi","DomDefinitions"];
+var pixi = {};
 pixi.renderers = {};
 pixi.renderers.IRenderer = function() { };
 $hxClasses["pixi.renderers.IRenderer"] = pixi.renderers.IRenderer;
@@ -977,7 +943,7 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 	this.containers = new haxe.ds.StringMap();
 	this.icons = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.x = Std["int"](startX * utils.system.DeviceCapabilities.get_width());
 	this.y = Std["int"](startY * utils.system.DeviceCapabilities.get_height());
 	if(isModal) {
@@ -1002,8 +968,8 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 };
 $hxClasses["popin.MyPopin"] = popin.MyPopin;
 popin.MyPopin.__name__ = ["popin","MyPopin"];
-popin.MyPopin.__super__ = pixi.display.DisplayObjectContainer;
-popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+popin.MyPopin.__super__ = PIXI.DisplayObjectContainer;
+popin.MyPopin.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	addIcon: function(x,y,texturePath,name,target,isInteractive,texturePathActive,pIsSelectButton) {
 		if(pIsSelectButton == null) pIsSelectButton = false;
 		if(isInteractive == null) isInteractive = false;
@@ -1077,7 +1043,7 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 	,addContainer: function(name,target,x,y) {
 		if(y == null) y = 0;
 		if(x == null) x = 0;
-		var temp = new pixi.display.DisplayObjectContainer();
+		var temp = new PIXI.DisplayObjectContainer();
 		temp.x = x;
 		temp.y = y;
 		this.containers.set(name,temp);
@@ -1253,7 +1219,7 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 });
 popin.PopinManager = function() {
 	this.childs = new haxe.ds.StringMap();
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 };
 $hxClasses["popin.PopinManager"] = popin.PopinManager;
 popin.PopinManager.__name__ = ["popin","PopinManager"];
@@ -1261,8 +1227,8 @@ popin.PopinManager.getInstance = function() {
 	if(popin.PopinManager.instance == null) popin.PopinManager.instance = new popin.PopinManager();
 	return popin.PopinManager.instance;
 };
-popin.PopinManager.__super__ = pixi.display.DisplayObjectContainer;
-popin.PopinManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+popin.PopinManager.__super__ = PIXI.DisplayObjectContainer;
+popin.PopinManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	openPopin: function(popinName,pX,pY) {
 		GameInfo.can_map_update = false;
 		var v = Type.createInstance(Type.resolveClass("popin." + popinName),[pX,pY]);
@@ -1517,7 +1483,7 @@ popin.PopinWorkshop.prototype = $extend(popin.MyPopin.prototype,{
 });
 var scenes = {};
 scenes.GameScene = function() {
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	new utils.game.InputInfos(true,true);
@@ -1536,8 +1502,8 @@ scenes.GameScene.getInstance = function() {
 	if(scenes.GameScene.instance == null) scenes.GameScene.instance = new scenes.GameScene();
 	return scenes.GameScene.instance;
 };
-scenes.GameScene.__super__ = pixi.display.DisplayObjectContainer;
-scenes.GameScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+scenes.GameScene.__super__ = PIXI.DisplayObjectContainer;
+scenes.GameScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	doAction: function() {
 	}
 	,resize: function() {
@@ -1545,7 +1511,7 @@ scenes.GameScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototy
 	,__class__: scenes.GameScene
 });
 scenes.LoaderScene = function() {
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	var img = new PIXI.Sprite(PIXI.Texture.fromImage("assets/UI/SplashScreen/IconsSplash.jpg"));
@@ -1560,8 +1526,8 @@ scenes.LoaderScene.getInstance = function() {
 	if(scenes.LoaderScene.instance == null) scenes.LoaderScene.instance = new scenes.LoaderScene();
 	return scenes.LoaderScene.instance;
 };
-scenes.LoaderScene.__super__ = pixi.display.DisplayObjectContainer;
-scenes.LoaderScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+scenes.LoaderScene.__super__ = PIXI.DisplayObjectContainer;
+scenes.LoaderScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	__class__: scenes.LoaderScene
 });
 scenes.ScenesManager = function() {
@@ -1746,15 +1712,17 @@ $hxClasses.Array = Array;
 Array.__name__ = ["Array"];
 sprites.Building.CASINO = 1;
 sprites.Building.EGLISE = 2;
-sprites.Building.HANGAR_1 = 3;
-sprites.Building.HANGAR_2 = 4;
-sprites.Building.HANGAR_3 = 5;
-sprites.Building.HANGAR_4 = 6;
-sprites.Building.HANGAR_5 = 7;
-sprites.Building.HANGAR_6 = 8;
+sprites.Building.HANGAR_BLEU = 3;
+sprites.Building.HANGAR_CYAN = 4;
+sprites.Building.HANGAR_JAUNE = 5;
+sprites.Building.HANGAR_ROUGE = 6;
+sprites.Building.HANGAR_VERT = 7;
+sprites.Building.HANGAR_VIOLET = 8;
 sprites.Building.LABO = 9;
 sprites.Building.NICHE = 10;
 sprites.Building.PAS_DE_TIR = 11;
+sprites.Building.ENTREPOT = 12;
+sprites.Building.MUSEE = 13;
 sprites.Building.LVL_1 = 256;
 sprites.Building.LVL_2 = 512;
 sprites.Building.LVL_3 = 768;
@@ -1773,7 +1741,7 @@ GameInfo.ressources = (function($this) {
 	return $r;
 }(this));
 GameInfo.questsArticles = { current : [{ previewImg : "IconDogNiche", title : "Première niche", description : "Pas de niches, pas d'employés.Pas d'employés, pas\nde fusées.Pas de fusées... pas de fusées.\nOuvrez-donc le menu de construction.\nPuis achetez et construisez une niche !", rewards : [{ name : "fric", quantity : "100"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogWorkshop", title : "Premier atelier", description : "Les ateliers servent à construire les fussées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les batiments peuvent être\nachetés depuis le menu de construction", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogWorkshop", title : "Première fusée", description : "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et comencez la\n construction de la fusée. N'oubliez pas de fouett..\n*hum* motiver vos employés en cliquant sur\n l'icone dans le atelier", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogAstro", title : "La conquète de l'espace !", description : "Votre première fusée est prète à partir !\nVous n'avez plus qu'a appuyer sur le gros\nboutton vert pour la lancer. Ca ne devrait pas être\ntrop compliqué non ?", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogCasino", title : "Black jack and...", description : "Vos employés veulent se détendre, vous voulez\n vous remplir les poches.\nUn casino semble le parfait compromis", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogMusee", title : "La culture ça rapporte", description : "Les artefacts que vous trouvez sur les planètes\nsont incroyablement rares Et comme ce qui est\nrare est cher, les billets ne sont pas donnés. Entre la\nboutique de souvenirs et les entrées, vous allez\nencaisser sec !", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]}], finished : { }};
-GameInfo.buildMenuArticles = { niches : [{ buildingID : sprites.Building.NICHE | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png", title : "Niche en Bois", description : "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}], spacechips : [{ buildingID : sprites.Building.HANGAR_1 | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png", title : "Atelier Destination SprungField", description : "Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre2", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.HANGAR_2 | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png", title : "Atelier Destination Modor", description : "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre5", quantity : 250}]},{ buildingID : sprites.Building.HANGAR_3 | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png", title : "Atelier Destination Namok", description : "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre3", quantity : 10},{ name : "poudre4", quantity : 25}]},{ buildingID : sprites.Building.HANGAR_4 | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png", title : "Atelier Destination Terre", description : "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.HANGAR_5 | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png", title : "Atelier Destination Wundërland", description : "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.HANGAR_6 | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png", title : "Atelier Destination StarWat", description : "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}], utilitaires : [{ buildingID : sprites.Building.CASINO | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png", title : "Casino", description : "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.EGLISE | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png", title : "Église", description : "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.EGLISE | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png", title : "Entrepot", description : "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}]};
+GameInfo.buildMenuArticles = { niches : [{ buildingID : sprites.Building.NICHE | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png", title : "Niche en Bois", description : "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}], spacechips : [{ buildingID : sprites.Building.HANGAR_BLEU | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png", title : "Atelier Destination SprungField", description : "Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre2", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.HANGAR_CYAN | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png", title : "Atelier Destination Modor", description : "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre5", quantity : 250}]},{ buildingID : sprites.Building.HANGAR_JAUNE | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png", title : "Atelier Destination Namok", description : "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre3", quantity : 10},{ name : "poudre4", quantity : 25}]},{ buildingID : sprites.Building.HANGAR_ROUGE | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png", title : "Atelier Destination Terre", description : "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.HANGAR_VERT | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png", title : "Atelier Destination Wundërland", description : "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.HANGAR_VIOLET | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png", title : "Atelier Destination StarWat", description : "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}], utilitaires : [{ buildingID : sprites.Building.CASINO | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png", title : "Casino", description : "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.EGLISE | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png", title : "Église", description : "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : sprites.Building.EGLISE | sprites.Building.LVL_1, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png", title : "Entrepot", description : "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}]};
 GameInfo.buildings = (function($this) {
 	var $r;
 	var _g = new haxe.ds.StringMap();
@@ -1797,29 +1765,29 @@ GameInfo.BUILDINGS_CONFIG = (function($this) {
 	_g.set(sprites.Building.CASINO | sprites.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 60, frames_nb : 18, img : "CasinoLv2"});
 	_g.set(sprites.Building.CASINO | sprites.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 12, img : "CasinoLv3"});
 	_g.set(sprites.Building.EGLISE | sprites.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "EgliseLv1"});
-	_g.set(sprites.Building.EGLISE | sprites.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 0, frames_nb : 1, img : "CasinoLv2"});
-	_g.set(sprites.Building.EGLISE | sprites.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 1, img : "CasinoLv3"});
-	_g.set(sprites.Building.HANGAR_1 | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "Hangar1Lv1"});
-	_g.set(sprites.Building.HANGAR_1 | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "Hangar1Lv2"});
-	_g.set(sprites.Building.HANGAR_1 | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "Hangar1Lv3"});
-	_g.set(sprites.Building.HANGAR_2 | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "Hangar1Lv1"});
-	_g.set(sprites.Building.HANGAR_2 | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "Hangar1Lv2"});
-	_g.set(sprites.Building.HANGAR_2 | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "Hangar1Lv3"});
-	_g.set(sprites.Building.HANGAR_3 | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "Hangar1Lv1"});
-	_g.set(sprites.Building.HANGAR_3 | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "Hangar1Lv2"});
-	_g.set(sprites.Building.HANGAR_3 | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "Hangar1Lv3"});
-	_g.set(sprites.Building.HANGAR_4 | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "Hangar1Lv1"});
-	_g.set(sprites.Building.HANGAR_4 | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "Hangar1Lv2"});
-	_g.set(sprites.Building.HANGAR_4 | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "Hangar1Lv3"});
-	_g.set(sprites.Building.HANGAR_5 | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "Hangar1Lv1"});
-	_g.set(sprites.Building.HANGAR_5 | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "Hangar1Lv2"});
-	_g.set(sprites.Building.HANGAR_5 | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "Hangar1Lv3"});
-	_g.set(sprites.Building.HANGAR_6 | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "Hangar1Lv1"});
-	_g.set(sprites.Building.HANGAR_6 | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "Hangar1Lv2"});
-	_g.set(sprites.Building.HANGAR_6 | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "Hangar1Lv3"});
-	_g.set(sprites.Building.LABO | sprites.Building.LVL_1,{ width : 2, height : 2, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "CasinoLv1"});
-	_g.set(sprites.Building.LABO | sprites.Building.LVL_2,{ width : 2, height : 2, vertical_dir : 0, building_time : 60, frames_nb : 1, img : "CasinoLv2"});
-	_g.set(sprites.Building.LABO | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : 1, building_time : 90, frames_nb : 1, img : "CasinoLv3"});
+	_g.set(sprites.Building.EGLISE | sprites.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 0, frames_nb : 16, img : "EgliseLv2"});
+	_g.set(sprites.Building.EGLISE | sprites.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 16, img : "EgliseLv3"});
+	_g.set(sprites.Building.HANGAR_BLEU | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarBleuLv1"});
+	_g.set(sprites.Building.HANGAR_BLEU | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarBleuLv2"});
+	_g.set(sprites.Building.HANGAR_BLEU | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarBleuLv3"});
+	_g.set(sprites.Building.HANGAR_CYAN | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarCyanLv1"});
+	_g.set(sprites.Building.HANGAR_CYAN | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarCyanLv2"});
+	_g.set(sprites.Building.HANGAR_CYAN | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarCyanLv3"});
+	_g.set(sprites.Building.HANGAR_JAUNE | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarJauneLv1"});
+	_g.set(sprites.Building.HANGAR_JAUNE | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarJauneLv2"});
+	_g.set(sprites.Building.HANGAR_JAUNE | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarJauneLv3"});
+	_g.set(sprites.Building.HANGAR_ROUGE | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarRougeLv1"});
+	_g.set(sprites.Building.HANGAR_ROUGE | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarRougeLv2"});
+	_g.set(sprites.Building.HANGAR_ROUGE | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarRougeLv3"});
+	_g.set(sprites.Building.HANGAR_VERT | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarVertLv1"});
+	_g.set(sprites.Building.HANGAR_VERT | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarVertLv2"});
+	_g.set(sprites.Building.HANGAR_VERT | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarVertLv3"});
+	_g.set(sprites.Building.HANGAR_VIOLET | sprites.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarVioletLv1"});
+	_g.set(sprites.Building.HANGAR_VIOLET | sprites.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarVioletLv2"});
+	_g.set(sprites.Building.HANGAR_VIOLET | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarVioletLv3"});
+	_g.set(sprites.Building.LABO | sprites.Building.LVL_1,{ width : 2, height : 2, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "LaboLv1"});
+	_g.set(sprites.Building.LABO | sprites.Building.LVL_2,{ width : 2, height : 2, vertical_dir : 0, building_time : 60, frames_nb : 1, img : "LaboLv2"});
+	_g.set(sprites.Building.LABO | sprites.Building.LVL_3,{ width : 3, height : 2, vertical_dir : 1, building_time : 90, frames_nb : 1, img : "LaboLv3"});
 	_g.set(sprites.Building.NICHE | sprites.Building.LVL_1,{ width : 1, height : 1, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "CasinoLv1"});
 	_g.set(sprites.Building.NICHE | sprites.Building.LVL_2,{ width : 1, height : 1, vertical_dir : 0, building_time : 60, frames_nb : 1, img : "CasinoLv2"});
 	_g.set(sprites.Building.NICHE | sprites.Building.LVL_3,{ width : 1, height : 1, vertical_dir : 0, building_time : 90, frames_nb : 1, img : "CasinoLv3"});
