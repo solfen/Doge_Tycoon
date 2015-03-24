@@ -157,7 +157,8 @@ class GameInfo
  		],
  		"spacechips": [
  			{
- 				buildingID: Building.HANGAR_1,
+
+ 				buildingID: Building.HANGAR_BLEU,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png',
  				title: 'Atelier Destination SprungField',
  				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
@@ -169,7 +170,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_2,
+ 				buildingID: Building.HANGAR_CYAN,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png',
  				title: 'Atelier Destination Modor',
  				description: "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
@@ -181,7 +182,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_3,
+ 				buildingID: Building.HANGAR_JAUNE,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png',
  				title: 'Atelier Destination Namok',
  				description: "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
@@ -193,7 +194,7 @@ class GameInfo
  				]
  			}, 			
  			{
- 				buildingID: Building.HANGAR_4,
+ 				buildingID: Building.HANGAR_ROUGE,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png',
  				title: 'Atelier Destination Terre',
  				description: "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
@@ -205,7 +206,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_5,
+ 				buildingID: Building.HANGAR_VERT,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png',
  				title: 'Atelier Destination Wundërland',
  				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
@@ -217,7 +218,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_6,
+ 				buildingID: Building.HANGAR_VIOLET,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png',
  				title: 'Atelier Destination StarWat',
  				description: "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",
@@ -335,160 +336,160 @@ class GameInfo
 			height: 3,
 			vertical_dir: 0,
 			building_time: 0,
-			frames_nb: 1,
-			img: "CasinoLv2"
+			frames_nb: 16,
+			img: "EgliseLv2"
 		},
 		Building.EGLISE | Building.LVL_3 => {
 			width: 3,
 			height: 3,
 			vertical_dir: 0,
 			building_time: 90,
-			frames_nb: 1,
-			img: "CasinoLv3"
+			frames_nb: 16,
+			img: "EgliseLv3"
 		},
-		Building.HANGAR_1 | Building.LVL_1 => {
+		Building.HANGAR_BLEU | Building.LVL_1 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
-			img: "Hangar1Lv1"
+			img: "HangarBleuLv1"
 		},
-		Building.HANGAR_1 | Building.LVL_2 => {
+		Building.HANGAR_BLEU | Building.LVL_2 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
-			img: "Hangar1Lv2"
+			img: "HangarBleuLv2"
 		},
-		Building.HANGAR_1 | Building.LVL_3 => {
+		Building.HANGAR_BLEU | Building.LVL_3 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
-			img: "Hangar1Lv3"
+			img: "HangarBleuLv3"
 		},
-		Building.HANGAR_2 | Building.LVL_1 => {
+		Building.HANGAR_CYAN | Building.LVL_1 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
-			img: "Hangar1Lv1"
+			img: "HangarCyanLv1"
 		},
-		Building.HANGAR_2 | Building.LVL_2 => {
+		Building.HANGAR_CYAN | Building.LVL_2 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
-			img: "Hangar1Lv2"
+			img: "HangarCyanLv2"
 		},
-		Building.HANGAR_2 | Building.LVL_3 => {
+		Building.HANGAR_CYAN | Building.LVL_3 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
-			img: "Hangar1Lv3"
+			img: "HangarCyanLv3"
 		},
-		Building.HANGAR_3 | Building.LVL_1 => {
+		Building.HANGAR_JAUNE | Building.LVL_1 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
-			img: "Hangar1Lv1"
+			img: "HangarJauneLv1"
 		},
-		Building.HANGAR_3 | Building.LVL_2 => {
+		Building.HANGAR_JAUNE | Building.LVL_2 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
-			img: "Hangar1Lv2"
+			img: "HangarJauneLv2"
 		},
-		Building.HANGAR_3 | Building.LVL_3 => {
+		Building.HANGAR_JAUNE | Building.LVL_3 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
-			img: "Hangar1Lv3"
+			img: "HangarJauneLv3"
 		},
-		Building.HANGAR_4 | Building.LVL_1 => {
+		Building.HANGAR_ROUGE | Building.LVL_1 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
-			img: "Hangar1Lv1"
+			img: "HangarRougeLv1"
 		},
-		Building.HANGAR_4 | Building.LVL_2 => {
+		Building.HANGAR_ROUGE | Building.LVL_2 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
-			img: "Hangar1Lv2"
+			img: "HangarRougeLv2"
 		},
-		Building.HANGAR_4 | Building.LVL_3 => {
+		Building.HANGAR_ROUGE | Building.LVL_3 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
-			img: "Hangar1Lv3"
+			img: "HangarRougeLv3"
 		},
-		Building.HANGAR_5 | Building.LVL_1 => {
+		Building.HANGAR_VERT | Building.LVL_1 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
-			img: "Hangar1Lv1"
+			img: "HangarVertLv1"
 		},
-		Building.HANGAR_5 | Building.LVL_2 => {
+		Building.HANGAR_VERT | Building.LVL_2 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
-			img: "Hangar1Lv2"
+			img: "HangarVertLv2"
 		},
-		Building.HANGAR_5 | Building.LVL_3 => {
+		Building.HANGAR_VERT | Building.LVL_3 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
-			img: "Hangar1Lv3"
+			img: "HangarVertLv3"
 		},
-		Building.HANGAR_6 | Building.LVL_1 => {
+		Building.HANGAR_VIOLET | Building.LVL_1 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
-			img: "Hangar1Lv1"
+			img: "HangarVioletLv1"
 		},
-		Building.HANGAR_6 | Building.LVL_2 => {
+		Building.HANGAR_VIOLET | Building.LVL_2 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
-			img: "Hangar1Lv2"
+			img: "HangarVioletLv2"
 		},
-		Building.HANGAR_6 | Building.LVL_3 => {
+		Building.HANGAR_VIOLET | Building.LVL_3 => {
 			width: 3,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
-			img: "Hangar1Lv3"
+			img: "HangarVioletLv3"
 		},
 		Building.LABO | Building.LVL_1 => {
 			width: 2,
@@ -496,7 +497,7 @@ class GameInfo
 			vertical_dir: 0,
 			building_time: 30,
 			frames_nb: 1,
-			img: "CasinoLv1"
+			img: "LaboLv1"
 		},
 		Building.LABO | Building.LVL_2 => {
 			width: 2,
@@ -504,7 +505,7 @@ class GameInfo
 			vertical_dir: 0,
 			building_time: 60,
 			frames_nb: 1,
-			img: "CasinoLv2"
+			img: "LaboLv2"
 		},
 		Building.LABO | Building.LVL_3 => {
 			width: 3,
@@ -512,7 +513,7 @@ class GameInfo
 			vertical_dir: 1,
 			building_time: 90,
 			frames_nb: 1,
-			img: "CasinoLv3"
+			img: "LaboLv3"
 		},
 		Building.NICHE | Building.LVL_1 => {
 			width: 1,
@@ -570,24 +571,24 @@ class GameInfo
 		config[ EGLISE | LVL_1 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 3 };
 		config[ EGLISE | LVL_2 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 4 };
 		config[ EGLISE | LVL_3 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 5 };
-		config[ HANGAR_1 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 6 };
-		config[ HANGAR_1 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 7 };
-		config[ HANGAR_1 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 8 };
-		config[ HANGAR_2 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 9 };
-		config[ HANGAR_2 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 10 };
-		config[ HANGAR_2 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 11 };
-		config[ HANGAR_3 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 12 };
-		config[ HANGAR_3 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 13 };
-		config[ HANGAR_3 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 14 };
-		config[ HANGAR_4 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 15 };
-		config[ HANGAR_4 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 16 };
-		config[ HANGAR_4 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 17 };
-		config[ HANGAR_5 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 18 };
-		config[ HANGAR_5 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 19 };
-		config[ HANGAR_5 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 20 };
-		config[ HANGAR_6 | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 21 };
-		config[ HANGAR_6 | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 22 };
-		config[ HANGAR_6 | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 23 };
+		config[ HANGAR_BLEU | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 6 };
+		config[ HANGAR_BLEU | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 7 };
+		config[ HANGAR_BLEU | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 8 };
+		config[ HANGAR_CYAN | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 9 };
+		config[ HANGAR_CYAN | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 10 };
+		config[ HANGAR_CYAN | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 11 };
+		config[ HANGAR_JAUNE | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 12 };
+		config[ HANGAR_JAUNE | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 13 };
+		config[ HANGAR_JAUNE | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 14 };
+		config[ HANGAR_ROUGE | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 15 };
+		config[ HANGAR_ROUGE | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 16 };
+		config[ HANGAR_ROUGE | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 17 };
+		config[ HANGAR_VERT | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 18 };
+		config[ HANGAR_VERT | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 19 };
+		config[ HANGAR_VERT | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 20 };
+		config[ HANGAR_VIOLET | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 21 };
+		config[ HANGAR_VIOLET | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 22 };
+		config[ HANGAR_VIOLET | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 23 };
 		config[ LABO | LVL_1 ] = 		{ width: 2, height: 2, vertical_dir: 0, img_i: 24 };
 		config[ LABO | LVL_2 ] = 		{ width: 2, height: 2, vertical_dir: 0, img_i: 25 };
 		config[ LABO | LVL_3 ] = 		{ width: 3, height: 2, vertical_dir: 1, img_i: 26 };
