@@ -4,7 +4,8 @@ import utils.system.DeviceCapabilities;
 import utils.events.Event;
 import utils.game.IsoTools;
 import utils.game.InputInfos;
-import sprites.Building;
+import buildings.Building;
+import buildings.PreviewBuilding;
 import pixi.display.DisplayObjectContainer;
 import pixi.display.Sprite;
 import pixi.extras.TilingSprite;
@@ -38,6 +39,7 @@ class IsoMap extends DisplayObjectContainer
 	private var _map_width: Int;
 	private var _map_height: Int;
 	private var _is_clicking: Bool;
+	private var _previewing_building: PreviewBuilding;
 
 /* ---------------------------------------------------------------------------------------- */
 
@@ -74,7 +76,7 @@ class IsoMap extends DisplayObjectContainer
 		_graphics = new Graphics();
 		_graphics.lineStyle(1, 0x88ccff, 1);
 		addChild(_graphics);
-		
+
 		var i: Int = cells_nb;
 		while (i-->0)
 		{
@@ -101,10 +103,11 @@ class IsoMap extends DisplayObjectContainer
 
 		if (!GameInfo.can_map_update)
 		{
+			_is_clicking = false;
 			return;
 		}
 
-		GameInfo.building_2_build = Building.CASINO | Building.LVL_1; // tmp here
+		GameInfo.building_2_build = Building.CASINO; // tmp here
 
 		if (_is_clicking && !InputInfos.is_mouse_down)
 		{
@@ -142,33 +145,41 @@ class IsoMap extends DisplayObjectContainer
 			y += Std.int((DeviceCapabilities.height*(1-_screen_margin)-InputInfos.mouse_y)*_screen_move_speed);
 		}
 
+		if (GameInfo.building_2_build > 0) // building preview
+		{
+			var build_data = _get_building_coord(InputInfos.mouse_x, InputInfos.mouse_y);
+
+			if (build_data != null)
+			{
+				if (_previewing_building == null)
+				{
+					_previewing_building = new PreviewBuilding(GameInfo.building_2_build, build_data.x, build_data.y);
+					addChild(_previewing_building);
+				}
+
+				build_data.x = Std.int(build_data.x-IsoMap.cell_width*Std.int(_previewing_building.width_in_tiles_nb*0.5));
+				build_data.y = Std.int(build_data.y+IsoMap.cell_height*Std.int(_previewing_building.height_in_tiles_nb*0.5+1));
+				_previewing_building.position.set(build_data.x, build_data.y);
+			}
+		}
 	}
 
 	private function _on_click (): Void
 	{
 		if (GameInfo.building_2_build > 0)
 		{
-			var new_building: Building = build_building(GameInfo.building_2_build, Std.int(InputInfos.mouse_x), Std.int(InputInfos.mouse_y));
+			var new_building: Building = build_building(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y);
 			
 			if (new_building != null)
 			{
 				GameInfo.building_2_build = 0;
+				removeChild(_previewing_building);
+				_previewing_building = null;
 			}
 		}
 	}
 
-	// todo:
-	// init/get obstacles_layer & buildings_layer function from string (from server)
-	// position preview d'un building en tiles par rapport à la position de la souris
-	// update obstacles_layer & buildings_layer from inputs (add / remove)
-	// update offset x & y while drag & drop
-
-	public function set_content (content: String): Void
-	{
-
-	}
-
-	public function build_building (pBuilding_id: Int, pX: Int, pY: Int): Building
+	private function _get_building_coord (pX: Int, pY: Int): Dynamic
 	{
 		var offset_x: Int = Std.int(this.x)+_offset_x;
 		var offset_y: Int = Std.int(this.y)+_offset_y;
@@ -178,27 +189,59 @@ class IsoMap extends DisplayObjectContainer
 			return null;
 		}
 
-		// todo: + verifier l'obstacles_layer
-
 		var index: Int = IsoTools.cell_index_from_xy(pX, pY, offset_x, offset_y, cell_width, cell_height, cols_nb);
 		var col: Float = IsoTools.cell_col(index, cols_nb);
 		var row: Float = IsoTools.cell_row(index, cols_nb);
 		var new_x: Int = IsoTools.cell_x(col, cell_width, _offset_x);
 		var new_y: Int = IsoTools.cell_y(row, cell_height, _offset_y);
 
-		buildings_layer[index] = pBuilding_id;
+		// todo: + verifier l'obstacles_layer
+
+		return {
+			index: index,
+			col: col,
+			row: row,
+			x: new_x,
+			y: new_y
+		};
+	}
+
+	// todo:
+	// init/get obstacles_layer & buildings_layer function from string (from server)
+	// position preview d'un building en tiles par rapport à la position de la souris
+	// update obstacles_layer & buildings_layer from inputs (add / remove)
+	// update offset x & y while drag & drop
+
+
+	public function set_content (content: String): Void
+	{
+
+	}
+
+	public function build_building (pBuilding_type: Int, pX: Int, pY: Int): Building
+	{
+		var build_data = _get_building_coord(pX, pY);
+
+		if (build_data == null)
+		{
+			return null;
+		}
+
+		obstacles_layer[build_data.index] = true;
+		buildings_layer[build_data.index] = pBuilding_type;
 
 		// todo: set the obstacles layer
 
-		var building: Building = new Building(pBuilding_id, col, row, new_x, new_y);
+		var building: Building = new Building(pBuilding_type, build_data.col, build_data.row, build_data.x, build_data.y);
 		
-		//trace("index: "+index);
+		//trace("build_data.index: "+build_data.index);
 		//trace("col: "+col);
 		//trace("row: "+row);
+		//trace("id:", pBuilding_type);
 
 		try
 		{	// todo: trouver mieux comme technique...
-			untyped getChildAt(Std.int(row)+2).addChild(building); // +1 pour le bg et +1 pour le graphics
+			untyped getChildAt(Std.int(build_data.row)+2).addChild(building); // +1 pour le bg et +1 pour le graphics
 		}
 		catch (error: Dynamic)
 		{

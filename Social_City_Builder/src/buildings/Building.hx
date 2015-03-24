@@ -1,4 +1,4 @@
-package sprites;
+package buildings;
 
 import utils.system.DeviceCapabilities;
 import pixi.display.MovieClip;
@@ -57,15 +57,13 @@ class Building extends MovieClip
 		lvl += 0x100;
 	}
 	
-	
 	public function new (p_type: Int, p_col: Float, p_row: Float, pX: Int, pY: Int): Void
 	{
 		type = p_type;
-		lvl = 1;
+		lvl = Building.LVL_1;
 		col = p_col;
 		row = p_row;
 		is_builded = false;
-
 		config = GameInfo.BUILDINGS_CONFIG[get_id()];
 
 		width_in_tiles_nb = config.width;
@@ -92,7 +90,7 @@ class Building extends MovieClip
 	private function _on_click (p_data: InteractionData): Void
 	{
 		trace('click on building '+get_id());
-		// dispatch event here?
+		// dispatch an event here?
 	}
 
 	/**
@@ -103,19 +101,20 @@ class Building extends MovieClip
 	{
 		var textures: Array<Texture> = new Array<Texture>();
 		
-		if (config.frames_nb == 1)
+		/*if (config.frames_nb == 1)
 		{
 			textures.push(Texture.fromFrame(GameInfo.BUILDINGS_IMG_FOLDER_PATH + config.img + GameInfo.BUILDINGS_IMG_EXTENSION));
 		}
 		else
-		{
+		{*/
 			var i: Int = config.frames_nb;
 
-			while (i-->0) // modif la config pour indexer à 0 plutôt
+			while (i-->0)
+			//while (--i>0) // pour index 1
 			{
 				textures.push(Texture.fromFrame(config.img + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
 			}
-		}
+		//}
 		return textures;
 	}
 	

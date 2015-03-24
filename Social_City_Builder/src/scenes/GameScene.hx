@@ -6,11 +6,9 @@ import utils.events.Event;
 import utils.game.InputInfos;
 import pixi.InteractionData;
 import pixi.textures.Texture;
-import sprites.Ambulance;
 import hud.HudManager;
 import popin.PopinManager;
 import IsoMap;
-import sprites.Building;
 
 class GameScene extends DisplayObjectContainer 
 {

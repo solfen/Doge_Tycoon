@@ -1,6 +1,6 @@
 package;
 
-import sprites.Building;
+import buildings.Building;
 // class that store informations of the game in statics var so that it can be acces anywhere
 // the player stats will most likely be here
 class GameInfo
