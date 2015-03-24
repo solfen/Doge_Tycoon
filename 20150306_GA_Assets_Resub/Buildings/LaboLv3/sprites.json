@@ -1,0 +1,15 @@
+{
+"frames": {
+	"LaboLv3.png": {
+		"frame": {"x":0, "y":0, "w":411, "h":380},
+		"spriteSourceSize": {"x":0,"y":45,"w":425,"h":425},
+		"sourceSize": {"w":425,"h":425}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 412, "h": 381},
+	"scale": "1"
+}
+}
