@@ -27,6 +27,7 @@ class HudFric extends IconHud
 		if(lastFric != GameInfo.ressources['fric'].userPossesion){
 			lastFric = GameInfo.ressources['fric'].userPossesion;
 			fricText.setText(lastFric+'');
+			fricText.position.x = Std.int(width*0.95 - fricText.width);
 		}
 	}	
 }

@@ -84,7 +84,7 @@ class HudManager extends DisplayObjectContainer
 			container.obj.position.y = Math.min(Std.int(container.startY*DeviceCapabilities.height),DeviceCapabilities.height-container.obj.children[0].height);
 		}
 	}
-	private function updateChildText(){
+	public function updateChildText(){
 		for(child in childs){
 			if(child.isUpdatable){
 				child.updateInfo();

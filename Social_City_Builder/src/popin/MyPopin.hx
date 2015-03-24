@@ -58,7 +58,7 @@ class MyPopin extends DisplayObjectContainer
 		//int cast because Float pos = blurry images
 		var icon:IconPopin = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive,texturePathActive,pIsSelectButton);
 		if(isInteractive){
-			icon.click = childClick;
+			icon.mouseup = childClick;
 			icon.mouseupoutside = childUpOutside;
 		}
 		icons[name] = icon;

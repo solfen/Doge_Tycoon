@@ -78,7 +78,7 @@ sprites.Building.prototype = $extend(PIXI.MovieClip.prototype,{
 		return this.type | this.lvl;
 	}
 	,_on_click: function(p_data) {
-		haxe.Log.trace("click on building " + this.get_id(),{ fileName : "Building.hx", lineNumber : 90, className : "sprites.Building", methodName : "_on_click"});
+		console.log("click on building " + this.get_id());
 	}
 	,_get_texture: function() {
 		var textures = new Array();
@@ -198,7 +198,7 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 		try {
 			this.getChildAt((row | 0) + 2).addChild(building);
 		} catch( error ) {
-			haxe.Log.trace(error,{ fileName : "IsoMap.hx", lineNumber : 205, className : "IsoMap", methodName : "build_building"});
+			console.log(error);
 		}
 		return building;
 	}
@@ -317,14 +317,14 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 		scenes.ScenesManager.getInstance().loadScene("GameScene");
 	}
 	,onFacebookConnect: function(pResponse) {
-		haxe.Log.trace(pResponse.status,{ fileName : "Main.hx", lineNumber : 116, className : "Main", methodName : "onFacebookConnect"});
+		console.log(pResponse.status);
 		if(pResponse.status == "connected") {
-			haxe.Log.trace("awww yeah ! you're in !",{ fileName : "Main.hx", lineNumber : 118, className : "Main", methodName : "onFacebookConnect"});
+			console.log("awww yeah ! you're in !");
 			FB.ui({ method : "share", href : "https://developers.facebook.com/docs"},$bind(this,this.test));
-		} else if(pResponse.status == "not_authorized") haxe.Log.trace("Oh no ! you're not identified",{ fileName : "Main.hx", lineNumber : 122, className : "Main", methodName : "onFacebookConnect"});
+		} else if(pResponse.status == "not_authorized") console.log("Oh no ! you're not identified");
 	}
 	,test: function() {
-		haxe.Log.trace("succes",{ fileName : "Main.hx", lineNumber : 126, className : "Main", methodName : "test"});
+		console.log("succes");
 	}
 	,gameLoop: function(timestamp) {
 		Main.stats.begin();
@@ -419,12 +419,6 @@ Type.createInstance = function(cl,args) {
 	return null;
 };
 var haxe = {};
-haxe.Log = function() { };
-$hxClasses["haxe.Log"] = haxe.Log;
-haxe.Log.__name__ = ["haxe","Log"];
-haxe.Log.trace = function(v,infos) {
-	js.Boot.__trace(v,infos);
-};
 haxe.Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
@@ -515,7 +509,7 @@ hud.IconHud.__name__ = ["hud","IconHud"];
 hud.IconHud.__super__ = PIXI.Sprite;
 hud.IconHud.prototype = $extend(PIXI.Sprite.prototype,{
 	changeTexture: function(state) {
-		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "normal") this.setTexture(this.normalTexture); else haxe.Log.trace("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state,{ fileName : "IconHud.hx", lineNumber : 53, className : "hud.IconHud", methodName : "changeTexture"});
+		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "normal") this.setTexture(this.normalTexture); else console.log("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state);
 	}
 	,onMouseDown: function(pData) {
 		if(this.activeTexture != null) this.setTexture(this.activeTexture);
@@ -598,6 +592,7 @@ hud.HudFric.prototype = $extend(hud.IconHud.prototype,{
 		if(this.lastFric != GameInfo.ressources.get("fric").userPossesion) {
 			this.lastFric = GameInfo.ressources.get("fric").userPossesion;
 			this.fricText.setText(this.lastFric + "");
+			this.fricText.position.x = this.width * 0.95 - this.fricText.width | 0;
 		}
 	}
 	,__class__: hud.HudFric
@@ -618,6 +613,7 @@ hud.HudHardMoney.prototype = $extend(hud.IconHud.prototype,{
 		if(this.lastHardMoney != GameInfo.ressources.get("hardMoney").userPossesion) {
 			this.lastHardMoney = GameInfo.ressources.get("hardMoney").userPossesion;
 			this.hardMoneyText.setText(this.lastHardMoney + "");
+			this.hardMoneyText.position.x = this.width * 0.95 - this.hardMoneyText.width | 0;
 		}
 	}
 	,__class__: hud.HudHardMoney
@@ -827,25 +823,6 @@ var js = {};
 js.Boot = function() { };
 $hxClasses["js.Boot"] = js.Boot;
 js.Boot.__name__ = ["js","Boot"];
-js.Boot.__unhtml = function(s) {
-	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
-};
-js.Boot.__trace = function(v,i) {
-	var msg;
-	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
-	msg += js.Boot.__string_rec(v,"");
-	if(i != null && i.customParams != null) {
-		var _g = 0;
-		var _g1 = i.customParams;
-		while(_g < _g1.length) {
-			var v1 = _g1[_g];
-			++_g;
-			msg += "," + js.Boot.__string_rec(v1,"");
-		}
-	}
-	var d;
-	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js.Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
-};
 js.Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -1009,7 +986,7 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 		if(isInteractive == null) isInteractive = false;
 		var icon = new popin.IconPopin(x * this.background.width - this.background.width / 2 | 0,y * this.background.height - this.background.height / 2 | 0,texturePath,name,isInteractive,texturePathActive,pIsSelectButton);
 		if(isInteractive) {
-			icon.click = $bind(this,this.childClick);
+			icon.mouseup = $bind(this,this.childClick);
 			icon.mouseupoutside = $bind(this,this.childUpOutside);
 		}
 		this.icons.set(name,icon);
@@ -1222,6 +1199,7 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 					}(this))).userPossesion -= i1.quantity;
 				}
 				GameInfo.building_2_build = article.buildingID;
+				hud.HudManager.getInstance().updateChildText();
 				popin.PopinManager.getInstance().closePopin("PopinBuild");
 			}
 		} else if(pEvent.target._name.indexOf("buildHard") != -1) {
@@ -1236,6 +1214,7 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 			if(this.currentTab == "nicheTab") article1 = GameInfo.buildMenuArticles.niches[index1]; else if(this.currentTab == "spaceshipTab") article1 = GameInfo.buildMenuArticles.spacechips[index1]; else if(this.currentTab == "utilitairesTab") article1 = GameInfo.buildMenuArticles.utilitaires[index1];
 			if(GameInfo.ressources.get("hardMoney").userPossesion >= article1.hardPrice) {
 				GameInfo.ressources.get("hardMoney").userPossesion -= article1.hardPrice;
+				hud.HudManager.getInstance().updateChildText();
 				GameInfo.building_2_build = article1.buildingID;
 				popin.PopinManager.getInstance().closePopin("PopinBuild");
 			}
@@ -1247,7 +1226,7 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 			var key = pEvent.target._name;
 			$r = $this.icons.get(key);
 			return $r;
-		}(this))).setTextureToNormal();
+		}(this))).setTextureToNormal(); else if(pEvent.target._name == "closeButton") this.icons.get("closeButton").setTextureToNormal();
 	}
 	,__class__: popin.PopinBuild
 });
@@ -1386,11 +1365,38 @@ popin.PopinMarket.prototype = $extend(popin.MyPopin.prototype,{
 		} else if(name.indexOf("validBtn") != -1) {
 			var index3 = Std.parseInt(name.split("validBtn")[1]);
 			this.icons.get("validBtn" + index3).setTextureToNormal();
-			if(this.currentTab == "buyTab") haxe.Log.trace("article : " + "poudre" + index3 + " cost : " + Std.string(GameInfo.ressources.get("poudre" + index3).buyCost) + "quantity ",{ fileName : "PopinMarket.hx", lineNumber : 138, className : "popin.PopinMarket", methodName : "childClick", customParams : [GameInfo.ressources.get("poudre" + index3).lastQuantityBuy]}); else if(this.currentTab == "sellTab") haxe.Log.trace("article : " + "poudre" + index3 + " cost : " + Std.string(GameInfo.ressources.get("poudre" + index3).sellCost) + "quantity ",{ fileName : "PopinMarket.hx", lineNumber : 140, className : "popin.PopinMarket", methodName : "childClick", customParams : [GameInfo.ressources.get("poudre" + index3).lastQuantitySell]});
+			if(this.currentTab == "buyTab") {
+				var cost = GameInfo.ressources.get("poudre" + index3).buyCost * GameInfo.ressources.get("poudre" + index3).lastQuantityBuy;
+				if(cost <= GameInfo.ressources.get("fric").userPossesion) {
+					GameInfo.ressources.get("fric").userPossesion -= cost;
+					GameInfo.ressources.get("poudre" + index3).userPossesion += GameInfo.ressources.get("poudre" + index3).lastQuantityBuy;
+					console.log(GameInfo.ressources.get("poudre" + index3).userPossesion);
+					hud.HudManager.getInstance().updateChildText();
+				}
+			} else if(this.currentTab == "sellTab") {
+				var cost1 = GameInfo.ressources.get("poudre" + index3).sellCost * GameInfo.ressources.get("poudre" + index3).lastQuantitySell;
+				if(GameInfo.ressources.get("poudre" + index3).userPossesion >= GameInfo.ressources.get("poudre" + index3).lastQuantitySell) {
+					GameInfo.ressources.get("fric").userPossesion += cost1;
+					GameInfo.ressources.get("poudre" + index3).userPossesion -= GameInfo.ressources.get("poudre" + index3).lastQuantitySell;
+					hud.HudManager.getInstance().updateChildText();
+				}
+			}
 		}
 	}
 	,childUpOutside: function(pEvent) {
-		if(pEvent.target._name == "buyTab" && this.currentTab != "buyTab") this.icons.get("buyTab").setTextureToNormal(); else if(pEvent.target._name == "sellTab" && this.currentTab != "sellTab") this.icons.get("sellTab").setTextureToNormal();
+		if(pEvent.target._name == "buyTab" && this.currentTab != "buyTab") this.icons.get("buyTab").setTextureToNormal(); else if(pEvent.target._name == "sellTab" && this.currentTab != "sellTab") this.icons.get("sellTab").setTextureToNormal(); else if(pEvent.target._name.indexOf("validBtn") != -1) {
+			var index = Std.parseInt(pEvent.target._name.split("validBtn")[1]);
+			this.icons.get("validBtn" + index).setTextureToNormal();
+		} else if(pEvent.target._name == "closeButton") this.icons.get("closeButton").setTextureToNormal(); else if(pEvent.target._name.indexOf("1unit") != -1) {
+			var index1 = Std.parseInt(pEvent.target._name.split("1unit")[1]);
+			this.icons.get("1unit" + index1).setTextureToNormal();
+		} else if(pEvent.target._name.indexOf("10unit") != -1) {
+			var index2 = Std.parseInt(pEvent.target._name.split("10unit")[1]);
+			this.icons.get("10unit" + index2).setTextureToNormal();
+		} else if(pEvent.target._name.indexOf("100unit") != -1) {
+			var index3 = Std.parseInt(pEvent.target._name.split("100unit")[1]);
+			this.icons.get("100unit" + index3).setTextureToNormal();
+		}
 	}
 	,__class__: popin.PopinMarket
 });

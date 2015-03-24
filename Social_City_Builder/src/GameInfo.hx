@@ -143,7 +143,7 @@ class GameInfo
  	public static var buildMenuArticles:Dynamic = {
  		"niches": [
  			{
- 				buildingID: Building.NICHE | Building.LVL_1,
+ 				buildingID: Building.NICHE,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png',
  				title: 'Niche en Bois',
  				description: "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.",
@@ -157,7 +157,7 @@ class GameInfo
  		],
  		"spacechips": [
  			{
- 				buildingID: Building.HANGAR_1 | Building.LVL_1,
+ 				buildingID: Building.HANGAR_1,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png',
  				title: 'Atelier Destination SprungField',
  				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
@@ -169,7 +169,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_2 | Building.LVL_1,
+ 				buildingID: Building.HANGAR_2,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png',
  				title: 'Atelier Destination Modor',
  				description: "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
@@ -181,7 +181,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_3 | Building.LVL_1,
+ 				buildingID: Building.HANGAR_3,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png',
  				title: 'Atelier Destination Namok',
  				description: "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
@@ -193,7 +193,7 @@ class GameInfo
  				]
  			}, 			
  			{
- 				buildingID: Building.HANGAR_4 | Building.LVL_1,
+ 				buildingID: Building.HANGAR_4,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png',
  				title: 'Atelier Destination Terre',
  				description: "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
@@ -205,7 +205,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_5 | Building.LVL_1,
+ 				buildingID: Building.HANGAR_5,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png',
  				title: 'Atelier Destination Wundërland',
  				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
@@ -217,7 +217,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_6 | Building.LVL_1,
+ 				buildingID: Building.HANGAR_6,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png',
  				title: 'Atelier Destination StarWat',
  				description: "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",
@@ -232,7 +232,7 @@ class GameInfo
  		],
  		"utilitaires": [
  			{
- 				buildingID: Building.CASINO | Building.LVL_1,
+ 				buildingID: Building.CASINO,
  				previewImg: 'assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png',
  				title: 'Casino',
  				description: "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.",
@@ -244,7 +244,7 @@ class GameInfo
  				]
  			},
  			{
-				buildingID: Building.EGLISE | Building.LVL_1,
+				buildingID: Building.EGLISE,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png',
  				title: 'Église',
  				description: "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.",
@@ -256,7 +256,7 @@ class GameInfo
  				]
  			},
  			{
-				buildingID: Building.EGLISE | Building.LVL_1,
+				buildingID: Building.EGLISE,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png',
  				title: 'Entrepot',
  				description: "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.",

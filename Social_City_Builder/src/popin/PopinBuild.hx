@@ -4,7 +4,7 @@ import popin.PopinManager;
 import pixi.InteractionData;
 import pixi.textures.Texture;
 import pixi.display.DisplayObjectContainer;
-
+import hud.HudManager;
 //PopinBuild is lauched on HudBuild click (and ambulance click right now)
 //PopinBuild inherit form MyPopin who is the base class of all popin
 //Basicly any Popin is just a configuration of Mypopin
@@ -134,6 +134,7 @@ class PopinBuild extends MyPopin
 					GameInfo.ressources[i.name].userPossesion -= i.quantity;
 				}
 				GameInfo.building_2_build = article.buildingID;
+				HudManager.getInstance().updateChildText();
 				PopinManager.getInstance().closePopin("PopinBuild");
 			}
 		}
@@ -150,6 +151,7 @@ class PopinBuild extends MyPopin
 
 			if(GameInfo.ressources['hardMoney'].userPossesion >= article.hardPrice){
 				GameInfo.ressources['hardMoney'].userPossesion -= article.hardPrice;
+				HudManager.getInstance().updateChildText();
 				GameInfo.building_2_build = article.buildingID;
 				PopinManager.getInstance().closePopin("PopinBuild");
 			}
@@ -167,6 +169,9 @@ class PopinBuild extends MyPopin
 		}
 		else if(pEvent.target._name.indexOf("buildHard") != -1 || pEvent.target._name.indexOf("buildSoft") != -1){
 			icons[pEvent.target._name].setTextureToNormal();
+		}
+		else if(pEvent.target._name == "closeButton"){
+			icons["closeButton"].setTextureToNormal();
 		}
 	}
 }

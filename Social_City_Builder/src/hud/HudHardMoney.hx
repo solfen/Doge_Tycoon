@@ -25,6 +25,7 @@ class HudHardMoney extends IconHud
 		if(lastHardMoney != GameInfo.ressources['hardMoney'].userPossesion){
 			lastHardMoney = GameInfo.ressources['hardMoney'].userPossesion;
 			hardMoneyText.setText(lastHardMoney+'');
+			hardMoneyText.position.x = Std.int(width*0.95 - hardMoneyText.width);
 		}
 	}	
 }

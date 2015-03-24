@@ -1,5 +1,6 @@
 package popin;
 import popin.MyPopin;
+import hud.HudManager;
 import popin.PopinManager;
 import pixi.InteractionData;
 import pixi.textures.Texture;
@@ -134,10 +135,24 @@ class PopinMarket extends MyPopin
 		else if(name.indexOf("validBtn") != -1){
 			var index:Int = Std.parseInt(name.split('validBtn')[1]);
 			icons['validBtn'+index].setTextureToNormal();
-			if(currentTab == "buyTab")
-				trace("article : " + 'poudre'+index + " cost : " + GameInfo.ressources['poudre'+index].buyCost + "quantity ",GameInfo.ressources['poudre'+index].lastQuantityBuy);
-			else if(currentTab == "sellTab")
-				trace("article : " + 'poudre'+index + " cost : " + GameInfo.ressources['poudre'+index].sellCost + "quantity ",GameInfo.ressources['poudre'+index].lastQuantitySell);
+			if(currentTab == "buyTab"){
+				//lastquantity sell and buy are updated eachTime the user clicks on a quantityButton
+				var cost:Float = GameInfo.ressources['poudre'+index].buyCost * GameInfo.ressources['poudre'+index].lastQuantityBuy;
+				if(cost <= GameInfo.ressources['fric'].userPossesion){
+					GameInfo.ressources['fric'].userPossesion -= cost;
+					GameInfo.ressources['poudre'+index].userPossesion += GameInfo.ressources['poudre'+index].lastQuantityBuy;
+					trace(GameInfo.ressources['poudre'+index].userPossesion);
+					HudManager.getInstance().updateChildText();
+				}
+			}
+			else if(currentTab == "sellTab"){
+				var cost:Float = GameInfo.ressources['poudre'+index].sellCost * GameInfo.ressources['poudre'+index].lastQuantitySell;
+				if(GameInfo.ressources['poudre'+index].userPossesion >= GameInfo.ressources['poudre'+index].lastQuantitySell){
+					GameInfo.ressources['fric'].userPossesion += cost;
+					GameInfo.ressources['poudre'+index].userPossesion -= GameInfo.ressources['poudre'+index].lastQuantitySell;
+					HudManager.getInstance().updateChildText();
+				}
+			}
 		}
 	}
 	override private function childUpOutside(pEvent:Dynamic){
@@ -146,6 +161,25 @@ class PopinMarket extends MyPopin
 		}
 		else if(pEvent.target._name == 'sellTab' && currentTab != 'sellTab'){
 			icons['sellTab'].setTextureToNormal();
+		}		
+		else if(pEvent.target._name.indexOf("validBtn") != -1){
+			var index:Int = Std.parseInt(pEvent.target._name.split('validBtn')[1]);
+			icons['validBtn'+index].setTextureToNormal();
+		}
+		else if(pEvent.target._name == "closeButton"){
+			icons["closeButton"].setTextureToNormal();
+		}		
+		else if(pEvent.target._name.indexOf('1unit') != -1){
+			var index:Int = Std.parseInt(pEvent.target._name.split('1unit')[1]); //we deduce the index from the pEvent.target._name
+			icons['1unit'+index].setTextureToNormal();
+		}
+		else if(pEvent.target._name.indexOf('10unit') != -1){
+			var index:Int = Std.parseInt(pEvent.target._name.split('10unit')[1]);
+			icons['10unit'+index].setTextureToNormal();
+		}
+		else if(pEvent.target._name.indexOf('100unit') != -1){
+			var index:Int = Std.parseInt(pEvent.target._name.split('100unit')[1]);
+			icons['100unit'+index].setTextureToNormal();
 		}
 	}
 }
