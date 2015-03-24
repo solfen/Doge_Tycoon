@@ -1,0 +1,15 @@
+{
+"frames": {
+	"HangarCyanLv1.png": {
+		"frame": {"x":0, "y":0, "w":386, "h":291},
+		"spriteSourceSize": {"x":0,"y":22,"w":386,"h":313},
+		"sourceSize": {"w":386,"h":313}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 387, "h": 292},
+	"scale": "1"
+}
+}

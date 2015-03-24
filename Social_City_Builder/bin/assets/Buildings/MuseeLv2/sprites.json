@@ -1,0 +1,15 @@
+{
+"frames": {
+	"MuseeLv2.png": {
+		"frame": {"x":0, "y":0, "w":259, "h":350},
+		"spriteSourceSize": {"x":0,"y":75,"w":425,"h":425},
+		"sourceSize": {"w":425,"h":425}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 260, "h": 351},
+	"scale": "1"
+}
+}

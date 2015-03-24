@@ -1,0 +1,15 @@
+{
+"frames": {
+	"EgliseLv1.png": {
+		"frame": {"x":0, "y":0, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 388, "h": 372},
+	"scale": "1"
+}
+}

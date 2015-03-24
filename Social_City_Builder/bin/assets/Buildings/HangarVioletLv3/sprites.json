@@ -1,0 +1,15 @@
+{
+"frames": {
+	"HangarVioletLv3.png": {
+		"frame": {"x":0, "y":0, "w":386, "h":313},
+		"spriteSourceSize": {"x":0,"y":0,"w":386,"h":313},
+		"sourceSize": {"w":386,"h":313}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 387, "h": 314},
+	"scale": "1"
+}
+}
