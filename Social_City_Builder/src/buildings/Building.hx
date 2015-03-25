@@ -32,6 +32,8 @@ class Building extends MovieClip
 	public static var LVL_2 		: Int 	= 	0x200;
 	public static var LVL_3 		: Int 	=	0x300;
 
+	//public static var COLS_NB_MAX
+
 	public static function get_building_type (id: Int): Int
 	{
 		return id&0xFF;
@@ -90,10 +92,11 @@ class Building extends MovieClip
 	public function get_bloking_tiles (): Array<Bool>
 	{
 		var bloking_tiles: Array<Bool> = [];
-		var i: Int = width_in_tiles_nb * height_in_tiles_nb; // use a static here
+		var i: Int = width_in_tiles_nb * height_in_tiles_nb; // use a static here ?
 		
 		while (i-->0)
 		{
+			//if (vertical)
 			bloking_tiles[i] = false;
 		}
 

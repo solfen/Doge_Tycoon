@@ -102,6 +102,7 @@ class IsoMap extends DisplayObjectContainer
 
 	private function _update (): Void
 	{
+		//GameInfo.building_2_build = Building.HANGAR_BLEU;
 
 		if (!GameInfo.can_map_update)
 		{

@@ -328,7 +328,7 @@ class GameInfo
 			height: 3,
 			vertical_dir: 0,
 			building_time: 30,
-			frames_nb: 1,
+			frames_nb: 13,
 			img: "EgliseLv1"
 		},
 		Building.EGLISE | Building.LVL_2 => {
@@ -560,7 +560,7 @@ class GameInfo
 			height: 5,
 			vertical_dir: 0,
 			building_time: 90,
-			frames_nb: 5,
+			frames_nb: 7,
 			img: "PasdetirLv3"
 		},
 		Building.ENTREPOT | Building.LVL_1 => {
