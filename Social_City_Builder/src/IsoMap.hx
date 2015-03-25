@@ -31,6 +31,7 @@ class IsoMap extends DisplayObjectContainer
 	private var _graphics: Graphics;
 	private var _screen_margin: Float;
 	private var _screen_move_speed: Float;
+	private var _screen_move_max_to_build: Int;
 	private var _old_x: Float;
 	private var _old_y: Float;
 	private var _offset_x: Int;
@@ -51,6 +52,7 @@ class IsoMap extends DisplayObjectContainer
 
 		_screen_margin = 0.05;
 		_screen_move_speed = 0.5;
+		_screen_move_max_to_build = 64;
 		_is_clicking = false;
 
 		cols_nb = pCols_nb;
@@ -164,7 +166,9 @@ class IsoMap extends DisplayObjectContainer
 
 	private function _on_click (): Void
 	{
-		if (GameInfo.building_2_build > 0)
+		if (GameInfo.building_2_build > 0
+			&& Std.int(_old_x/_screen_move_max_to_build)==Std.int(x/_screen_move_max_to_build)
+			&& Std.int(_old_y/_screen_move_max_to_build)==Std.int(y/_screen_move_max_to_build))
 		{
 			var new_building: Building = build_building(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y);
 			

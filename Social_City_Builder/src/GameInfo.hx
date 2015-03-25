@@ -348,7 +348,7 @@ class GameInfo
 			img: "EgliseLv3"
 		},
 		Building.HANGAR_BLEU | Building.LVL_1 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
@@ -356,7 +356,7 @@ class GameInfo
 			img: "HangarBleuLv1"
 		},
 		Building.HANGAR_BLEU | Building.LVL_2 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
@@ -364,7 +364,7 @@ class GameInfo
 			img: "HangarBleuLv2"
 		},
 		Building.HANGAR_BLEU | Building.LVL_3 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
@@ -372,7 +372,7 @@ class GameInfo
 			img: "HangarBleuLv3"
 		},
 		Building.HANGAR_CYAN | Building.LVL_1 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
@@ -380,7 +380,7 @@ class GameInfo
 			img: "HangarCyanLv1"
 		},
 		Building.HANGAR_CYAN | Building.LVL_2 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
@@ -388,7 +388,7 @@ class GameInfo
 			img: "HangarCyanLv2"
 		},
 		Building.HANGAR_CYAN | Building.LVL_3 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
@@ -396,7 +396,7 @@ class GameInfo
 			img: "HangarCyanLv3"
 		},
 		Building.HANGAR_JAUNE | Building.LVL_1 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
@@ -404,7 +404,7 @@ class GameInfo
 			img: "HangarJauneLv1"
 		},
 		Building.HANGAR_JAUNE | Building.LVL_2 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
@@ -412,7 +412,7 @@ class GameInfo
 			img: "HangarJauneLv2"
 		},
 		Building.HANGAR_JAUNE | Building.LVL_3 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
@@ -420,7 +420,7 @@ class GameInfo
 			img: "HangarJauneLv3"
 		},
 		Building.HANGAR_ROUGE | Building.LVL_1 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
@@ -428,7 +428,7 @@ class GameInfo
 			img: "HangarRougeLv1"
 		},
 		Building.HANGAR_ROUGE | Building.LVL_2 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
@@ -436,7 +436,7 @@ class GameInfo
 			img: "HangarRougeLv2"
 		},
 		Building.HANGAR_ROUGE | Building.LVL_3 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
@@ -444,7 +444,7 @@ class GameInfo
 			img: "HangarRougeLv3"
 		},
 		Building.HANGAR_VERT | Building.LVL_1 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
@@ -452,7 +452,7 @@ class GameInfo
 			img: "HangarVertLv1"
 		},
 		Building.HANGAR_VERT | Building.LVL_2 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
@@ -460,7 +460,7 @@ class GameInfo
 			img: "HangarVertLv2"
 		},
 		Building.HANGAR_VERT | Building.LVL_3 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
@@ -468,7 +468,7 @@ class GameInfo
 			img: "HangarVertLv3"
 		},
 		Building.HANGAR_VIOLET | Building.LVL_1 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 30,
@@ -476,7 +476,7 @@ class GameInfo
 			img: "HangarVioletLv1"
 		},
 		Building.HANGAR_VIOLET | Building.LVL_2 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 60,
@@ -484,7 +484,7 @@ class GameInfo
 			img: "HangarVioletLv2"
 		},
 		Building.HANGAR_VIOLET | Building.LVL_3 => {
-			width: 3,
+			width: 4,
 			height: 2,
 			vertical_dir: -1,
 			building_time: 90,
@@ -509,8 +509,8 @@ class GameInfo
 		},
 		Building.LABO | Building.LVL_3 => {
 			width: 3,
-			height: 2,
-			vertical_dir: 1,
+			height: 3,
+			vertical_dir: 0,
 			building_time: 90,
 			frames_nb: 1,
 			img: "LaboLv3"
@@ -520,83 +520,96 @@ class GameInfo
 			height: 1,
 			vertical_dir: 0,
 			building_time: 30,
-			frames_nb: 1,
-			img: "CasinoLv1"
+			frames_nb: 11,
+			img: "NicheLv1"
 		},
 		Building.NICHE | Building.LVL_2 => {
 			width: 1,
 			height: 1,
 			vertical_dir: 0,
 			building_time: 60,
-			frames_nb: 1,
-			img: "CasinoLv2"
+			frames_nb: 33,
+			img: "NicheLv2"
 		},
 		Building.NICHE | Building.LVL_3 => {
 			width: 1,
 			height: 1,
 			vertical_dir: 0,
 			building_time: 90,
-			frames_nb: 1,
-			img: "CasinoLv3"
+			frames_nb: 18,
+			img: "NicheLv3"
 		},
 		Building.PAS_DE_TIR | Building.LVL_1 => {
 			width: 5,
 			height: 5,
 			vertical_dir: 0,
 			building_time: 30,
-			frames_nb: 1,
-			img: "CasinoLv1"
+			frames_nb: 23,
+			img: "PasdetirLv1"
 		},
 		Building.PAS_DE_TIR | Building.LVL_2 => {
 			width: 5,
 			height: 5,
 			vertical_dir: 0,
 			building_time: 60,
-			frames_nb: 1,
-			img: "CasinoLv2"
+			frames_nb: 12,
+			img: "PasdetirLv2"
 		},
 		Building.PAS_DE_TIR | Building.LVL_3 => {
 			width: 5,
 			height: 5,
 			vertical_dir: 0,
 			building_time: 90,
+			frames_nb: 5,
+			img: "PasdetirLv3"
+		},
+		Building.ENTREPOT | Building.LVL_1 => {
+			width: 2,
+			height: 2,
+			vertical_dir: 0,
+			building_time: 30,
+			frames_nb: 4,
+			img: "EntrepotLv1"
+		},
+		Building.ENTREPOT | Building.LVL_2 => {
+			width: 2,
+			height: 2,
+			vertical_dir: 0,
+			building_time: 60,
+			frames_nb: 4,
+			img: "EntrepotLv2"
+		},
+		Building.ENTREPOT | Building.LVL_3 => {
+			width: 2,
+			height: 2,
+			vertical_dir: 0,
+			building_time: 90,
+			frames_nb: 4,
+			img: "EntrepotLv3"
+		},
+		Building.MUSEE | Building.LVL_1 => {
+			width: 2,
+			height: 2,
+			vertical_dir: 0,
+			building_time: 30,
 			frames_nb: 1,
-			img: "CasinoLv3"
-		}
+			img: "MuseeLv1"
+		},
+		Building.MUSEE | Building.LVL_2 => {
+			width: 2,
+			height: 2,
+			vertical_dir: 0,
+			building_time: 60,
+			frames_nb: 1,
+			img: "MuseeLv2"
+		},
+		Building.MUSEE | Building.LVL_3 => {
+			width: 3,
+			height: 2,
+			vertical_dir: 1,
+			building_time: 90,
+			frames_nb: 1,
+			img: "MuseeLv3"
+		},
 	];
-
-	/*	config[ CASINO | LVL_1 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 0 }; // + (buildingTime -> à récup sur le serveur)
-		config[ CASINO | LVL_2 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 1 };
-		config[ CASINO | LVL_3 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 2 };
-		config[ EGLISE | LVL_1 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 3 };
-		config[ EGLISE | LVL_2 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 4 };
-		config[ EGLISE | LVL_3 ] = 		{ width: 3, height: 3, vertical_dir: 0, img_i: 5 };
-		config[ HANGAR_BLEU | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 6 };
-		config[ HANGAR_BLEU | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 7 };
-		config[ HANGAR_BLEU | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 8 };
-		config[ HANGAR_CYAN | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 9 };
-		config[ HANGAR_CYAN | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 10 };
-		config[ HANGAR_CYAN | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 11 };
-		config[ HANGAR_JAUNE | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 12 };
-		config[ HANGAR_JAUNE | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 13 };
-		config[ HANGAR_JAUNE | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 14 };
-		config[ HANGAR_ROUGE | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 15 };
-		config[ HANGAR_ROUGE | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 16 };
-		config[ HANGAR_ROUGE | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 17 };
-		config[ HANGAR_VERT | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 18 };
-		config[ HANGAR_VERT | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 19 };
-		config[ HANGAR_VERT | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 20 };
-		config[ HANGAR_VIOLET | LVL_1 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 21 };
-		config[ HANGAR_VIOLET | LVL_2 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 22 };
-		config[ HANGAR_VIOLET | LVL_3 ] = 	{ width: 3, height: 2, vertical_dir: -1, img_i: 23 };
-		config[ LABO | LVL_1 ] = 		{ width: 2, height: 2, vertical_dir: 0, img_i: 24 };
-		config[ LABO | LVL_2 ] = 		{ width: 2, height: 2, vertical_dir: 0, img_i: 25 };
-		config[ LABO | LVL_3 ] = 		{ width: 3, height: 2, vertical_dir: 1, img_i: 26 };
-		config[ NICHE | LVL_1 ] = 		{ width: 1, height: 1, vertical_dir: 0, img_i: 27 };
-		config[ NICHE | LVL_2 ] = 		{ width: 1, height: 1, vertical_dir: 0, img_i: 28 };
-		config[ NICHE | LVL_3 ] = 		{ width: 1, height: 1, vertical_dir: 0, img_i: 29 };
-		config[ PAS_DE_TIR | LVL_1 ] = 	{ width: 5, height: 3, vertical_dir: 0, img_i: 30 };
-		config[ PAS_DE_TIR | LVL_2 ] = 	{ width: 5, height: 3, vertical_dir: 0, img_i: 31 };
-		config[ PAS_DE_TIR | LVL_3 ] = 	{ width: 5, height: 3, vertical_dir: 0, img_i: 32 };
-		*/
 }
