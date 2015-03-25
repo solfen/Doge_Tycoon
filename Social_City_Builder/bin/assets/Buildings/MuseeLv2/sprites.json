@@ -1,6 +1,6 @@
 {
 "frames": {
-	"MuseeLv2.png": {
+	"MuseeLv2_0.png": {
 		"frame": {"x":0, "y":0, "w":259, "h":350},
 		"spriteSourceSize": {"x":0,"y":75,"w":425,"h":425},
 		"sourceSize": {"w":425,"h":425}

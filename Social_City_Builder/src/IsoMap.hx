@@ -107,8 +107,6 @@ class IsoMap extends DisplayObjectContainer
 			return;
 		}
 
-		GameInfo.building_2_build = Building.CASINO; // tmp here
-
 		if (_is_clicking && !InputInfos.is_mouse_down)
 		{
 			_is_clicking = false;

@@ -158,7 +158,7 @@ class GameInfo
  		"spacechips": [
  			{
 
- 				buildingID: Building.HANGAR_BLEU,
+ 				buildingID: Building.HANGAR_JAUNE,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png',
  				title: 'Atelier Destination SprungField',
  				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
@@ -170,7 +170,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_CYAN,
+ 				buildingID: Building.HANGAR_VERT,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png',
  				title: 'Atelier Destination Modor',
  				description: "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
@@ -182,7 +182,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_JAUNE,
+ 				buildingID: Building.HANGAR_CYAN,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png',
  				title: 'Atelier Destination Namok',
  				description: "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
@@ -194,7 +194,7 @@ class GameInfo
  				]
  			}, 			
  			{
- 				buildingID: Building.HANGAR_ROUGE,
+ 				buildingID: Building.HANGAR_BLEU,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png',
  				title: 'Atelier Destination Terre',
  				description: "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
@@ -206,7 +206,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_VERT,
+ 				buildingID: Building.HANGAR_VIOLET,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png',
  				title: 'Atelier Destination Wundërland',
  				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
@@ -218,7 +218,7 @@ class GameInfo
  				]
  			},
  			{
- 				buildingID: Building.HANGAR_VIOLET,
+ 				buildingID: Building.HANGAR_ROUGE,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png',
  				title: 'Atelier Destination StarWat',
  				description: "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",

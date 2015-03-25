@@ -1,21 +1,21 @@
 {
 "frames": {
-	"entrepotLv1_0.png": {
+	"EntrepotLv1_0.png": {
 		"frame": {"x":0, "y":201, "w":259, "h":200},
 		"spriteSourceSize": {"x":0,"y":70,"w":259,"h":270},
 		"sourceSize": {"w":259,"h":270}
 	},
-	"entrepotLv1_1.png": {
+	"EntrepotLv1_1.png": {
 		"frame": {"x":260, "y":0, "w":259, "h":200},
 		"spriteSourceSize": {"x":0,"y":70,"w":259,"h":270},
 		"sourceSize": {"w":259,"h":270}
 	},
-	"entrepotLv1_2.png": {
+	"EntrepotLv1_2.png": {
 		"frame": {"x":260, "y":201, "w":259, "h":200},
 		"spriteSourceSize": {"x":0,"y":70,"w":259,"h":270},
 		"sourceSize": {"w":259,"h":270}
 	},
-	"entrepotLv1_3.png": {
+	"EntrepotLv1_3.png": {
 		"frame": {"x":0, "y":0, "w":259, "h":200},
 		"spriteSourceSize": {"x":0,"y":70,"w":259,"h":270},
 		"sourceSize": {"w":259,"h":270}

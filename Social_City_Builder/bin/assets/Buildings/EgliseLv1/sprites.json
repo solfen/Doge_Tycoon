@@ -1,67 +1,67 @@
 {
 "frames": {
 	"EgliseLv1_0.png": {
-		"frame": {"x":388, "y":372, "w":387, "h":371},
+		"frame": {"x":776, "y":372, "w":387, "h":371},
 		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
 		"sourceSize": {"w":387,"h":371}
 	},
-	"EgliseLv1_12.png": {
+	"EgliseLv1_1.png": {
 		"frame": {"x":776, "y":0, "w":387, "h":371},
 		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
 		"sourceSize": {"w":387,"h":371}
 	},
-	"EgliseLv1_16.png": {
-		"frame": {"x":388, "y":1116, "w":387, "h":371},
-		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
-		"sourceSize": {"w":387,"h":371}
-	},
-	"EgliseLv1_20.png": {
-		"frame": {"x":388, "y":744, "w":387, "h":371},
-		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
-		"sourceSize": {"w":387,"h":371}
-	},
-	"EgliseLv1_24.png": {
-		"frame": {"x":776, "y":1116, "w":387, "h":371},
-		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
-		"sourceSize": {"w":387,"h":371}
-	},
-	"EgliseLv1_28.png": {
-		"frame": {"x":388, "y":0, "w":387, "h":371},
-		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
-		"sourceSize": {"w":387,"h":371}
-	},
-	"EgliseLv1_32.png": {
-		"frame": {"x":0, "y":1116, "w":387, "h":371},
-		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
-		"sourceSize": {"w":387,"h":371}
-	},
-	"EgliseLv1_36.png": {
-		"frame": {"x":0, "y":744, "w":387, "h":371},
-		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
-		"sourceSize": {"w":387,"h":371}
-	},
-	"EgliseLv1_4.png": {
-		"frame": {"x":776, "y":744, "w":387, "h":371},
-		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
-		"sourceSize": {"w":387,"h":371}
-	},
-	"EgliseLv1_40.png": {
-		"frame": {"x":0, "y":372, "w":387, "h":371},
-		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
-		"sourceSize": {"w":387,"h":371}
-	},
-	"EgliseLv1_44.png": {
-		"frame": {"x":0, "y":0, "w":387, "h":371},
-		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
-		"sourceSize": {"w":387,"h":371}
-	},
-	"EgliseLv1_47.png": {
+	"EgliseLv1_10.png": {
 		"frame": {"x":388, "y":372, "w":387, "h":371},
 		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
 		"sourceSize": {"w":387,"h":371}
 	},
-	"EgliseLv1_8.png": {
+	"EgliseLv1_11.png": {
+		"frame": {"x":776, "y":744, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	},
+	"EgliseLv1_12.png": {
 		"frame": {"x":776, "y":372, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	},
+	"EgliseLv1_2.png": {
+		"frame": {"x":388, "y":1116, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	},
+	"EgliseLv1_3.png": {
+		"frame": {"x":388, "y":744, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	},
+	"EgliseLv1_4.png": {
+		"frame": {"x":776, "y":1116, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	},
+	"EgliseLv1_5.png": {
+		"frame": {"x":388, "y":0, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	},
+	"EgliseLv1_6.png": {
+		"frame": {"x":0, "y":1116, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	},
+	"EgliseLv1_7.png": {
+		"frame": {"x":0, "y":744, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	},
+	"EgliseLv1_8.png": {
+		"frame": {"x":0, "y":372, "w":387, "h":371},
+		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
+		"sourceSize": {"w":387,"h":371}
+	},
+	"EgliseLv1_9.png": {
+		"frame": {"x":0, "y":0, "w":387, "h":371},
 		"spriteSourceSize": {"x":0,"y":0,"w":387,"h":371},
 		"sourceSize": {"w":387,"h":371}
 	}
