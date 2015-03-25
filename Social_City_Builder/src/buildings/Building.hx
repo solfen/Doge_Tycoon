@@ -86,6 +86,19 @@ class Building extends MovieClip
 	{
 		return type|lvl;
 	}
+
+	public function get_bloking_tiles (): Array<Bool>
+	{
+		var bloking_tiles: Array<Bool> = [];
+		var i: Int = width_in_tiles_nb * height_in_tiles_nb; // use a static here
+		
+		while (i-->0)
+		{
+			bloking_tiles[i] = false;
+		}
+
+		return bloking_tiles;
+	}
 	
 	private function _on_click (p_data: InteractionData): Void
 	{
