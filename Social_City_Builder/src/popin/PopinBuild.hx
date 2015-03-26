@@ -17,7 +17,7 @@ class PopinBuild extends MyPopin
 
 	private function new(?startX:Float,?startY:Float) 
 	{
-
+		GameInfo.can_map_update = false;
 		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
 		headerTextures = [
 			'niches'=>Texture.fromImage('assets/UI/PopInBuilt/PopInHeaderNiches.png'),
@@ -79,6 +79,7 @@ class PopinBuild extends MyPopin
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
 	override private function childClick(pEvent:Dynamic){
 		if(pEvent.target._name == "closeButton"){
+			GameInfo.can_map_update = true;
 			PopinManager.getInstance().closePopin("PopinBuild");
 		}
 		else if(pEvent.target._name == "nicheTab" && currentTab != "nicheTab"){

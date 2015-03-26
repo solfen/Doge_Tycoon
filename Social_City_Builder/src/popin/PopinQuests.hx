@@ -17,16 +17,10 @@ class PopinQuests extends MyPopin
 
 	private function new(?startX:Float,?startY:Float) 
 	{
-
+		GameInfo.can_map_update = false;
 		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
-		/*headerTextures = [ // no header for now but mybe in the future
-			'niches'=>Texture.fromImage('assets/UI/PopInBuilt/PopInHeaderNiches.png'),
-			'spaceships'=>Texture.fromImage('assets/UI/PopInBuilt/PopInHeaderFusees.png'),
-			'utilitaire'=>Texture.fromImage('assets/UI/PopInBuilt/PopInHeaderUtilitaires.png')
-		];*/
 		articleHeight /= background.height; // background is defiened in MyPopin
 
-		//addHeader(0.65,0.05,headerTextures['niches']);
 		addIcon(-0.15,-0.15,'assets/UI/PopInQuest/PopInTitleQuest.png',"popInTitle",this,false);
 		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollBackground.png',"contentBackground",this,false);
 
@@ -75,6 +69,7 @@ class PopinQuests extends MyPopin
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
 	override private function childClick(pEvent:Dynamic){
 		if(pEvent.target._name == "closeButton"){
+			GameInfo.can_map_update = true;
 			PopinManager.getInstance().closePopin("PopinQuests");
 		}
 		else if(pEvent.target._name == "currentQuestsTab" && currentTab != "currentQuestsTab"){

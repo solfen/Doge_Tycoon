@@ -11,6 +11,7 @@ class InputInfos
 	public static var singleton: InputInfos;
 	public static var mouse_x: Int;
 	public static var mouse_y: Int;
+	public static var mouse_deltaY: Int = 0;
 	public static var last_mouse_down_x: Int;
 	public static var last_mouse_down_y: Int;
 	public static var last_mouse_up_x: Int;
@@ -18,7 +19,7 @@ class InputInfos
 	public static var is_mouse_down: Bool;
 
 
-	public function new (listen_click: Bool, listen_mousemove: Bool): Void
+	public function new (listen_click: Bool, listen_mousemove: Bool, ?listen_wheel: Bool=true): Void
 	{
 		singleton = this;
 		mouse_x = 0;
@@ -37,6 +38,10 @@ class InputInfos
 		if (listen_mousemove)
 		{
 			Browser.window.onmousemove = _on_mousemove;
+		}
+		if(listen_wheel)
+		{
+			Browser.window.addEventListener('wheel', _on_wheel);
 		}
 	}
 
@@ -58,6 +63,10 @@ class InputInfos
 	{
 		mouse_x = pData.clientX;
 		mouse_y = pData.clientY;
+	}
+	private function _on_wheel (pData: Dynamic):Void
+	{
+		mouse_deltaY = pData.deltaY;
 	}
 
 }

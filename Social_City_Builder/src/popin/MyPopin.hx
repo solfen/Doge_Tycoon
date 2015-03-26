@@ -3,11 +3,13 @@ package popin;
 import popin.IconPopin;
 import pixi.display.DisplayObjectContainer;
 import pixi.InteractionData;
+import utils.events.Event;
 import pixi.textures.Texture;
 import pixi.display.Sprite;
 import utils.system.DeviceCapabilities;
 import pixi.text.Text;
 import pixi.primitives.Graphics;
+import utils.game.InputInfos;
 
 //Base PopIn class, all popIn will inherit from this
 // it's a DisplayObjectContainer, has a base x & y, clickEvent and a destroy method that destroy the popin (and its icons)
@@ -26,8 +28,10 @@ class MyPopin extends DisplayObjectContainer
 	private var scrollDragSy:Float;
 	private var header:Sprite;
 	private var headerTextures:Map<String,Texture>;
+	private var mouse_deltaY:Int;
+	private var startScrollY:Float;
 	
-	public function new(startX:Float=0,startY:Float=0, texturePath:String, ?isModal:Bool=true) 
+	public function new(startX:Float=0,startY:Float=0, texturePath:String, ?isModal:Bool=false) 
 	{
 		super();
 		// *width so that it's in % of screen
@@ -109,6 +113,26 @@ class MyPopin extends DisplayObjectContainer
 		}
 		icons["scrollingIndicator"] = scrollIndicator;
 		addChild(scrollIndicator);
+		mouse_deltaY = InputInfos.mouse_deltaY;
+		startScrollY = containers["verticalScroller"].y;
+		Main.getInstance().addEventListener(Event.GAME_LOOP, scroll);
+	}
+	private function scroll(){
+		if(InputInfos.mouse_deltaY == 0 
+		|| InputInfos.mouse_x - x+background.width/2  > background.x + background.width  
+		|| InputInfos.mouse_x - x+background.width/2  < background.x
+		|| InputInfos.mouse_y - y+background.height/2 > background.y + background.height 
+		|| InputInfos.mouse_y - y+background.height/2 < background.y )
+			return;
+
+		var contentDeltaY:Float = -(mouse_deltaY + InputInfos.mouse_deltaY)/3 * icons["articleBase"].height * 0.5;
+		if(contentDeltaY < containers["verticalScroller"].height-icons["contentBackground"].height - icons["articleBase"].height*3
+		&& contentDeltaY > -(containers["verticalScroller"].height - icons["articleBase"].height*3 + 100)) {
+			mouse_deltaY += InputInfos.mouse_deltaY;
+			InputInfos.mouse_deltaY = 0; // !! BAD FIND ANOTHER WAY
+			//TO DO MOVE SCROLL BAR
+			containers["verticalScroller"].y = Std.int(startScrollY + contentDeltaY);
+		}
 	}
 	private function removeVerticalScrollBar(){
 		removeChild(icons["scrollingIndicator"]);
@@ -134,5 +158,7 @@ class MyPopin extends DisplayObjectContainer
 	private function stopClickEventPropagation(pEvent:InteractionData){}
 	
 	// !! ask mathieu if when we destroy a popin it destroy its childs too !!
-	public function destroy (): Void {}
+	public function destroy (): Void {
+		Main.getInstance().removeEventListener(Event.GAME_LOOP, scroll);
+	}
 }

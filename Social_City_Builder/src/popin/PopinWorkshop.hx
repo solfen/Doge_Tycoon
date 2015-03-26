@@ -19,6 +19,7 @@ class PopinWorkshop extends MyPopin
 
 	private function new(?startX:Float,?startY:Float,?ref:String= 'hangarNamok') 
 	{
+		GameInfo.can_map_update = false;
 		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
 		buildingRef = ref;
 		headerTextures = [ 
@@ -56,6 +57,7 @@ class PopinWorkshop extends MyPopin
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
 	override private function childClick(pEvent:Dynamic){
 		if(pEvent.target._name == "closeButton"){
+			GameInfo.can_map_update = true;
 			PopinManager.getInstance().closePopin("PopinWorkshop");
 		}
 	}

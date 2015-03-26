@@ -18,7 +18,7 @@ class PopinMarket extends MyPopin
 
 	private function new(?startX:Float,?startY:Float) 
 	{
-
+		GameInfo.can_map_update = false;
 		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
 		headerTextures = [
 			'buy'=>Texture.fromImage('assets/UI/PopInMarket/PopInHeaderBuy.png'),
@@ -96,6 +96,7 @@ class PopinMarket extends MyPopin
 	override private function childClick(pEvent:Dynamic){
 		var name:String = pEvent.target._name;
 		if(name == "closeButton"){
+			GameInfo.can_map_update = true;
 			PopinManager.getInstance().closePopin("PopinMarket");
 		}
 		else if(name == "buyTab" && currentTab != "buyTab"){
