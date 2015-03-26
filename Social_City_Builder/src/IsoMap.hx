@@ -50,7 +50,7 @@ class IsoMap extends DisplayObjectContainer
 
 		singleton = this;
 
-		_screen_margin = 0.05;
+		_screen_margin = 0.03;
 		_screen_move_speed = 0.5;
 		_screen_move_max_to_build = 64;
 		_is_clicking = false;
@@ -102,7 +102,7 @@ class IsoMap extends DisplayObjectContainer
 
 	private function _update (): Void
 	{
-		//GameInfo.building_2_build = Building.HANGAR_BLEU;
+		//GameInfo.building_2_build = Building.CASINO;//CASINO;//PAS_DE_TIR;//LABO;//HANGAR_BLEU;
 
 		if (!GameInfo.can_map_update)
 		{
@@ -148,7 +148,7 @@ class IsoMap extends DisplayObjectContainer
 
 		if (GameInfo.building_2_build > 0) // building preview
 		{
-			var build_data = _get_building_coord(InputInfos.mouse_x, InputInfos.mouse_y);
+			var build_data: Dynamic = _get_building_coord(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y);
 
 			if (build_data != null)
 			{
@@ -158,9 +158,16 @@ class IsoMap extends DisplayObjectContainer
 					addChild(_previewing_building);
 				}
 
-				build_data.x = Std.int(build_data.x-IsoMap.cell_width*Std.int(_previewing_building.width_in_tiles_nb*0.5));
-				build_data.y = Std.int(build_data.y+IsoMap.cell_height*Std.int(_previewing_building.height_in_tiles_nb*0.5+1));
-				_previewing_building.position.set(build_data.x, build_data.y);
+				if (!build_data.can_build && _previewing_building.tint == 0xFFFFFF)
+				{
+					_previewing_building.tint = PreviewBuilding.CANT_BUILD_COLOR;
+				}
+				else if (build_data.can_build && _previewing_building.tint != 0xFFFFFF)
+				{
+					_previewing_building.tint = 0xFFFFFF;
+				}
+
+				_previewing_building.set_position(build_data.x, build_data.y);
 			}
 		}
 	}
@@ -182,7 +189,7 @@ class IsoMap extends DisplayObjectContainer
 		}
 	}
 
-	private function _get_building_coord (pX: Int, pY: Int): Dynamic
+	private function _get_building_coord (pBuilding_type: Int, pX: Int, pY: Int): Dynamic
 	{
 		var offset_x: Int = Std.int(this.x)+_offset_x;
 		var offset_y: Int = Std.int(this.y)+_offset_y;
@@ -197,15 +204,32 @@ class IsoMap extends DisplayObjectContainer
 		var row: Float = IsoTools.cell_row(index, cols_nb);
 		var new_x: Int = IsoTools.cell_x(col, cell_width, _offset_x);
 		var new_y: Int = IsoTools.cell_y(row, cell_height, _offset_y);
+		var can_build: Bool = true;
 
-		// todo: + verifier l'obstacles_layer
+		// vérification de l'obstacles_layer
+
+		var conf = GameInfo.BUILDINGS_CONFIG[pBuilding_type|Building.LVL_1];
+		var s: Int = conf.width_in_tiles_nb<conf.height_in_tiles_nb ? conf.height : conf.width;
+		var i: Int = s*s;
+
+		while (i-->0)
+		{
+			var c: Int = Std.int(index - Std.int(i/s)*cols_nb - i%s);
+
+			if (obstacles_layer[c])
+			{
+				can_build = false;
+			}
+			//trace("check:", i, c, obstacles_layer[c]);
+		}
 
 		return {
 			index: index,
 			col: col,
 			row: row,
 			x: new_x,
-			y: new_y
+			y: new_y,
+			can_build: can_build
 		};
 	}
 
@@ -223,20 +247,30 @@ class IsoMap extends DisplayObjectContainer
 
 	public function build_building (pBuilding_type: Int, pX: Int, pY: Int): Building
 	{
-		var build_data = _get_building_coord(pX, pY);
+		var build_data = _get_building_coord(pBuilding_type, pX, pY);
 
-		if (build_data == null)
+		if (build_data == null || !build_data.can_build)
 		{
 			return null;
 		}
 
-		obstacles_layer[build_data.index] = true;
-		buildings_layer[build_data.index] = pBuilding_type;
 
 		// todo: set the obstacles layer
 
 		var building: Building = new Building(pBuilding_type, build_data.col, build_data.row, build_data.x, build_data.y);
 		
+		var s: Int = building.width_in_tiles_nb<building.height_in_tiles_nb ? building.height_in_tiles_nb : building.width_in_tiles_nb;
+		var i: Int = s*s;
+		while (i-->0)
+		{
+			var c: Int = Std.int(build_data.index - Std.int(i/s)*cols_nb - i%s);
+
+			obstacles_layer[c] = true;
+			buildings_layer[c] = pBuilding_type;
+
+			//trace("set:", i, c, obstacles_layer[c]);
+		}
+
 		//trace("build_data.index: "+build_data.index);
 		//trace("col: "+col);
 		//trace("row: "+row);

@@ -73,9 +73,7 @@ class Building extends MovieClip
 
 		super(_get_texture());
 		anchor.set(0, 1);
-		pX = Std.int(pX-IsoMap.cell_width*Std.int(width_in_tiles_nb*0.5));
-		pY = Std.int(pY+IsoMap.cell_height*Std.int(height_in_tiles_nb*0.5+1));
-		position.set(pX, pY);
+		set_position(pX, pY);
 		interactive = true;
 		buttonMode = true;
 		loop = true;
@@ -89,7 +87,7 @@ class Building extends MovieClip
 		return type|lvl;
 	}
 
-	public function get_bloking_tiles (): Array<Bool>
+	/*public function get_bloking_tiles (): Array<Bool>
 	{
 		var bloking_tiles: Array<Bool> = [];
 		var i: Int = width_in_tiles_nb * height_in_tiles_nb; // use a static here ?
@@ -101,6 +99,15 @@ class Building extends MovieClip
 		}
 
 		return bloking_tiles;
+	}*/
+
+	public function set_position (x: Int, y: Int): Void
+	{
+		x = Std.int(x-IsoMap.cell_width*(width_in_tiles_nb-1)*0.5);
+		//y = Std.int(y+IsoMap.cell_height*(height_in_tiles_nb-(height_in_tiles_nb>>1)));
+		y = y+IsoMap.cell_height;
+		
+		position.set(x, y);
 	}
 	
 	private function _on_click (p_data: InteractionData): Void

@@ -9,6 +9,7 @@ import buildings.Building;
 class PreviewBuilding extends Building
 {
 
+	public static var CANT_BUILD_COLOR: Int = 0xFF4444;
 
 	public function new (p_type: Int, pX: Int, pY: Int): Void
 	{
@@ -17,6 +18,6 @@ class PreviewBuilding extends Building
 		click = null;
 		interactive = false;
 		buttonMode = false;
-		alpha = 0.5;
+		alpha = 0.6;
 	}
 }
