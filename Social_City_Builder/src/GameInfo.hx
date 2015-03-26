@@ -257,7 +257,7 @@ class GameInfo
  				]
  			},
  			{
-				buildingID: Building.EGLISE,
+				buildingID: Building.ENTREPOT,
  				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png',
  				title: 'Entrepot',
  				description: "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.",
@@ -268,6 +268,30 @@ class GameInfo
  					{"name":"poudre1","quantity":25},
  				]
  			},
+ 			{
+				buildingID: Building.LABO,
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewLabo.png',
+ 				title: 'Labo',
+ 				description: "Les labos servent à faire avancer la recherche.\nNos chiens ont une idée de ce qu'il font ne vous en faites pas.",
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre1","quantity":25},
+ 				]
+ 			},		
+ 			{
+				buildingID: Building.MUSEE,
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewMusee.png',
+ 				title: 'Musée',
+ 				description: "Le Mussee est l'endroit ou vous présentez vos artefacts aliens au monde.\nEt en plus ça rapporte un max",
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"name":"fric","quantity":1000},
+ 					{"name":"poudre0","quantity":10},
+ 					{"name":"poudre1","quantity":25},
+ 				]
+ 			}, 
  		],
  	};
  	public static var buildings:Map<String,Dynamic> = [ //temp, à changer avec le merge lucien

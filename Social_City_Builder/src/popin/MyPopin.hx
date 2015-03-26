@@ -126,13 +126,13 @@ class MyPopin extends DisplayObjectContainer
 			return;
 
 		var contentDeltaY:Float = -(mouse_deltaY + InputInfos.mouse_deltaY)/3 * icons["articleBase"].height * 0.5;
-		if(contentDeltaY < containers["verticalScroller"].height-icons["contentBackground"].height - icons["articleBase"].height*3
-		&& contentDeltaY > -(containers["verticalScroller"].height - icons["articleBase"].height*3 + 100)) {
+		if(contentDeltaY < containers["verticalScroller"].height-icons["contentBackground"].height - icons["articleBase"].height*2
+		&& contentDeltaY > -(containers["verticalScroller"].height - icons["articleBase"].height*2 + 100)) {
 			mouse_deltaY += InputInfos.mouse_deltaY;
-			InputInfos.mouse_deltaY = 0; // !! BAD FIND ANOTHER WAY
-			//TO DO MOVE SCROLL BAR
 			containers["verticalScroller"].y = Std.int(startScrollY + contentDeltaY);
+			//TO DO MOVE SCROLL BAR
 		}
+		InputInfos.mouse_deltaY = 0; // !! BAD FIND ANOTHER WAY
 	}
 	private function removeVerticalScrollBar(){
 		removeChild(icons["scrollingIndicator"]);

@@ -78,6 +78,12 @@ buildings.Building.prototype = $extend(PIXI.MovieClip.prototype,{
 	,get_id: function() {
 		return this.type | this.lvl;
 	}
+	,get_bloking_tiles: function() {
+		var bloking_tiles = [];
+		var i = this.width_in_tiles_nb * this.height_in_tiles_nb;
+		while(i-- > 0) bloking_tiles[i] = false;
+		return bloking_tiles;
+	}
 	,_on_click: function(p_data) {
 		console.log("click on building " + this.get_id());
 	}
@@ -121,6 +127,7 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 	IsoMap.singleton = this;
 	this._screen_margin = 0.05;
 	this._screen_move_speed = 0.5;
+	this._screen_move_max_to_build = 64;
 	this._is_clicking = false;
 	IsoMap.cols_nb = pCols_nb;
 	IsoMap.rows_nb = pRows_nb;
@@ -190,7 +197,7 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 		}
 	}
 	,_on_click: function() {
-		if(GameInfo.building_2_build > 0) {
+		if(GameInfo.building_2_build > 0 && (this._old_x / this._screen_move_max_to_build | 0) == (this.x / this._screen_move_max_to_build | 0) && (this._old_y / this._screen_move_max_to_build | 0) == (this.y / this._screen_move_max_to_build | 0)) {
 			var new_building = this.build_building(GameInfo.building_2_build,utils.game.InputInfos.mouse_x,utils.game.InputInfos.mouse_y);
 			if(new_building != null) {
 				GameInfo.building_2_build = 0;
@@ -1091,11 +1098,11 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 	,scroll: function() {
 		if(utils.game.InputInfos.mouse_deltaY == 0 || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 > this.background.x + this.background.width || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 < this.background.x || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 > this.background.y + this.background.height || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 < this.background.y) return;
 		var contentDeltaY = -(this.mouse_deltaY + utils.game.InputInfos.mouse_deltaY) / 3 * this.icons.get("articleBase").height * 0.5;
-		if(contentDeltaY < this.containers.get("verticalScroller").height - this.icons.get("contentBackground").height - this.icons.get("articleBase").height * 3 && contentDeltaY > -(this.containers.get("verticalScroller").height - this.icons.get("articleBase").height * 3 + 100)) {
+		if(contentDeltaY < this.containers.get("verticalScroller").height - this.icons.get("contentBackground").height - this.icons.get("articleBase").height * 2 && contentDeltaY > -(this.containers.get("verticalScroller").height - this.icons.get("articleBase").height * 2 + 100)) {
 			this.mouse_deltaY += utils.game.InputInfos.mouse_deltaY;
-			utils.game.InputInfos.mouse_deltaY = 0;
 			this.containers.get("verticalScroller").y = this.startScrollY + contentDeltaY | 0;
 		}
+		utils.game.InputInfos.mouse_deltaY = 0;
 	}
 	,removeVerticalScrollBar: function() {
 		this.removeChild(this.icons.get("scrollingIndicator"));
@@ -1260,6 +1267,7 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 				}
 				GameInfo.building_2_build = article.buildingID;
 				hud.HudManager.getInstance().updateChildText();
+				GameInfo.can_map_update = true;
 				popin.PopinManager.getInstance().closePopin("PopinBuild");
 			}
 		} else if(pEvent.target._name.indexOf("buildHard") != -1) {
@@ -1276,6 +1284,7 @@ popin.PopinBuild.prototype = $extend(popin.MyPopin.prototype,{
 				GameInfo.ressources.get("hardMoney").userPossesion -= article1.hardPrice;
 				hud.HudManager.getInstance().updateChildText();
 				GameInfo.building_2_build = article1.buildingID;
+				GameInfo.can_map_update = true;
 				popin.PopinManager.getInstance().closePopin("PopinBuild");
 			}
 		}
@@ -1845,7 +1854,7 @@ GameInfo.ressources = (function($this) {
 	return $r;
 }(this));
 GameInfo.questsArticles = { current : [{ previewImg : "IconDogNiche", title : "Première niche", description : "Pas de niches, pas d'employés.Pas d'employés, pas\nde fusées.Pas de fusées... pas de fusées.\nOuvrez-donc le menu de construction.\nPuis achetez et construisez une niche !", rewards : [{ name : "fric", quantity : "100"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogWorkshop", title : "Premier atelier", description : "Les ateliers servent à construire les fussées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les batiments peuvent être\nachetés depuis le menu de construction", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogWorkshop", title : "Première fusée", description : "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et comencez la\n construction de la fusée. N'oubliez pas de fouett..\n*hum* motiver vos employés en cliquant sur\n l'icone dans le atelier", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogAstro", title : "La conquète de l'espace !", description : "Votre première fusée est prète à partir !\nVous n'avez plus qu'a appuyer sur le gros\nboutton vert pour la lancer. Ca ne devrait pas être\ntrop compliqué non ?", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogCasino", title : "Black jack and...", description : "Vos employés veulent se détendre, vous voulez\n vous remplir les poches.\nUn casino semble le parfait compromis", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]},{ previewImg : "IconDogMusee", title : "La culture ça rapporte", description : "Les artefacts que vous trouvez sur les planètes\nsont incroyablement rares Et comme ce qui est\nrare est cher, les billets ne sont pas donnés. Entre la\nboutique de souvenirs et les entrées, vous allez\nencaisser sec !", rewards : [{ name : "fric", quantity : "1000"},{ name : "poudre0", quantity : "10"}]}], finished : { }};
-GameInfo.buildMenuArticles = { niches : [{ buildingID : buildings.Building.NICHE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png", title : "Niche en Bois", description : "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}], spacechips : [{ buildingID : buildings.Building.HANGAR_JAUNE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png", title : "Atelier Destination SprungField", description : "Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre2", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.HANGAR_VERT, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png", title : "Atelier Destination Modor", description : "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre5", quantity : 250}]},{ buildingID : buildings.Building.HANGAR_CYAN, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png", title : "Atelier Destination Namok", description : "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre3", quantity : 10},{ name : "poudre4", quantity : 25}]},{ buildingID : buildings.Building.HANGAR_BLEU, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png", title : "Atelier Destination Terre", description : "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.HANGAR_VIOLET, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png", title : "Atelier Destination Wundërland", description : "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.HANGAR_ROUGE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png", title : "Atelier Destination StarWat", description : "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}], utilitaires : [{ buildingID : buildings.Building.CASINO, previewImg : "assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png", title : "Casino", description : "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.EGLISE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png", title : "Église", description : "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.EGLISE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png", title : "Entrepot", description : "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}]};
+GameInfo.buildMenuArticles = { niches : [{ buildingID : buildings.Building.NICHE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png", title : "Niche en Bois", description : "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}], spacechips : [{ buildingID : buildings.Building.HANGAR_JAUNE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png", title : "Atelier Destination SprungField", description : "Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre2", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.HANGAR_VERT, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png", title : "Atelier Destination Modor", description : "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre5", quantity : 250}]},{ buildingID : buildings.Building.HANGAR_CYAN, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png", title : "Atelier Destination Namok", description : "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre3", quantity : 10},{ name : "poudre4", quantity : 25}]},{ buildingID : buildings.Building.HANGAR_BLEU, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png", title : "Atelier Destination Terre", description : "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.HANGAR_VIOLET, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png", title : "Atelier Destination Wundërland", description : "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.HANGAR_ROUGE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png", title : "Atelier Destination StarWat", description : "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}], utilitaires : [{ buildingID : buildings.Building.CASINO, previewImg : "assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png", title : "Casino", description : "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.EGLISE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png", title : "Église", description : "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.ENTREPOT, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png", title : "Entrepot", description : "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.LABO, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewLabo.png", title : "Labo", description : "Les labos servent à faire avancer la recherche.\nNos chiens ont une idée de ce qu'il font ne vous en faites pas.", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]},{ buildingID : buildings.Building.MUSEE, previewImg : "assets/UI/Icons/Buildings/PopInBuiltArticlePreviewMusee.png", title : "Musée", description : "Le Mussee est l'endroit ou vous présentez vos artefacts aliens au monde.\nEt en plus ça rapporte un max", hardPrice : 3, ressources : [{ name : "fric", quantity : 1000},{ name : "poudre0", quantity : 10},{ name : "poudre1", quantity : 25}]}]};
 GameInfo.buildings = (function($this) {
 	var $r;
 	var _g = new haxe.ds.StringMap();
@@ -1868,36 +1877,42 @@ GameInfo.BUILDINGS_CONFIG = (function($this) {
 	_g.set(buildings.Building.CASINO | buildings.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 25, img : "CasinoLv1"});
 	_g.set(buildings.Building.CASINO | buildings.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 60, frames_nb : 18, img : "CasinoLv2"});
 	_g.set(buildings.Building.CASINO | buildings.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 12, img : "CasinoLv3"});
-	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "EgliseLv1"});
+	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 13, img : "EgliseLv1"});
 	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 0, frames_nb : 16, img : "EgliseLv2"});
 	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 16, img : "EgliseLv3"});
-	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarBleuLv1"});
-	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarBleuLv2"});
-	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarBleuLv3"});
-	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarCyanLv1"});
-	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarCyanLv2"});
-	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarCyanLv3"});
-	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarJauneLv1"});
-	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarJauneLv2"});
-	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarJauneLv3"});
-	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarRougeLv1"});
-	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarRougeLv2"});
-	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarRougeLv3"});
-	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarVertLv1"});
-	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarVertLv2"});
-	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarVertLv3"});
-	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_1,{ width : 3, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarVioletLv1"});
-	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_2,{ width : 3, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarVioletLv2"});
-	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_3,{ width : 3, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarVioletLv3"});
+	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarBleuLv1"});
+	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarBleuLv2"});
+	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarBleuLv3"});
+	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarCyanLv1"});
+	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarCyanLv2"});
+	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarCyanLv3"});
+	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarJauneLv1"});
+	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarJauneLv2"});
+	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarJauneLv3"});
+	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarRougeLv1"});
+	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarRougeLv2"});
+	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarRougeLv3"});
+	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarVertLv1"});
+	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarVertLv2"});
+	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarVertLv3"});
+	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarVioletLv1"});
+	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarVioletLv2"});
+	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarVioletLv3"});
 	_g.set(buildings.Building.LABO | buildings.Building.LVL_1,{ width : 2, height : 2, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "LaboLv1"});
 	_g.set(buildings.Building.LABO | buildings.Building.LVL_2,{ width : 2, height : 2, vertical_dir : 0, building_time : 60, frames_nb : 1, img : "LaboLv2"});
-	_g.set(buildings.Building.LABO | buildings.Building.LVL_3,{ width : 3, height : 2, vertical_dir : 1, building_time : 90, frames_nb : 1, img : "LaboLv3"});
-	_g.set(buildings.Building.NICHE | buildings.Building.LVL_1,{ width : 1, height : 1, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "CasinoLv1"});
-	_g.set(buildings.Building.NICHE | buildings.Building.LVL_2,{ width : 1, height : 1, vertical_dir : 0, building_time : 60, frames_nb : 1, img : "CasinoLv2"});
-	_g.set(buildings.Building.NICHE | buildings.Building.LVL_3,{ width : 1, height : 1, vertical_dir : 0, building_time : 90, frames_nb : 1, img : "CasinoLv3"});
-	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_1,{ width : 5, height : 5, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "CasinoLv1"});
-	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_2,{ width : 5, height : 5, vertical_dir : 0, building_time : 60, frames_nb : 1, img : "CasinoLv2"});
-	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_3,{ width : 5, height : 5, vertical_dir : 0, building_time : 90, frames_nb : 1, img : "CasinoLv3"});
+	_g.set(buildings.Building.LABO | buildings.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 1, img : "LaboLv3"});
+	_g.set(buildings.Building.NICHE | buildings.Building.LVL_1,{ width : 1, height : 1, vertical_dir : 0, building_time : 30, frames_nb : 11, img : "NicheLv1"});
+	_g.set(buildings.Building.NICHE | buildings.Building.LVL_2,{ width : 1, height : 1, vertical_dir : 0, building_time : 60, frames_nb : 33, img : "NicheLv2"});
+	_g.set(buildings.Building.NICHE | buildings.Building.LVL_3,{ width : 1, height : 1, vertical_dir : 0, building_time : 90, frames_nb : 18, img : "NicheLv3"});
+	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_1,{ width : 5, height : 5, vertical_dir : 0, building_time : 30, frames_nb : 23, img : "PasdetirLv1"});
+	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_2,{ width : 5, height : 5, vertical_dir : 0, building_time : 60, frames_nb : 12, img : "PasdetirLv2"});
+	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_3,{ width : 5, height : 5, vertical_dir : 0, building_time : 90, frames_nb : 7, img : "PasdetirLv3"});
+	_g.set(buildings.Building.ENTREPOT | buildings.Building.LVL_1,{ width : 2, height : 2, vertical_dir : 0, building_time : 30, frames_nb : 4, img : "EntrepotLv1"});
+	_g.set(buildings.Building.ENTREPOT | buildings.Building.LVL_2,{ width : 2, height : 2, vertical_dir : 0, building_time : 60, frames_nb : 4, img : "EntrepotLv2"});
+	_g.set(buildings.Building.ENTREPOT | buildings.Building.LVL_3,{ width : 2, height : 2, vertical_dir : 0, building_time : 90, frames_nb : 4, img : "EntrepotLv3"});
+	_g.set(buildings.Building.MUSEE | buildings.Building.LVL_1,{ width : 2, height : 2, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "MuseeLv1"});
+	_g.set(buildings.Building.MUSEE | buildings.Building.LVL_2,{ width : 2, height : 2, vertical_dir : 0, building_time : 60, frames_nb : 1, img : "MuseeLv2"});
+	_g.set(buildings.Building.MUSEE | buildings.Building.LVL_3,{ width : 3, height : 2, vertical_dir : 1, building_time : 90, frames_nb : 1, img : "MuseeLv3"});
 	$r = _g;
 	return $r;
 }(this));
