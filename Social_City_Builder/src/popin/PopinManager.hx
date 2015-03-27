@@ -4,6 +4,8 @@ import popin.PopinBuild;
 import popin.PopinMarket;
 import popin.PopinQuests;
 import popin.PopinWorkshop;
+import popin.PopinInventory;
+import popin.PopinShop;
 import popin.MyPopin;
 import pixi.InteractionData;
 import pixi.display.DisplayObjectContainer;
@@ -24,22 +26,30 @@ class PopinManager extends DisplayObjectContainer
 	public function new()  {
 		super();
 	}
+	public function updateInventory(){
+		if(isPopinOpen("PopinInventory")){
+			childs["PopinInventory"].update();
+		}
+	}
 	public function getCurrentPopinName():String{
 		return currentPopinName;
+	}
+	public function isPopinOpen(pName:String):Bool{
+		return childs.exists(pName);
 	}
 	//instantiate any popIn just with its name so that anywhere in the code we can open a popin with a string
 	// by doing PopinManager.getInstance().openPopin("popinName")
 	public function openPopin(popinName:String, ?pX:Float, ?pY:Float){
 		childs[popinName] = Type.createInstance( Type.resolveClass("popin."+popinName), [pX,pY] );
 		addChild(childs[popinName]);
-		currentPopinName = popinName;
+		currentPopinName = popinName != "PopinInventory" ? popinName:currentPopinName; // beacuse inventory can be opened with other popins
 	}
 
 	public function closePopin(popinName:String){
 		childs[popinName].destroy();
 		removeChild(childs[popinName]);
 		childs.remove(popinName);
-		currentPopinName = null;
+		currentPopinName = popinName == "PopinInventory" ? currentPopinName:null;
 	}
 	public function closeCurentPopin():Void{
 		if(currentPopinName != null){

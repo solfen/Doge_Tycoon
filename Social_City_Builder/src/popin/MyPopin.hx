@@ -126,13 +126,13 @@ class MyPopin extends DisplayObjectContainer
 			return;
 
 		var contentDeltaY:Float = -(mouse_deltaY + InputInfos.mouse_deltaY)/3 * icons["articleBase"].height * 0.5;
-		if(contentDeltaY < containers["verticalScroller"].height-icons["contentBackground"].height - icons["articleBase"].height*3
-		&& contentDeltaY > -(containers["verticalScroller"].height - icons["articleBase"].height*3 + 100)) {
+		if(contentDeltaY <= 0
+		&& contentDeltaY > -(containers["verticalScroller"].height - icons["articleBase"].height*3+25)) {
 			mouse_deltaY += InputInfos.mouse_deltaY;
-			InputInfos.mouse_deltaY = 0; // !! BAD FIND ANOTHER WAY
-			//TO DO MOVE SCROLL BAR
 			containers["verticalScroller"].y = Std.int(startScrollY + contentDeltaY);
+			//TO DO MOVE SCROLL BAR
 		}
+		InputInfos.mouse_deltaY = 0; // !! BAD FIND ANOTHER WAY
 	}
 	private function removeVerticalScrollBar(){
 		removeChild(icons["scrollingIndicator"]);
@@ -153,6 +153,7 @@ class MyPopin extends DisplayObjectContainer
 	//the popin will inherit from this class and then can overide this function to configure the childs click action
 	private function childClick(pEvent:InteractionData){}
 	private function childUpOutside(pEvent:InteractionData){}
+	public function update(){}
 
 	// empty function so that we can capture the clickEvent on the modal and not on anythingBelow
 	private function stopClickEventPropagation(pEvent:InteractionData){}

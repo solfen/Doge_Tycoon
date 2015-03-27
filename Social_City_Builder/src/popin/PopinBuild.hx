@@ -136,7 +136,9 @@ class PopinBuild extends MyPopin
 				}
 				GameInfo.building_2_build = article.buildingID;
 				HudManager.getInstance().updateChildText();
+				GameInfo.can_map_update = true;
 				PopinManager.getInstance().closePopin("PopinBuild");
+				PopinManager.getInstance().updateInventory();
 			}
 		}
 		else if(pEvent.target._name.indexOf("buildHard") != -1){
@@ -154,7 +156,9 @@ class PopinBuild extends MyPopin
 				GameInfo.ressources['hardMoney'].userPossesion -= article.hardPrice;
 				HudManager.getInstance().updateChildText();
 				GameInfo.building_2_build = article.buildingID;
+				GameInfo.can_map_update = true;
 				PopinManager.getInstance().closePopin("PopinBuild");
+				PopinManager.getInstance().updateInventory();
 			}
 		}
 	}

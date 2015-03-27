@@ -123,7 +123,7 @@ class Building extends MovieClip
 	{
 		if (!is_builded) {
 			
-			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(_building_end_time-_building_start_time)*0x99);
+			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(_building_end_time-_building_start_time)*0x90);
 
 			tint = (color<<16)|(color<<8)|color;
 
