@@ -77,7 +77,6 @@ class Building extends MovieClip
 		buttonMode = true;
 		loop = true;
 		animationSpeed = 0.333;
-		play();
 		click = _on_click;
 		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
 	}
@@ -123,13 +122,14 @@ class Building extends MovieClip
 	{
 		if (!is_builded) {
 			
-			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(_building_end_time-_building_start_time)*0x90);
+			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(_building_end_time-_building_start_time)*0x99);
 
-			tint = (color<<16)|(color<<8)|color;
+			tint = (color<<16)|(color<<8)|color; // 0x000000 -> 0x999999
 
 			if (Timer.stamp() >= _building_end_time) {
 				is_builded = true;
-				tint = 0xffffff;
+				tint = 0xFFFFFF;
+				play();
 			}
 		}
 	}
