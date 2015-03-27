@@ -153,6 +153,7 @@ class MyPopin extends DisplayObjectContainer
 	//the popin will inherit from this class and then can overide this function to configure the childs click action
 	private function childClick(pEvent:InteractionData){}
 	private function childUpOutside(pEvent:InteractionData){}
+	public function update(){}
 
 	// empty function so that we can capture the clickEvent on the modal and not on anythingBelow
 	private function stopClickEventPropagation(pEvent:InteractionData){}

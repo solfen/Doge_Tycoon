@@ -25,6 +25,11 @@ class PopinManager extends DisplayObjectContainer
 	public function new()  {
 		super();
 	}
+	public function updateInventory(){
+		if(isPopinOpen("PopinInventory")){
+			childs["PopinInventory"].update();
+		}
+	}
 	public function getCurrentPopinName():String{
 		return currentPopinName;
 	}

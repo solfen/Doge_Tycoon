@@ -14,6 +14,7 @@ class PopinInventory extends MyPopin
 	private var articleHeight:Float = Texture.fromImage("assets/UI/PopInInventory/PopInInventoryArticleBg.png").height;
 	private var articleInterline:Float = 0.01;
 	private var hasVerticalScrollBar:Bool = false;
+	private var textColor:String = "black";
 
 	private function new(?startX:Float,?startY:Float) 
 	{
@@ -43,8 +44,8 @@ class PopinInventory extends MyPopin
 
 			addIcon(0.1,0.065+y,'assets/UI/PopInInventory/PopInInventoryArticleBg.png',"articleBase",containers["verticalScroller"],false);
 			addIcon(0.135,0.069+y,article.iconImg,"ArticlePreview",containers["verticalScroller"],false);
-			addText(0.40,0.12+y,'FuturaStdHeavy','15px',article.name,'nameText',containers["verticalScroller"]);
-			addText(0.47,0.069+y,'FuturaStdHeavy','15px',article.userPossesion,'titleText',containers["verticalScroller"]);
+			addText(0.40,0.069+y,'FuturaStdHeavy','15px',article.name,'nameText',containers["verticalScroller"],textColor);
+			addText(0.4,0.12+y,'FuturaStdHeavy','15px',article.userPossesion,'titleText',containers["verticalScroller"],textColor);
 
 			if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > icons["contentBackground"].height && !hasVerticalScrollBar){
 				addVerticalScrollBar();
@@ -65,5 +66,9 @@ class PopinInventory extends MyPopin
 		if(pEvent.target._name == "closeButton"){
 			icons["closeButton"].setTextureToNormal();
 		}		
+	}
+	override public function update(){
+		containers["verticalScroller"].children = [];
+		addRessourcestArticles(GameInfo.ressources);
 	}
 }

@@ -14,19 +14,19 @@ class PopinShop extends MyPopin
 	private var articleHeight:Float = Texture.fromImage("assets/UI/PopInMarket/PopInMarketBgArticle.png").height;
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
-	private var currentTab:String = "buyTab";
+	private var currentTab:String = "softTab";
 
 	private function new(?startX:Float,?startY:Float) 
 	{
 		GameInfo.can_map_update = false;
 		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
 		headerTextures = [
-			'buy'=>Texture.fromImage('assets/UI/PopInMarket/PopInHeaderBuy.png'),
-			'sell'=>Texture.fromImage('assets/UI/PopInMarket/PopInHeaderSell.png'),
+			'softTab'=>Texture.fromImage('assets/UI/PopInShop/PopInHeaderDogflooz.png'),
+			'hardTab'=>Texture.fromImage('assets/UI/PopInShop/PopInHeaderOsDOr.png'),
 		];
 		articleHeight /= background.height; // background is defiened in MyPopin
 
-		addHeader(0.65,0.05,headerTextures['buy']);
+		addHeader(0.65,0.05,headerTextures['softTab']);
 		addIcon(-0.15,-0.15,'assets/UI/PopInMarket/PopInTitleMarket.png',"popInTitle",this,false);
 		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollBackground.png',"contentBackground",this,false);
 
@@ -142,7 +142,6 @@ class PopinShop extends MyPopin
 				if(cost <= GameInfo.ressources['fric'].userPossesion){
 					GameInfo.ressources['fric'].userPossesion -= cost;
 					GameInfo.ressources['poudre'+index].userPossesion += GameInfo.ressources['poudre'+index].lastQuantityBuy;
-					trace(GameInfo.ressources['poudre'+index].userPossesion);
 					HudManager.getInstance().updateChildText();
 				}
 			}
