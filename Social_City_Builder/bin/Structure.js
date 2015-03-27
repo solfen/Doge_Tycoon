@@ -45,11 +45,9 @@ buildings.Building = function(p_type,p_col,p_row,pX,pY) {
 	this.lvl = buildings.Building.LVL_1;
 	this.col = p_col;
 	this.row = p_row;
-	this.is_builded = false;
-	var key = this.get_id();
-	this.config = GameInfo.BUILDINGS_CONFIG.get(key);
-	this.width_in_tiles_nb = this.config.width;
-	this.height_in_tiles_nb = this.config.height;
+	this.is_builded = true;
+	this.width_in_tiles_nb = this.get_config().width;
+	this.height_in_tiles_nb = this.get_config().height;
 	PIXI.MovieClip.call(this,this._get_texture());
 	this.anchor.set(0,1);
 	this.set_position(pX,pY);
@@ -57,8 +55,8 @@ buildings.Building = function(p_type,p_col,p_row,pX,pY) {
 	this.buttonMode = true;
 	this.loop = true;
 	this.animationSpeed = 0.333;
-	this.play();
 	this.click = $bind(this,this._on_click);
+	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this._update));
 };
 $hxClasses["buildings.Building"] = buildings.Building;
 buildings.Building.__name__ = ["buildings","Building"];
@@ -70,24 +68,50 @@ buildings.Building.get_building_lvl = function(id) {
 };
 buildings.Building.__super__ = PIXI.MovieClip;
 buildings.Building.prototype = $extend(PIXI.MovieClip.prototype,{
-	upgrade: function() {
-		this.lvl += 256;
-	}
-	,get_id: function() {
+	get_id: function() {
 		return this.type | this.lvl;
+	}
+	,get_config: function() {
+		var key = this.get_id();
+		return GameInfo.BUILDINGS_CONFIG.get(key);
 	}
 	,set_position: function(x,y) {
 		x = x - IsoMap.cell_width * (this.width_in_tiles_nb - 1) * 0.5 | 0;
 		y = y + IsoMap.cell_height;
 		this.position.set(x,y);
 	}
+	,build: function() {
+		this.is_builded = false;
+		this.tint = 0;
+		this._building_start_time = haxe.Timer.stamp();
+		this._building_end_time = this._building_start_time + this.get_config().building_time;
+	}
+	,upgrade: function() {
+		if(this.lvl < buildings.Building.LVL_3) {
+			this.lvl = 256;
+			this.textures = this._get_texture();
+			this.build();
+		}
+	}
+	,_update: function() {
+		if(!this.is_builded) {
+			var color = Std["int"]((haxe.Timer.stamp() - this._building_start_time) / (this._building_end_time - this._building_start_time) * 153);
+			this.tint = color << 16 | color << 8 | color;
+			if(haxe.Timer.stamp() >= this._building_end_time) {
+				this.is_builded = true;
+				this.tint = 16777215;
+				this.play();
+			}
+		}
+	}
 	,_on_click: function(p_data) {
+		if(!this.is_builded || !GameInfo.can_map_update) return;
 		console.log("click on building " + this.get_id());
 	}
 	,_get_texture: function() {
 		var textures = new Array();
-		var i = this.config.frames_nb;
-		while(i-- > 0) textures.push(PIXI.Texture.fromFrame(Std.string(this.config.img) + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
+		var i = this.get_config().frames_nb;
+		while(i-- > 0) textures.push(PIXI.Texture.fromFrame(Std.string(this.get_config().img) + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
 		return textures;
 	}
 	,__class__: buildings.Building
@@ -145,6 +169,7 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 	this._graphics.lineStyle(1,8965375,1);
 	this.addChild(this._graphics);
 	var i = IsoMap.cells_nb;
+	var test = 0;
 	while(i-- > 0) {
 		this.obstacles_layer[i] = false;
 		this.buildings_layer[i] = 0;
@@ -153,7 +178,10 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 		this._graphics.lineTo(this._cells_pts[i].x2,this._cells_pts[i].y2);
 		this._graphics.lineTo(this._cells_pts[i].x3,this._cells_pts[i].y3);
 		this._graphics.lineTo(this._cells_pts[i].x0,this._cells_pts[i].y0);
-		if(i / IsoMap.cols_nb - (i / IsoMap.cols_nb | 0) == 0) this.addChild(new pixi.display.DisplayObjectContainer());
+		if(i / IsoMap.cols_nb - (i / IsoMap.cols_nb | 0) == 0) {
+			this.addChild(new pixi.display.DisplayObjectContainer());
+			this.addChild(new pixi.display.DisplayObjectContainer());
+		}
 	}
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this._update));
 };
@@ -161,7 +189,29 @@ $hxClasses["IsoMap"] = IsoMap;
 IsoMap.__name__ = ["IsoMap"];
 IsoMap.__super__ = pixi.display.DisplayObjectContainer;
 IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
-	_update: function() {
+	build_building: function(pBuilding_type,pX,pY) {
+		var build_data = this._get_building_coord(pBuilding_type,pX,pY);
+		if(build_data == null || !build_data.can_build) return null;
+		var building = new buildings.Building(pBuilding_type,build_data.col,build_data.row,build_data.x,build_data.y);
+		building.build();
+		var s;
+		if(building.width_in_tiles_nb < building.height_in_tiles_nb) s = building.height_in_tiles_nb; else s = building.width_in_tiles_nb;
+		var i = s * s;
+		while(i-- > 0) {
+			var c = build_data.index - (i / s | 0) * IsoMap.cols_nb - i % s | 0;
+			this.obstacles_layer[c] = true;
+			this.buildings_layer[c] = pBuilding_type;
+		}
+		try {
+			this.getChildAt((build_data.row * 2 | 0) + 2).addChild(building);
+		} catch( error ) {
+			console.log(error);
+		}
+		return building;
+	}
+	,destroy_building: function(pX,pY) {
+	}
+	,_update: function() {
 		if(!GameInfo.can_map_update) {
 			this._is_clicking = false;
 			return;
@@ -180,7 +230,8 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 		}
 		if(utils.game.InputInfos.mouse_x < utils.system.DeviceCapabilities.get_width() * this._screen_margin && this.x < 0) this.x += Std["int"]((utils.system.DeviceCapabilities.get_width() * this._screen_margin - utils.game.InputInfos.mouse_x) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_x > utils.system.DeviceCapabilities.get_width() * (1 - this._screen_margin) && this.x > utils.system.DeviceCapabilities.get_width() - this._map_width) this.x += Std["int"]((utils.system.DeviceCapabilities.get_width() * (1 - this._screen_margin) - utils.game.InputInfos.mouse_x) * this._screen_move_speed);
 		if(utils.game.InputInfos.mouse_y < utils.system.DeviceCapabilities.get_height() * this._screen_margin && this.y < 0) this.y += Std["int"]((utils.system.DeviceCapabilities.get_height() * this._screen_margin - utils.game.InputInfos.mouse_y) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_y > utils.system.DeviceCapabilities.get_height() * (1 - this._screen_margin) && this.y > utils.system.DeviceCapabilities.get_height() - this._map_height) this.y += Std["int"]((utils.system.DeviceCapabilities.get_height() * (1 - this._screen_margin) - utils.game.InputInfos.mouse_y) * this._screen_move_speed);
-		if(GameInfo.building_2_build > 0) {
+		this._graphics.visible = GameInfo.building_2_build > 0;
+		if(this._graphics.visible) {
 			var build_data = this._get_building_coord(GameInfo.building_2_build,utils.game.InputInfos.mouse_x,utils.game.InputInfos.mouse_y);
 			if(build_data != null) {
 				if(this._previewing_building == null) {
@@ -221,29 +272,6 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 			if(this.obstacles_layer[c]) can_build = false;
 		}
 		return { index : index, col : col, row : row, x : new_x, y : new_y, can_build : can_build};
-	}
-	,set_content: function(content) {
-	}
-	,build_building: function(pBuilding_type,pX,pY) {
-		var build_data = this._get_building_coord(pBuilding_type,pX,pY);
-		if(build_data == null || !build_data.can_build) return null;
-		var building = new buildings.Building(pBuilding_type,build_data.col,build_data.row,build_data.x,build_data.y);
-		var s;
-		if(building.width_in_tiles_nb < building.height_in_tiles_nb) s = building.height_in_tiles_nb; else s = building.width_in_tiles_nb;
-		var i = s * s;
-		while(i-- > 0) {
-			var c = build_data.index - (i / s | 0) * IsoMap.cols_nb - i % s | 0;
-			this.obstacles_layer[c] = true;
-			this.buildings_layer[c] = pBuilding_type;
-		}
-		try {
-			this.getChildAt((build_data.row | 0) + 2).addChild(building);
-		} catch( error ) {
-			console.log(error);
-		}
-		return building;
-	}
-	,destroy_building: function(pX,pY) {
 	}
 	,__class__: IsoMap
 });
@@ -356,7 +384,6 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 		pEvent.target.removeEventListener("onProgress",$bind(this,this.onLoadProgress));
 		pEvent.target.removeEventListener("onComplete",$bind(this,this.onLoadComplete));
 		scenes.ScenesManager.getInstance().loadScene("GameScene");
-		console.log("caca");
 	}
 	,onFacebookConnect: function(pResponse) {
 		console.log(pResponse.status);
@@ -465,7 +492,7 @@ buildings.PreviewBuilding = function(p_type,pX,pY) {
 	this.click = null;
 	this.interactive = false;
 	this.buttonMode = false;
-	this.alpha = 0.6;
+	this.alpha = 0.7;
 };
 $hxClasses["buildings.PreviewBuilding"] = buildings.PreviewBuilding;
 buildings.PreviewBuilding.__name__ = ["buildings","PreviewBuilding"];
@@ -482,6 +509,9 @@ haxe.Timer = function(time_ms) {
 };
 $hxClasses["haxe.Timer"] = haxe.Timer;
 haxe.Timer.__name__ = ["haxe","Timer"];
+haxe.Timer.stamp = function() {
+	return new Date().getTime() / 1000;
+};
 haxe.Timer.prototype = {
 	run: function() {
 	}
@@ -590,8 +620,11 @@ hud.HudBuild.__super__ = hud.IconHud;
 hud.HudBuild.prototype = $extend(hud.IconHud.prototype,{
 	onClick: function(pData) {
 		var curName = popin.PopinManager.getInstance().getCurrentPopinName();
-		if(curName != null) popin.PopinManager.getInstance().closeCurentPopin();
-		if(curName != "PopinBuild") popin.PopinManager.getInstance().openPopin("PopinBuild",0.5,0.5);
+		if(curName != null) {
+			popin.PopinManager.getInstance().closeCurentPopin();
+			GameInfo.can_map_update = true;
+		}
+		if(curName != "PopinBuild") popin.PopinManager.getInstance().openPopin("PopinBuild",0.5,0.55);
 	}
 	,__class__: hud.HudBuild
 });
@@ -675,7 +708,10 @@ hud.HudInventory.__name__ = ["hud","HudInventory"];
 hud.HudInventory.__super__ = hud.IconHud;
 hud.HudInventory.prototype = $extend(hud.IconHud.prototype,{
 	onClick: function(pData) {
-		if(popin.PopinManager.getInstance().isPopinOpen("PopinInventory")) popin.PopinManager.getInstance().closePopin("PopinInventory"); else popin.PopinManager.getInstance().openPopin("PopinInventory",0.9,0.5);
+		if(popin.PopinManager.getInstance().isPopinOpen("PopinInventory")) {
+			popin.PopinManager.getInstance().closePopin("PopinInventory");
+			GameInfo.can_map_update = true;
+		} else popin.PopinManager.getInstance().openPopin("PopinInventory",0.9,0.55);
 	}
 	,__class__: hud.HudInventory
 });
@@ -785,8 +821,11 @@ hud.HudMarket.__super__ = hud.IconHud;
 hud.HudMarket.prototype = $extend(hud.IconHud.prototype,{
 	onClick: function(pData) {
 		var curName = popin.PopinManager.getInstance().getCurrentPopinName();
-		if(curName != null) popin.PopinManager.getInstance().closeCurentPopin();
-		if(curName != "PopinMarket") popin.PopinManager.getInstance().openPopin("PopinMarket",0.5,0.5);
+		if(curName != null) {
+			popin.PopinManager.getInstance().closeCurentPopin();
+			GameInfo.can_map_update = true;
+		}
+		if(curName != "PopinMarket") popin.PopinManager.getInstance().openPopin("PopinMarket",0.5,0.55);
 	}
 	,__class__: hud.HudMarket
 });
@@ -799,8 +838,11 @@ hud.HudQuests.__super__ = hud.IconHud;
 hud.HudQuests.prototype = $extend(hud.IconHud.prototype,{
 	onClick: function(pData) {
 		var curName = popin.PopinManager.getInstance().getCurrentPopinName();
-		if(curName != "PopinInventory") popin.PopinManager.getInstance().closeCurentPopin();
-		if(curName != "PopinQuests") popin.PopinManager.getInstance().openPopin("PopinQuests",0.5,0.5);
+		if(curName != "PopinInventory") {
+			popin.PopinManager.getInstance().closeCurentPopin();
+			GameInfo.can_map_update = true;
+		}
+		if(curName != "PopinQuests") popin.PopinManager.getInstance().openPopin("PopinQuests",0.5,0.55);
 	}
 	,__class__: hud.HudQuests
 });
@@ -813,8 +855,11 @@ hud.HudShop.__super__ = hud.IconHud;
 hud.HudShop.prototype = $extend(hud.IconHud.prototype,{
 	onClick: function(pData) {
 		var curName = popin.PopinManager.getInstance().getCurrentPopinName();
-		if(curName != "PopinInventory") popin.PopinManager.getInstance().closeCurentPopin();
-		if(curName != "PopinShop") popin.PopinManager.getInstance().openPopin("PopinShop",0.5,0.5);
+		if(curName != "PopinInventory") {
+			popin.PopinManager.getInstance().closeCurentPopin();
+			GameInfo.can_map_update = true;
+		}
+		if(curName != "PopinShop") popin.PopinManager.getInstance().openPopin("PopinShop",0.5,0.55);
 	}
 	,__class__: hud.HudShop
 });
@@ -1114,7 +1159,7 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 	,__class__: popin.MyPopin
 });
 popin.PopinBuild = function(startX,startY) {
-	this.currentTab = "nicheTab";
+	this.currentTab = "utilitairesTab";
 	this.hasVerticalScrollBar = false;
 	this.articleInterline = 0.03;
 	this.articleHeight = PIXI.Texture.fromImage("assets/UI/PopInBuilt/PopInBuiltBgArticle.png").height;
@@ -1126,7 +1171,7 @@ popin.PopinBuild = function(startX,startY) {
 	_g.set("utilitaire",PIXI.Texture.fromImage("assets/UI/PopInBuilt/PopInHeaderUtilitaires.png"));
 	this.headerTextures = _g;
 	this.articleHeight /= this.background.height;
-	this.addHeader(0.65,0.05,this.headerTextures.get("niches"));
+	this.addHeader(0.65,0.05,this.headerTextures.get("utilitaire"));
 	this.addIcon(-0.15,-0.15,"assets/UI/PopInBuilt/PopInTitleConstruction.png","popInTitle",this,false);
 	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollBackground.png","contentBackground",this,false);
 	this.addIcon(-0.02,0.17,"assets/UI/PopInBuilt/PopInOngletNicheNormal.png","nicheTab",this,true,"assets/UI/PopInBuilt/PopInOngletNicheActive.png",true);
@@ -1135,8 +1180,8 @@ popin.PopinBuild = function(startX,startY) {
 	this.addIcon(0.95,0,"assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","closeButton",this,true,"assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png",true);
 	this.addContainer("verticalScroller",this,0,0);
 	this.addMask(this.icons.get("contentBackground").x,this.icons.get("contentBackground").y + 3,this.icons.get("contentBackground").width,this.icons.get("contentBackground").height - 6,this.containers.get("verticalScroller"));
-	this.addBuildArticles(GameInfo.buildMenuArticles.niches);
-	this.icons.get("nicheTab").setTextureToActive();
+	this.addBuildArticles(GameInfo.buildMenuArticles.utilitaires);
+	this.icons.get(this.currentTab).setTextureToActive();
 	this.addIcon(0.09,0.15,"assets/UI/PopIn/PopInScrollOverlay.png","scrollOverlay",this,false);
 };
 $hxClasses["popin.PopinBuild"] = popin.PopinBuild;
@@ -1986,6 +2031,8 @@ String.prototype.__class__ = $hxClasses.String = String;
 String.__name__ = ["String"];
 $hxClasses.Array = Array;
 Array.__name__ = ["Array"];
+Date.prototype.__class__ = $hxClasses.Date = Date;
+Date.__name__ = ["Date"];
 buildings.Building.CASINO = 1;
 buildings.Building.EGLISE = 2;
 buildings.Building.HANGAR_BLEU = 3;

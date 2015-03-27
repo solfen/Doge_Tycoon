@@ -19,9 +19,11 @@ class HudShop extends IconHud
 	
 	override private function onClick (pData:InteractionData) : Void {
 		var curName:String = PopinManager.getInstance().getCurrentPopinName();
-		if(curName != "PopinInventory")
+		if(curName != "PopinInventory"){
 			PopinManager.getInstance().closeCurentPopin();
+			GameInfo.can_map_update = true;
+		}
 		if(curName != "PopinShop")
-			PopinManager.getInstance().openPopin("PopinShop", 0.5, 0.5);
+			PopinManager.getInstance().openPopin("PopinShop", 0.5, 0.55);
 	}
 }
