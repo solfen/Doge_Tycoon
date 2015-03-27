@@ -18,9 +18,11 @@ class HudMarket extends IconHud
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {
-		if(PopinManager.getInstance().getCurrentPopinName() != "PopinInventory"){
+		var curName:String = PopinManager.getInstance().getCurrentPopinName();
+		if(curName != null){
 			PopinManager.getInstance().closeCurentPopin();
 		}
-		PopinManager.getInstance().openPopin("PopinMarket", 0.5, 0.5);
+		if(curName != "PopinMarket")
+			PopinManager.getInstance().openPopin("PopinMarket", 0.5, 0.5);
 	}
 }

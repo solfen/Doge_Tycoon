@@ -18,9 +18,10 @@ class HudQuests extends IconHud
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {
-		if(PopinManager.getInstance().getCurrentPopinName() != "PopinInventory"){
+		var curName:String = PopinManager.getInstance().getCurrentPopinName();
+		if(curName != "PopinInventory")
 			PopinManager.getInstance().closeCurentPopin();
-		}
-		PopinManager.getInstance().openPopin("PopinQuests", 0.5, 0.5);
+		if(curName != "PopinQuests")
+			PopinManager.getInstance().openPopin("PopinQuests", 0.5, 0.5);
 	}	
 }
