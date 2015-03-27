@@ -5,6 +5,7 @@ import popin.PopinMarket;
 import popin.PopinQuests;
 import popin.PopinWorkshop;
 import popin.PopinInventory;
+import popin.PopinShop;
 import popin.MyPopin;
 import pixi.InteractionData;
 import pixi.display.DisplayObjectContainer;
