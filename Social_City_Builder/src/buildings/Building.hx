@@ -103,7 +103,7 @@ class Building extends MovieClip
 	public function build (): Void
 	{
 		is_builded = false;
-		tint = 0x000000;
+		tint = 0;
 		_building_start_time = Timer.stamp();
 		_building_end_time = _building_start_time + get_config().building_time;
 	}
