@@ -1,0 +1,70 @@
+{
+"frames": {
+	"doge-run_0": {
+		"frame": {"x":0, "y":212, "w":137, "h":210},
+		"spriteSourceSize": {"x":80,"y":24,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_1": {
+		"frame": {"x":0, "y":0, "w":141, "h":211},
+		"spriteSourceSize": {"x":84,"y":23,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_10": {
+		"frame": {"x":504, "y":0, "w":108, "h":200},
+		"spriteSourceSize": {"x":106,"y":34,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_11": {
+		"frame": {"x":267, "y":211, "w":119, "h":204},
+		"spriteSourceSize": {"x":96,"y":30,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_2": {
+		"frame": {"x":503, "y":409, "w":109, "h":201},
+		"spriteSourceSize": {"x":89,"y":33,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_3": {
+		"frame": {"x":267, "y":416, "w":105, "h":196},
+		"spriteSourceSize": {"x":100,"y":38,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_4": {
+		"frame": {"x":387, "y":409, "w":115, "h":198},
+		"spriteSourceSize": {"x":106,"y":36,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_5": {
+		"frame": {"x":390, "y":0, "w":113, "h":202},
+		"spriteSourceSize": {"x":96,"y":32,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_6": {
+		"frame": {"x":138, "y":212, "w":128, "h":212},
+		"spriteSourceSize": {"x":83,"y":22,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_7": {
+		"frame": {"x":266, "y":0, "w":123, "h":210},
+		"spriteSourceSize": {"x":84,"y":24,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_8": {
+		"frame": {"x":142, "y":0, "w":123, "h":201},
+		"spriteSourceSize": {"x":89,"y":33,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	},
+	"doge-run_9": {
+		"frame": {"x":387, "y":211, "w":117, "h":197},
+		"spriteSourceSize": {"x":99,"y":37,"w":280,"h":280},
+		"sourceSize": {"w":280,"h":280}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 613, "h": 613},
+	"scale": "1"
+}
+}

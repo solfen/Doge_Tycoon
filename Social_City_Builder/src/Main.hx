@@ -58,7 +58,7 @@ class Main extends EventDispatcher
 	private function new () {
 		
 		super();
-		stage = new Stage(0x3f7cb6);
+		stage = new Stage(0x3f7cbf);
 		renderer = Detector.autoDetectRenderer(DeviceCapabilities.width, DeviceCapabilities.height); // voir ce que ça donne dans facebook
 		Browser.document.body.appendChild(renderer.view);
 		stats = new pixi.utils.Stats();
@@ -102,7 +102,8 @@ class Main extends EventDispatcher
 	}
 	
 	private function onLoadProgress (pEvent:Event): Void {
-		/*var lLoader:AssetLoader = cast(pEvent.target, AssetLoader);
+		/*TODO LOADING BAR
+		var lLoader:AssetLoader = cast(pEvent.target, AssetLoader);
 		trace( (lLoader.assetURLs.length-lLoader.loadCount)/lLoader.assetURLs.length);*/
 	}
 	

@@ -1,0 +1,35 @@
+{
+"frames": {
+	"planetGlow_0": {
+		"frame": {"x":814, "y":0, "w":813, "h":635},
+		"spriteSourceSize": {"x":0,"y":0,"w":813,"h":635},
+		"sourceSize": {"w":813,"h":635}
+	},
+	"planetGlow_1": {
+		"frame": {"x":0, "y":0, "w":813, "h":635},
+		"spriteSourceSize": {"x":0,"y":0,"w":813,"h":635},
+		"sourceSize": {"w":813,"h":635}
+	},
+	"planetGlow_2": {
+		"frame": {"x":0, "y":636, "w":813, "h":635},
+		"spriteSourceSize": {"x":0,"y":0,"w":813,"h":635},
+		"sourceSize": {"w":813,"h":635}
+	},
+	"planetGlow_3": {
+		"frame": {"x":814, "y":636, "w":684, "h":576},
+		"spriteSourceSize": {"x":65,"y":59,"w":813,"h":635},
+		"sourceSize": {"w":813,"h":635}
+	},
+	"planetGlow_4": {
+		"frame": {"x":814, "y":1213, "w":684, "h":576},
+		"spriteSourceSize": {"x":65,"y":59,"w":813,"h":635},
+		"sourceSize": {"w":813,"h":635}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 1628, "h": 1790},
+	"scale": "1"
+}
+}
