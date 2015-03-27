@@ -254,11 +254,12 @@ class IsoMap extends DisplayObjectContainer
 			return null;
 		}
 
-
 		// todo: set the obstacles layer
 
 		var building: Building = new Building(pBuilding_type, build_data.col, build_data.row, build_data.x, build_data.y);
 		
+		building.build();
+
 		var s: Int = building.width_in_tiles_nb<building.height_in_tiles_nb ? building.height_in_tiles_nb : building.width_in_tiles_nb;
 		var i: Int = s*s;
 		while (i-->0)
