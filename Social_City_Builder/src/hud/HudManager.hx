@@ -37,16 +37,16 @@ class HudManager extends DisplayObjectContainer
 		addHud(new HudDoges(0,hudTopY),"HudDoges",'HudTop');
 		addHud(new HudStock(0,hudTopY),"HudStock",'HudTop');
 
-		addContainer(0.94,0,'HudLeft',0.05,0.05,'right');
-		addHud(new HudOptions(0,hudTopY),"HudOptions",'HudLeft');
+		/*addContainer(0.94,0,'HudLeft',0.05,0.05,'right');
+		addHud(new HudOptions(0,hudTopY),"HudOptions",'HudLeft');*/
 		
 		addContainer(0.01,0.9,'HudBottom',.98,0.01,'right');
-		addHud(new HudDestroy(0,hudBottomY),"HudDestroy", 'HudBottom');
-		addHud(new HudObservatory(0,hudBottomY),"HudObservatory", 'HudBottom');
+		/*addHud(new HudDestroy(0,hudBottomY),"HudDestroy", 'HudBottom');
+		addHud(new HudObservatory(0,hudBottomY),"HudObservatory", 'HudBottom');*/
 		addHud(new HudInventory(0,hudBottomY),"HudInventory", 'HudBottom');
 		addHud(new HudQuests(0,hudBottomY),"HudQuests", 'HudBottom');
-		addHud(new HudMarket(0,hudBottomY),"HudMarket", 'HudBottom');
-		addHud(new HudShop(0,hudBottomY),"HudShop", 'HudBottom');
+		addHud(new HudMarket(0,hudBottomY-0.01),"HudMarket", 'HudBottom');
+		addHud(new HudShop(0,hudBottomY-0.008),"HudShop", 'HudBottom');
 		addHud(new HudBuild(0,hudBottomY),"HudBuild", 'HudBottom');
 
 		resizeHud();

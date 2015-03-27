@@ -594,17 +594,6 @@ hud.HudBuild.prototype = $extend(hud.IconHud.prototype,{
 	}
 	,__class__: hud.HudBuild
 });
-hud.HudDestroy = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"HudIconDestroyNormal.png","HudIconDestroyActive.png");
-};
-$hxClasses["hud.HudDestroy"] = hud.HudDestroy;
-hud.HudDestroy.__name__ = ["hud","HudDestroy"];
-hud.HudDestroy.__super__ = hud.IconHud;
-hud.HudDestroy.prototype = $extend(hud.IconHud.prototype,{
-	onClick: function(pData) {
-	}
-	,__class__: hud.HudDestroy
-});
 hud.HudDoges = function(startX,startY) {
 	hud.IconHud.call(this,startX,startY,"HudPopFillBar.png",null,true,false);
 	this.barFill = new PIXI.Sprite(PIXI.Texture.fromImage("HudPopFill.png"));
@@ -703,15 +692,11 @@ hud.HudManager = function() {
 	this.addHud(new hud.HudHardMoney(0,this.hudTopY),"HudHardMoney","HudTop");
 	this.addHud(new hud.HudDoges(0,this.hudTopY),"HudDoges","HudTop");
 	this.addHud(new hud.HudStock(0,this.hudTopY),"HudStock","HudTop");
-	this.addContainer(0.94,0,"HudLeft",0.05,0.05,"right");
-	this.addHud(new hud.HudOptions(0,this.hudTopY),"HudOptions","HudLeft");
 	this.addContainer(0.01,0.9,"HudBottom",.98,0.01,"right");
-	this.addHud(new hud.HudDestroy(0,this.hudBottomY),"HudDestroy","HudBottom");
-	this.addHud(new hud.HudObservatory(0,this.hudBottomY),"HudObservatory","HudBottom");
 	this.addHud(new hud.HudInventory(0,this.hudBottomY),"HudInventory","HudBottom");
 	this.addHud(new hud.HudQuests(0,this.hudBottomY),"HudQuests","HudBottom");
-	this.addHud(new hud.HudMarket(0,this.hudBottomY),"HudMarket","HudBottom");
-	this.addHud(new hud.HudShop(0,this.hudBottomY),"HudShop","HudBottom");
+	this.addHud(new hud.HudMarket(0,this.hudBottomY - 0.01),"HudMarket","HudBottom");
+	this.addHud(new hud.HudShop(0,this.hudBottomY - 0.008),"HudShop","HudBottom");
 	this.addHud(new hud.HudBuild(0,this.hudBottomY),"HudBuild","HudBottom");
 	this.resizeHud();
 	Main.getInstance().addEventListener("Event.RESIZE",$bind(this,this.resizeHud));
@@ -803,34 +788,6 @@ hud.HudMarket.prototype = $extend(hud.IconHud.prototype,{
 		if(curName != "PopinMarket") popin.PopinManager.getInstance().openPopin("PopinMarket",0.5,0.5);
 	}
 	,__class__: hud.HudMarket
-});
-hud.HudObservatory = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"HudIconObservatoryNormal.png","HudIconObservatoryActive.png");
-};
-$hxClasses["hud.HudObservatory"] = hud.HudObservatory;
-hud.HudObservatory.__name__ = ["hud","HudObservatory"];
-hud.HudObservatory.__super__ = hud.IconHud;
-hud.HudObservatory.prototype = $extend(hud.IconHud.prototype,{
-	onClick: function(pData) {
-		var curName = popin.PopinManager.getInstance().getCurrentPopinName();
-		if(curName != "PopinInventory") popin.PopinManager.getInstance().closeCurentPopin();
-		if(curName != "PopinObservatory") popin.PopinManager.getInstance().openPopin("PopinObservatory",0.5,0.5);
-	}
-	,__class__: hud.HudObservatory
-});
-hud.HudOptions = function(startX,startY) {
-	hud.IconHud.call(this,startX,startY,"HudIconOptionNormal.png","HudIconOptionActive.png");
-};
-$hxClasses["hud.HudOptions"] = hud.HudOptions;
-hud.HudOptions.__name__ = ["hud","HudOptions"];
-hud.HudOptions.__super__ = hud.IconHud;
-hud.HudOptions.prototype = $extend(hud.IconHud.prototype,{
-	onClick: function(pData) {
-		var curName = popin.PopinManager.getInstance().getCurrentPopinName();
-		if(curName != "PopinInventory") popin.PopinManager.getInstance().closeCurentPopin();
-		if(curName != "PopinWorkshop") popin.PopinManager.getInstance().openPopin("PopinWorkshop",0.5,0.5);
-	}
-	,__class__: hud.HudOptions
 });
 hud.HudQuests = function(startX,startY) {
 	hud.IconHud.call(this,startX,startY,"HudIconQuestNormal.png","HudIconQuestActive.png");
@@ -2016,7 +1973,7 @@ GameInfo.ressources = (function($this) {
 	_g.set("poudre3",{ name : "PLPP Blue", previewImg : "assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewBlueMineral.png", iconImg : "assets/UI/Icons/IconsRessources/IconBlueMineral.png", userPossesion : 15000, buyCost : 100, sellCost : 40, lastQuantityBuy : 0, lastQuantitySell : 0});
 	_g.set("poudre4",{ name : "PLPP Purple", previewImg : "assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewPurpleMineral.png", iconImg : "assets/UI/Icons/IconsRessources/IconPurpleMineral.png", userPossesion : 15000, buyCost : 300, sellCost : 200, lastQuantityBuy : 0, lastQuantitySell : 0});
 	_g.set("poudre5",{ name : "PLPP Red", previewImg : "assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewRedMineral.png", iconImg : "assets/UI/Icons/IconsRessources/IconRedMineral.png", userPossesion : 15000, buyCost : 1000, sellCost : 700, lastQuantityBuy : 0, lastQuantitySell : 0});
-	_g.set("fric",{ name : "Dogeflooz", previewImg : "assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png", iconImg : "assets/UI/Icons/IconsRessources/IconDogeflooz.png", userPossesion : 15000});
+	_g.set("fric",{ name : "Dogeflooz", previewImg : "assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png", iconImg : "assets/UI/Icons/IconsRessources/IconDogeflooz.png", userPossesion : 5000});
 	_g.set("hardMoney",{ name : "Os D'or", previewImg : "assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png", iconImg : "assets/UI/Icons/IconsRessources/IconOsDor.png", userPossesion : 15000});
 	$r = _g;
 	return $r;

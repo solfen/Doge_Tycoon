@@ -70,7 +70,7 @@ class GameInfo
  			name: 'Dogeflooz',
  			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png',
  			iconImg: 'assets/UI/Icons/IconsRessources/IconDogeflooz.png',
- 			userPossesion: 15000,
+ 			userPossesion: 5000,
  		},
  		'hardMoney' => {
  			name: "Os D'or",
