@@ -6,6 +6,7 @@ import popin.PopinQuests;
 import popin.PopinWorkshop;
 import popin.PopinInventory;
 import popin.PopinShop;
+import popin.PopinUpgrade;
 import popin.MyPopin;
 import pixi.InteractionData;
 import pixi.display.DisplayObjectContainer;
@@ -39,17 +40,33 @@ class PopinManager extends DisplayObjectContainer
 	}
 	//instantiate any popIn just with its name so that anywhere in the code we can open a popin with a string
 	// by doing PopinManager.getInstance().openPopin("popinName")
-	public function openPopin(popinName:String, ?pX:Float, ?pY:Float){
-		childs[popinName] = Type.createInstance( Type.resolveClass("popin."+popinName), [pX,pY] );
+	public function openPopin(popinName:String, ?pX:Float, ?pY:Float,?buildingAttached:buildings.Building){
+		childs[popinName] = Type.createInstance( Type.resolveClass("popin."+popinName), [pX,pY,buildingAttached]);
 		addChild(childs[popinName]);
+
 		currentPopinName = popinName != "PopinInventory" ? popinName:currentPopinName; // beacuse inventory can be opened with other popins
 	}
+	public function openContextPopin(pX:Float, pY:Float,buildingAttached:buildings.Building){
+		childs["PopinUpgrade"] = Type.createInstance( Type.resolveClass("popin."+"PopinUpgrade"), [pX,pY,buildingAttached]);
+		buildingAttached.addChild(childs["PopinUpgrade"]);
+	}
 
-	public function closePopin(popinName:String){
+	public function closePopin(popinName:String,?buildingAttached:buildings.Building){
 		childs[popinName].destroy();
-		removeChild(childs[popinName]);
+		if(buildingAttached == null){
+			removeChild(childs[popinName]);
+		}
+		else{
+			buildingAttached.removeChild(childs[popinName]);
+		}
 		childs.remove(popinName);
 		currentPopinName = popinName == "PopinInventory" ? currentPopinName:null;
+	}
+	public function closeContextPopin(){
+		if(childs["PopinUpgrade"] != null){
+			childs["PopinUpgrade"].destroy();
+			childs.remove("PopinUpgrade");
+		}
 	}
 	public function closeCurentPopin():Void{
 		if(currentPopinName != null){

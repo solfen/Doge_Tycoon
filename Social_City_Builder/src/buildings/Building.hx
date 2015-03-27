@@ -42,6 +42,7 @@ class Building extends MovieClip
 	public var height_in_tiles_nb: Int;
 	public var building_time: Int;
 	public var is_builded: Bool;
+	public var has_context_popin:Bool = false;
 	public var config: Dynamic;
 
 	private var _building_start_time: Float;
@@ -143,8 +144,15 @@ class Building extends MovieClip
 		{
 			return;
 		}
+		if(GameInfo.is_building_context_pop_open){
+			popin.PopinManager.getInstance().closeContextPopin();
+			GameInfo.is_building_context_pop_open = false;
+		}
+		else {
+			popin.PopinManager.getInstance().openContextPopin(width*0.5/DeviceCapabilities.width,-height*0.5/DeviceCapabilities.height,this);
+			GameInfo.is_building_context_pop_open = true;
+		}
 
-		trace('click on building '+get_id());
 		// dispatch an event here?
 	}
 

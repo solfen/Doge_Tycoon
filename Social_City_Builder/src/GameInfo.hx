@@ -370,6 +370,7 @@ class GameInfo
  	public static var stockPercent:Float = 50;
  	public static var building_2_build: Int = Building.PAS_DE_TIR;
  	public static var can_map_update: Bool = true; 	
+ 	public static var is_building_context_pop_open: Bool = false;
 
  	public static var BUILDINGS_IMG_FOLDER_PATH: String = "assets/Buildings/";
 	public static var BUILDINGS_IMG_EXTENSION: String = ".png";
