@@ -1,6 +1,8 @@
 package buildings;
 
+import haxe.Timer;
 import utils.system.DeviceCapabilities;
+import utils.events.Event;
 import pixi.display.MovieClip;
 import pixi.InteractionData;
 import pixi.display.Sprite;
@@ -31,18 +33,6 @@ class Building extends MovieClip
 	public static var LVL_1 		: Int 	= 	0x100;
 	public static var LVL_2 		: Int 	= 	0x200;
 	public static var LVL_3 		: Int 	=	0x300;
-
-	//public static var COLS_NB_MAX
-
-	public static function get_building_type (id: Int): Int
-	{
-		return id&0xFF;
-	}
-
-	public static function get_building_lvl (id: Int): Int
-	{
-		return id&0xF00;
-	}
 	
 	public var type: Int;
 	public var lvl: Int;
@@ -54,9 +44,19 @@ class Building extends MovieClip
 	public var is_builded: Bool;
 	public var config: Dynamic;
 
-	public function upgrade () {
-		
-		lvl += 0x100;
+	private var _building_start_time: Float;
+	private var _building_end_time: Float;
+
+/* ---------------------------------------------------------------------------------------- */
+
+	public static function get_building_type (id: Int): Int
+	{
+		return id&0xFF;
+	}
+
+	public static function get_building_lvl (id: Int): Int
+	{
+		return id&0xF00;
 	}
 	
 	public function new (p_type: Int, p_col: Float, p_row: Float, pX: Int, pY: Int): Void
@@ -65,11 +65,10 @@ class Building extends MovieClip
 		lvl = Building.LVL_1;
 		col = p_col;
 		row = p_row;
-		is_builded = false;
-		config = GameInfo.BUILDINGS_CONFIG[get_id()];
+		is_builded = true;
 
-		width_in_tiles_nb = config.width;
-		height_in_tiles_nb = config.height;
+		width_in_tiles_nb = get_config().width;
+		height_in_tiles_nb = get_config().height;
 
 		super(_get_texture());
 		anchor.set(0, 1);
@@ -78,8 +77,8 @@ class Building extends MovieClip
 		buttonMode = true;
 		loop = true;
 		animationSpeed = 0.333;
-		play();
 		click = _on_click;
+		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
 	}
 
 	public function get_id (): Int
@@ -87,19 +86,10 @@ class Building extends MovieClip
 		return type|lvl;
 	}
 
-	/*public function get_bloking_tiles (): Array<Bool>
+	public function get_config (): Dynamic
 	{
-		var bloking_tiles: Array<Bool> = [];
-		var i: Int = width_in_tiles_nb * height_in_tiles_nb; // use a static here ?
-		
-		while (i-->0)
-		{
-			//if (vertical)
-			bloking_tiles[i] = false;
-		}
-
-		return bloking_tiles;
-	}*/
+		return GameInfo.BUILDINGS_CONFIG[get_id()];
+	}
 
 	public function set_position (x: Int, y: Int): Void
 	{
@@ -109,36 +99,62 @@ class Building extends MovieClip
 		
 		position.set(x, y);
 	}
+
+	public function build (): Void
+	{
+		is_builded = false;
+		tint = 0x000000;
+		_building_start_time = Timer.stamp();
+		_building_end_time = _building_start_time + get_config().building_time;
+	}
+
+	public function upgrade () {
+		
+		if (lvl < Building.LVL_3)
+		{
+			lvl = 0x100;
+			textures = _get_texture();
+			build();
+		}
+	}
+
+	private function _update ()
+	{
+		if (!is_builded) {
+			
+			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(_building_end_time-_building_start_time)*0x99);
+
+			tint = (color<<16)|(color<<8)|color; // 0x000000 -> 0x999999
+
+			if (Timer.stamp() >= _building_end_time) {
+				is_builded = true;
+				tint = 0xFFFFFF;
+				play();
+			}
+		}
+	}
 	
 	private function _on_click (p_data: InteractionData): Void
 	{
+		if (!is_builded || !GameInfo.can_map_update)
+		{
+			return;
+		}
+
 		trace('click on building '+get_id());
 		// dispatch an event here?
 	}
 
-	/**
-	 * Tableau de textures de l'ambulance
-	 * @return le tableau de textures
-	 */
 	private function _get_texture (): Array<Texture>
 	{
 		var textures: Array<Texture> = new Array<Texture>();
-		
-		/*if (config.frames_nb == 1)
-		{
-			textures.push(Texture.fromFrame(GameInfo.BUILDINGS_IMG_FOLDER_PATH + config.img + GameInfo.BUILDINGS_IMG_EXTENSION));
-		}
-		else
-		{*/
-			var i: Int = config.frames_nb;
+		var i: Int = get_config().frames_nb;
 
-			while (i-->0)
-			//while (--i>0) // pour index 1
-			{
-				textures.push(Texture.fromFrame(config.img + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
-			}
-		//}
+		while (i-->0)
+		{
+			textures.push(Texture.fromFrame(get_config().img + "_" + i + GameInfo.BUILDINGS_IMG_EXTENSION));
+		}
 		return textures;
 	}
-	
+
 }

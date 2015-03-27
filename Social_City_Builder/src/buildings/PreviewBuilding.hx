@@ -18,6 +18,6 @@ class PreviewBuilding extends Building
 		click = null;
 		interactive = false;
 		buttonMode = false;
-		alpha = 0.6;
+		alpha = 0.7;
 	}
 }
