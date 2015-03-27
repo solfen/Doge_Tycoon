@@ -1117,7 +1117,7 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 	,scroll: function() {
 		if(utils.game.InputInfos.mouse_deltaY == 0 || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 > this.background.x + this.background.width || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 < this.background.x || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 > this.background.y + this.background.height || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 < this.background.y) return;
 		var contentDeltaY = -(this.mouse_deltaY + utils.game.InputInfos.mouse_deltaY) / 3 * this.icons.get("articleBase").height * 0.5;
-		if(contentDeltaY < this.containers.get("verticalScroller").height - this.icons.get("contentBackground").height - this.icons.get("articleBase").height * 2 && contentDeltaY > -(this.containers.get("verticalScroller").height - this.icons.get("articleBase").height * 2 + 100)) {
+		if(contentDeltaY <= 0 && contentDeltaY > -(this.containers.get("verticalScroller").height - this.icons.get("articleBase").height * 3 + 25)) {
 			this.mouse_deltaY += utils.game.InputInfos.mouse_deltaY;
 			this.containers.get("verticalScroller").y = this.startScrollY + contentDeltaY | 0;
 		}
