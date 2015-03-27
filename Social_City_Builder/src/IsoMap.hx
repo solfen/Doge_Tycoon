@@ -173,7 +173,10 @@ class IsoMap extends DisplayObjectContainer
 		{
 			// déplacement sur la map au click
 			x = InputInfos.mouse_x - (InputInfos.last_mouse_down_x-_old_x);
+			x = x>0 ? 0 : x<DeviceCapabilities.width-_map_width ? DeviceCapabilities.width-_map_width : x;
+
 			y = InputInfos.mouse_y - (InputInfos.last_mouse_down_y-_old_y);
+			y = y>0 ? 0 : y<DeviceCapabilities.height-_map_height ? DeviceCapabilities.height-_map_height : y;
 		}
 
 		// déplacements de la map sur les bords de l'écran :

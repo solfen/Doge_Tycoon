@@ -6,39 +6,6 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
-var pixi = {};
-pixi.display = {};
-pixi.display.DisplayObject = function() {
-	PIXI.DisplayObject.call(this);
-	this.name = "";
-};
-$hxClasses["pixi.display.DisplayObject"] = pixi.display.DisplayObject;
-pixi.display.DisplayObject.__name__ = ["pixi","display","DisplayObject"];
-pixi.display.DisplayObject.__super__ = PIXI.DisplayObject;
-pixi.display.DisplayObject.prototype = $extend(PIXI.DisplayObject.prototype,{
-	__class__: pixi.display.DisplayObject
-});
-pixi.display.DisplayObjectContainer = function() {
-	PIXI.DisplayObjectContainer.call(this);
-};
-$hxClasses["pixi.display.DisplayObjectContainer"] = pixi.display.DisplayObjectContainer;
-pixi.display.DisplayObjectContainer.__name__ = ["pixi","display","DisplayObjectContainer"];
-pixi.display.DisplayObjectContainer.__super__ = PIXI.DisplayObjectContainer;
-pixi.display.DisplayObjectContainer.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
-	getChildByName: function(name) {
-		var _g1 = 0;
-		var _g = this.children.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			if(this.children[i].name == name) return this.children[i];
-		}
-		return null;
-	}
-	,applyScale: function(pixelRatio) {
-		if(pixelRatio > 0) this.scale.set(1 / pixelRatio,1 / pixelRatio);
-	}
-	,__class__: pixi.display.DisplayObjectContainer
-});
 var buildings = {};
 buildings.Building = function(p_type,p_col,p_row,pX,pY) {
 	this.type = p_type;
@@ -46,6 +13,7 @@ buildings.Building = function(p_type,p_col,p_row,pX,pY) {
 	this.col = p_col;
 	this.row = p_row;
 	this.is_builded = true;
+	this._cheat_ratio = 0.3;
 	this.width_in_tiles_nb = this.get_config().width;
 	this.height_in_tiles_nb = this.get_config().height;
 	PIXI.MovieClip.call(this,this._get_texture());
@@ -84,12 +52,13 @@ buildings.Building.prototype = $extend(PIXI.MovieClip.prototype,{
 		this.is_builded = false;
 		this.tint = 0;
 		this._building_start_time = haxe.Timer.stamp();
-		this._building_end_time = this._building_start_time + this.get_config().building_time;
+		this._building_end_time = this._building_start_time + this.get_config().building_time * this._cheat_ratio;
 	}
 	,upgrade: function() {
 		if(this.lvl < buildings.Building.LVL_3) {
-			this.lvl = 256;
+			this.lvl += 256;
 			this.textures = this._get_texture();
+			this.gotoAndStop(0);
 			this.build();
 		}
 	}
@@ -144,7 +113,7 @@ HxOverrides.iter = function(a) {
 	}};
 };
 var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	IsoMap.singleton = this;
 	this._screen_margin = 0.03;
 	this._screen_move_speed = 0.5;
@@ -179,16 +148,16 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 		this._graphics.lineTo(this._cells_pts[i].x3,this._cells_pts[i].y3);
 		this._graphics.lineTo(this._cells_pts[i].x0,this._cells_pts[i].y0);
 		if(i / IsoMap.cols_nb - (i / IsoMap.cols_nb | 0) == 0) {
-			this.addChild(new pixi.display.DisplayObjectContainer());
-			this.addChild(new pixi.display.DisplayObjectContainer());
+			this.addChild(new PIXI.DisplayObjectContainer());
+			this.addChild(new PIXI.DisplayObjectContainer());
 		}
 	}
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this._update));
 };
 $hxClasses["IsoMap"] = IsoMap;
 IsoMap.__name__ = ["IsoMap"];
-IsoMap.__super__ = pixi.display.DisplayObjectContainer;
-IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+IsoMap.__super__ = PIXI.DisplayObjectContainer;
+IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	build_building: function(pBuilding_type,pX,pY) {
 		var build_data = this._get_building_coord(pBuilding_type,pX,pY);
 		if(build_data == null || !build_data.can_build) return null;
@@ -230,7 +199,9 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 		}
 		if(utils.game.InputInfos.is_mouse_down) {
 			this.x = utils.game.InputInfos.mouse_x - (utils.game.InputInfos.last_mouse_down_x - this._old_x);
+			if(this.x > 0) this.x = 0; else if(this.x < utils.system.DeviceCapabilities.get_width() - this._map_width) this.x = utils.system.DeviceCapabilities.get_width() - this._map_width; else this.x = this.x;
 			this.y = utils.game.InputInfos.mouse_y - (utils.game.InputInfos.last_mouse_down_y - this._old_y);
+			if(this.y > 0) this.y = 0; else if(this.y < utils.system.DeviceCapabilities.get_height() - this._map_height) this.y = utils.system.DeviceCapabilities.get_height() - this._map_height; else this.y = this.y;
 		}
 		if(utils.game.InputInfos.mouse_x < utils.system.DeviceCapabilities.get_width() * this._screen_margin && this.x < 0) this.x += Std["int"]((utils.system.DeviceCapabilities.get_width() * this._screen_margin - utils.game.InputInfos.mouse_x) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_x > utils.system.DeviceCapabilities.get_width() * (1 - this._screen_margin) && this.x > utils.system.DeviceCapabilities.get_width() - this._map_width) this.x += Std["int"]((utils.system.DeviceCapabilities.get_width() * (1 - this._screen_margin) - utils.game.InputInfos.mouse_x) * this._screen_move_speed);
 		if(utils.game.InputInfos.mouse_y < utils.system.DeviceCapabilities.get_height() * this._screen_margin && this.y < 0) this.y += Std["int"]((utils.system.DeviceCapabilities.get_height() * this._screen_margin - utils.game.InputInfos.mouse_y) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_y > utils.system.DeviceCapabilities.get_height() * (1 - this._screen_margin) && this.y > utils.system.DeviceCapabilities.get_height() - this._map_height) this.y += Std["int"]((utils.system.DeviceCapabilities.get_height() * (1 - this._screen_margin) - utils.game.InputInfos.mouse_y) * this._screen_move_speed);
@@ -727,7 +698,7 @@ hud.HudManager = function() {
 	this.hudWidthInterval = 0.05;
 	this.containers = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.addContainer(0.01,0,"HudTop",0.92,0.05,"center");
 	this.addHud(new hud.HudFric(0,this.hudTopY),"HudFric","HudTop");
 	this.addHud(new hud.HudHardMoney(0,this.hudTopY),"HudHardMoney","HudTop");
@@ -750,8 +721,8 @@ hud.HudManager.getInstance = function() {
 	if(hud.HudManager.instance == null) hud.HudManager.instance = new hud.HudManager();
 	return hud.HudManager.instance;
 };
-hud.HudManager.__super__ = pixi.display.DisplayObjectContainer;
-hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+hud.HudManager.__super__ = PIXI.DisplayObjectContainer;
+hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	resizeHud: function() {
 		var $it0 = this.containers.iterator();
 		while( $it0.hasNext() ) {
@@ -787,7 +758,7 @@ hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype
 	}
 	,addContainer: function(x,y,name,maxWidth,interval,align) {
 		if(align == null) align = "left";
-		var container = new pixi.display.DisplayObjectContainer();
+		var container = new PIXI.DisplayObjectContainer();
 		container.position.set(Std["int"](x * utils.system.DeviceCapabilities.get_width()),Std["int"](y * utils.system.DeviceCapabilities.get_height()));
 		var v = { };
 		this.containers.set(name,v);
@@ -966,9 +937,7 @@ js.Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-pixi.DomDefinitions = function() { };
-$hxClasses["pixi.DomDefinitions"] = pixi.DomDefinitions;
-pixi.DomDefinitions.__name__ = ["pixi","DomDefinitions"];
+var pixi = {};
 pixi.renderers = {};
 pixi.renderers.IRenderer = function() { };
 $hxClasses["pixi.renderers.IRenderer"] = pixi.renderers.IRenderer;
@@ -1030,7 +999,7 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 	this.containers = new haxe.ds.StringMap();
 	this.icons = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.x = Std["int"](startX * utils.system.DeviceCapabilities.get_width());
 	this.y = Std["int"](startY * utils.system.DeviceCapabilities.get_height());
 	if(isModal) {
@@ -1055,8 +1024,8 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 };
 $hxClasses["popin.MyPopin"] = popin.MyPopin;
 popin.MyPopin.__name__ = ["popin","MyPopin"];
-popin.MyPopin.__super__ = pixi.display.DisplayObjectContainer;
-popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+popin.MyPopin.__super__ = PIXI.DisplayObjectContainer;
+popin.MyPopin.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	addIcon: function(x,y,texturePath,name,target,isInteractive,texturePathActive,pIsSelectButton) {
 		if(pIsSelectButton == null) pIsSelectButton = false;
 		if(isInteractive == null) isInteractive = false;
@@ -1142,7 +1111,7 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 	,addContainer: function(name,target,x,y) {
 		if(y == null) y = 0;
 		if(x == null) x = 0;
-		var temp = new pixi.display.DisplayObjectContainer();
+		var temp = new PIXI.DisplayObjectContainer();
 		temp.x = x;
 		temp.y = y;
 		this.containers.set(name,temp);
@@ -1383,7 +1352,7 @@ popin.PopinInventory.prototype = $extend(popin.MyPopin.prototype,{
 popin.PopinManager = function() {
 	this.currentPopinName = null;
 	this.childs = new haxe.ds.StringMap();
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 };
 $hxClasses["popin.PopinManager"] = popin.PopinManager;
 popin.PopinManager.__name__ = ["popin","PopinManager"];
@@ -1391,8 +1360,8 @@ popin.PopinManager.getInstance = function() {
 	if(popin.PopinManager.instance == null) popin.PopinManager.instance = new popin.PopinManager();
 	return popin.PopinManager.instance;
 };
-popin.PopinManager.__super__ = pixi.display.DisplayObjectContainer;
-popin.PopinManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+popin.PopinManager.__super__ = PIXI.DisplayObjectContainer;
+popin.PopinManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	updateInventory: function() {
 		if(this.isPopinOpen("PopinInventory")) this.childs.get("PopinInventory").update();
 	}
@@ -1794,7 +1763,7 @@ popin.PopinWorkshop.prototype = $extend(popin.MyPopin.prototype,{
 });
 var scenes = {};
 scenes.GameScene = function() {
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	new utils.game.InputInfos(true,true);
@@ -1813,8 +1782,8 @@ scenes.GameScene.getInstance = function() {
 	if(scenes.GameScene.instance == null) scenes.GameScene.instance = new scenes.GameScene();
 	return scenes.GameScene.instance;
 };
-scenes.GameScene.__super__ = pixi.display.DisplayObjectContainer;
-scenes.GameScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+scenes.GameScene.__super__ = PIXI.DisplayObjectContainer;
+scenes.GameScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	doAction: function() {
 	}
 	,resize: function() {
@@ -1822,7 +1791,7 @@ scenes.GameScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototy
 	,__class__: scenes.GameScene
 });
 scenes.LoaderScene = function() {
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	var background = new PIXI.TilingSprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/IconsSplash.jpg"),utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
@@ -1871,8 +1840,8 @@ scenes.LoaderScene.getInstance = function() {
 	if(scenes.LoaderScene.instance == null) scenes.LoaderScene.instance = new scenes.LoaderScene();
 	return scenes.LoaderScene.instance;
 };
-scenes.LoaderScene.__super__ = pixi.display.DisplayObjectContainer;
-scenes.LoaderScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+scenes.LoaderScene.__super__ = PIXI.DisplayObjectContainer;
+scenes.LoaderScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	animation: function() {
 		this.planet.rotation -= 0.1;
 	}
@@ -2118,7 +2087,7 @@ GameInfo.BUILDINGS_CONFIG = (function($this) {
 	_g.set(buildings.Building.CASINO | buildings.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 60, frames_nb : 18, img : "CasinoLv2"});
 	_g.set(buildings.Building.CASINO | buildings.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 12, img : "CasinoLv3"});
 	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 13, img : "EgliseLv1"});
-	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 0, frames_nb : 16, img : "EgliseLv2"});
+	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 60, frames_nb : 16, img : "EgliseLv2"});
 	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 16, img : "EgliseLv3"});
 	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarBleuLv1"});
 	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarBleuLv2"});
