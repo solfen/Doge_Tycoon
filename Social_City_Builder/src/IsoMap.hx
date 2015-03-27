@@ -146,8 +146,6 @@ class IsoMap extends DisplayObjectContainer
 
 	private function _update (): Void
 	{
-		//GameInfo.building_2_build = Building.NICHE;//NICHE;//CASINO;//PAS_DE_TIR;//LABO;//HANGAR_BLEU;
-
 		if (!GameInfo.can_map_update)
 		{
 			_is_clicking = false; // pour le reset du click, si on est dans l'interface par exemple

@@ -413,7 +413,7 @@ class GameInfo
 			width: 3,
 			height: 3,
 			vertical_dir: 0,
-			building_time: 0,
+			building_time: 60,
 			frames_nb: 16,
 			img: "EgliseLv2"
 		},

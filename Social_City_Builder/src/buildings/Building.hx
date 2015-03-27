@@ -46,6 +46,7 @@ class Building extends MovieClip
 
 	private var _building_start_time: Float;
 	private var _building_end_time: Float;
+	private var _cheat_ratio: Float;
 
 /* ---------------------------------------------------------------------------------------- */
 
@@ -66,6 +67,7 @@ class Building extends MovieClip
 		col = p_col;
 		row = p_row;
 		is_builded = true;
+		_cheat_ratio = 0.3; // pour construire + vite, parce que c'est long!
 
 		width_in_tiles_nb = get_config().width;
 		height_in_tiles_nb = get_config().height;
@@ -105,20 +107,21 @@ class Building extends MovieClip
 		is_builded = false;
 		tint = 0;
 		_building_start_time = Timer.stamp();
-		_building_end_time = _building_start_time + get_config().building_time;
+		_building_end_time = _building_start_time + get_config().building_time * _cheat_ratio;
 	}
 
-	public function upgrade () {
-		
+	public function upgrade (): Void
+	{
 		if (lvl < Building.LVL_3)
 		{
-			lvl = 0x100;
+			lvl += 0x100;
 			textures = _get_texture();
+			gotoAndStop(0);
 			build();
 		}
 	}
 
-	private function _update ()
+	private function _update (): Void
 	{
 		if (!is_builded) {
 			
