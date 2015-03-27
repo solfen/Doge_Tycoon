@@ -21,8 +21,9 @@ class HudMarket extends IconHud
 		var curName:String = PopinManager.getInstance().getCurrentPopinName();
 		if(curName != null){
 			PopinManager.getInstance().closeCurentPopin();
+			GameInfo.can_map_update = true;
 		}
 		if(curName != "PopinMarket")
-			PopinManager.getInstance().openPopin("PopinMarket", 0.5, 0.5);
+			PopinManager.getInstance().openPopin("PopinMarket", 0.5, 0.55);
 	}
 }

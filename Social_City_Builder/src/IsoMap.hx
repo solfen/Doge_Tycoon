@@ -129,7 +129,7 @@ class IsoMap extends DisplayObjectContainer
 		try
 		{
 			// on met le building dans le layer qui correspond à sa row
-			untyped getChildAt(Std.int(build_data.row*2)+2).addChild(building); // +1 pour le bg et +1 pour le graphics
+			untyped getChildAt(Std.int(build_data.row*2-s)+3).addChild(building); // +1 pour le bg et +1 pour le graphics
 		}
 		catch (error: Dynamic)
 		{
@@ -151,6 +151,11 @@ class IsoMap extends DisplayObjectContainer
 		if (!GameInfo.can_map_update)
 		{
 			_is_clicking = false; // pour le reset du click, si on est dans l'interface par exemple
+			if (_previewing_building != null) // reset du preview s'il y en avait un (indecision)
+			{
+				removeChild(_previewing_building);
+				_previewing_building = null;
+			}
 			return;
 		}
 
@@ -194,7 +199,7 @@ class IsoMap extends DisplayObjectContainer
 
 		_graphics.visible = GameInfo.building_2_build > 0;
 
-		if (_graphics.visible) // building preview
+		if (GameInfo.building_2_build > 0) // building preview
 		{
 			var build_data: Dynamic = _get_building_coord(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y);
 

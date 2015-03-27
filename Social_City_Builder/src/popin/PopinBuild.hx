@@ -13,7 +13,7 @@ class PopinBuild extends MyPopin
 	private var articleHeight:Float = Texture.fromImage("assets/UI/PopInBuilt/PopInBuiltBgArticle.png").height;
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
-	private var currentTab:String = "nicheTab";
+	private var currentTab:String = "utilitairesTab";
 
 	private function new(?startX:Float,?startY:Float) 
 	{
@@ -26,7 +26,7 @@ class PopinBuild extends MyPopin
 		];
 		articleHeight /= background.height; // background is defiened in MyPopin
 
-		addHeader(0.65,0.05,headerTextures['niches']);
+		addHeader(0.65,0.05,headerTextures['utilitaire']);
 		addIcon(-0.15,-0.15,'assets/UI/PopInBuilt/PopInTitleConstruction.png',"popInTitle",this,false);
 		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollBackground.png',"contentBackground",this,false);
 
@@ -37,8 +37,8 @@ class PopinBuild extends MyPopin
 
 		addContainer("verticalScroller",this,0,0);
 		addMask(icons["contentBackground"].x, icons["contentBackground"].y+3, icons["contentBackground"].width, icons["contentBackground"].height-6,containers["verticalScroller"]);
-		addBuildArticles(GameInfo.buildMenuArticles.niches);
-		icons['nicheTab'].setTextureToActive();
+		addBuildArticles(GameInfo.buildMenuArticles.utilitaires);
+		icons[currentTab].setTextureToActive();
 		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollOverlay.png',"scrollOverlay",this,false);
 	}
 

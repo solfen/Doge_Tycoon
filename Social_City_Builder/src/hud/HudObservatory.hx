@@ -19,8 +19,10 @@ class HudObservatory extends IconHud
 	
 	override private function onClick (pData:InteractionData) : Void {
 		var curName:String = PopinManager.getInstance().getCurrentPopinName();
-		if(curName != "PopinInventory")
+		if(curName != "PopinInventory"){
 			PopinManager.getInstance().closeCurentPopin();
+			GameInfo.can_map_update = true;
+		}
 		if(curName != "PopinObservatory")
 			PopinManager.getInstance().openPopin("PopinObservatory", 0.5, 0.5);
 	}

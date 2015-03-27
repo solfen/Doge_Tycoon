@@ -17,9 +17,11 @@ class HudBuild extends IconHud
 	
 	override private function onClick (pData:InteractionData) : Void {
 		var curName:String = PopinManager.getInstance().getCurrentPopinName();
-		if(curName != null)
+		if(curName != null){
 			PopinManager.getInstance().closeCurentPopin();
+			GameInfo.can_map_update = true;
+		}
 		if(curName != "PopinBuild")
-			PopinManager.getInstance().openPopin("PopinBuild", 0.5, 0.5);
+			PopinManager.getInstance().openPopin("PopinBuild", 0.5, 0.55);
 	}
 }

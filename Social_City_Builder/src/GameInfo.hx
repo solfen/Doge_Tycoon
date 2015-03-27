@@ -368,7 +368,7 @@ class GameInfo
  	public static var dogeNumber:Float = 20;
  	public static var dogeMaxNumber:Float = 25;
  	public static var stockPercent:Float = 50;
- 	public static var building_2_build: Int = 0;
+ 	public static var building_2_build: Int = Building.PAS_DE_TIR;
  	public static var can_map_update: Bool = true; 	
 
  	public static var BUILDINGS_IMG_FOLDER_PATH: String = "assets/Buildings/";
@@ -621,7 +621,7 @@ class GameInfo
 			width: 5,
 			height: 5,
 			vertical_dir: 0,
-			building_time: 30,
+			building_time: 5,
 			frames_nb: 23,
 			img: "PasdetirLv1"
 		},
