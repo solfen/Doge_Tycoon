@@ -140,6 +140,60 @@ class GameInfo
 
  		}
  	}
+ 	public static var shopArticles:Map<String,Map<String,Dynamic>> = [
+ 		'soft' => [
+	 		'Dogeflooz1' => {
+	 			name: 'Dogeflooz x5000',
+	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png',
+	 			text: "Besoin d'un petit coup de boost ?\nUn peu juste pour le loyer ce mois ci ?\nLe pack NoobDoge est fait pour vous !",
+	 			price: 01
+	 		},
+	 		'Dogeflooz2' => {
+	 			name: 'Dogeflooz2 x50 000',
+	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Dogeflooz.png',
+	 			text: "Il y a des choses qui ne s'achètent pas\nPour tout le reste, il y a le Dogeflooz",
+	 			price: 05,
+	 		},
+	 		'Dogeflooz3' => {
+	 			name: 'Dogeflooz2 x500 000',
+	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Dogeflooz.png',
+	 			text: "Une banque qui appartient a son\nDogeFlooz ça change tout",
+	 			price: 25,
+	 		}, 		
+	 		'Dogeflooz4' => {
+	 			name: 'Dogeflooz2 x5 000 000',
+	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Dogeflooz.png',
+	 			text: "En panne de slogans connus,\nrevenez plus tard",
+	 			price: 99,
+	 		}
+ 		],
+ 		'hard' => [
+	 		"Os1" => {
+	 			name: "Os d'or",
+	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png',
+	 			text: "Tout ce qui brille n'est pas de l'or\nMais ces os le sont bien",
+	 			price: 1,
+	 		}, 		
+	 		"Os2" => {
+	 			name: "Os d'or x50",
+	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Os.png',
+	 			text: "Avec tout cet or, vous allez conquérir\nle monde, que dis-je l'espace !",
+	 			price: 5,
+	 		}, 		
+	 		"Os3" => {
+	 			name: "Os d'or x500",
+	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Os.png',
+	 			text: "Aucune description ne poura définir\nprécisément la qualitée de ce pack",
+	 			price: 25,
+	 		}, 		
+	 		"Os4" => {
+	 			name: "Os d'or x5000",
+	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Os.png',
+	 			text: "Ce pack ce passe d'une description\ncar il se suffit à lui même",
+	 			price: 99,
+	 		},
+ 		]
+ 	];
  	public static var buildMenuArticles:Dynamic = {
  		"niches": [
  			{
@@ -294,7 +348,7 @@ class GameInfo
  			}, 
  		],
  	};
- 	public static var buildings:Map<String,Dynamic> = [ //temp, à changer avec le merge lucien
+ 	public static var buildings:Map<String,Dynamic> = [ //temp, pour l'instant popinWorshop en a besoin mais pas à l'avenir
  		'hangarNamok'=> {
  			destination:'Namok',
  			previewImg: 'assets/UI/Icons/Planet/IconNamek.png',
