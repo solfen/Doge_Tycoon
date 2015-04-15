@@ -28,7 +28,7 @@ class MyPopin extends DisplayObjectContainer
 	private var scrollDragSy:Float;
 	private var header:Sprite;
 	private var headerTextures:Map<String,Texture>;
-	private var mouse_deltaY:Int;
+	private var mouse_wheel_dir:Int;
 	private var startScrollY:Float;
 	
 	public function new(startX:Float=0,startY:Float=0, texturePath:String, ?isModal:Bool=false) 
@@ -113,26 +113,26 @@ class MyPopin extends DisplayObjectContainer
 		}
 		icons["scrollingIndicator"] = scrollIndicator;
 		addChild(scrollIndicator);
-		mouse_deltaY = InputInfos.mouse_deltaY;
+		mouse_wheel_dir = InputInfos.mouse_wheel_dir;
 		startScrollY = containers["verticalScroller"].y;
 		Main.getInstance().addEventListener(Event.GAME_LOOP, scroll);
 	}
 	private function scroll(){
-		if(InputInfos.mouse_deltaY == 0 
+		if(InputInfos.mouse_wheel_dir == 0 
 		|| InputInfos.mouse_x - x+background.width/2  > background.x + background.width  
 		|| InputInfos.mouse_x - x+background.width/2  < background.x
 		|| InputInfos.mouse_y - y+background.height/2 > background.y + background.height 
 		|| InputInfos.mouse_y - y+background.height/2 < background.y )
 			return;
 
-		var contentDeltaY:Float = -(mouse_deltaY + InputInfos.mouse_deltaY)/3 * icons["articleBase"].height * 0.5;
+		var contentDeltaY:Float = -(mouse_wheel_dir + InputInfos.mouse_wheel_dir)/3 * icons["articleBase"].height * 0.5;
 		if(contentDeltaY <= 0
 		&& contentDeltaY > -(containers["verticalScroller"].height - icons["articleBase"].height*3+25)) {
-			mouse_deltaY += InputInfos.mouse_deltaY;
+			mouse_wheel_dir += InputInfos.mouse_wheel_dir;
 			containers["verticalScroller"].y = Std.int(startScrollY + contentDeltaY);
 			//TO DO MOVE SCROLL BAR
 		}
-		InputInfos.mouse_deltaY = 0; // !! BAD FIND ANOTHER WAY
+		InputInfos.mouse_wheel_dir = 0; // !! BAD FIND ANOTHER WAY
 	}
 	private function removeVerticalScrollBar(){
 		removeChild(icons["scrollingIndicator"]);

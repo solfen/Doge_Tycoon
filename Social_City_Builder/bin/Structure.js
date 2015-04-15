@@ -181,7 +181,7 @@ IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 		try {
 			this.getChildAt((build_data.row * 2 - s | 0) + 3).addChild(building);
 		} catch( error ) {
-			console.log(error);
+			haxe.Log.trace(error,{ fileName : "IsoMap.hx", lineNumber : 144, className : "IsoMap", methodName : "build_building"});
 		}
 		return building;
 	}
@@ -368,14 +368,14 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 		scenes.ScenesManager.getInstance().loadScene("GameScene");
 	}
 	,onFacebookConnect: function(pResponse) {
-		console.log(pResponse.status);
+		haxe.Log.trace(pResponse.status,{ fileName : "Main.hx", lineNumber : 117, className : "Main", methodName : "onFacebookConnect"});
 		if(pResponse.status == "connected") {
-			console.log("awww yeah ! you're in !");
+			haxe.Log.trace("awww yeah ! you're in !",{ fileName : "Main.hx", lineNumber : 119, className : "Main", methodName : "onFacebookConnect"});
 			FB.ui({ method : "share", href : "https://developers.facebook.com/docs"},$bind(this,this.test));
-		} else if(pResponse.status == "not_authorized") console.log("Oh no ! you're not identified");
+		} else if(pResponse.status == "not_authorized") haxe.Log.trace("Oh no ! you're not identified",{ fileName : "Main.hx", lineNumber : 123, className : "Main", methodName : "onFacebookConnect"});
 	}
 	,test: function() {
-		console.log("succes");
+		haxe.Log.trace("succes",{ fileName : "Main.hx", lineNumber : 127, className : "Main", methodName : "test"});
 	}
 	,gameLoop: function(timestamp) {
 		Main.stats.begin();
@@ -483,6 +483,12 @@ buildings.PreviewBuilding.prototype = $extend(buildings.Building.prototype,{
 	__class__: buildings.PreviewBuilding
 });
 var haxe = {};
+haxe.Log = function() { };
+$hxClasses["haxe.Log"] = haxe.Log;
+haxe.Log.__name__ = ["haxe","Log"];
+haxe.Log.trace = function(v,infos) {
+	js.Boot.__trace(v,infos);
+};
 haxe.Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
@@ -579,7 +585,7 @@ hud.IconHud.__name__ = ["hud","IconHud"];
 hud.IconHud.__super__ = PIXI.Sprite;
 hud.IconHud.prototype = $extend(PIXI.Sprite.prototype,{
 	changeTexture: function(state) {
-		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "normal") this.setTexture(this.normalTexture); else console.log("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state);
+		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "normal") this.setTexture(this.normalTexture); else haxe.Log.trace("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state,{ fileName : "IconHud.hx", lineNumber : 53, className : "hud.IconHud", methodName : "changeTexture"});
 	}
 	,onMouseDown: function(pData) {
 		if(this.activeTexture != null) this.setTexture(this.activeTexture);
@@ -877,6 +883,25 @@ var js = {};
 js.Boot = function() { };
 $hxClasses["js.Boot"] = js.Boot;
 js.Boot.__name__ = ["js","Boot"];
+js.Boot.__unhtml = function(s) {
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+};
+js.Boot.__trace = function(v,i) {
+	var msg;
+	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
+	msg += js.Boot.__string_rec(v,"");
+	if(i != null && i.customParams != null) {
+		var _g = 0;
+		var _g1 = i.customParams;
+		while(_g < _g1.length) {
+			var v1 = _g1[_g];
+			++_g;
+			msg += "," + js.Boot.__string_rec(v1,"");
+		}
+	}
+	var d;
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js.Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+};
 js.Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -1093,18 +1118,18 @@ popin.MyPopin.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 		this.icons.set("scrollingIndicator",v);
 		v;
 		this.addChild(this.scrollIndicator);
-		this.mouse_deltaY = utils.game.InputInfos.mouse_deltaY;
+		this.mouse_wheel_dir = utils.game.InputInfos.mouse_wheel_dir;
 		this.startScrollY = this.containers.get("verticalScroller").y;
 		Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this.scroll));
 	}
 	,scroll: function() {
-		if(utils.game.InputInfos.mouse_deltaY == 0 || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 > this.background.x + this.background.width || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 < this.background.x || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 > this.background.y + this.background.height || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 < this.background.y) return;
-		var contentDeltaY = -(this.mouse_deltaY + utils.game.InputInfos.mouse_deltaY) / 3 * this.icons.get("articleBase").height * 0.5;
+		if(utils.game.InputInfos.mouse_wheel_dir == 0 || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 > this.background.x + this.background.width || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 < this.background.x || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 > this.background.y + this.background.height || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 < this.background.y) return;
+		var contentDeltaY = -(this.mouse_wheel_dir + utils.game.InputInfos.mouse_wheel_dir) / 3 * this.icons.get("articleBase").height * 0.5;
 		if(contentDeltaY <= 0 && contentDeltaY > -(this.containers.get("verticalScroller").height - this.icons.get("articleBase").height * 3 + 25)) {
-			this.mouse_deltaY += utils.game.InputInfos.mouse_deltaY;
+			this.mouse_wheel_dir += utils.game.InputInfos.mouse_wheel_dir;
 			this.containers.get("verticalScroller").y = this.startScrollY + contentDeltaY | 0;
 		}
-		utils.game.InputInfos.mouse_deltaY = 0;
+		utils.game.InputInfos.mouse_wheel_dir = 0;
 	}
 	,removeVerticalScrollBar: function() {
 		this.removeChild(this.icons.get("scrollingIndicator"));
@@ -1533,7 +1558,7 @@ popin.PopinMarket.prototype = $extend(popin.MyPopin.prototype,{
 				if(cost <= GameInfo.ressources.get("fric").userPossesion) {
 					GameInfo.ressources.get("fric").userPossesion -= cost;
 					GameInfo.ressources.get("poudre" + index3).userPossesion += GameInfo.ressources.get("poudre" + index3).lastQuantityBuy;
-					console.log(GameInfo.ressources.get("poudre" + index3).userPossesion);
+					haxe.Log.trace(GameInfo.ressources.get("poudre" + index3).userPossesion,{ fileName : "PopinMarket.hx", lineNumber : 145, className : "popin.PopinMarket", methodName : "childClick"});
 					hud.HudManager.getInstance().updateChildText();
 					popin.PopinManager.getInstance().updateInventory();
 				}
@@ -1730,7 +1755,7 @@ popin.PopinShop.prototype = $extend(popin.MyPopin.prototype,{
 });
 popin.PopinUpgrade = function(startX,startY,buildingAttached) {
 	if(buildingAttached == null) {
-		console.log("ERROR : NO BUILDING REF PASSED");
+		haxe.Log.trace("ERROR : NO BUILDING REF PASSED",{ fileName : "PopinUpgrade.hx", lineNumber : 21, className : "popin.PopinUpgrade", methodName : "new"});
 		return;
 	}
 	popin.MyPopin.call(this,startX,startY,"assets/UI/HudBuildingContextBar.png");
@@ -1818,7 +1843,7 @@ scenes.GameScene = function() {
 	PIXI.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
-	new utils.game.InputInfos(true,true);
+	new utils.game.InputInfos(true,true,true);
 	utils.game.InputInfos.mouse_x = Std["int"](utils.system.DeviceCapabilities.get_width() * 0.5);
 	utils.game.InputInfos.mouse_y = Std["int"](utils.system.DeviceCapabilities.get_height() * 0.5);
 	new IsoMap("assets/BG.jpg",64,64,128,64);
@@ -1943,7 +1968,6 @@ utils.events.Event.prototype = {
 };
 utils.game = {};
 utils.game.InputInfos = function(listen_click,listen_mousemove,listen_wheel) {
-	if(listen_wheel == null) listen_wheel = true;
 	utils.game.InputInfos.singleton = this;
 	utils.game.InputInfos.mouse_x = 0;
 	utils.game.InputInfos.mouse_y = 0;
@@ -1951,13 +1975,14 @@ utils.game.InputInfos = function(listen_click,listen_mousemove,listen_wheel) {
 	utils.game.InputInfos.last_mouse_down_y = 0;
 	utils.game.InputInfos.last_mouse_up_x = 0;
 	utils.game.InputInfos.last_mouse_up_y = 0;
+	utils.game.InputInfos.mouse_wheel_dir = 0;
 	utils.game.InputInfos.is_mouse_down = false;
 	if(listen_click) {
 		window.onmousedown = $bind(this,this._on_mousedown);
 		window.onmouseup = $bind(this,this._on_mouseup);
 	}
 	if(listen_mousemove) window.onmousemove = $bind(this,this._on_mousemove);
-	if(listen_wheel) window.addEventListener("wheel",$bind(this,this._on_wheel));
+	if(listen_wheel) window.addEventListener("wheel",$bind(this,this._on_wheel),false);
 };
 $hxClasses["utils.game.InputInfos"] = utils.game.InputInfos;
 utils.game.InputInfos.__name__ = ["utils","game","InputInfos"];
@@ -1977,7 +2002,8 @@ utils.game.InputInfos.prototype = {
 		utils.game.InputInfos.mouse_y = pData.clientY;
 	}
 	,_on_wheel: function(pData) {
-		utils.game.InputInfos.mouse_deltaY = pData.deltaY;
+		if(pData.deltaY < 0) utils.game.InputInfos.mouse_wheel_dir = -1; else utils.game.InputInfos.mouse_wheel_dir = 1;
+		haxe.Log.trace("wheel direction:",{ fileName : "InputInfos.hx", lineNumber : 74, className : "utils.game.InputInfos", methodName : "_on_wheel", customParams : [utils.game.InputInfos.mouse_wheel_dir]});
 	}
 	,__class__: utils.game.InputInfos
 };
@@ -2185,6 +2211,5 @@ buildings.PreviewBuilding.CANT_BUILD_COLOR = 16729156;
 utils.events.Event.COMPLETE = "Event.COMPLETE";
 utils.events.Event.GAME_LOOP = "Event.GAME_LOOP";
 utils.events.Event.RESIZE = "Event.RESIZE";
-utils.game.InputInfos.mouse_deltaY = 0;
 Main.main();
 })();

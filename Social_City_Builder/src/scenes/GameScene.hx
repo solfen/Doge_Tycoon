@@ -26,14 +26,12 @@ class GameScene extends DisplayObjectContainer
 		x=0;
 		y=0;
 
-		new InputInfos(true, true);
+		new InputInfos(true, true, true);
 		InputInfos.mouse_x = Std.int(DeviceCapabilities.width*0.5);
 		InputInfos.mouse_y = Std.int(DeviceCapabilities.height*0.5);
 
 		new IsoMap("assets/BG.jpg", 64, 64, 128, 64);
 		addChild(IsoMap.singleton);
-		/*var testTexture:Texture = Texture.fromFrame('CasinoLv2_01.png');
-		addChild(new Sprite(testTexture));*/
 		addChild(HudManager.getInstance());
 		addChild(PopinManager.getInstance());
 

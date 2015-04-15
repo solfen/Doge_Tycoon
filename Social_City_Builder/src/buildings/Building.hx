@@ -144,16 +144,16 @@ class Building extends MovieClip
 		{
 			return;
 		}
-		if(GameInfo.is_building_context_pop_open){
+		if (GameInfo.is_building_context_pop_open)
+		{
 			popin.PopinManager.getInstance().closeContextPopin();
 			GameInfo.is_building_context_pop_open = false;
 		}
-		else {
-			popin.PopinManager.getInstance().openContextPopin(width*0.5/DeviceCapabilities.width,-height*0.5/DeviceCapabilities.height,this);
+		else
+		{
+			popin.PopinManager.getInstance().openContextPopin(width*0.5/DeviceCapabilities.width, -height*0.5/DeviceCapabilities.height, this);
 			GameInfo.is_building_context_pop_open = true;
 		}
-
-		// dispatch an event here?
 	}
 
 	private function _get_texture (): Array<Texture>

@@ -116,8 +116,16 @@ class IsoMap extends DisplayObjectContainer
 
 		// set the obstacles layer :
 
-		var s: Int = building.width_in_tiles_nb<building.height_in_tiles_nb ? building.height_in_tiles_nb : building.width_in_tiles_nb;
+		/*
+			hangar lvl 1:
+
+			width: 4
+			height: 2
+		*/
+
+		var s: Int = building.width_in_tiles_nb < building.height_in_tiles_nb ? building.height_in_tiles_nb : building.width_in_tiles_nb;
 		var i: Int = s*s;
+
 		while (i-->0)
 		{
 			var c: Int = Std.int(build_data.index - Std.int(i/s)*cols_nb - i%s);
@@ -262,7 +270,7 @@ class IsoMap extends DisplayObjectContainer
 
 		// vérification de l'obstacles_layer :
 		var conf = GameInfo.BUILDINGS_CONFIG[pBuilding_type|Building.LVL_1];
-		var s: Int = conf.width_in_tiles_nb<conf.height_in_tiles_nb ? conf.height : conf.width;
+		var s: Int = conf.width_in_tiles_nb < conf.height_in_tiles_nb ? conf.height : conf.width;
 		var i: Int = s*s;
 
 		while (i-->0)
