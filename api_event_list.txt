@@ -2,8 +2,7 @@ buy_hard
 buy_soft
 buy_plpp
 sell_plpp
-accept_quest
-return_quest
+finish_quest
 build_building
 destroy_building
 build_rocket
