@@ -35,30 +35,36 @@ class LoaderScene extends DisplayObjectContainer
 		planet = new Sprite(Texture.fromFrame('assets/UI/SplashScreen/Planet.png'));
 		var planetLight:Sprite = new Sprite(Texture.fromFrame('assets/UI/SplashScreen/PlanetLight.png'));
 		var title:Sprite = new Sprite(Texture.fromFrame('assets/UI/SplashScreen/Title.png'));
+		var loadingBar:Sprite = new Sprite(Texture.fromFrame('assets/UI/SplashScreen/LoadingFillBar.png'));
+		var loadingFillStart = new Sprite(Texture.fromFrame('assets/UI/SplashScreen/LoadingFill01.png'));
 		title.anchor.set(0.5,0.5);
 		planet.anchor.set(0.5,0.5);
 		planetGlow.anchor.set(0.5,0.5);
 		doge.anchor.set(0.5,0.5);
 		planetLight.anchor.set(0.5,0.5);
+		loadingBar.anchor.set(0.5,0.5);
+
 		title.position.set(Std.int(DeviceCapabilities.width/2),Std.int(DeviceCapabilities.height*0.3));
 		planet.position.set(Std.int(DeviceCapabilities.width/2),Std.int(DeviceCapabilities.height*1.05));
 		planetGlow.position.set(Std.int(DeviceCapabilities.width/2),Std.int(DeviceCapabilities.height*0.7));
 		doge.position.set(Std.int(DeviceCapabilities.width/2),Std.int(DeviceCapabilities.height*0.65));
 		planetLight.position.set(Std.int(DeviceCapabilities.width/2),Std.int(DeviceCapabilities.height*0.86));
+		loadingBar.position.set(Std.int(DeviceCapabilities.width/2),Std.int(DeviceCapabilities.height*0.9));
 
 		addChild(background);
 		addChild(title);
 		addChild(planet);
 		addChild(planetLight);
-		addChild(planetGlow);
 		addChild(doge);
-		doge.animationSpeed = 0.5;
-		planetGlow.animationSpeed = 0.15;
+		addChild(planetGlow);
+		addChild(loadingBar);
+		doge.animationSpeed = 0.25;
+		planetGlow.animationSpeed = 0.05;
 		doge.play();
 		planetGlow.play();
 		Main.getInstance().addEventListener(Event.GAME_LOOP, animation);
 	}
 	private function animation(){
-		planet.rotation -= 0.1;
+		planet.rotation -= 0.03;
 	}
 }
