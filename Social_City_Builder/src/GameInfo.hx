@@ -381,7 +381,6 @@ class GameInfo
 		Building.CASINO | Building.LVL_1 => {
 			width: 3,
 			height: 3,
-			vertical_dir: 0,
 			building_time: 30,
 			frames_nb: 25,
 			img: "CasinoLv1"
@@ -389,7 +388,6 @@ class GameInfo
 		Building.CASINO | Building.LVL_2 => {
 			width: 3,
 			height: 3,
-			vertical_dir: 0,
 			building_time: 60,
 			frames_nb: 18,
 			img: "CasinoLv2"
@@ -397,7 +395,6 @@ class GameInfo
 		Building.CASINO | Building.LVL_3 => {
 			width: 3,
 			height: 3,
-			vertical_dir: 0,
 			building_time: 90,
 			frames_nb: 12,
 			img: "CasinoLv3"
@@ -405,7 +402,6 @@ class GameInfo
 		Building.EGLISE | Building.LVL_1 => {
 			width: 3,
 			height: 3,
-			vertical_dir: 0,
 			building_time: 30,
 			frames_nb: 13,
 			img: "EgliseLv1"
@@ -413,7 +409,6 @@ class GameInfo
 		Building.EGLISE | Building.LVL_2 => {
 			width: 3,
 			height: 3,
-			vertical_dir: 0,
 			building_time: 60,
 			frames_nb: 16,
 			img: "EgliseLv2"
@@ -421,7 +416,6 @@ class GameInfo
 		Building.EGLISE | Building.LVL_3 => {
 			width: 3,
 			height: 3,
-			vertical_dir: 0,
 			building_time: 90,
 			frames_nb: 16,
 			img: "EgliseLv3"
@@ -429,7 +423,6 @@ class GameInfo
 		Building.HANGAR_BLEU | Building.LVL_1 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
 			img: "HangarBleuLv1"
@@ -437,7 +430,6 @@ class GameInfo
 		Building.HANGAR_BLEU | Building.LVL_2 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
 			img: "HangarBleuLv2"
@@ -445,7 +437,6 @@ class GameInfo
 		Building.HANGAR_BLEU | Building.LVL_3 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
 			img: "HangarBleuLv3"
@@ -453,7 +444,6 @@ class GameInfo
 		Building.HANGAR_CYAN | Building.LVL_1 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
 			img: "HangarCyanLv1"
@@ -461,7 +451,6 @@ class GameInfo
 		Building.HANGAR_CYAN | Building.LVL_2 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
 			img: "HangarCyanLv2"
@@ -469,7 +458,6 @@ class GameInfo
 		Building.HANGAR_CYAN | Building.LVL_3 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
 			img: "HangarCyanLv3"
@@ -477,7 +465,6 @@ class GameInfo
 		Building.HANGAR_JAUNE | Building.LVL_1 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
 			img: "HangarJauneLv1"
@@ -485,7 +472,6 @@ class GameInfo
 		Building.HANGAR_JAUNE | Building.LVL_2 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
 			img: "HangarJauneLv2"
@@ -493,7 +479,6 @@ class GameInfo
 		Building.HANGAR_JAUNE | Building.LVL_3 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
 			img: "HangarJauneLv3"
@@ -501,7 +486,6 @@ class GameInfo
 		Building.HANGAR_ROUGE | Building.LVL_1 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
 			img: "HangarRougeLv1"
@@ -509,7 +493,6 @@ class GameInfo
 		Building.HANGAR_ROUGE | Building.LVL_2 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
 			img: "HangarRougeLv2"
@@ -517,7 +500,6 @@ class GameInfo
 		Building.HANGAR_ROUGE | Building.LVL_3 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
 			img: "HangarRougeLv3"
@@ -525,7 +507,6 @@ class GameInfo
 		Building.HANGAR_VERT | Building.LVL_1 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
 			img: "HangarVertLv1"
@@ -533,7 +514,6 @@ class GameInfo
 		Building.HANGAR_VERT | Building.LVL_2 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
 			img: "HangarVertLv2"
@@ -541,7 +521,6 @@ class GameInfo
 		Building.HANGAR_VERT | Building.LVL_3 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
 			img: "HangarVertLv3"
@@ -549,7 +528,6 @@ class GameInfo
 		Building.HANGAR_VIOLET | Building.LVL_1 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 30,
 			frames_nb: 1,
 			img: "HangarVioletLv1"
@@ -557,7 +535,6 @@ class GameInfo
 		Building.HANGAR_VIOLET | Building.LVL_2 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 60,
 			frames_nb: 1,
 			img: "HangarVioletLv2"
@@ -565,7 +542,6 @@ class GameInfo
 		Building.HANGAR_VIOLET | Building.LVL_3 => {
 			width: 4,
 			height: 2,
-			vertical_dir: -1,
 			building_time: 90,
 			frames_nb: 1,
 			img: "HangarVioletLv3"
@@ -573,7 +549,6 @@ class GameInfo
 		Building.LABO | Building.LVL_1 => {
 			width: 2,
 			height: 2,
-			vertical_dir: 0,
 			building_time: 30,
 			frames_nb: 1,
 			img: "LaboLv1"
@@ -581,7 +556,6 @@ class GameInfo
 		Building.LABO | Building.LVL_2 => {
 			width: 2,
 			height: 2,
-			vertical_dir: 0,
 			building_time: 60,
 			frames_nb: 1,
 			img: "LaboLv2"
@@ -589,7 +563,6 @@ class GameInfo
 		Building.LABO | Building.LVL_3 => {
 			width: 3,
 			height: 3,
-			vertical_dir: 0,
 			building_time: 90,
 			frames_nb: 1,
 			img: "LaboLv3"
@@ -597,7 +570,6 @@ class GameInfo
 		Building.NICHE | Building.LVL_1 => {
 			width: 1,
 			height: 1,
-			vertical_dir: 0,
 			building_time: 30,
 			frames_nb: 11,
 			img: "NicheLv1"
@@ -605,7 +577,6 @@ class GameInfo
 		Building.NICHE | Building.LVL_2 => {
 			width: 1,
 			height: 1,
-			vertical_dir: 0,
 			building_time: 60,
 			frames_nb: 33,
 			img: "NicheLv2"
@@ -613,7 +584,6 @@ class GameInfo
 		Building.NICHE | Building.LVL_3 => {
 			width: 1,
 			height: 1,
-			vertical_dir: 0,
 			building_time: 90,
 			frames_nb: 18,
 			img: "NicheLv3"
@@ -621,7 +591,6 @@ class GameInfo
 		Building.PAS_DE_TIR | Building.LVL_1 => {
 			width: 5,
 			height: 5,
-			vertical_dir: 0,
 			building_time: 5,
 			frames_nb: 23,
 			img: "PasdetirLv1"
@@ -629,7 +598,6 @@ class GameInfo
 		Building.PAS_DE_TIR | Building.LVL_2 => {
 			width: 5,
 			height: 5,
-			vertical_dir: 0,
 			building_time: 60,
 			frames_nb: 12,
 			img: "PasdetirLv2"
@@ -637,7 +605,6 @@ class GameInfo
 		Building.PAS_DE_TIR | Building.LVL_3 => {
 			width: 5,
 			height: 5,
-			vertical_dir: 0,
 			building_time: 90,
 			frames_nb: 7,
 			img: "PasdetirLv3"
@@ -645,7 +612,6 @@ class GameInfo
 		Building.ENTREPOT | Building.LVL_1 => {
 			width: 2,
 			height: 2,
-			vertical_dir: 0,
 			building_time: 30,
 			frames_nb: 4,
 			img: "EntrepotLv1"
@@ -653,7 +619,6 @@ class GameInfo
 		Building.ENTREPOT | Building.LVL_2 => {
 			width: 2,
 			height: 2,
-			vertical_dir: 0,
 			building_time: 60,
 			frames_nb: 4,
 			img: "EntrepotLv2"
@@ -661,7 +626,6 @@ class GameInfo
 		Building.ENTREPOT | Building.LVL_3 => {
 			width: 2,
 			height: 2,
-			vertical_dir: 0,
 			building_time: 90,
 			frames_nb: 4,
 			img: "EntrepotLv3"
@@ -669,7 +633,6 @@ class GameInfo
 		Building.MUSEE | Building.LVL_1 => {
 			width: 2,
 			height: 2,
-			vertical_dir: 0,
 			building_time: 30,
 			frames_nb: 1,
 			img: "MuseeLv1"
@@ -677,15 +640,13 @@ class GameInfo
 		Building.MUSEE | Building.LVL_2 => {
 			width: 2,
 			height: 2,
-			vertical_dir: 0,
 			building_time: 60,
 			frames_nb: 1,
 			img: "MuseeLv2"
 		},
 		Building.MUSEE | Building.LVL_3 => {
-			width: 3,
-			height: 2,
-			vertical_dir: 1,
+			width: 2,
+			height: 3,
 			building_time: 90,
 			frames_nb: 1,
 			img: "MuseeLv3"

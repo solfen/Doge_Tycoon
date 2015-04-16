@@ -68,6 +68,12 @@ buildings.Building.get_building_type = function(id) {
 buildings.Building.get_building_lvl = function(id) {
 	return id & 3840;
 };
+buildings.Building.get_map_idx = function(pOrigin,pWidth,pHeight) {
+	var map_idx = [];
+	var i = pWidth * pHeight;
+	while(i-- > 0) map_idx[i] = pOrigin - i % pWidth - (i / pWidth | 0) * IsoMap.cols_nb;
+	return map_idx;
+};
 buildings.Building.__super__ = PIXI.MovieClip;
 buildings.Building.prototype = $extend(PIXI.MovieClip.prototype,{
 	get_id: function() {
@@ -203,18 +209,16 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 		if(build_data == null || !build_data.can_build) return null;
 		var building = new buildings.Building(pBuilding_type,build_data.col,build_data.row,build_data.x,build_data.y);
 		building.build();
-		var s;
-		if(building.width_in_tiles_nb < building.height_in_tiles_nb) s = building.height_in_tiles_nb; else s = building.width_in_tiles_nb;
-		var i = s * s;
+		var building_map_idx = buildings.Building.get_map_idx(build_data.index,building.width_in_tiles_nb,building.height_in_tiles_nb);
+		var i = building_map_idx.length;
 		while(i-- > 0) {
-			var c = build_data.index - (i / s | 0) * IsoMap.cols_nb - i % s | 0;
-			this.obstacles_layer[c] = true;
-			this.buildings_layer[c] = pBuilding_type;
+			this.obstacles_layer[building_map_idx[i]] = true;
+			this.buildings_layer[building_map_idx[i]] = pBuilding_type;
 		}
 		try {
-			this.getChildAt((build_data.row * 2 - s | 0) + 3).addChild(building);
+			this.getChildAt((build_data.row * 2 - building.height_in_tiles_nb | 0) + 3).addChild(building);
 		} catch( error ) {
-			haxe.Log.trace(error,{ fileName : "IsoMap.hx", lineNumber : 144, className : "IsoMap", methodName : "build_building"});
+			haxe.Log.trace(error,{ fileName : "IsoMap.hx", lineNumber : 135, className : "IsoMap", methodName : "build_building"});
 		}
 		return building;
 	}
@@ -279,13 +283,9 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 		var new_y = utils.game.IsoTools.cell_y(row,IsoMap.cell_height,this._offset_y);
 		var can_build = true;
 		var conf = GameInfo.BUILDINGS_CONFIG.get(pBuilding_type | buildings.Building.LVL_1);
-		var s;
-		if(conf.width_in_tiles_nb < conf.height_in_tiles_nb) s = conf.height; else s = conf.width;
-		var i = s * s;
-		while(i-- > 0) {
-			var c = index - (i / s | 0) * IsoMap.cols_nb - i % s | 0;
-			if(this.obstacles_layer[c]) can_build = false;
-		}
+		var building_map_idx = buildings.Building.get_map_idx(index,conf.width,conf.height);
+		var i = building_map_idx.length;
+		while(can_build && i-- > 0) if(this.obstacles_layer[building_map_idx[i]]) can_build = false;
 		return { index : index, col : col, row : row, x : new_x, y : new_y, can_build : can_build};
 	}
 	,__class__: IsoMap
@@ -2197,45 +2197,45 @@ GameInfo.BUILDINGS_IMG_EXTENSION = ".png";
 GameInfo.BUILDINGS_CONFIG = (function($this) {
 	var $r;
 	var _g = new haxe.ds.IntMap();
-	_g.set(buildings.Building.CASINO | buildings.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 25, img : "CasinoLv1"});
-	_g.set(buildings.Building.CASINO | buildings.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 60, frames_nb : 18, img : "CasinoLv2"});
-	_g.set(buildings.Building.CASINO | buildings.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 12, img : "CasinoLv3"});
-	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_1,{ width : 3, height : 3, vertical_dir : 0, building_time : 30, frames_nb : 13, img : "EgliseLv1"});
-	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_2,{ width : 3, height : 3, vertical_dir : 0, building_time : 60, frames_nb : 16, img : "EgliseLv2"});
-	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 16, img : "EgliseLv3"});
-	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarBleuLv1"});
-	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarBleuLv2"});
-	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarBleuLv3"});
-	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarCyanLv1"});
-	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarCyanLv2"});
-	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarCyanLv3"});
-	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarJauneLv1"});
-	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarJauneLv2"});
-	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarJauneLv3"});
-	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarRougeLv1"});
-	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarRougeLv2"});
-	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarRougeLv3"});
-	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarVertLv1"});
-	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarVertLv2"});
-	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarVertLv3"});
-	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_1,{ width : 4, height : 2, vertical_dir : -1, building_time : 30, frames_nb : 1, img : "HangarVioletLv1"});
-	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_2,{ width : 4, height : 2, vertical_dir : -1, building_time : 60, frames_nb : 1, img : "HangarVioletLv2"});
-	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_3,{ width : 4, height : 2, vertical_dir : -1, building_time : 90, frames_nb : 1, img : "HangarVioletLv3"});
-	_g.set(buildings.Building.LABO | buildings.Building.LVL_1,{ width : 2, height : 2, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "LaboLv1"});
-	_g.set(buildings.Building.LABO | buildings.Building.LVL_2,{ width : 2, height : 2, vertical_dir : 0, building_time : 60, frames_nb : 1, img : "LaboLv2"});
-	_g.set(buildings.Building.LABO | buildings.Building.LVL_3,{ width : 3, height : 3, vertical_dir : 0, building_time : 90, frames_nb : 1, img : "LaboLv3"});
-	_g.set(buildings.Building.NICHE | buildings.Building.LVL_1,{ width : 1, height : 1, vertical_dir : 0, building_time : 30, frames_nb : 11, img : "NicheLv1"});
-	_g.set(buildings.Building.NICHE | buildings.Building.LVL_2,{ width : 1, height : 1, vertical_dir : 0, building_time : 60, frames_nb : 33, img : "NicheLv2"});
-	_g.set(buildings.Building.NICHE | buildings.Building.LVL_3,{ width : 1, height : 1, vertical_dir : 0, building_time : 90, frames_nb : 18, img : "NicheLv3"});
-	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_1,{ width : 5, height : 5, vertical_dir : 0, building_time : 5, frames_nb : 23, img : "PasdetirLv1"});
-	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_2,{ width : 5, height : 5, vertical_dir : 0, building_time : 60, frames_nb : 12, img : "PasdetirLv2"});
-	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_3,{ width : 5, height : 5, vertical_dir : 0, building_time : 90, frames_nb : 7, img : "PasdetirLv3"});
-	_g.set(buildings.Building.ENTREPOT | buildings.Building.LVL_1,{ width : 2, height : 2, vertical_dir : 0, building_time : 30, frames_nb : 4, img : "EntrepotLv1"});
-	_g.set(buildings.Building.ENTREPOT | buildings.Building.LVL_2,{ width : 2, height : 2, vertical_dir : 0, building_time : 60, frames_nb : 4, img : "EntrepotLv2"});
-	_g.set(buildings.Building.ENTREPOT | buildings.Building.LVL_3,{ width : 2, height : 2, vertical_dir : 0, building_time : 90, frames_nb : 4, img : "EntrepotLv3"});
-	_g.set(buildings.Building.MUSEE | buildings.Building.LVL_1,{ width : 2, height : 2, vertical_dir : 0, building_time : 30, frames_nb : 1, img : "MuseeLv1"});
-	_g.set(buildings.Building.MUSEE | buildings.Building.LVL_2,{ width : 2, height : 2, vertical_dir : 0, building_time : 60, frames_nb : 1, img : "MuseeLv2"});
-	_g.set(buildings.Building.MUSEE | buildings.Building.LVL_3,{ width : 3, height : 2, vertical_dir : 1, building_time : 90, frames_nb : 1, img : "MuseeLv3"});
+	_g.set(buildings.Building.CASINO | buildings.Building.LVL_1,{ width : 3, height : 3, building_time : 30, frames_nb : 25, img : "CasinoLv1"});
+	_g.set(buildings.Building.CASINO | buildings.Building.LVL_2,{ width : 3, height : 3, building_time : 60, frames_nb : 18, img : "CasinoLv2"});
+	_g.set(buildings.Building.CASINO | buildings.Building.LVL_3,{ width : 3, height : 3, building_time : 90, frames_nb : 12, img : "CasinoLv3"});
+	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_1,{ width : 3, height : 3, building_time : 30, frames_nb : 13, img : "EgliseLv1"});
+	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_2,{ width : 3, height : 3, building_time : 60, frames_nb : 16, img : "EgliseLv2"});
+	_g.set(buildings.Building.EGLISE | buildings.Building.LVL_3,{ width : 3, height : 3, building_time : 90, frames_nb : 16, img : "EgliseLv3"});
+	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_1,{ width : 4, height : 2, building_time : 30, frames_nb : 1, img : "HangarBleuLv1"});
+	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_2,{ width : 4, height : 2, building_time : 60, frames_nb : 1, img : "HangarBleuLv2"});
+	_g.set(buildings.Building.HANGAR_BLEU | buildings.Building.LVL_3,{ width : 4, height : 2, building_time : 90, frames_nb : 1, img : "HangarBleuLv3"});
+	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_1,{ width : 4, height : 2, building_time : 30, frames_nb : 1, img : "HangarCyanLv1"});
+	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_2,{ width : 4, height : 2, building_time : 60, frames_nb : 1, img : "HangarCyanLv2"});
+	_g.set(buildings.Building.HANGAR_CYAN | buildings.Building.LVL_3,{ width : 4, height : 2, building_time : 90, frames_nb : 1, img : "HangarCyanLv3"});
+	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_1,{ width : 4, height : 2, building_time : 30, frames_nb : 1, img : "HangarJauneLv1"});
+	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_2,{ width : 4, height : 2, building_time : 60, frames_nb : 1, img : "HangarJauneLv2"});
+	_g.set(buildings.Building.HANGAR_JAUNE | buildings.Building.LVL_3,{ width : 4, height : 2, building_time : 90, frames_nb : 1, img : "HangarJauneLv3"});
+	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_1,{ width : 4, height : 2, building_time : 30, frames_nb : 1, img : "HangarRougeLv1"});
+	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_2,{ width : 4, height : 2, building_time : 60, frames_nb : 1, img : "HangarRougeLv2"});
+	_g.set(buildings.Building.HANGAR_ROUGE | buildings.Building.LVL_3,{ width : 4, height : 2, building_time : 90, frames_nb : 1, img : "HangarRougeLv3"});
+	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_1,{ width : 4, height : 2, building_time : 30, frames_nb : 1, img : "HangarVertLv1"});
+	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_2,{ width : 4, height : 2, building_time : 60, frames_nb : 1, img : "HangarVertLv2"});
+	_g.set(buildings.Building.HANGAR_VERT | buildings.Building.LVL_3,{ width : 4, height : 2, building_time : 90, frames_nb : 1, img : "HangarVertLv3"});
+	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_1,{ width : 4, height : 2, building_time : 30, frames_nb : 1, img : "HangarVioletLv1"});
+	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_2,{ width : 4, height : 2, building_time : 60, frames_nb : 1, img : "HangarVioletLv2"});
+	_g.set(buildings.Building.HANGAR_VIOLET | buildings.Building.LVL_3,{ width : 4, height : 2, building_time : 90, frames_nb : 1, img : "HangarVioletLv3"});
+	_g.set(buildings.Building.LABO | buildings.Building.LVL_1,{ width : 2, height : 2, building_time : 30, frames_nb : 1, img : "LaboLv1"});
+	_g.set(buildings.Building.LABO | buildings.Building.LVL_2,{ width : 2, height : 2, building_time : 60, frames_nb : 1, img : "LaboLv2"});
+	_g.set(buildings.Building.LABO | buildings.Building.LVL_3,{ width : 3, height : 3, building_time : 90, frames_nb : 1, img : "LaboLv3"});
+	_g.set(buildings.Building.NICHE | buildings.Building.LVL_1,{ width : 1, height : 1, building_time : 30, frames_nb : 11, img : "NicheLv1"});
+	_g.set(buildings.Building.NICHE | buildings.Building.LVL_2,{ width : 1, height : 1, building_time : 60, frames_nb : 33, img : "NicheLv2"});
+	_g.set(buildings.Building.NICHE | buildings.Building.LVL_3,{ width : 1, height : 1, building_time : 90, frames_nb : 18, img : "NicheLv3"});
+	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_1,{ width : 5, height : 5, building_time : 5, frames_nb : 23, img : "PasdetirLv1"});
+	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_2,{ width : 5, height : 5, building_time : 60, frames_nb : 12, img : "PasdetirLv2"});
+	_g.set(buildings.Building.PAS_DE_TIR | buildings.Building.LVL_3,{ width : 5, height : 5, building_time : 90, frames_nb : 7, img : "PasdetirLv3"});
+	_g.set(buildings.Building.ENTREPOT | buildings.Building.LVL_1,{ width : 2, height : 2, building_time : 30, frames_nb : 4, img : "EntrepotLv1"});
+	_g.set(buildings.Building.ENTREPOT | buildings.Building.LVL_2,{ width : 2, height : 2, building_time : 60, frames_nb : 4, img : "EntrepotLv2"});
+	_g.set(buildings.Building.ENTREPOT | buildings.Building.LVL_3,{ width : 2, height : 2, building_time : 90, frames_nb : 4, img : "EntrepotLv3"});
+	_g.set(buildings.Building.MUSEE | buildings.Building.LVL_1,{ width : 2, height : 2, building_time : 30, frames_nb : 1, img : "MuseeLv1"});
+	_g.set(buildings.Building.MUSEE | buildings.Building.LVL_2,{ width : 2, height : 2, building_time : 60, frames_nb : 1, img : "MuseeLv2"});
+	_g.set(buildings.Building.MUSEE | buildings.Building.LVL_3,{ width : 2, height : 3, building_time : 90, frames_nb : 1, img : "MuseeLv3"});
 	$r = _g;
 	return $r;
 }(this));

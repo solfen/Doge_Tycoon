@@ -1,0 +1,74 @@
+<script>
+
+/*
+
+- hangar lvl 1:
+
+width: 4
+height: 2
+
+0000
+0000
+1111
+i111
+
+- musee lvl 3:
+
+width: 2
+height: 3
+
+110
+110
+i10
+
+*/
+
+var map = [
+	0,0,0,0,0,0,
+	0,0,0,0,0,0,
+	0,0,0,0,0,0,
+	0,0,0,0,0,0,
+	0,0,0,0,0,0,
+];
+
+var cols_nb = 6;
+
+/*---------------------------------------*/
+var ori1 = 18;
+var w1 = 2;
+var h1 = 3;
+
+var map_idx1 = get_map_idx(ori1, w1, h1);
+// goal -> [18,17,12,11,6,5] -> [ori-0, ori-1, ori-0-cols_nb, ori-1-cols_nb, ori-0-cols_nb*2, ori-1-cols_nb*2] 
+console.log("expected1:", [18,17,12,11,6,5]);
+console.log("map_idx1:", map_idx1);
+
+/*---------------------------------------*/
+var ori2 = 19;
+var w2 = 3;
+var h2 = 2;
+
+var map_idx2 = get_map_idx(ori2, w2, h2);
+// goal ---> [19,18,17,13,12,11] ---> [ori-0, ori-1, ori-2, ori-0-cols_nb, ori-1-cols_nb, ori-2-cols_nb] 
+console.log("expected2:", [19,18,17,13,12,11]);
+console.log("map_idx2:", map_idx2);
+
+/*---------------------------------------*/
+function get_map_idx (ori, w, h) {
+	
+	var map_idx = [];
+
+	for (var i = w*h; i--;) { // i = [5 -> 0]
+
+		console.log("i%w:",i%w);
+		console.log("i/h|0:",i/h|0);
+		console.log("i/w|0:",i/w|0);
+
+		map_idx[i] = ori - (i%w) - (i/w|0) * cols_nb;
+	}
+
+
+	return map_idx;
+}
+
+</script>

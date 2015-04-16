@@ -61,6 +61,21 @@ class Building extends MovieClip
 		return id&0xF00;
 	}
 	
+	public static function get_map_idx (pOrigin: Int, pWidth: Int, pHeight: Int) : Array<Int>
+	{
+		// algo: map_idx[i] = ori - (i%w) - (i/w|0) * cols_nb;
+
+		var map_idx: Array<Int> = [];
+		var i: Int = pWidth * pHeight;
+
+		while (i-->0)
+		{
+			map_idx[i] = pOrigin - (i % pWidth) - Std.int(i / pWidth) * IsoMap.cols_nb;
+		}
+
+		return map_idx;
+	}
+
 	public function new (p_type: Int, p_col: Float, p_row: Float, pX: Int, pY: Int): Void
 	{
 		type = p_type;
@@ -97,7 +112,7 @@ class Building extends MovieClip
 	public function set_position (x: Int, y: Int): Void
 	{
 		x = Std.int(x-IsoMap.cell_width*(width_in_tiles_nb-1)*0.5);
-		//y = Std.int(y+IsoMap.cell_height*(height_in_tiles_nb-(height_in_tiles_nb>>1)));
+		//y = Std.int(y+IsoMap.cell_height*(height_in_tiles_nb-(height_in_tiles_nb>>1))); // pour centrer
 		y = y+IsoMap.cell_height;
 		
 		position.set(x, y);

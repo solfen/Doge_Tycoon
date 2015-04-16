@@ -116,28 +116,19 @@ class IsoMap extends DisplayObjectContainer
 
 		// set the obstacles layer :
 
-		/*
-			hangar lvl 1:
-
-			width: 4
-			height: 2
-		*/
-
-		var s: Int = building.width_in_tiles_nb < building.height_in_tiles_nb ? building.height_in_tiles_nb : building.width_in_tiles_nb;
-		var i: Int = s*s;
+		var building_map_idx: Array<Int> = Building.get_map_idx(build_data.index, building.width_in_tiles_nb, building.height_in_tiles_nb);
+		var i: Int = building_map_idx.length;
 
 		while (i-->0)
 		{
-			var c: Int = Std.int(build_data.index - Std.int(i/s)*cols_nb - i%s);
-
-			obstacles_layer[c] = true;
-			buildings_layer[c] = pBuilding_type;
+			obstacles_layer[building_map_idx[i]] = true;
+			buildings_layer[building_map_idx[i]] = pBuilding_type;
 		}
 
 		try
 		{
 			// on met le building dans le layer qui correspond à sa row
-			untyped getChildAt(Std.int(build_data.row*2-s)+3).addChild(building); // +1 pour le bg et +1 pour le graphics
+			untyped getChildAt(Std.int(build_data.row*2-building.height_in_tiles_nb)+3).addChild(building); // +1 pour le bg et +1 pour le graphics
 		}
 		catch (error: Dynamic)
 		{
@@ -160,7 +151,7 @@ class IsoMap extends DisplayObjectContainer
 			if (_previewing_building != null) // reset du preview s'il y en avait un (indecision)
 			{
 				removeChild(_previewing_building);
-				_previewing_building = null;
+				_previewing_building = null; 
 			}
 			return;
 		}
@@ -269,16 +260,14 @@ class IsoMap extends DisplayObjectContainer
 		var can_build: Bool = true;
 
 		// vérification de l'obstacles_layer :
+
 		var conf = GameInfo.BUILDINGS_CONFIG[pBuilding_type|Building.LVL_1];
-		var s: Int = conf.width_in_tiles_nb < conf.height_in_tiles_nb ? conf.height : conf.width;
-		var i: Int = s*s;
+		var building_map_idx: Array<Int> = Building.get_map_idx(index, conf.width, conf.height);
+		var i: Int = building_map_idx.length;
 
-		while (i-->0)
+		while (can_build && i-->0)
 		{
-			var c: Int = Std.int(index - Std.int(i/s)*cols_nb - i%s);
-
-			if (obstacles_layer[c])
-			{
+			if (obstacles_layer[building_map_idx[i]]) {
 				can_build = false;
 			}
 		}
