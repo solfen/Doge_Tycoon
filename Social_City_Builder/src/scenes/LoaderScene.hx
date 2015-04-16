@@ -17,8 +17,7 @@ class LoaderScene extends DisplayObjectContainer
 		return instance;
 	}	
 	
-	public function new() 
-	{
+	public function new() {
 		super();
 		x=0;
 		y=0;

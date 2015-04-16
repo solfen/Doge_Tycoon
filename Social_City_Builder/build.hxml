@@ -1,5 +1,5 @@
--cp src
+#I Need to use ctrl+B to build 	as ctrl+Enter does not write in js file
 -main Main
--js bin/Structure.js
+-cp C:\wamp\www\Doge_Tycoon\Social_City_Builder\src
+-js C:\wamp\www\Doge_Tycoon\Social_City_Builder\bin\Structure.js
 -lib pixijs
-

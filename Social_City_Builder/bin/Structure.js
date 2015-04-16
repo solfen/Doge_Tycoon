@@ -6,6 +6,39 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var pixi = {};
+pixi.display = {};
+pixi.display.DisplayObject = function() {
+	PIXI.DisplayObject.call(this);
+	this.name = "";
+};
+$hxClasses["pixi.display.DisplayObject"] = pixi.display.DisplayObject;
+pixi.display.DisplayObject.__name__ = ["pixi","display","DisplayObject"];
+pixi.display.DisplayObject.__super__ = PIXI.DisplayObject;
+pixi.display.DisplayObject.prototype = $extend(PIXI.DisplayObject.prototype,{
+	__class__: pixi.display.DisplayObject
+});
+pixi.display.DisplayObjectContainer = function() {
+	PIXI.DisplayObjectContainer.call(this);
+};
+$hxClasses["pixi.display.DisplayObjectContainer"] = pixi.display.DisplayObjectContainer;
+pixi.display.DisplayObjectContainer.__name__ = ["pixi","display","DisplayObjectContainer"];
+pixi.display.DisplayObjectContainer.__super__ = PIXI.DisplayObjectContainer;
+pixi.display.DisplayObjectContainer.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+	getChildByName: function(name) {
+		var _g1 = 0;
+		var _g = this.children.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(this.children[i].name == name) return this.children[i];
+		}
+		return null;
+	}
+	,applyScale: function(pixelRatio) {
+		if(pixelRatio > 0) this.scale.set(1 / pixelRatio,1 / pixelRatio);
+	}
+	,__class__: pixi.display.DisplayObjectContainer
+});
 var buildings = {};
 buildings.Building = function(p_type,p_col,p_row,pX,pY) {
 	this.has_context_popin = false;
@@ -120,7 +153,7 @@ HxOverrides.iter = function(a) {
 	}};
 };
 var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
-	PIXI.DisplayObjectContainer.call(this);
+	pixi.display.DisplayObjectContainer.call(this);
 	IsoMap.singleton = this;
 	this._screen_margin = 0.03;
 	this._screen_move_speed = 0.5;
@@ -155,16 +188,16 @@ var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
 		this._graphics.lineTo(this._cells_pts[i].x3,this._cells_pts[i].y3);
 		this._graphics.lineTo(this._cells_pts[i].x0,this._cells_pts[i].y0);
 		if(i / IsoMap.cols_nb - (i / IsoMap.cols_nb | 0) == 0) {
-			this.addChild(new PIXI.DisplayObjectContainer());
-			this.addChild(new PIXI.DisplayObjectContainer());
+			this.addChild(new pixi.display.DisplayObjectContainer());
+			this.addChild(new pixi.display.DisplayObjectContainer());
 		}
 	}
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this._update));
 };
 $hxClasses["IsoMap"] = IsoMap;
 IsoMap.__name__ = ["IsoMap"];
-IsoMap.__super__ = PIXI.DisplayObjectContainer;
-IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+IsoMap.__super__ = pixi.display.DisplayObjectContainer;
+IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	build_building: function(pBuilding_type,pX,pY) {
 		var build_data = this._get_building_coord(pBuilding_type,pX,pY);
 		if(build_data == null || !build_data.can_build) return null;
@@ -711,7 +744,7 @@ hud.HudManager = function() {
 	this.hudWidthInterval = 0.05;
 	this.containers = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
-	PIXI.DisplayObjectContainer.call(this);
+	pixi.display.DisplayObjectContainer.call(this);
 	this.addContainer(0.01,0,"HudTop",0.92,0.05,"center");
 	this.addHud(new hud.HudFric(0,this.hudTopY),"HudFric","HudTop");
 	this.addHud(new hud.HudHardMoney(0,this.hudTopY),"HudHardMoney","HudTop");
@@ -734,8 +767,8 @@ hud.HudManager.getInstance = function() {
 	if(hud.HudManager.instance == null) hud.HudManager.instance = new hud.HudManager();
 	return hud.HudManager.instance;
 };
-hud.HudManager.__super__ = PIXI.DisplayObjectContainer;
-hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+hud.HudManager.__super__ = pixi.display.DisplayObjectContainer;
+hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	resizeHud: function() {
 		var $it0 = this.containers.iterator();
 		while( $it0.hasNext() ) {
@@ -771,7 +804,7 @@ hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	}
 	,addContainer: function(x,y,name,maxWidth,interval,align) {
 		if(align == null) align = "left";
-		var container = new PIXI.DisplayObjectContainer();
+		var container = new pixi.display.DisplayObjectContainer();
 		container.position.set(Std["int"](x * utils.system.DeviceCapabilities.get_width()),Std["int"](y * utils.system.DeviceCapabilities.get_height()));
 		var v = { };
 		this.containers.set(name,v);
@@ -969,7 +1002,9 @@ js.Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-var pixi = {};
+pixi.DomDefinitions = function() { };
+$hxClasses["pixi.DomDefinitions"] = pixi.DomDefinitions;
+pixi.DomDefinitions.__name__ = ["pixi","DomDefinitions"];
 pixi.renderers = {};
 pixi.renderers.IRenderer = function() { };
 $hxClasses["pixi.renderers.IRenderer"] = pixi.renderers.IRenderer;
@@ -1031,7 +1066,7 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 	this.containers = new haxe.ds.StringMap();
 	this.icons = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
-	PIXI.DisplayObjectContainer.call(this);
+	pixi.display.DisplayObjectContainer.call(this);
 	this.x = Std["int"](startX * utils.system.DeviceCapabilities.get_width());
 	this.y = Std["int"](startY * utils.system.DeviceCapabilities.get_height());
 	if(isModal) {
@@ -1056,8 +1091,8 @@ popin.MyPopin = function(startX,startY,texturePath,isModal) {
 };
 $hxClasses["popin.MyPopin"] = popin.MyPopin;
 popin.MyPopin.__name__ = ["popin","MyPopin"];
-popin.MyPopin.__super__ = PIXI.DisplayObjectContainer;
-popin.MyPopin.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+popin.MyPopin.__super__ = pixi.display.DisplayObjectContainer;
+popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	addIcon: function(x,y,texturePath,name,target,isInteractive,texturePathActive,pIsSelectButton) {
 		if(pIsSelectButton == null) pIsSelectButton = false;
 		if(isInteractive == null) isInteractive = false;
@@ -1143,7 +1178,7 @@ popin.MyPopin.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	,addContainer: function(name,target,x,y) {
 		if(y == null) y = 0;
 		if(x == null) x = 0;
-		var temp = new PIXI.DisplayObjectContainer();
+		var temp = new pixi.display.DisplayObjectContainer();
 		temp.x = x;
 		temp.y = y;
 		this.containers.set(name,temp);
@@ -1384,7 +1419,7 @@ popin.PopinInventory.prototype = $extend(popin.MyPopin.prototype,{
 popin.PopinManager = function() {
 	this.currentPopinName = null;
 	this.childs = new haxe.ds.StringMap();
-	PIXI.DisplayObjectContainer.call(this);
+	pixi.display.DisplayObjectContainer.call(this);
 };
 $hxClasses["popin.PopinManager"] = popin.PopinManager;
 popin.PopinManager.__name__ = ["popin","PopinManager"];
@@ -1392,8 +1427,8 @@ popin.PopinManager.getInstance = function() {
 	if(popin.PopinManager.instance == null) popin.PopinManager.instance = new popin.PopinManager();
 	return popin.PopinManager.instance;
 };
-popin.PopinManager.__super__ = PIXI.DisplayObjectContainer;
-popin.PopinManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+popin.PopinManager.__super__ = pixi.display.DisplayObjectContainer;
+popin.PopinManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	updateInventory: function() {
 		if(this.isPopinOpen("PopinInventory")) this.childs.get("PopinInventory").update();
 	}
@@ -1840,7 +1875,7 @@ popin.PopinWorkshop.prototype = $extend(popin.MyPopin.prototype,{
 });
 var scenes = {};
 scenes.GameScene = function() {
-	PIXI.DisplayObjectContainer.call(this);
+	pixi.display.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	new utils.game.InputInfos(true,true,true);
@@ -1859,8 +1894,8 @@ scenes.GameScene.getInstance = function() {
 	if(scenes.GameScene.instance == null) scenes.GameScene.instance = new scenes.GameScene();
 	return scenes.GameScene.instance;
 };
-scenes.GameScene.__super__ = PIXI.DisplayObjectContainer;
-scenes.GameScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+scenes.GameScene.__super__ = pixi.display.DisplayObjectContainer;
+scenes.GameScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	doAction: function() {
 	}
 	,resize: function() {
@@ -1868,7 +1903,7 @@ scenes.GameScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	,__class__: scenes.GameScene
 });
 scenes.LoaderScene = function() {
-	PIXI.DisplayObjectContainer.call(this);
+	pixi.display.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	var background = new PIXI.TilingSprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/IconsSplash.jpg"),utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
@@ -1917,8 +1952,8 @@ scenes.LoaderScene.getInstance = function() {
 	if(scenes.LoaderScene.instance == null) scenes.LoaderScene.instance = new scenes.LoaderScene();
 	return scenes.LoaderScene.instance;
 };
-scenes.LoaderScene.__super__ = PIXI.DisplayObjectContainer;
-scenes.LoaderScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
+scenes.LoaderScene.__super__ = pixi.display.DisplayObjectContainer;
+scenes.LoaderScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	animation: function() {
 		this.planet.rotation -= 0.1;
 	}
