@@ -9,17 +9,30 @@
 		$_POST[$key] = addslashes($value);
 	}
 
-	if (empty($_POST['player_id'])) {
+	//print_r($_POST);
 
-		error();
+	if (empty($_POST['facebookID']) || empty($_POST['event_name'])) {
+
+		error('missing information');
 	}
 
+	$connexion = new PDO($src, $user, $pwd);
+	$connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 	$config = [
-		"db_src" => $src,
-		"db_user" => $user,
-		"db_pwd" => $pwd,
-		"player_id" => $_POST['player_id'] // THE "facebookID"
-	]
+		'connexion' => $connexion,
+		'facebookID' => $_POST['facebookID']
+	];
+
+	$config['player_data'] = get_all_player_data($config);
+
+	if (!$config['player_data']) {
+
+		error('no player_data');
+	}
+
+	// 1 : update data if possible
+	// 2 : send usefull data about the player: level, hardCurrency, softCurrency, ressource_1, ressource_2, ressource_3, ressource_4, ressource_5, ressource_6, meansQttMax, population, populationMax, collected_artefacts[], builded_buildings[], explored_planets[], player_quests[], player_rocket[];
 
 	switch ($_POST['event_name']) {
 		
@@ -34,9 +47,6 @@
 		break;
 		case 'sell_plpp':
 			sell_plpp($config, $_POST['quantity']);
-		break;
-		case 'accept_quest':
-			accept_quest($config, $_POST['quest_ref']);
 		break;
 		case 'finish_quest':
 			finish_quest($config, $_POST['quest_id']);
@@ -54,13 +64,15 @@
 			launch_rocket($config, $_POST['rocket_id']);
 		break;
 		default: // nothing good
-			error();
+			error('wrong event_name');
 		break;
 	}
 
+/* ------------------------------------------------------------------ */
 
 	function buy_hard ($config, $quantity) {
 
+		echo "okay: ".$quantity;
 	}
 
 	function buy_soft ($config, $quantity) {
@@ -99,51 +111,44 @@
 
 	}
 
+/* ------------------------------------------------------------------ */
 
-/* exemple
-	// ------------------------------------------------------- //
-	// -------------< le traitement des erreurs >------------- //
-	// ------------------------------------------------------- //
+	function get_all_player_data ($config) {
 
-	// la recherche des erreurs, avec un renvoi au formulaire s'il y a une detection
+		$player = get_db_select_query($config, '*', '`players`', '`facebookID`="'.$config['facebookID'].'"')[0];
 
-	if (	empty($_POST['Nom'])
-		||	empty($_POST['Prenom'])
-		||	empty($_POST['DateDeNaissance'])
-		||	empty($_POST['Photo'])
-		||	empty($_POST['IDSteam'])
-		||	empty($_POST['PourJarJar']))
-	{
-		header("Location:addOne.php?error=1");
-		die();
+		//print_r($player);
+		//echo '<br>empty($player[ID]) ? '.empty($player['ID']).'<br>';
+
+		if (empty($player['ID'])) {
+
+			return null;
+		}
+
+		return [
+			'player' => $player,
+			'artefacts' => get_db_select_query($config, '*', '`collected_artefacts`', '`player_id`="'.$player['ID'].'"'),
+			'buildings' => get_db_select_query($config, '*', '`builded_buildings`', '`player_id`="'.$player['ID'].'"'),
+			'planets' => get_db_select_query($config, '*', '`explored_planets`', '`player_id`="'.$player['ID'].'"'),
+			'quests' => get_db_select_query($config, '*', '`player_quests`', '`player_id`="'.$player['ID'].'"'),
+			'rocket' => get_db_select_query($config, '*', '`player_rocket`', '`player_id`="'.$player['ID'].'"')
+		];
 	}
 
-	try
-	{
-		// ---------------------------------------- //
-		// -------------< la requete >------------- //
-		// ---------------------------------------- //
+	function get_db_select_query ($config, $select, $from, $where) {
 
-		$connexion = new PDO($source, $user, $motDePasse);
-		$connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$requete = "INSERT INTO `copains` (`Nom`, `Prenom`, `DateDeNaissance`, `Photo`, `IDSteam`, `PourJarJar`) VALUES ("
-					."'".addslashes($_POST['Nom'])."'"
-					."'".addslashes($_POST['Prenom'])."'"
-					."'".addslashes(strtotime($_POST['DateDeNaissance']))."'"
-					."'".addslashes($_POST['Photo'])."'"
-					."'".addslashes((int)$_POST['IDSteam'])."'"
-					."'".addslashes((int)$_POST['PourJarJar'])."'"
-					.")";
-		$resultat = $connexion->query($requete);
+		$req = "SELECT $select FROM $from WHERE $where";
+
+		try {
+
+			return $config['connexion']->query($req)->fetchAll();
+
+		} catch (PDOExeption $e) {
+
+			echo '{"error":"'.$e->getMessage().'"}';
+			die();
+
+		}
 	}
-	catch (PDOExeption $e)
-	{
-		print 'PDO error : '.$e->getMessage().'<br>';
-		die();
-	}
-
-	header("Location:index.php"); // si tout est bon, on revient à la liste des copains
-*/
-
 
 ?>
