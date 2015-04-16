@@ -10,8 +10,8 @@ use Facebook\FacebookRequestException;
 use Facebook\FacebookCanvasLoginHelper;
 use Facebook\FacebookRedirectLoginHelper;
  
-$APP_ID = "597963723664837";
-$APP_SECRET = "14ecee6ab4082ec9387f9c1203a2f4f1";
+$APP_ID = "855211017867902";
+$APP_SECRET = "ed316cbb88696b4a16f4a53a77aff738";
 FacebookSession::setDefaultApplication($APP_ID,$APP_SECRET);
 
 $connexion = new PDO($source, $user, $motDePasse);

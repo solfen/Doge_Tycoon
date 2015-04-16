@@ -394,20 +394,23 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 		lLoader.load();
 	}
 	,onLoadProgress: function(pEvent) {
+		var lLoader;
+		lLoader = js.Boot.__cast(pEvent.target , PIXI.AssetLoader);
+		GameInfo.loaderCompletion = (lLoader.assetURLs.length - lLoader.loadCount) / lLoader.assetURLs.length;
 	}
 	,onLoadComplete: function(pEvent) {
 		pEvent.target.removeEventListener("onProgress",$bind(this,this.onLoadProgress));
 		pEvent.target.removeEventListener("onComplete",$bind(this,this.onLoadComplete));
 	}
 	,onFacebookConnect: function(pResponse) {
-		haxe.Log.trace(pResponse.status,{ fileName : "Main.hx", lineNumber : 117, className : "Main", methodName : "onFacebookConnect"});
+		haxe.Log.trace(pResponse.status,{ fileName : "Main.hx", lineNumber : 116, className : "Main", methodName : "onFacebookConnect"});
 		if(pResponse.status == "connected") {
-			haxe.Log.trace("awww yeah ! you're in !",{ fileName : "Main.hx", lineNumber : 119, className : "Main", methodName : "onFacebookConnect"});
+			haxe.Log.trace("awww yeah ! you're in !",{ fileName : "Main.hx", lineNumber : 118, className : "Main", methodName : "onFacebookConnect"});
 			FB.ui({ method : "share", href : "https://developers.facebook.com/docs"},$bind(this,this.test));
-		} else if(pResponse.status == "not_authorized") haxe.Log.trace("Oh no ! you're not identified",{ fileName : "Main.hx", lineNumber : 123, className : "Main", methodName : "onFacebookConnect"});
+		} else if(pResponse.status == "not_authorized") haxe.Log.trace("Oh no ! you're not identified",{ fileName : "Main.hx", lineNumber : 122, className : "Main", methodName : "onFacebookConnect"});
 	}
 	,test: function() {
-		haxe.Log.trace("succes",{ fileName : "Main.hx", lineNumber : 127, className : "Main", methodName : "test"});
+		haxe.Log.trace("succes",{ fileName : "Main.hx", lineNumber : 126, className : "Main", methodName : "test"});
 	}
 	,gameLoop: function(timestamp) {
 		Main.stats.begin();
@@ -934,6 +937,9 @@ js.Boot.__trace = function(v,i) {
 	var d;
 	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js.Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
 };
+js.Boot.getClass = function(o) {
+	if((o instanceof Array) && o.__enum__ == null) return Array; else return o.__class__;
+};
 js.Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
@@ -1000,6 +1006,51 @@ js.Boot.__string_rec = function(o,s) {
 	default:
 		return String(o);
 	}
+};
+js.Boot.__interfLoop = function(cc,cl) {
+	if(cc == null) return false;
+	if(cc == cl) return true;
+	var intf = cc.__interfaces__;
+	if(intf != null) {
+		var _g1 = 0;
+		var _g = intf.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var i1 = intf[i];
+			if(i1 == cl || js.Boot.__interfLoop(i1,cl)) return true;
+		}
+	}
+	return js.Boot.__interfLoop(cc.__super__,cl);
+};
+js.Boot.__instanceof = function(o,cl) {
+	if(cl == null) return false;
+	switch(cl) {
+	case Int:
+		return (o|0) === o;
+	case Float:
+		return typeof(o) == "number";
+	case Bool:
+		return typeof(o) == "boolean";
+	case String:
+		return typeof(o) == "string";
+	case Array:
+		return (o instanceof Array) && o.__enum__ == null;
+	case Dynamic:
+		return true;
+	default:
+		if(o != null) {
+			if(typeof(cl) == "function") {
+				if(o instanceof cl) return true;
+				if(js.Boot.__interfLoop(js.Boot.getClass(o),cl)) return true;
+			}
+		} else return false;
+		if(cl == Class && o.__name__ != null) return true;
+		if(cl == Enum && o.__ename__ != null) return true;
+		return o.__enum__ == cl;
+	}
+};
+js.Boot.__cast = function(o,t) {
+	if(js.Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
 };
 pixi.DomDefinitions = function() { };
 $hxClasses["pixi.DomDefinitions"] = pixi.DomDefinitions;
@@ -1902,53 +1953,66 @@ scenes.GameScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototy
 	,__class__: scenes.GameScene
 });
 scenes.LoaderScene = function() {
+	this.textStyle = { font : "15px FuturaStdHeavy", fill : "white"};
+	this.phraseInterval = 3000;
+	this.randomPhrases = ["Affinage des fouets","Mise en suspend des congés","Ajout de Rambo IV au cinéma","Relecture des commérages de Gertrude","Automatisation des automates","Peinture des tomates","Wow !","Much Game !","Such Genius","Instauration de la semaine de 169 heures","Toilettage du personnel","Financement de dictatures","Mise en place de la surveillance de masse"];
 	pixi.display.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
-	var background = new PIXI.TilingSprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/IconsSplash.jpg"),utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
+	this.background = new PIXI.TilingSprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/IconsSplash.jpg"),utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
 	var dogeTextures = [];
 	var _g = 0;
 	while(_g < 12) {
 		var i = _g++;
 		dogeTextures.push(PIXI.Texture.fromFrame("doge-run_" + i));
 	}
-	var doge = new PIXI.MovieClip(dogeTextures);
+	this.doge = new PIXI.MovieClip(dogeTextures);
 	var glowTextures = [];
 	var _g1 = 0;
 	while(_g1 < 5) {
 		var i1 = _g1++;
 		glowTextures.push(PIXI.Texture.fromFrame("planetGlow_" + i1));
 	}
-	var planetGlow = new PIXI.MovieClip(glowTextures);
+	this.planetGlow = new PIXI.MovieClip(glowTextures);
 	this.planet = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/Planet.png"));
-	var planetLight = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/PlanetLight.png"));
-	var title = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/Title.png"));
-	var loadingBar = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/LoadingFillBar.png"));
-	var loadingFillStart = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/LoadingFill01.png"));
-	title.anchor.set(0.5,0.5);
+	this.planetLight = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/PlanetLight.png"));
+	this.title = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/Title.png"));
+	this.loadingBar = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/LoadingFillBar.png"));
+	this.loadingFillStart = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/LoadingFill01.png"));
+	this.loadingFillEnd = new PIXI.Sprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/LoadingFill03.png"));
+	this.loadingFillMidlle = new PIXI.TilingSprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/LoadingFill02.png"),350,this.loadingFillStart.height);
+	this.phraseText = new PIXI.Text("",this.textStyle);
+	this.changePhrase();
+	this.title.anchor.set(0.5,0.5);
 	this.planet.anchor.set(0.5,0.5);
-	planetGlow.anchor.set(0.5,0.5);
-	doge.anchor.set(0.5,0.5);
-	planetLight.anchor.set(0.5,0.5);
-	loadingBar.anchor.set(0.5,0.5);
-	title.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.3));
-	this.planet.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 1.05));
-	planetGlow.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.7));
-	doge.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.65));
-	planetLight.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.86));
-	loadingBar.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.9));
-	this.addChild(background);
-	this.addChild(title);
+	this.planetGlow.anchor.set(0.5,0.5);
+	this.doge.anchor.set(0.5,0.5);
+	this.planetLight.anchor.set(0.5,0.5);
+	this.loadingBar.anchor.set(0.5,0.5);
+	this.loadingFillMidlle.anchor.set(0,0.5);
+	this.loadingFillStart.anchor.set(0,0.5);
+	this.loadingFillEnd.anchor.set(0,0.5);
+	this.phraseText.anchor.set(0.5,0.5);
+	this.onResize();
+	this.addChild(this.background);
+	this.addChild(this.title);
 	this.addChild(this.planet);
-	this.addChild(planetLight);
-	this.addChild(doge);
-	this.addChild(planetGlow);
-	this.addChild(loadingBar);
-	doge.animationSpeed = 0.25;
-	planetGlow.animationSpeed = 0.05;
-	doge.play();
-	planetGlow.play();
+	this.addChild(this.planetLight);
+	this.addChild(this.doge);
+	this.addChild(this.planetGlow);
+	this.addChild(this.loadingBar);
+	this.addChild(this.loadingFillStart);
+	this.addChild(this.loadingFillMidlle);
+	this.addChild(this.loadingFillEnd);
+	this.addChild(this.phraseText);
+	this.doge.animationSpeed = 0.25;
+	this.planetGlow.animationSpeed = 0.05;
+	this.doge.play();
+	this.planetGlow.play();
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this.animation));
+	Main.getInstance().addEventListener("Event.RESIZE",$bind(this,this.onResize));
+	var timer = new haxe.Timer(this.phraseInterval);
+	timer.run = $bind(this,this.changePhrase);
 };
 $hxClasses["scenes.LoaderScene"] = scenes.LoaderScene;
 scenes.LoaderScene.__name__ = ["scenes","LoaderScene"];
@@ -1960,6 +2024,29 @@ scenes.LoaderScene.__super__ = pixi.display.DisplayObjectContainer;
 scenes.LoaderScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 	animation: function() {
 		this.planet.rotation -= 0.03;
+		if(this.currentLoadFillWidth != GameInfo.loaderCompletion) this.loadBarFill();
+	}
+	,onResize: function() {
+		this.background.width = utils.system.DeviceCapabilities.get_width();
+		this.background.height = utils.system.DeviceCapabilities.get_height();
+		this.title.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.3));
+		this.planet.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 1.05));
+		this.planetGlow.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.7));
+		this.doge.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.65));
+		this.planetLight.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.86));
+		this.loadingBar.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.9));
+		this.loadingFillStart.position.set(this.loadingBar.x - this.loadingBar.width / 2 + 3 | 0,this.loadingBar.y);
+		this.loadingFillMidlle.position.set(this.loadingFillStart.x + this.loadingFillStart.width,this.loadingFillStart.y);
+		this.loadingFillEnd.position.set(this.loadingFillMidlle.x + this.loadingFillMidlle.width,this.loadingFillStart.y);
+		this.phraseText.position.set(Std["int"](utils.system.DeviceCapabilities.get_width() / 2),Std["int"](utils.system.DeviceCapabilities.get_height() * 0.95));
+	}
+	,loadBarFill: function() {
+		this.maxLoadFillWidth = this.loadingBar.width - (this.loadingFillStart.width + 3) - this.loadingFillEnd.width;
+		this.loadingFillMidlle.width = GameInfo.loaderCompletion * this.maxLoadFillWidth;
+		this.loadingFillEnd.position.set(this.loadingFillMidlle.x + this.loadingFillMidlle.width,this.loadingFillStart.y);
+	}
+	,changePhrase: function() {
+		this.phraseText.setText(this.randomPhrases[Std["int"](Math.random() * (this.randomPhrases.length - 1))]);
 	}
 	,__class__: scenes.LoaderScene
 });
@@ -2123,6 +2210,14 @@ $hxClasses.Array = Array;
 Array.__name__ = ["Array"];
 Date.prototype.__class__ = $hxClasses.Date = Date;
 Date.__name__ = ["Date"];
+var Int = $hxClasses.Int = { __name__ : ["Int"]};
+var Dynamic = $hxClasses.Dynamic = { __name__ : ["Dynamic"]};
+var Float = $hxClasses.Float = Number;
+Float.__name__ = ["Float"];
+var Bool = Boolean;
+Bool.__ename__ = ["Bool"];
+var Class = $hxClasses.Class = { __name__ : ["Class"]};
+var Enum = { };
 buildings.Building.CASINO = 1;
 buildings.Building.EGLISE = 2;
 buildings.Building.HANGAR_BLEU = 3;
@@ -2188,8 +2283,7 @@ GameInfo.buildings = (function($this) {
 	$r = _g;
 	return $r;
 }(this));
-GameInfo.userWidth = 1920;
-GameInfo.userHeight = 1000;
+GameInfo.loaderCompletion = 0;
 GameInfo.dogeNumber = 20;
 GameInfo.dogeMaxNumber = 25;
 GameInfo.stockPercent = 50;

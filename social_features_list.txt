@@ -1,4 +1,7 @@
-features sociales:
+﻿features sociales:
 - échanges d'artefacts (visualisation, demande, offre)
 - inviter ses amis a voyager sur sa fusée, offre de la soft currentie
-- 
+- share the game for hardmoney
+- notification when building finished if player not connected ?
+- notification when not conected since 3 day
+

@@ -361,10 +361,7 @@ class GameInfo
 
  		}
  	];
-
-
- 	public static var userWidth:Float=1920;
- 	public static var userHeight:Float=1000;
+ 	public static var loaderCompletion:Float = 0; // when we're loading the game we need to know the % of completion
  	public static var dogeNumber:Float = 20;
  	public static var dogeMaxNumber:Float = 25;
  	public static var stockPercent:Float = 50;

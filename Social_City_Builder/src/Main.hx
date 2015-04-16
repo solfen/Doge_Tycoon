@@ -102,15 +102,14 @@ class Main extends EventDispatcher
 	}
 	
 	private function onLoadProgress (pEvent:Event): Void {
-		/*TODO LOADING BAR
 		var lLoader:AssetLoader = cast(pEvent.target, AssetLoader);
-		trace( (lLoader.assetURLs.length-lLoader.loadCount)/lLoader.assetURLs.length);*/
+		GameInfo.loaderCompletion = (lLoader.assetURLs.length-lLoader.loadCount)/lLoader.assetURLs.length;
 	}
 	
 	private function onLoadComplete (pEvent:Event): Void {
 		pEvent.target.removeEventListener("onProgress", onLoadProgress);
 		pEvent.target.removeEventListener("onComplete", onLoadComplete);
-		ScenesManager.getInstance().loadScene("GameScene");
+		//ScenesManager.getInstance().loadScene("GameScene");
 		//FB.getLoginStatus(onFacebookConnect);
 	}
 	private function onFacebookConnect(pResponse:Dynamic){
