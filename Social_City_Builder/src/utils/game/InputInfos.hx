@@ -31,6 +31,8 @@ class InputInfos
 		mouse_wheel_dir = 0;
 		is_mouse_down = false;
 
+		//Browser.document.fullscreenEnabled = true;
+
 		if (listen_click)
 		{
 			Browser.window.onmousedown = _on_mousedown;
