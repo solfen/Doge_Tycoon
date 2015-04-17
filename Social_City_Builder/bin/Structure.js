@@ -1109,35 +1109,24 @@ popin.IconPopin.prototype = $extend(PIXI.Sprite.prototype,{
 	}
 	,__class__: popin.IconPopin
 });
-popin.MyPopin = function(startX,startY,texturePath,isModal) {
+popin.MyPopin = function(pstartX,pstartY,texturePath,isModal) {
 	if(isModal == null) isModal = false;
-	if(startY == null) startY = 0;
-	if(startX == null) startX = 0;
+	if(pstartY == null) pstartY = 0;
+	if(pstartX == null) pstartX = 0;
 	this.scrollDragging = false;
 	this.containers = new haxe.ds.StringMap();
 	this.icons = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
 	pixi.display.DisplayObjectContainer.call(this);
-	this.x = Std["int"](startX * utils.system.DeviceCapabilities.get_width());
-	this.y = Std["int"](startY * utils.system.DeviceCapabilities.get_height());
-	if(isModal) {
-		this.modalZone = new PIXI.Sprite(PIXI.Texture.fromImage("assets/alpha_bg.png"));
-		this.modalZone.x = -startX * utils.system.DeviceCapabilities.get_width();
-		this.modalZone.y = -startY * utils.system.DeviceCapabilities.get_height();
-		this.modalZone.width = utils.system.DeviceCapabilities.get_width();
-		this.modalZone.height = utils.system.DeviceCapabilities.get_height();
-		this.modalZone.interactive = true;
-		this.modalZone.click = $bind(this,this.stopClickEventPropagation);
-		var v = this.modalZone;
-		this.childs.set("modal",v);
-		v;
-		this.addChild(this.modalZone);
-	}
+	this.startX = pstartX;
+	this.startY = pstartY;
+	this.onResize();
+	Main.getInstance().addEventListener("Event.RESIZE",$bind(this,this.onResize));
 	this.background = new PIXI.Sprite(PIXI.Texture.fromImage(texturePath));
 	this.background.anchor.set(0.5,0.5);
-	var v1 = this.background;
-	this.childs.set("background",v1);
-	v1;
+	var v = this.background;
+	this.childs.set("background",v);
+	v;
 	this.addChild(this.background);
 };
 $hxClasses["popin.MyPopin"] = popin.MyPopin;
@@ -1237,6 +1226,11 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 		this.containers.set(name,temp);
 		temp;
 		target.addChild(temp);
+	}
+	,onResize: function() {
+		haxe.Log.trace("WUT???",{ fileName : "MyPopin.hx", lineNumber : 158, className : "popin.MyPopin", methodName : "onResize"});
+		this.x = Std["int"](this.startX * utils.system.DeviceCapabilities.get_width());
+		this.y = Std["int"](this.startY * utils.system.DeviceCapabilities.get_height());
 	}
 	,childClick: function(pEvent) {
 	}
@@ -2133,7 +2127,7 @@ utils.game.InputInfos.prototype = {
 	,_on_wheel: function(pData) {
 		pData.preventDefault();
 		if(pData.deltaY < 0) utils.game.InputInfos.mouse_wheel_dir = -1; else utils.game.InputInfos.mouse_wheel_dir = 1;
-		haxe.Log.trace("wheel direction:",{ fileName : "InputInfos.hx", lineNumber : 75, className : "utils.game.InputInfos", methodName : "_on_wheel", customParams : [utils.game.InputInfos.mouse_wheel_dir]});
+		haxe.Log.trace("wheel direction:",{ fileName : "InputInfos.hx", lineNumber : 77, className : "utils.game.InputInfos", methodName : "_on_wheel", customParams : [utils.game.InputInfos.mouse_wheel_dir]});
 	}
 	,__class__: utils.game.InputInfos
 };

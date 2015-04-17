@@ -16,6 +16,8 @@ import utils.game.InputInfos;
 // TODO : remove functions + MAJ description
 class MyPopin extends DisplayObjectContainer
 {
+	private var startX:Float;
+	private var startY:Float;
 	private var background:Sprite;
 	private var modalZone:Sprite;
 	private var childs:Map<String, Sprite> = new Map();
@@ -32,15 +34,15 @@ class MyPopin extends DisplayObjectContainer
 	private var startScrollY:Float;
 	private var maxDragY:Float;
 	
-	public function new(startX:Float=0,startY:Float=0, texturePath:String, ?isModal:Bool=false) 
+	public function new(pstartX:Float=0,pstartY:Float=0, texturePath:String, ?isModal:Bool=false) 
 	{
 		super();
-		// *width so that it's in % of screen
-		x=Std.int(startX*DeviceCapabilities.width);
-		y=Std.int(startY*DeviceCapabilities.height);
+		startX = pstartX;
+		startY = pstartY;
+		onResize();
 
-		if(isModal){
-			modalZone = new Sprite(Texture.fromImage("assets/alpha_bg.png"));
+		/*if(isModal){
+			modalZone = new Sprite(Texture.fromImage("assets/alpha_bg.png")); !!! TO REDO !!!
 			modalZone.x= -startX*DeviceCapabilities.width;
 			modalZone.y= -startY*DeviceCapabilities.height;
 			modalZone.width = DeviceCapabilities.width;
@@ -49,7 +51,8 @@ class MyPopin extends DisplayObjectContainer
 			modalZone.click = stopClickEventPropagation;
 			childs["modal"] = modalZone;
 			addChild(modalZone);
-		}
+		}*/
+		Main.getInstance().addEventListener(Event.RESIZE, onResize);
 
 		background = new Sprite(Texture.fromImage(texturePath));
 		background.anchor.set(0.5, 0.5);
@@ -58,7 +61,6 @@ class MyPopin extends DisplayObjectContainer
 	}
 
 	// creates an IconPopin and puts it in the childs array
-	// TODO : create textures and stock them so that if we ask for the same we dont have to recreate it (unless pixi does it already)
 	private function addIcon(x:Float,y:Float, texturePath:String, name:String, target:DisplayObjectContainer,?isInteractive:Bool=false,?texturePathActive:String,?pIsSelectButton:Bool=false):Void{
 		//int cast because Float pos = blurry images
 		var icon:IconPopin = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive,texturePathActive,pIsSelectButton);
@@ -151,8 +153,14 @@ class MyPopin extends DisplayObjectContainer
 		containers[name] = temp;
 		target.addChild(temp);
 	}
-	//empty function so that the interactive Icons are automaticly binded to this function
-	//the popin will inherit from this class and then can overide this function to configure the childs click action
+	private function onResize():Void{
+		// * screen width so that it's in % of screen
+		trace("WUT???");
+		x=Std.int(startX*DeviceCapabilities.width);
+		y=Std.int(startY*DeviceCapabilities.height);
+	}
+
+	//any popin will inherit from this class and then can overide this function to configure the childs click action
 	private function childClick(pEvent:InteractionData){}
 	private function childUpOutside(pEvent:InteractionData){}
 	public function update(){}
