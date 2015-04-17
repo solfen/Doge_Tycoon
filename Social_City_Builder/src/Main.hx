@@ -1,19 +1,18 @@
 package;
 
-import scenes.ScenesManager;
+import haxe.Timer;
+import js.Browser;
 import utils.events.Event;
 import utils.events.EventDispatcher;
 import utils.system.DeviceCapabilities;
-import haxe.Timer;
-import js.Browser;
 import pixi.display.Stage;
 import pixi.loaders.AssetLoader;
 import pixi.renderers.webgl.WebGLRenderer;
 import pixi.utils.Detector;
+import pixi.text.Text;
 import externs.FB;
 import externs.WebFontLoader;
-import haxe.Timer;
-import pixi.text.Text;
+import scenes.ScenesManager;
 
 /**
  * Classe d'initialisation et lancement du jeu
@@ -26,15 +25,18 @@ class Main extends EventDispatcher
 	/**
 	 * chemin vers le fichier de configuration
 	 */
-	private static inline var CONFIG_PATH:String = "config.json";	
-	private static var stats: Dynamic;
-	private static var instance: Main;
-	public var renderer:WebGLRenderer;
-	private static var stage:Stage;
-	private var WebFontConfig:Dynamic;
+	public var renderer: WebGLRenderer;
+	public var delta_time: Float;
 	
+	private static inline var CONFIG_PATH: String = "config.json";	
+	private static var instance: Main;
+	private static var stage: Stage;
+	private static var stats: Dynamic;
+	
+	private var WebFontConfig: Dynamic;
 
-	private static function main ():Void {
+	private static function main (): Void
+	{
 		Main.getInstance();
 	}
 
@@ -42,42 +44,53 @@ class Main extends EventDispatcher
 	 * Retourne l'instance unique de la classe, et la crée si elle n'existait pas au préalable
 	 * @return instance unique
 	 */
-	public static function getInstance (): Main {
+	public static function getInstance (): Main
+	{
 		if (instance == null) instance = new Main();
 		return instance;
 	}
 
 	//return the stage. The stage is the container where we add all our graphics and containers
-	public static function getStage() : Stage {
+	public static function getStage (): Stage
+	{
 		return stage;
 	}
 
 	/**
 	 * création du jeu et lancement du chargement du fichier de configuration
 	 */
-	private function new () {
-		
+	private function new ()
+	{
 		super();
+
 		stage = new Stage(0x3f7cbf);
+
 		renderer = Detector.autoDetectRenderer(DeviceCapabilities.width, DeviceCapabilities.height); // voir ce que ça donne dans facebook
-		Browser.document.body.appendChild(renderer.view);
+		
+		delta_time = 0;
+
 		stats = new pixi.utils.Stats();
-		Browser.document.body.appendChild( stats.domElement );
 		stats.domElement.style.position = "absolute";
 		stats.domElement.style.top = "0px";
-		gameLoop(0);
+		
+		Browser.document.body.appendChild(renderer.view);
+		Browser.document.body.appendChild(stats.domElement);
 		Browser.window.addEventListener("resize", resize);
+		
+		
 		WebFontConfig = {
-		    custom: {
-		    	families: ['FuturaStdMedium','FuturaStdHeavy'],
-		    	urls: ['fonts.css'],
-		    },
+			custom: {
+				families: ['FuturaStdMedium', 'FuturaStdHeavy'],
+				urls: ['fonts.css']
+			},
 
 			active: function() {
 			    preloadAssets();
 			}
 		};
 		WebFontLoader.load(WebFontConfig);
+		
+		gameLoop(0);
 	}
 	
 	/**
@@ -129,12 +142,17 @@ class Main extends EventDispatcher
 	/**
 	 * game loop
 	 */
-	private function gameLoop(timestamp) {
+	private function gameLoop (timestamp)
+	{
+		var start = Timer.stamp();
+
 		stats.begin();
 		Browser.window.requestAnimationFrame(cast gameLoop);
 		render();		
 		dispatchEvent(new Event(Event.GAME_LOOP));
 		stats.end();
+
+		delta_time = Timer.stamp() - start;
 	}
 	
 	/**

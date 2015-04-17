@@ -180,7 +180,7 @@ class IsoMap extends DisplayObjectContainer
 					&&	map_x_on_screen <= buildings_list[i].x + buildings_list[i].width
 					&&	map_y_on_screen >= buildings_list[i].y - buildings_list[i].height
 					&&	map_y_on_screen <= buildings_list[i].y)
-				{// mouse over
+				{// mouse over a building
 					if (buildings_list[i].all_map_index.indexOf(current_overflown_cell) == -1)
 					{
 						buildings_list[i].is_clickable = focused_building == null || focused_building.row >= buildings_list[i].row;

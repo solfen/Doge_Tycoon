@@ -40,7 +40,7 @@ class Building extends MovieClip
 	public var config: Dynamic;
 	public var col: Float;
 	public var row: Float;
-	public var creation_stamp: Float;
+	public var building_end_time: Float; // utile pour determiner les gains
 	public var type: Int;
 	public var lvl: Int;
 	public var map_origin_index: Int;
@@ -49,10 +49,8 @@ class Building extends MovieClip
 	public var building_time: Int;
 	public var is_builded: Bool;
 	public var is_clickable: Bool;
-	//public var has_context_popin:Bool;
 
 	private var _building_start_time: Float;
-	private var _building_end_time: Float;
 	private var _cheat_ratio: Float;
 
 /* ---------------------------------------------------------------------------------------- */
@@ -69,8 +67,6 @@ class Building extends MovieClip
 	
 	public static function get_map_idx (pOrigin: Int, pWidth: Int, pHeight: Int) : Array<Int>
 	{
-		// algo: map_idx[i] = ori - (i%w) - (i/w|0) * cols_nb;
-
 		var map_idx: Array<Int> = [];
 		var i: Int = pWidth * pHeight;
 
@@ -84,17 +80,15 @@ class Building extends MovieClip
 
 	public function new (p_type: Int, p_index: Int, pX: Int, pY: Int): Void
 	{
+		_cheat_ratio = 0.3; // pour construire + vite, parce que c'est long sinon !
+		
 		type = p_type;
 		lvl = Building.LVL_1;
-		map_origin_index = p_index;//IsoTools.cell_index_from_cr
+		map_origin_index = p_index;
 		col = IsoTools.cell_col(map_origin_index, IsoMap.cols_nb);
 		row = IsoTools.cell_row(map_origin_index, IsoMap.cols_nb);
 		is_builded = true;
 		is_clickable = true;
-		//has_context_popin = false;
-		creation_stamp = Timer.stamp();
-
-		_cheat_ratio = 0.3; // pour construire + vite, parce que c'est long!
 
 		width_in_tiles_nb = get_config().width;
 		height_in_tiles_nb = get_config().height;
@@ -137,7 +131,7 @@ class Building extends MovieClip
 		is_builded = false;
 		tint = 0;
 		_building_start_time = Timer.stamp();
-		_building_end_time = _building_start_time + get_config().building_time * _cheat_ratio;
+		building_end_time = _building_start_time + get_config().building_time * _cheat_ratio;
 	}
 
 	public function upgrade (): Void
@@ -155,11 +149,11 @@ class Building extends MovieClip
 	{
 		if (!is_builded) {
 			
-			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(_building_end_time-_building_start_time)*0x99);
+			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(building_end_time-_building_start_time)*0x99);
 
 			tint = (color<<16) | (color<<8) | color; // 0x000000 -> 0x999999
 
-			if (Timer.stamp() >= _building_end_time) {
+			if (Timer.stamp() >= building_end_time) {
 				is_builded = true;
 				tint = 0xFFFFFF;
 				play();
@@ -168,36 +162,13 @@ class Building extends MovieClip
 
 		if (is_clickable)
 		{
-			alpha = 1;
+			alpha = Math.min(1, alpha + Main.getInstance().delta_time * 20);
+			//trace(alpha, Main.getInstance().delta_time);
 		}
 		else
 		{
-			alpha = 0.5;
+			alpha = Math.max(0.5, alpha - Main.getInstance().delta_time * 20);
 		}
-		
-
-
-		/*if (InputInfos.mouse_x >= x+IsoMap.singleton.x
-			&& InputInfos.mouse_x <= x+IsoMap.singleton.x+width
-			&& InputInfos.mouse_y >= y+IsoMap.singleton.y-height
-			&& InputInfos.mouse_y <= y+IsoMap.singleton.y) // mouse over
-		{
-			if (IsoMap.singleton.focused_building != null && all_map_index.indexOf(IsoMap.singleton.current_overflown_cell) == -1)
-			{
-				alpha = 0.5;
-				//is_focus = false;
-			}
-			else
-			{
-				alpha = 1;
-				IsoMap.singleton.focused_building = this;
-				//is_focus = true;
-			}
-		}
-		else
-		{
-			alpha = 1;	
-		}*/
 	}
 	
 	private function _on_click (p_data: InteractionData): Void
