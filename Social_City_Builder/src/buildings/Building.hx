@@ -50,8 +50,9 @@ class Building extends MovieClip
 	public var is_builded: Bool;
 	public var is_clickable: Bool;
 
-	private var _building_start_time: Float;
 	private var _cheat_ratio: Float;
+	private var _building_start_time: Float;
+	private var _fading_speed: Float;
 
 /* ---------------------------------------------------------------------------------------- */
 
@@ -100,6 +101,7 @@ class Building extends MovieClip
 		buttonMode = true;
 		loop = true;
 		animationSpeed = 0.333;
+		_fading_speed = 0.8;
 
 		all_map_index = get_map_idx(map_origin_index, width_in_tiles_nb, height_in_tiles_nb);
 
@@ -147,13 +149,14 @@ class Building extends MovieClip
 
 	private function _update (): Void
 	{
-		if (!is_builded) {
-			
+		if (!is_builded)
+		{
 			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(building_end_time-_building_start_time)*0x99);
 
 			tint = (color<<16) | (color<<8) | color; // 0x000000 -> 0x999999
 
-			if (Timer.stamp() >= building_end_time) {
+			if (Timer.stamp() >= building_end_time)
+			{
 				is_builded = true;
 				tint = 0xFFFFFF;
 				play();
@@ -162,12 +165,14 @@ class Building extends MovieClip
 
 		if (is_clickable)
 		{
-			alpha = Math.min(1, alpha + Main.getInstance().delta_time * 20);
-			//trace(alpha, Main.getInstance().delta_time);
+			//alpha = 1;
+			alpha = Math.min(1, alpha + Main.getInstance().delta_time * _fading_speed);
 		}
 		else
 		{
-			alpha = Math.max(0.5, alpha - Main.getInstance().delta_time * 20);
+			//alpha = 0.4;
+			alpha = Math.max(0.4, alpha - Main.getInstance().delta_time * _fading_speed);
+			//trace(Main.getInstance().delta_time * _fading_speed);
 		}
 	}
 	

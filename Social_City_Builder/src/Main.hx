@@ -34,6 +34,7 @@ class Main extends EventDispatcher
 	private static var stats: Dynamic;
 	
 	private var WebFontConfig: Dynamic;
+	private var _old_stamp: Float;
 
 	private static function main (): Void
 	{
@@ -68,6 +69,7 @@ class Main extends EventDispatcher
 		renderer = Detector.autoDetectRenderer(DeviceCapabilities.width, DeviceCapabilities.height); // voir ce que ça donne dans facebook
 		
 		delta_time = 0;
+		_old_stamp = Timer.stamp();
 
 		stats = new pixi.utils.Stats();
 		stats.domElement.style.position = "absolute";
@@ -77,7 +79,6 @@ class Main extends EventDispatcher
 		Browser.document.body.appendChild(stats.domElement);
 		Browser.window.addEventListener("resize", resize);
 		
-		
 		WebFontConfig = {
 			custom: {
 				families: ['FuturaStdMedium', 'FuturaStdHeavy'],
@@ -85,7 +86,7 @@ class Main extends EventDispatcher
 			},
 
 			active: function() {
-			    preloadAssets();
+			   preloadAssets();
 			}
 		};
 		WebFontLoader.load(WebFontConfig);
@@ -144,15 +145,14 @@ class Main extends EventDispatcher
 	 */
 	private function gameLoop (timestamp)
 	{
-		var start = Timer.stamp();
+		delta_time = Timer.stamp() - _old_stamp;
+		_old_stamp = Timer.stamp();
 
 		stats.begin();
 		Browser.window.requestAnimationFrame(cast gameLoop);
 		render();		
 		dispatchEvent(new Event(Event.GAME_LOOP));
 		stats.end();
-
-		delta_time = Timer.stamp() - start;
 	}
 	
 	/**

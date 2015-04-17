@@ -6,48 +6,16 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
-var pixi = {};
-pixi.display = {};
-pixi.display.DisplayObject = function() {
-	PIXI.DisplayObject.call(this);
-	this.name = "";
-};
-$hxClasses["pixi.display.DisplayObject"] = pixi.display.DisplayObject;
-pixi.display.DisplayObject.__name__ = ["pixi","display","DisplayObject"];
-pixi.display.DisplayObject.__super__ = PIXI.DisplayObject;
-pixi.display.DisplayObject.prototype = $extend(PIXI.DisplayObject.prototype,{
-	__class__: pixi.display.DisplayObject
-});
-pixi.display.DisplayObjectContainer = function() {
-	PIXI.DisplayObjectContainer.call(this);
-};
-$hxClasses["pixi.display.DisplayObjectContainer"] = pixi.display.DisplayObjectContainer;
-pixi.display.DisplayObjectContainer.__name__ = ["pixi","display","DisplayObjectContainer"];
-pixi.display.DisplayObjectContainer.__super__ = PIXI.DisplayObjectContainer;
-pixi.display.DisplayObjectContainer.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
-	getChildByName: function(name) {
-		var _g1 = 0;
-		var _g = this.children.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			if(this.children[i].name == name) return this.children[i];
-		}
-		return null;
-	}
-	,applyScale: function(pixelRatio) {
-		if(pixelRatio > 0) this.scale.set(1 / pixelRatio,1 / pixelRatio);
-	}
-	,__class__: pixi.display.DisplayObjectContainer
-});
 var buildings = {};
-buildings.Building = function(p_type,p_col,p_row,pX,pY) {
-	this.has_context_popin = false;
+buildings.Building = function(p_type,p_index,pX,pY) {
+	this._cheat_ratio = 0.3;
 	this.type = p_type;
 	this.lvl = buildings.Building.LVL_1;
-	this.col = p_col;
-	this.row = p_row;
+	this.map_origin_index = p_index;
+	this.col = utils.game.IsoTools.cell_col(this.map_origin_index,IsoMap.cols_nb);
+	this.row = utils.game.IsoTools.cell_row(this.map_origin_index,IsoMap.cols_nb);
 	this.is_builded = true;
-	this._cheat_ratio = 0.3;
+	this.is_clickable = true;
 	this.width_in_tiles_nb = this.get_config().width;
 	this.height_in_tiles_nb = this.get_config().height;
 	PIXI.MovieClip.call(this,this._get_texture());
@@ -57,6 +25,7 @@ buildings.Building = function(p_type,p_col,p_row,pX,pY) {
 	this.buttonMode = true;
 	this.loop = true;
 	this.animationSpeed = 0.333;
+	this.all_map_index = buildings.Building.get_map_idx(this.map_origin_index,this.width_in_tiles_nb,this.height_in_tiles_nb);
 	this.click = $bind(this,this._on_click);
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this._update));
 };
@@ -92,7 +61,7 @@ buildings.Building.prototype = $extend(PIXI.MovieClip.prototype,{
 		this.is_builded = false;
 		this.tint = 0;
 		this._building_start_time = haxe.Timer.stamp();
-		this._building_end_time = this._building_start_time + this.get_config().building_time * this._cheat_ratio;
+		this.building_end_time = this._building_start_time + this.get_config().building_time * this._cheat_ratio;
 	}
 	,upgrade: function() {
 		if(this.lvl < buildings.Building.LVL_3) {
@@ -104,17 +73,18 @@ buildings.Building.prototype = $extend(PIXI.MovieClip.prototype,{
 	}
 	,_update: function() {
 		if(!this.is_builded) {
-			var color = Std["int"]((haxe.Timer.stamp() - this._building_start_time) / (this._building_end_time - this._building_start_time) * 153);
+			var color = Std["int"]((haxe.Timer.stamp() - this._building_start_time) / (this.building_end_time - this._building_start_time) * 153);
 			this.tint = color << 16 | color << 8 | color;
-			if(haxe.Timer.stamp() >= this._building_end_time) {
+			if(haxe.Timer.stamp() >= this.building_end_time) {
 				this.is_builded = true;
 				this.tint = 16777215;
 				this.play();
 			}
 		}
+		if(this.is_clickable) this.alpha = Math.min(1,this.alpha + Main.getInstance().delta_time * 20); else this.alpha = Math.max(0.5,this.alpha - Main.getInstance().delta_time * 20);
 	}
 	,_on_click: function(p_data) {
-		if(!this.is_builded || !GameInfo.can_map_update) return;
+		if(!this.is_builded || !this.is_clickable || !GameInfo.can_map_update) return;
 		if(GameInfo.is_building_context_pop_open) {
 			popin.PopinManager.getInstance().closeContextPopin();
 			GameInfo.is_building_context_pop_open = false;
@@ -151,6 +121,18 @@ HxOverrides.substr = function(s,pos,len) {
 	} else if(len < 0) len = s.length + len - pos;
 	return s.substr(pos,len);
 };
+HxOverrides.indexOf = function(a,obj,i) {
+	var len = a.length;
+	if(i < 0) {
+		i += len;
+		if(i < 0) i = 0;
+	}
+	while(i < len) {
+		if(a[i] === obj) return i;
+		i++;
+	}
+	return -1;
+};
 HxOverrides.iter = function(a) {
 	return { cur : 0, arr : a, hasNext : function() {
 		return this.cur < this.arr.length;
@@ -158,67 +140,65 @@ HxOverrides.iter = function(a) {
 		return this.arr[this.cur++];
 	}};
 };
-var IsoMap = function(pBG_url,pCols_nb,pRows_nb,pCell_width,pCell_height) {
-	pixi.display.DisplayObjectContainer.call(this);
+var IsoMap = function(pBG_frame,pCols_nb,pRows_nb,pCell_width,pCell_height) {
+	PIXI.DisplayObjectContainer.call(this);
 	IsoMap.singleton = this;
-	this._screen_margin = 0.03;
+	this._screen_margin = 0.0333;
 	this._screen_move_speed = 0.5;
 	this._screen_move_max_to_build = 64;
+	this._screen_move_delay = 0.7;
 	this._is_clicking = false;
 	IsoMap.cols_nb = pCols_nb;
 	IsoMap.rows_nb = pRows_nb;
 	IsoMap.cells_nb = IsoMap.cols_nb * IsoMap.rows_nb;
 	IsoMap.cell_width = pCell_width;
 	IsoMap.cell_height = pCell_height;
+	this.focused_building = null;
 	this._map_width = IsoMap.cols_nb * IsoMap.cell_width;
 	this._map_height = IsoMap.rows_nb * IsoMap.cell_height;
-	this._offset_x = 0;
-	this._offset_y = 0;
-	this._cells_pts = utils.game.IsoTools.all_map_pts_xy(this._offset_x,this._offset_y,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cols_nb * IsoMap.rows_nb,IsoMap.cols_nb);
+	this._screen_move_x = 0;
+	this._screen_move_y = 0;
+	this._time_to_move_screen = haxe.Timer.stamp();
+	this._cells_pts = utils.game.IsoTools.all_map_pts_xy(0,0,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cols_nb * IsoMap.rows_nb,IsoMap.cols_nb);
 	this.x = this._old_x = Std["int"](utils.system.DeviceCapabilities.get_width() * 0.5 - this._map_width * 0.5);
 	this.y = this._old_y = Std["int"](utils.system.DeviceCapabilities.get_height() * 0.5 - this._map_height * 0.5);
+	this.buildings_list = new Array();
 	this.obstacles_layer = new Array();
-	this.buildings_layer = new Array();
-	this.addChild(new PIXI.TilingSprite(PIXI.Texture.fromImage(pBG_url),this._map_width,this._map_height));
+	this.addChild(new PIXI.TilingSprite(PIXI.Texture.fromFrame(pBG_frame),this._map_width,this._map_height));
 	this._graphics = new PIXI.Graphics();
 	this._graphics.lineStyle(1,8965375,1);
 	this.addChild(this._graphics);
 	var i = IsoMap.cells_nb;
-	var test = 0;
 	while(i-- > 0) {
 		this.obstacles_layer[i] = false;
-		this.buildings_layer[i] = 0;
 		this._graphics.moveTo(this._cells_pts[i].x0,this._cells_pts[i].y0);
 		this._graphics.lineTo(this._cells_pts[i].x1,this._cells_pts[i].y1);
 		this._graphics.lineTo(this._cells_pts[i].x2,this._cells_pts[i].y2);
 		this._graphics.lineTo(this._cells_pts[i].x3,this._cells_pts[i].y3);
 		this._graphics.lineTo(this._cells_pts[i].x0,this._cells_pts[i].y0);
 		if(i / IsoMap.cols_nb - (i / IsoMap.cols_nb | 0) == 0) {
-			this.addChild(new pixi.display.DisplayObjectContainer());
-			this.addChild(new pixi.display.DisplayObjectContainer());
+			this.addChild(new PIXI.DisplayObjectContainer());
+			this.addChild(new PIXI.DisplayObjectContainer());
 		}
 	}
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this._update));
 };
 $hxClasses["IsoMap"] = IsoMap;
 IsoMap.__name__ = ["IsoMap"];
-IsoMap.__super__ = pixi.display.DisplayObjectContainer;
-IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+IsoMap.__super__ = PIXI.DisplayObjectContainer;
+IsoMap.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	build_building: function(pBuilding_type,pX,pY) {
-		var build_data = this._get_building_coord(pBuilding_type,pX,pY);
-		if(build_data == null || !build_data.can_build) return null;
-		var building = new buildings.Building(pBuilding_type,build_data.col,build_data.row,build_data.x,build_data.y);
+		var build_data = this._get_building_coord(pBuilding_type,this.current_overflown_cell);
+		if(!build_data.can_build) return null;
+		var building = new buildings.Building(pBuilding_type,this.current_overflown_cell,build_data.x,build_data.y);
 		building.build();
 		var building_map_idx = buildings.Building.get_map_idx(build_data.index,building.width_in_tiles_nb,building.height_in_tiles_nb);
 		var i = building_map_idx.length;
-		while(i-- > 0) {
-			this.obstacles_layer[building_map_idx[i]] = true;
-			this.buildings_layer[building_map_idx[i]] = pBuilding_type;
-		}
+		while(i-- > 0) this.obstacles_layer[building_map_idx[i]] = true;
 		try {
 			this.getChildAt((build_data.row * 2 - building.height_in_tiles_nb | 0) + 3).addChild(building);
 		} catch( error ) {
-			haxe.Log.trace(error,{ fileName : "IsoMap.hx", lineNumber : 135, className : "IsoMap", methodName : "build_building"});
+			console.log(error);
 		}
 		return building;
 	}
@@ -232,6 +212,20 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 				this._previewing_building = null;
 			}
 			return;
+		}
+		if(utils.game.IsoTools.is_inside_map(utils.game.InputInfos.mouse_x,utils.game.InputInfos.mouse_y,this.x | 0,this.y | 0,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cells_nb,IsoMap.cols_nb)) {
+			this.current_overflown_cell = utils.game.IsoTools.cell_index_from_xy(utils.game.InputInfos.mouse_x,utils.game.InputInfos.mouse_y,this.x | 0,this.y | 0,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cols_nb);
+			var i = this.buildings_list.length;
+			var map_x_on_screen = utils.game.InputInfos.mouse_x - this.x;
+			var map_y_on_screen = utils.game.InputInfos.mouse_y - this.y;
+			var next_focused = null;
+			while(i-- > 0) if(map_x_on_screen >= this.buildings_list[i].x && map_x_on_screen <= this.buildings_list[i].x + this.buildings_list[i].width && map_y_on_screen >= this.buildings_list[i].y - this.buildings_list[i].height && map_y_on_screen <= this.buildings_list[i].y) {
+				if(HxOverrides.indexOf(this.buildings_list[i].all_map_index,this.current_overflown_cell,0) == -1) this.buildings_list[i].is_clickable = this.focused_building == null || this.focused_building.row >= this.buildings_list[i].row; else {
+					next_focused = this.buildings_list[i];
+					this.buildings_list[i].is_clickable = true;
+				}
+			} else this.buildings_list[i].is_clickable = true;
+			this.focused_building = next_focused;
 		}
 		if(this._is_clicking && !utils.game.InputInfos.is_mouse_down) {
 			this._is_clicking = false;
@@ -247,19 +241,15 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 			this.y = utils.game.InputInfos.mouse_y - (utils.game.InputInfos.last_mouse_down_y - this._old_y);
 			if(this.y > 0) this.y = 0; else if(this.y < utils.system.DeviceCapabilities.get_height() - this._map_height) this.y = utils.system.DeviceCapabilities.get_height() - this._map_height; else this.y = this.y;
 		}
-		if(utils.game.InputInfos.mouse_x < utils.system.DeviceCapabilities.get_width() * this._screen_margin && this.x < 0) this.x += Std["int"]((utils.system.DeviceCapabilities.get_width() * this._screen_margin - utils.game.InputInfos.mouse_x) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_x > utils.system.DeviceCapabilities.get_width() * (1 - this._screen_margin) && this.x > utils.system.DeviceCapabilities.get_width() - this._map_width) this.x += Std["int"]((utils.system.DeviceCapabilities.get_width() * (1 - this._screen_margin) - utils.game.InputInfos.mouse_x) * this._screen_move_speed);
-		if(utils.game.InputInfos.mouse_y < utils.system.DeviceCapabilities.get_height() * this._screen_margin && this.y < 0) this.y += Std["int"]((utils.system.DeviceCapabilities.get_height() * this._screen_margin - utils.game.InputInfos.mouse_y) * this._screen_move_speed); else if(utils.game.InputInfos.mouse_y > utils.system.DeviceCapabilities.get_height() * (1 - this._screen_margin) && this.y > utils.system.DeviceCapabilities.get_height() - this._map_height) this.y += Std["int"]((utils.system.DeviceCapabilities.get_height() * (1 - this._screen_margin) - utils.game.InputInfos.mouse_y) * this._screen_move_speed);
 		this._graphics.visible = GameInfo.building_2_build > 0;
 		if(GameInfo.building_2_build > 0) {
-			var build_data = this._get_building_coord(GameInfo.building_2_build,utils.game.InputInfos.mouse_x,utils.game.InputInfos.mouse_y);
-			if(build_data != null) {
-				if(this._previewing_building == null) {
-					this._previewing_building = new buildings.PreviewBuilding(GameInfo.building_2_build,build_data.x,build_data.y);
-					this.addChild(this._previewing_building);
-				}
-				if(!build_data.can_build && this._previewing_building.tint == 16777215) this._previewing_building.tint = buildings.PreviewBuilding.CANT_BUILD_COLOR; else if(build_data.can_build && this._previewing_building.tint != 16777215) this._previewing_building.tint = 16777215;
-				this._previewing_building.set_position(build_data.x,build_data.y);
+			var build_data = this._get_building_coord(GameInfo.building_2_build,this.current_overflown_cell);
+			if(this._previewing_building == null) {
+				this._previewing_building = new buildings.PreviewBuilding(GameInfo.building_2_build,build_data.x,build_data.y);
+				this.addChild(this._previewing_building);
 			}
+			if(!build_data.can_build && this._previewing_building.tint == 16777215) this._previewing_building.tint = buildings.PreviewBuilding.CANT_BUILD_COLOR; else if(build_data.can_build && this._previewing_building.tint != 16777215) this._previewing_building.tint = 16777215;
+			this._previewing_building.set_position(build_data.x,build_data.y);
 		}
 	}
 	,_on_click: function() {
@@ -267,20 +257,17 @@ IsoMap.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
 			var new_building = this.build_building(GameInfo.building_2_build,utils.game.InputInfos.mouse_x,utils.game.InputInfos.mouse_y);
 			if(new_building != null) {
 				GameInfo.building_2_build = 0;
+				this.buildings_list.push(new_building);
 				this.removeChild(this._previewing_building);
 				this._previewing_building = null;
 			}
 		}
 	}
-	,_get_building_coord: function(pBuilding_type,pX,pY) {
-		var offset_x = (this.x | 0) + this._offset_x;
-		var offset_y = (this.y | 0) + this._offset_y;
-		if(!utils.game.IsoTools.is_inside_map(pX,pY,offset_x,offset_y,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cells_nb,IsoMap.cols_nb)) return null;
-		var index = utils.game.IsoTools.cell_index_from_xy(pX,pY,offset_x,offset_y,IsoMap.cell_width,IsoMap.cell_height,IsoMap.cols_nb);
+	,_get_building_coord: function(pBuilding_type,index) {
 		var col = utils.game.IsoTools.cell_col(index,IsoMap.cols_nb);
 		var row = utils.game.IsoTools.cell_row(index,IsoMap.cols_nb);
-		var new_x = utils.game.IsoTools.cell_x(col,IsoMap.cell_width,this._offset_x);
-		var new_y = utils.game.IsoTools.cell_y(row,IsoMap.cell_height,this._offset_y);
+		var new_x = utils.game.IsoTools.cell_x(col,IsoMap.cell_width,0);
+		var new_y = utils.game.IsoTools.cell_y(row,IsoMap.cell_height,0);
 		var can_build = true;
 		var conf = GameInfo.BUILDINGS_CONFIG.get(pBuilding_type | buildings.Building.LVL_1);
 		var building_map_idx = buildings.Building.get_map_idx(index,conf.width,conf.height);
@@ -354,17 +341,18 @@ var Main = function() {
 	utils.events.EventDispatcher.call(this);
 	Main.stage = new PIXI.Stage(4160703);
 	this.renderer = PIXI.autoDetectRenderer(utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
-	window.document.body.appendChild(this.renderer.view);
+	this.delta_time = 0;
 	Main.stats = new Stats();
-	window.document.body.appendChild(Main.stats.domElement);
 	Main.stats.domElement.style.position = "absolute";
 	Main.stats.domElement.style.top = "0px";
-	this.gameLoop(0);
+	window.document.body.appendChild(this.renderer.view);
+	window.document.body.appendChild(Main.stats.domElement);
 	window.addEventListener("resize",$bind(this,this.resize));
 	this.WebFontConfig = { custom : { families : ["FuturaStdMedium","FuturaStdHeavy"], urls : ["fonts.css"]}, active : function() {
 		_g.preloadAssets();
 	}};
 	WebFont.load(this.WebFontConfig);
+	this.gameLoop(0);
 };
 $hxClasses["Main"] = Main;
 Main.__name__ = ["Main"];
@@ -404,21 +392,23 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 		scenes.ScenesManager.getInstance().loadScene("GameScene");
 	}
 	,onFacebookConnect: function(pResponse) {
-		haxe.Log.trace(pResponse.status,{ fileName : "Main.hx", lineNumber : 116, className : "Main", methodName : "onFacebookConnect"});
+		console.log(pResponse.status);
 		if(pResponse.status == "connected") {
-			haxe.Log.trace("awww yeah ! you're in !",{ fileName : "Main.hx", lineNumber : 118, className : "Main", methodName : "onFacebookConnect"});
+			console.log("awww yeah ! you're in !");
 			FB.ui({ method : "share", href : "https://developers.facebook.com/docs"},$bind(this,this.test));
-		} else if(pResponse.status == "not_authorized") haxe.Log.trace("Oh no ! you're not identified",{ fileName : "Main.hx", lineNumber : 122, className : "Main", methodName : "onFacebookConnect"});
+		} else if(pResponse.status == "not_authorized") console.log("Oh no ! you're not identified");
 	}
 	,test: function() {
-		haxe.Log.trace("succes",{ fileName : "Main.hx", lineNumber : 126, className : "Main", methodName : "test"});
+		console.log("succes");
 	}
 	,gameLoop: function(timestamp) {
+		var start = haxe.Timer.stamp();
 		Main.stats.begin();
 		window.requestAnimationFrame($bind(this,this.gameLoop));
 		this.render();
 		this.dispatchEvent(new utils.events.Event("Event.GAME_LOOP"));
 		Main.stats.end();
+		this.delta_time = haxe.Timer.stamp() - start;
 	}
 	,resize: function(pEvent) {
 		this.renderer.resize(utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
@@ -506,8 +496,9 @@ Type.createInstance = function(cl,args) {
 	return null;
 };
 buildings.PreviewBuilding = function(p_type,pX,pY) {
-	buildings.Building.call(this,p_type,0,0,pX,pY);
+	buildings.Building.call(this,p_type,-1,pX,pY);
 	this.click = null;
+	this.mouseover = null;
 	this.interactive = false;
 	this.buttonMode = false;
 	this.alpha = 0.7;
@@ -516,15 +507,11 @@ $hxClasses["buildings.PreviewBuilding"] = buildings.PreviewBuilding;
 buildings.PreviewBuilding.__name__ = ["buildings","PreviewBuilding"];
 buildings.PreviewBuilding.__super__ = buildings.Building;
 buildings.PreviewBuilding.prototype = $extend(buildings.Building.prototype,{
-	__class__: buildings.PreviewBuilding
+	_update: function() {
+	}
+	,__class__: buildings.PreviewBuilding
 });
 var haxe = {};
-haxe.Log = function() { };
-$hxClasses["haxe.Log"] = haxe.Log;
-haxe.Log.__name__ = ["haxe","Log"];
-haxe.Log.trace = function(v,infos) {
-	js.Boot.__trace(v,infos);
-};
 haxe.Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
@@ -621,7 +608,7 @@ hud.IconHud.__name__ = ["hud","IconHud"];
 hud.IconHud.__super__ = PIXI.Sprite;
 hud.IconHud.prototype = $extend(PIXI.Sprite.prototype,{
 	changeTexture: function(state) {
-		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "normal") this.setTexture(this.normalTexture); else haxe.Log.trace("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state,{ fileName : "IconHud.hx", lineNumber : 53, className : "hud.IconHud", methodName : "changeTexture"});
+		if(state == "active" && this.activeTexture != null) this.setTexture(this.activeTexture); else if(state == "normal") this.setTexture(this.normalTexture); else console.log("IconHud changeTexture() : Invalid texture change, check if correct state and/or correct textures. State: " + state);
 	}
 	,onMouseDown: function(pData) {
 		if(this.activeTexture != null) this.setTexture(this.activeTexture);
@@ -747,7 +734,7 @@ hud.HudManager = function() {
 	this.hudWidthInterval = 0.05;
 	this.containers = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.addContainer(0.01,0,"HudTop",0.92,0.05,"center");
 	this.addHud(new hud.HudFric(0,this.hudTopY),"HudFric","HudTop");
 	this.addHud(new hud.HudHardMoney(0,this.hudTopY),"HudHardMoney","HudTop");
@@ -770,8 +757,8 @@ hud.HudManager.getInstance = function() {
 	if(hud.HudManager.instance == null) hud.HudManager.instance = new hud.HudManager();
 	return hud.HudManager.instance;
 };
-hud.HudManager.__super__ = pixi.display.DisplayObjectContainer;
-hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+hud.HudManager.__super__ = PIXI.DisplayObjectContainer;
+hud.HudManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	resizeHud: function() {
 		var $it0 = this.containers.iterator();
 		while( $it0.hasNext() ) {
@@ -807,7 +794,7 @@ hud.HudManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype
 	}
 	,addContainer: function(x,y,name,maxWidth,interval,align) {
 		if(align == null) align = "left";
-		var container = new pixi.display.DisplayObjectContainer();
+		var container = new PIXI.DisplayObjectContainer();
 		container.position.set(Std["int"](x * utils.system.DeviceCapabilities.get_width()),Std["int"](y * utils.system.DeviceCapabilities.get_height()));
 		var v = { };
 		this.containers.set(name,v);
@@ -919,25 +906,6 @@ var js = {};
 js.Boot = function() { };
 $hxClasses["js.Boot"] = js.Boot;
 js.Boot.__name__ = ["js","Boot"];
-js.Boot.__unhtml = function(s) {
-	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
-};
-js.Boot.__trace = function(v,i) {
-	var msg;
-	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
-	msg += js.Boot.__string_rec(v,"");
-	if(i != null && i.customParams != null) {
-		var _g = 0;
-		var _g1 = i.customParams;
-		while(_g < _g1.length) {
-			var v1 = _g1[_g];
-			++_g;
-			msg += "," + js.Boot.__string_rec(v1,"");
-		}
-	}
-	var d;
-	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js.Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
-};
 js.Boot.getClass = function(o) {
 	if((o instanceof Array) && o.__enum__ == null) return Array; else return o.__class__;
 };
@@ -1053,9 +1021,7 @@ js.Boot.__instanceof = function(o,cl) {
 js.Boot.__cast = function(o,t) {
 	if(js.Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
 };
-pixi.DomDefinitions = function() { };
-$hxClasses["pixi.DomDefinitions"] = pixi.DomDefinitions;
-pixi.DomDefinitions.__name__ = ["pixi","DomDefinitions"];
+var pixi = {};
 pixi.renderers = {};
 pixi.renderers.IRenderer = function() { };
 $hxClasses["pixi.renderers.IRenderer"] = pixi.renderers.IRenderer;
@@ -1117,7 +1083,7 @@ popin.MyPopin = function(pstartX,pstartY,texturePath,isModal) {
 	this.containers = new haxe.ds.StringMap();
 	this.icons = new haxe.ds.StringMap();
 	this.childs = new haxe.ds.StringMap();
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.startX = pstartX;
 	this.startY = pstartY;
 	this.onResize();
@@ -1131,8 +1097,8 @@ popin.MyPopin = function(pstartX,pstartY,texturePath,isModal) {
 };
 $hxClasses["popin.MyPopin"] = popin.MyPopin;
 popin.MyPopin.__name__ = ["popin","MyPopin"];
-popin.MyPopin.__super__ = pixi.display.DisplayObjectContainer;
-popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+popin.MyPopin.__super__ = PIXI.DisplayObjectContainer;
+popin.MyPopin.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	addIcon: function(x,y,texturePath,name,target,isInteractive,texturePathActive,pIsSelectButton) {
 		if(pIsSelectButton == null) pIsSelectButton = false;
 		if(isInteractive == null) isInteractive = false;
@@ -1220,7 +1186,7 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 	,addContainer: function(name,target,x,y) {
 		if(y == null) y = 0;
 		if(x == null) x = 0;
-		var temp = new pixi.display.DisplayObjectContainer();
+		var temp = new PIXI.DisplayObjectContainer();
 		temp.x = x;
 		temp.y = y;
 		this.containers.set(name,temp);
@@ -1228,7 +1194,7 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 		target.addChild(temp);
 	}
 	,onResize: function() {
-		haxe.Log.trace("WUT???",{ fileName : "MyPopin.hx", lineNumber : 158, className : "popin.MyPopin", methodName : "onResize"});
+		console.log("WUT???");
 		this.x = Std["int"](this.startX * utils.system.DeviceCapabilities.get_width());
 		this.y = Std["int"](this.startY * utils.system.DeviceCapabilities.get_height());
 	}
@@ -1466,7 +1432,7 @@ popin.PopinInventory.prototype = $extend(popin.MyPopin.prototype,{
 popin.PopinManager = function() {
 	this.currentPopinName = null;
 	this.childs = new haxe.ds.StringMap();
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 };
 $hxClasses["popin.PopinManager"] = popin.PopinManager;
 popin.PopinManager.__name__ = ["popin","PopinManager"];
@@ -1474,8 +1440,8 @@ popin.PopinManager.getInstance = function() {
 	if(popin.PopinManager.instance == null) popin.PopinManager.instance = new popin.PopinManager();
 	return popin.PopinManager.instance;
 };
-popin.PopinManager.__super__ = pixi.display.DisplayObjectContainer;
-popin.PopinManager.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+popin.PopinManager.__super__ = PIXI.DisplayObjectContainer;
+popin.PopinManager.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	updateInventory: function() {
 		if(this.isPopinOpen("PopinInventory")) this.childs.get("PopinInventory").update();
 	}
@@ -1640,7 +1606,7 @@ popin.PopinMarket.prototype = $extend(popin.MyPopin.prototype,{
 				if(cost <= GameInfo.ressources.get("fric").userPossesion) {
 					GameInfo.ressources.get("fric").userPossesion -= cost;
 					GameInfo.ressources.get("poudre" + index3).userPossesion += GameInfo.ressources.get("poudre" + index3).lastQuantityBuy;
-					haxe.Log.trace(GameInfo.ressources.get("poudre" + index3).userPossesion,{ fileName : "PopinMarket.hx", lineNumber : 145, className : "popin.PopinMarket", methodName : "childClick"});
+					console.log(GameInfo.ressources.get("poudre" + index3).userPossesion);
 					hud.HudManager.getInstance().updateChildText();
 					popin.PopinManager.getInstance().updateInventory();
 				}
@@ -1837,7 +1803,7 @@ popin.PopinShop.prototype = $extend(popin.MyPopin.prototype,{
 });
 popin.PopinUpgrade = function(startX,startY,buildingAttached) {
 	if(buildingAttached == null) {
-		haxe.Log.trace("ERROR : NO BUILDING REF PASSED",{ fileName : "PopinUpgrade.hx", lineNumber : 21, className : "popin.PopinUpgrade", methodName : "new"});
+		console.log("ERROR : NO BUILDING REF PASSED");
 		return;
 	}
 	popin.MyPopin.call(this,startX,startY,"assets/UI/HudBuildingContextBar.png");
@@ -1922,7 +1888,7 @@ popin.PopinWorkshop.prototype = $extend(popin.MyPopin.prototype,{
 });
 var scenes = {};
 scenes.GameScene = function() {
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	new utils.game.InputInfos(true,true,true);
@@ -1941,8 +1907,8 @@ scenes.GameScene.getInstance = function() {
 	if(scenes.GameScene.instance == null) scenes.GameScene.instance = new scenes.GameScene();
 	return scenes.GameScene.instance;
 };
-scenes.GameScene.__super__ = pixi.display.DisplayObjectContainer;
-scenes.GameScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+scenes.GameScene.__super__ = PIXI.DisplayObjectContainer;
+scenes.GameScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	doAction: function() {
 	}
 	,resize: function() {
@@ -1953,7 +1919,7 @@ scenes.LoaderScene = function() {
 	this.textStyle = { font : "15px FuturaStdHeavy", fill : "white"};
 	this.phraseInterval = 3000;
 	this.randomPhrases = ["Affinage des fouets","Mise en suspend des congés","Ajout de Rambo IV au cinéma","Relecture des commérages de Gertrude","Automatisation des automates","Peinture des tomates","Wow !","Much Game !","Such Genius","Instauration de la semaine de 169 heures","Toilettage du personnel","Financement de dictatures","Mise en place de la surveillance de masse"];
-	pixi.display.DisplayObjectContainer.call(this);
+	PIXI.DisplayObjectContainer.call(this);
 	this.x = 0;
 	this.y = 0;
 	this.background = new PIXI.TilingSprite(PIXI.Texture.fromFrame("assets/UI/SplashScreen/IconsSplash.jpg"),utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
@@ -2017,8 +1983,8 @@ scenes.LoaderScene.getInstance = function() {
 	if(scenes.LoaderScene.instance == null) scenes.LoaderScene.instance = new scenes.LoaderScene();
 	return scenes.LoaderScene.instance;
 };
-scenes.LoaderScene.__super__ = pixi.display.DisplayObjectContainer;
-scenes.LoaderScene.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,{
+scenes.LoaderScene.__super__ = PIXI.DisplayObjectContainer;
+scenes.LoaderScene.prototype = $extend(PIXI.DisplayObjectContainer.prototype,{
 	animation: function() {
 		this.planet.rotation -= 0.03;
 		if(this.currentLoadFillWidth != GameInfo.loaderCompletion) this.loadBarFill();
@@ -2127,7 +2093,6 @@ utils.game.InputInfos.prototype = {
 	,_on_wheel: function(pData) {
 		pData.preventDefault();
 		if(pData.deltaY < 0) utils.game.InputInfos.mouse_wheel_dir = -1; else utils.game.InputInfos.mouse_wheel_dir = 1;
-		haxe.Log.trace("wheel direction:",{ fileName : "InputInfos.hx", lineNumber : 77, className : "utils.game.InputInfos", methodName : "_on_wheel", customParams : [utils.game.InputInfos.mouse_wheel_dir]});
 	}
 	,__class__: utils.game.InputInfos
 };
@@ -2192,6 +2157,9 @@ utils.system.DeviceCapabilities.get_width = function() {
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
+if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
+	return Array.prototype.indexOf.call(a,o,i);
+};
 Math.NaN = Number.NaN;
 Math.NEGATIVE_INFINITY = Number.NEGATIVE_INFINITY;
 Math.POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
@@ -2335,7 +2303,7 @@ GameInfo.BUILDINGS_CONFIG = (function($this) {
 	$r = _g;
 	return $r;
 }(this));
-LoadInfo.preloadAssets = ["assets/UI/SplashScreen/IconsSplash.jpg","assets/UI/SplashScreen/Title.png","assets/UI/SplashScreen/Planet.png","assets/UI/SplashScreen/PlanetLight.png","assets/UI/SplashScreen/doge/sprites.json","assets/UI/SplashScreen/doge/sprites.png","assets/UI/SplashScreen/PlanetGlow/sprites.json","assets/UI/SplashScreen/PlanetGlow/sprites.png","assets/UI/SplashScreen/LoadingFillBar.png","assets/UI/SplashScreen/LoadingFill01.png","assets/UI/SplashScreen/LoadingFill02.png","assets/UI/SplashScreen/LoadingFill03.png"];
+LoadInfo.preloadAssets = ["assets/UI/SplashScreen/IconsSplash.jpg","assets/UI/SplashScreen/Title.png","assets/UI/SplashScreen/Planet.png","assets/UI/SplashScreen/PlanetLight.png","assets/UI/SplashScreen/doge/sprites.json","assets/UI/SplashScreen/doge/sprites.png","assets/UI/SplashScreen/PlanetGlow/sprites.json","assets/UI/SplashScreen/PlanetGlow/sprites.png","assets/UI/SplashScreen/LoadingFillBar.png","assets/UI/SplashScreen/LoadingFill01.png","assets/UI/SplashScreen/LoadingFill02.png","assets/UI/SplashScreen/LoadingFill03.png","assets/BG.jpg"];
 LoadInfo.loadAssets = ["assets/Buildings/CasinoLv1/sprites.png","assets/Buildings/CasinoLv2/sprites.png","assets/Buildings/CasinoLv3/sprites.png","assets/Buildings/Echafaudage/Echafaudage01.png","assets/Buildings/Echafaudage/Echafaudage2.png","assets/Buildings/Echafaudage/Echafaudage3.png","assets/Buildings/Echafaudage/Echafaudage_1case.png","assets/Buildings/EgliseLv1/sprites.png","assets/Buildings/EgliseLv2/sprites.png","assets/Buildings/EgliseLv3/EgliseLv3_0.png","assets/Buildings/EgliseLv3/EgliseLv3_1.png","assets/Buildings/EgliseLv3/EgliseLv3_10.png","assets/Buildings/EgliseLv3/EgliseLv3_11.png","assets/Buildings/EgliseLv3/EgliseLv3_12.png","assets/Buildings/EgliseLv3/EgliseLv3_13.png","assets/Buildings/EgliseLv3/EgliseLv3_14.png","assets/Buildings/EgliseLv3/EgliseLv3_15.png","assets/Buildings/EgliseLv3/EgliseLv3_2.png","assets/Buildings/EgliseLv3/EgliseLv3_3.png","assets/Buildings/EgliseLv3/EgliseLv3_4.png","assets/Buildings/EgliseLv3/EgliseLv3_5.png","assets/Buildings/EgliseLv3/EgliseLv3_6.png","assets/Buildings/EgliseLv3/EgliseLv3_7.png","assets/Buildings/EgliseLv3/EgliseLv3_8.png","assets/Buildings/EgliseLv3/EgliseLv3_9.png","assets/Buildings/EgliseLv3/sprites.png","assets/Buildings/EntrepotLv1/sprites.png","assets/Buildings/EntrepotLv2/sprites.png","assets/Buildings/EntrepotLv3/sprites.png","assets/Buildings/Fusees/Bleu1/sprites.png","assets/Buildings/Fusees/Bleu2/sprites.png","assets/Buildings/Fusees/Bleu3/sprites.png","assets/Buildings/Fusees/Cyan1/sprites.png","assets/Buildings/Fusees/Cyan2/sprites.png","assets/Buildings/Fusees/Cyan3/sprites.png","assets/Buildings/Fusees/Fb1/sprites.png","assets/Buildings/Fusees/Fb2/sprites.png","assets/Buildings/Fusees/Fb3/sprites.png","assets/Buildings/Fusees/Jaune1/sprites.png","assets/Buildings/Fusees/Jaune2/sprites.png","assets/Buildings/Fusees/Jaune3/sprites.png","assets/Buildings/Fusees/Orange1/sprites.png","assets/Buildings/Fusees/Orange2/sprites.png","assets/Buildings/Fusees/Orange3/sprites.png","assets/Buildings/Fusees/Vert1/sprites.png","assets/Buildings/Fusees/Vert2/sprites.png","assets/Buildings/Fusees/Vert3/sprites.png","assets/Buildings/Fusees/Violet1/sprites.png","assets/Buildings/Fusees/Violet2/sprites.png","assets/Buildings/Fusees/Violet3/sprites.png","assets/Buildings/HangarBleuLv1/sprites.png","assets/Buildings/HangarBleuLv2/sprites.png","assets/Buildings/HangarBleuLv3/sprites.png","assets/Buildings/HangarCyanLv1/sprites.png","assets/Buildings/HangarCyanLv2/sprites.png","assets/Buildings/HangarCyanLv3/sprites.png","assets/Buildings/HangarJauneLv1/sprites.png","assets/Buildings/HangarJauneLv2/sprites.png","assets/Buildings/HangarJauneLv3/sprites.png","assets/Buildings/HangarRougeLv1/sprites.png","assets/Buildings/HangarRougeLv2/sprites.png","assets/Buildings/HangarRougeLv3/sprites.png","assets/Buildings/HangarVertLv1/sprites.png","assets/Buildings/HangarVertLv2/sprites.png","assets/Buildings/HangarVertLv3/sprites.png","assets/Buildings/HangarVioletLv1/sprites.png","assets/Buildings/HangarVioletLv2/sprites.png","assets/Buildings/HangarVioletLv3/sprites.png","assets/Buildings/LaboLv1/sprites.png","assets/Buildings/LaboLv2/sprites.png","assets/Buildings/LaboLv3/sprites.png","assets/Buildings/MuseeLv1/sprites.png","assets/Buildings/MuseeLv2/sprites.png","assets/Buildings/MuseeLv3/sprites.png","assets/Buildings/NicheLv1/sprites.png","assets/Buildings/NicheLv2/sprites.png","assets/Buildings/NicheLv3/sprites.png","assets/Buildings/PasDeTirLv1/sprites.png","assets/Buildings/PasDeTirLv2/sprites.png","assets/Buildings/PasDeTirLv3/sprites.png","assets/Dogs/DogCasino.png","assets/Dogs/DogChurch.png","assets/Dogs/DogHangarWorkshop.png","assets/Dogs/DogMusee.png","assets/Dogs/DogNiche.png","assets/Dogs/DogPasDeTir.png","assets/LoaderScene.png","assets/UI/Bulles/HudBulle.png","assets/UI/Cursor/curseur_down.png","assets/UI/Cursor/curseur_up.png","assets/UI/Hud/sprites.png","assets/UI/Icons/Artefacts/IconArtefactsDbz1.png","assets/UI/Icons/Artefacts/IconArtefactsDbz2.png","assets/UI/Icons/Artefacts/IconArtefactsDbz3.png","assets/UI/Icons/Artefacts/IconArtefactsLotr1.png","assets/UI/Icons/Artefacts/IconArtefactsLotr2.png","assets/UI/Icons/Artefacts/IconArtefactsLotr3.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons1.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons2.png","assets/UI/Icons/Artefacts/IconArtefactsSimpsons3.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars1.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars2.png","assets/UI/Icons/Artefacts/IconArtefactsStarwars3.png","assets/UI/Icons/Artefacts/IconArtefactsTerre1.png","assets/UI/Icons/Artefacts/IconArtefactsTerre2.png","assets/UI/Icons/Artefacts/IconArtefactsTerre3.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland1.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland2.png","assets/UI/Icons/Artefacts/IconArtefactsWonderland3.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewCasino.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewLabo.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewMusee.png","assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png","assets/UI/Icons/Dogs/IconDogAstro.png","assets/UI/Icons/Dogs/IconDogCasino.png","assets/UI/Icons/Dogs/IconDogChurch.png","assets/UI/Icons/Dogs/IconDogMusee.png","assets/UI/Icons/Dogs/IconDogNiche.png","assets/UI/Icons/Dogs/IconDogWorkshop.png","assets/UI/Icons/Fusee/Bleu3.png","assets/UI/Icons/Fusee/IconFuseeBleu1.png","assets/UI/Icons/Fusee/IconFuseeBleu2.png","assets/UI/Icons/Fusee/IconFuseeCyan1.png","assets/UI/Icons/Fusee/IconFuseeCyan2.png","assets/UI/Icons/Fusee/IconFuseeCyan3.png","assets/UI/Icons/Fusee/IconFuseeFB1.png","assets/UI/Icons/Fusee/IconFuseeFB2.png","assets/UI/Icons/Fusee/IconFuseeFB3.png","assets/UI/Icons/Fusee/IconFuseeJaune1.png","assets/UI/Icons/Fusee/IconFuseeJaune2.png","assets/UI/Icons/Fusee/IconFuseeJaune3.png","assets/UI/Icons/Fusee/IconFuseeOrange1.png","assets/UI/Icons/Fusee/IconFuseeOrange2.png","assets/UI/Icons/Fusee/IconFuseeOrange3.png","assets/UI/Icons/Fusee/IconFuseeVert1.png","assets/UI/Icons/Fusee/IconFuseeVert2.png","assets/UI/Icons/Fusee/IconFuseeVert3.png","assets/UI/Icons/Fusee/IconFuseeViolet1.png","assets/UI/Icons/Fusee/IconFuseeViolet2.png","assets/UI/Icons/Fusee/IconFuseeViolet3.png","assets/UI/Icons/IconsRessources/IconBlueMineral.png","assets/UI/Icons/IconsRessources/IconCyanMineral.png","assets/UI/Icons/IconsRessources/IconDogeflooz.png","assets/UI/Icons/IconsRessources/IconGreenMineral.png","assets/UI/Icons/IconsRessources/IconOsDor.png","assets/UI/Icons/IconsRessources/IconPurpleMineral.png","assets/UI/Icons/IconsRessources/IconRedMineral.png","assets/UI/Icons/IconsRessources/IconYellowMineral.png","assets/UI/Icons/Planet/IconNamek.png","assets/UI/Icons/Planet/IconPlaneteDesEtoiles.png","assets/UI/Icons/Planet/IconPlaneteMilieu.png","assets/UI/Icons/Planet/IconSpringfield.png","assets/UI/Icons/Planet/IconTerre.png","assets/UI/Icons/Planet/IconWonderland.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewBlueMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewCyanMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewGreenMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewPurpleMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewRedMineral.png","assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewYellowMineral.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Os.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Dogeflooz.png","assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Os.png","assets/UI/PopIn/ContourNotAfford.png","assets/UI/PopIn/ContourRessourceInsuffisant.png","assets/UI/PopIn/Overlay.png","assets/UI/PopIn/PopInArticleLock.png","assets/UI/PopIn/PopInBackground.png","assets/UI/PopIn/PopInCloseButtonActivel.png","assets/UI/PopIn/PopInCloseButtonNormal.png","assets/UI/PopIn/PopInScrollBackground.png","assets/UI/PopIn/PopInScrollOverlay.png","assets/UI/PopIn/PopInScrollingBar.png","assets/UI/PopIn/PopInScrollingTruc.png","assets/UI/PopInBuilt/PopInBuiltArticleEmptyRessource.png","assets/UI/PopInBuilt/PopInBuiltBgArticle.png","assets/UI/PopInBuilt/PopInBuiltHardActive.png","assets/UI/PopInBuilt/PopInBuiltHardNormal.png","assets/UI/PopInBuilt/PopInBuiltSoftActive.png","assets/UI/PopInBuilt/PopInBuiltSoftNormal.png","assets/UI/PopInBuilt/PopInBuiltSoftNotDispo.png","assets/UI/PopInBuilt/PopInHeaderFusees.png","assets/UI/PopInBuilt/PopInHeaderNiches.png","assets/UI/PopInBuilt/PopInHeaderUtilitaires.png","assets/UI/PopInBuilt/PopInOngletFuseeActive.png","assets/UI/PopInBuilt/PopInOngletFuseeNormal.png","assets/UI/PopInBuilt/PopInOngletNicheActive.png","assets/UI/PopInBuilt/PopInOngletNicheNormal.png","assets/UI/PopInBuilt/PopInOngletUtilitairesActive.png","assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png","assets/UI/PopInBuilt/PopInTitleConstruction.png","assets/UI/PopInInventory/PopInInventoryArticleBg.png","assets/UI/PopInInventory/PopInInventoryBackground.png","assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png","assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png","assets/UI/PopInInventory/PopInInventoryScrollingBar.png","assets/UI/PopInInventory/PopInInventoryScrollingTruc.png","assets/UI/PopInInventory/PopInInventoryTitle.png","assets/UI/PopInMarket/PopInHeaderBuy.png","assets/UI/PopInMarket/PopInHeaderSell.png","assets/UI/PopInMarket/PopInMarketBgArticle.png","assets/UI/PopInMarket/PopInMarketNbArticleActive.png","assets/UI/PopInMarket/PopInMarketNbArticleNormal.png","assets/UI/PopInMarket/PopInMarketValidActive.png","assets/UI/PopInMarket/PopInMarketValidNormal.png","assets/UI/PopInMarket/PopInOngletBuyActive.png","assets/UI/PopInMarket/PopInOngletBuyNormal.png","assets/UI/PopInMarket/PopInOngletSellActive.png","assets/UI/PopInMarket/PopInOngletSellNormal.png","assets/UI/PopInMarket/PopInTitleMarket.png","assets/UI/PopInObservatory/PopInObservatoryArticle.png","assets/UI/PopInObservatory/PopInScrollOverlay.png","assets/UI/PopInObservatory/PopInScrollingBar.png","assets/UI/PopInObservatory/PopInScrollingTruc.png","assets/UI/PopInObservatory/PopInTitleObservatory.png","assets/UI/PopInQuest/PopInQuestBgArticle.png","assets/UI/PopInQuest/PopInQuestOngletEnCoursActive.png","assets/UI/PopInQuest/PopInQuestOngletEnCoursNormal.png","assets/UI/PopInQuest/PopInQuestOngletFinishActive.png","assets/UI/PopInQuest/PopInQuestOngletFinishNormal.png","assets/UI/PopInQuest/PopInTitleQuest.png","assets/UI/PopInShop/PopInHeaderDogflooz.png","assets/UI/PopInShop/PopInHeaderOsDOr.png","assets/UI/PopInShop/PopInMarketValidActive.png","assets/UI/PopInShop/PopInMarketValidNormal.png","assets/UI/PopInShop/PopInOngletHardActive.png","assets/UI/PopInShop/PopInOngletHardNormal.png","assets/UI/PopInShop/PopInOngletSoftActive.png","assets/UI/PopInShop/PopInOngletSoftNormal.png","assets/UI/PopInShop/PopInShopBgArticle.png","assets/UI/PopInShop/PopInShopButtonConfirmActive.png","assets/UI/PopInShop/PopInShopButtonConfirmNormal.png","assets/UI/PopInShop/PopInTitleShop.png","assets/UI/PopInSocial/PopInSocialArticleBg.png","assets/UI/PopInSocial/PopInSocialBg.png","assets/UI/PopInSocial/PopInSocialButtonDownActivel.png","assets/UI/PopInSocial/PopInSocialButtonDownNormal.png","assets/UI/PopInSocial/PopInSocialButtonTradeActivel.png","assets/UI/PopInSocial/PopInSocialButtonTradeNormal.png","assets/UI/PopInSocial/PopInSocialButtonUpActive.png","assets/UI/PopInSocial/PopInSocialButtonUpNormal.png","assets/UI/PopInSocial/PopInSocialButtonVisitActive.png","assets/UI/PopInSocial/PopInSocialButtonVisitNormal.png","assets/UI/PopInSocial/PopInSocialPhotoBorders.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyBlue3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyCyan3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyFb3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyRed3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyVert3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet1.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyViolet3.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow2.png","assets/UI/PopInWorkshop/FuseeNotReady/PopInWorkshopFuseeNotReadyYellow3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyBlue3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyCyan3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyFb3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyRed3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyVert3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet0.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyViolet3.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow1.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow2.png","assets/UI/PopInWorkshop/FuseeReady/PopInWorkshopFuseeReadyYellow3.png","assets/UI/PopInWorkshop/PopInTitleWorkshop.png","assets/UI/PopInWorkshop/PopInWorkshopArticleBG.png","assets/UI/PopInWorkshop/PopInWorkshopBgPlanet.png","assets/UI/PopInWorkshop/PopInWorkshopCancelButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopCancelButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopDestroyButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopDestroyButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopHeader.png","assets/UI/PopInWorkshop/PopInWorkshopLaunchButtonActive.png","assets/UI/PopInWorkshop/PopInWorkshopLaunchButtonNormal.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFill1.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFill2.png","assets/UI/PopInWorkshop/PopInWorkshopLoadFillBar.png","assets/UI/PopInWorkshop/PopInWorkshopLoadIcon.png","assets/UI/PopInWorkshop/PopInWorkshopParticule.png","assets/UI/PopInWorkshop/PopInWorkshopTextBG.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle01.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle02.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle03.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle04.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle05.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle06.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle07.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle08.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle09.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerIdle10.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick01.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick02.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick03.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick04.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick05.png","assets/UI/PopInWorkshop/hammer/PopInWorkshopHammerOnClick06.png","assets/alpha_bg.png","assets/Buildings/CasinoLv1/sprites.json","assets/Buildings/CasinoLv2/sprites.json","assets/Buildings/CasinoLv3/sprites.json","assets/Buildings/EgliseLv1/sprites.json","assets/Buildings/EgliseLv2/sprites.json","assets/Buildings/EgliseLv3/sprites.json","assets/Buildings/EntrepotLv1/sprites.json","assets/Buildings/EntrepotLv2/sprites.json","assets/Buildings/EntrepotLv3/sprites.json","assets/Buildings/Fusees/Bleu1/sprites.json","assets/Buildings/Fusees/Bleu2/sprites.json","assets/Buildings/Fusees/Bleu3/sprites.json","assets/Buildings/Fusees/Cyan1/sprites.json","assets/Buildings/Fusees/Cyan2/sprites.json","assets/Buildings/Fusees/Cyan3/sprites.json","assets/Buildings/Fusees/Fb1/sprites.json","assets/Buildings/Fusees/Fb2/sprites.json","assets/Buildings/Fusees/Fb3/sprites.json","assets/Buildings/Fusees/Jaune1/sprites.json","assets/Buildings/Fusees/Jaune2/sprites.json","assets/Buildings/Fusees/Jaune3/sprites.json","assets/Buildings/Fusees/Orange1/sprites.json","assets/Buildings/Fusees/Orange2/sprites.json","assets/Buildings/Fusees/Orange3/sprites.json","assets/Buildings/Fusees/Vert1/sprites.json","assets/Buildings/Fusees/Vert2/sprites.json","assets/Buildings/Fusees/Vert3/sprites.json","assets/Buildings/Fusees/Violet1/sprites.json","assets/Buildings/Fusees/Violet2/sprites.json","assets/Buildings/Fusees/Violet3/sprites.json","assets/Buildings/HangarBleuLv1/sprites.json","assets/Buildings/HangarBleuLv2/sprites.json","assets/Buildings/HangarBleuLv3/sprites.json","assets/Buildings/HangarCyanLv1/sprites.json","assets/Buildings/HangarCyanLv2/sprites.json","assets/Buildings/HangarCyanLv3/sprites.json","assets/Buildings/HangarJauneLv1/sprites.json","assets/Buildings/HangarJauneLv2/sprites.json","assets/Buildings/HangarJauneLv3/sprites.json","assets/Buildings/HangarRougeLv1/sprites.json","assets/Buildings/HangarRougeLv2/sprites.json","assets/Buildings/HangarRougeLv3/sprites.json","assets/Buildings/HangarVertLv1/sprites.json","assets/Buildings/HangarVertLv2/sprites.json","assets/Buildings/HangarVertLv3/sprites.json","assets/Buildings/HangarVioletLv1/sprites.json","assets/Buildings/HangarVioletLv2/sprites.json","assets/Buildings/HangarVioletLv3/sprites.json","assets/Buildings/LaboLv1/sprites.json","assets/Buildings/LaboLv2/sprites.json","assets/Buildings/LaboLv3/sprites.json","assets/Buildings/MuseeLv1/sprites.json","assets/Buildings/MuseeLv2/sprites.json","assets/Buildings/MuseeLv3/sprites.json","assets/Buildings/NicheLv1/sprites.json","assets/Buildings/NicheLv2/sprites.json","assets/Buildings/NicheLv3/sprites.json","assets/Buildings/PasDeTirLv1/sprites.json","assets/Buildings/PasDeTirLv2/sprites.json","assets/Buildings/PasDeTirLv3/sprites.json","assets/UI/Hud/sprites.json","assets/UI/HudBuildingContextBar.png"];
 Main.CONFIG_PATH = "config.json";
 buildings.PreviewBuilding.CANT_BUILD_COLOR = 16729156;
@@ -2344,3 +2312,5 @@ utils.events.Event.GAME_LOOP = "Event.GAME_LOOP";
 utils.events.Event.RESIZE = "Event.RESIZE";
 Main.main();
 })();
+
+//# sourceMappingURL=Structure.js.map
