@@ -16,6 +16,8 @@ import utils.game.InputInfos;
 // TODO : remove functions + MAJ description
 class MyPopin extends DisplayObjectContainer
 {
+	private var startX:Float;
+	private var startY:Float;
 	private var background:Sprite;
 	private var modalZone:Sprite;
 	private var childs:Map<String, Sprite> = new Map();
@@ -30,16 +32,17 @@ class MyPopin extends DisplayObjectContainer
 	private var headerTextures:Map<String,Texture>;
 	private var mouse_wheel_dir:Int;
 	private var startScrollY:Float;
+	private var maxDragY:Float;
 	
-	public function new(startX:Float=0,startY:Float=0, texturePath:String, ?isModal:Bool=false) 
+	public function new(pstartX:Float=0,pstartY:Float=0, texturePath:String, ?isModal:Bool=false) 
 	{
 		super();
-		// *width so that it's in % of screen
-		x=Std.int(startX*DeviceCapabilities.width);
-		y=Std.int(startY*DeviceCapabilities.height);
+		startX = pstartX;
+		startY = pstartY;
+		onResize();
 
-		if(isModal){
-			modalZone = new Sprite(Texture.fromImage("assets/alpha_bg.png"));
+		/*if(isModal){
+			modalZone = new Sprite(Texture.fromImage("assets/alpha_bg.png")); !!! TO REDO !!!
 			modalZone.x= -startX*DeviceCapabilities.width;
 			modalZone.y= -startY*DeviceCapabilities.height;
 			modalZone.width = DeviceCapabilities.width;
@@ -48,7 +51,8 @@ class MyPopin extends DisplayObjectContainer
 			modalZone.click = stopClickEventPropagation;
 			childs["modal"] = modalZone;
 			addChild(modalZone);
-		}
+		}*/
+		Main.getInstance().addEventListener(Event.RESIZE, onResize);
 
 		background = new Sprite(Texture.fromImage(texturePath));
 		background.anchor.set(0.5, 0.5);
@@ -57,7 +61,6 @@ class MyPopin extends DisplayObjectContainer
 	}
 
 	// creates an IconPopin and puts it in the childs array
-	// TODO : create textures and stock them so that if we ask for the same we dont have to recreate it (unless pixi does it already)
 	private function addIcon(x:Float,y:Float, texturePath:String, name:String, target:DisplayObjectContainer,?isInteractive:Bool=false,?texturePathActive:String,?pIsSelectButton:Bool=false):Void{
 		//int cast because Float pos = blurry images
 		var icon:IconPopin = new IconPopin(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2),texturePath,name,isInteractive,texturePathActive,pIsSelectButton);
@@ -104,11 +107,11 @@ class MyPopin extends DisplayObjectContainer
 		};
 		scrollIndicator.mousemove = function(data){
 			var newY:Float = data.getLocalPosition(scrollIndicator.parent).y - scrollDragSy;
+			maxDragY = containers["verticalScroller"].height-icons["contentBackground"].height + 100; // 100 is totaly changeable
 			if(scrollDragging && newY > 0.23*background.height-background.height/2 && newY < 0.635*background.height-background.height/2) {
 				var interval:Float = (0.635*background.height-background.height/2) - (0.23*background.height-background.height/2 );
-				var maxScroll:Float = containers["verticalScroller"].height-icons["contentBackground"].height + 100; // 100 is totaly changeable
 				scrollIndicator.y = newY;
-				containers["verticalScroller"].y =  - Std.int(((newY - (0.23*background.height-background.height/2)) * maxScroll  / interval)); // math stuff fait à l'arrache (plus ou moins)
+				containers["verticalScroller"].y =  - Std.int(((newY - (0.23*background.height-background.height/2)) * maxDragY  / interval)); // math stuff fait à l'arrache (plus ou moins)
 			}
 		}
 		icons["scrollingIndicator"] = scrollIndicator;
@@ -125,12 +128,13 @@ class MyPopin extends DisplayObjectContainer
 		|| InputInfos.mouse_y - y+background.height/2 < background.y )
 			return;
 
+		var maxScrollY:Float = containers["verticalScroller"].height - icons["articleBase"].height*3+25;
 		var contentDeltaY:Float = -(mouse_wheel_dir + InputInfos.mouse_wheel_dir)/3 * icons["articleBase"].height * 0.5;
 		if(contentDeltaY <= 0
-		&& contentDeltaY > -(containers["verticalScroller"].height - icons["articleBase"].height*3+25)) {
+		&& contentDeltaY > -maxScrollY) {
 			mouse_wheel_dir += InputInfos.mouse_wheel_dir;
 			containers["verticalScroller"].y = Std.int(startScrollY + contentDeltaY);
-			//TO DO MOVE SCROLL BAR
+			scrollIndicator.y = Std.int((-(contentDeltaY/maxScrollY)*(0.635-0.23) + 0.23) * background.height-background.height/2);
 		}
 		InputInfos.mouse_wheel_dir = 0; // !! BAD FIND ANOTHER WAY
 	}
@@ -149,8 +153,14 @@ class MyPopin extends DisplayObjectContainer
 		containers[name] = temp;
 		target.addChild(temp);
 	}
-	//empty function so that the interactive Icons are automaticly binded to this function
-	//the popin will inherit from this class and then can overide this function to configure the childs click action
+	private function onResize():Void{
+		// * screen width so that it's in % of screen
+		trace("WUT???");
+		x=Std.int(startX*DeviceCapabilities.width);
+		y=Std.int(startY*DeviceCapabilities.height);
+	}
+
+	//any popin will inherit from this class and then can overide this function to configure the childs click action
 	private function childClick(pEvent:InteractionData){}
 	private function childUpOutside(pEvent:InteractionData){}
 	public function update(){}
