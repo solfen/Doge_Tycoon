@@ -109,7 +109,7 @@ class Main extends EventDispatcher
 	private function onLoadComplete (pEvent:Event): Void {
 		pEvent.target.removeEventListener("onProgress", onLoadProgress);
 		pEvent.target.removeEventListener("onComplete", onLoadComplete);
-		//ScenesManager.getInstance().loadScene("GameScene");
+		ScenesManager.getInstance().loadScene("GameScene");
 		//FB.getLoginStatus(onFacebookConnect);
 	}
 	private function onFacebookConnect(pResponse:Dynamic){
