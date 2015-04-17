@@ -53,12 +53,12 @@ class Building extends MovieClip
 
 	public static function get_building_type (id: Int): Int
 	{
-		return id&0xFF;
+		return id & 0x0FF;
 	}
 
 	public static function get_building_lvl (id: Int): Int
 	{
-		return id&0xF00;
+		return id & 0xF00;
 	}
 	
 	public static function get_map_idx (pOrigin: Int, pWidth: Int, pHeight: Int) : Array<Int>
@@ -143,7 +143,7 @@ class Building extends MovieClip
 			
 			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(_building_end_time-_building_start_time)*0x99);
 
-			tint = (color<<16)|(color<<8)|color; // 0x000000 -> 0x999999
+			tint = (color<<16) | (color<<8) | color; // 0x000000 -> 0x999999
 
 			if (Timer.stamp() >= _building_end_time) {
 				is_builded = true;
