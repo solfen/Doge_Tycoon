@@ -3,7 +3,8 @@ package buildings;
 import haxe.Timer;
 import utils.system.DeviceCapabilities;
 import utils.events.Event;
-//import utils.game.IsoTools;
+import utils.game.IsoTools;
+import utils.game.InputInfos;
 import pixi.display.MovieClip;
 import pixi.InteractionData;
 import pixi.display.Sprite;
@@ -35,16 +36,20 @@ class Building extends MovieClip
 	public static var LVL_2 		: Int 	= 	0x200;
 	public static var LVL_3 		: Int 	=	0x300;
 	
-	public var type: Int;
-	public var lvl: Int;
+	public var all_map_index: Array<Int>;
+	public var config: Dynamic;
 	public var col: Float;
 	public var row: Float;
+	public var creation_stamp: Float;
+	public var type: Int;
+	public var lvl: Int;
+	public var map_origin_index: Int;
 	public var width_in_tiles_nb: Int; // en nombre de tiles
 	public var height_in_tiles_nb: Int;
 	public var building_time: Int;
 	public var is_builded: Bool;
-	public var has_context_popin:Bool = false;
-	public var config: Dynamic;
+	public var is_clickable: Bool;
+	//public var has_context_popin:Bool;
 
 	private var _building_start_time: Float;
 	private var _building_end_time: Float;
@@ -77,13 +82,18 @@ class Building extends MovieClip
 		return map_idx;
 	}
 
-	public function new (p_type: Int, p_col: Float, p_row: Float, pX: Int, pY: Int): Void
+	public function new (p_type: Int, p_index: Int, pX: Int, pY: Int): Void
 	{
 		type = p_type;
 		lvl = Building.LVL_1;
-		col = p_col;
-		row = p_row;
+		map_origin_index = p_index;//IsoTools.cell_index_from_cr
+		col = IsoTools.cell_col(map_origin_index, IsoMap.cols_nb);
+		row = IsoTools.cell_row(map_origin_index, IsoMap.cols_nb);
 		is_builded = true;
+		is_clickable = true;
+		//has_context_popin = false;
+		creation_stamp = Timer.stamp();
+
 		_cheat_ratio = 0.3; // pour construire + vite, parce que c'est long!
 
 		width_in_tiles_nb = get_config().width;
@@ -96,8 +106,10 @@ class Building extends MovieClip
 		buttonMode = true;
 		loop = true;
 		animationSpeed = 0.333;
+
+		all_map_index = get_map_idx(map_origin_index, width_in_tiles_nb, height_in_tiles_nb);
+
 		click = _on_click;
-		mouseover = _on_mouseover;
 		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
 	}
 
@@ -153,14 +165,48 @@ class Building extends MovieClip
 				play();
 			}
 		}
+
+		if (is_clickable)
+		{
+			alpha = 1;
+		}
+		else
+		{
+			alpha = 0.5;
+		}
+		
+
+
+		/*if (InputInfos.mouse_x >= x+IsoMap.singleton.x
+			&& InputInfos.mouse_x <= x+IsoMap.singleton.x+width
+			&& InputInfos.mouse_y >= y+IsoMap.singleton.y-height
+			&& InputInfos.mouse_y <= y+IsoMap.singleton.y) // mouse over
+		{
+			if (IsoMap.singleton.focused_building != null && all_map_index.indexOf(IsoMap.singleton.current_overflown_cell) == -1)
+			{
+				alpha = 0.5;
+				//is_focus = false;
+			}
+			else
+			{
+				alpha = 1;
+				IsoMap.singleton.focused_building = this;
+				//is_focus = true;
+			}
+		}
+		else
+		{
+			alpha = 1;	
+		}*/
 	}
 	
 	private function _on_click (p_data: InteractionData): Void
 	{
-		if (!is_builded || !GameInfo.can_map_update)
+		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
 		{
 			return;
 		}
+
 		if (GameInfo.is_building_context_pop_open)
 		{
 			popin.PopinManager.getInstance().closeContextPopin();
@@ -171,11 +217,6 @@ class Building extends MovieClip
 			popin.PopinManager.getInstance().openContextPopin(width*0.5/DeviceCapabilities.width, -height*0.5/DeviceCapabilities.height, this);
 			GameInfo.is_building_context_pop_open = true;
 		}
-	}
-
-	private function _on_mouseover (p_data: InteractionData): Void
-	{
-		// indexOf if (IsoMap.singleton.current_overflown_cell)
 	}
 
 	private function _get_texture (): Array<Texture>

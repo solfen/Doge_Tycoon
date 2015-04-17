@@ -26,8 +26,9 @@ class IsoMap extends DisplayObjectContainer
 	public static var cell_width: Int;
 	public static var cell_height: Int;
 
+	public var buildings_list: Array<Building>;
 	public var obstacles_layer: Array<Bool>;
-	public var buildings_layer: Array<Int>;
+	public var focused_building: Building;
 	public var current_overflown_cell: Int;
 
 	private var _previewing_building: PreviewBuilding;
@@ -42,8 +43,6 @@ class IsoMap extends DisplayObjectContainer
 	private var _screen_move_max_to_build: Int;
 	private var _screen_move_x: Int;
 	private var _screen_move_y: Int;
-	private var _offset_x: Int;
-	private var _offset_y: Int;
 	private var _map_width: Int;
 	private var _map_height: Int;
 	private var _is_clicking: Bool;
@@ -56,7 +55,6 @@ class IsoMap extends DisplayObjectContainer
 
 		singleton = this;
 
-		/* some configuration, have to be public ? */
 		_screen_margin = 0.0333;
 		_screen_move_speed = 0.5;
 		_screen_move_max_to_build = 64;
@@ -68,35 +66,31 @@ class IsoMap extends DisplayObjectContainer
 		cells_nb = cols_nb * rows_nb;
 		cell_width = pCell_width;
 		cell_height = pCell_height;
+		focused_building = null;
 
 		_map_width = cols_nb * cell_width;
 		_map_height = rows_nb * cell_height;
-		_offset_x = 0;
-		_offset_y = 0;
 		_screen_move_x = 0;
 		_screen_move_y = 0;
 		_time_to_move_screen = Timer.stamp();
-		_cells_pts = IsoTools.all_map_pts_xy(_offset_x, _offset_y, cell_width, cell_height, cols_nb*rows_nb, cols_nb);
+		_cells_pts = IsoTools.all_map_pts_xy(0, 0, cell_width, cell_height, cols_nb*rows_nb, cols_nb);
 		
 		x = _old_x = Std.int(DeviceCapabilities.width*0.5 - _map_width*0.5);
 		y = _old_y = Std.int(DeviceCapabilities.height*0.5 - _map_height*0.5);
 
+		buildings_list = new Array<Building>();
 		obstacles_layer = new Array<Bool>();
-		buildings_layer = new Array<Int>();
 
 		addChild(new TilingSprite(Texture.fromFrame(pBG_frame), _map_width, _map_height));
-		//addChild(new TilingSprite(Texture.fromImage(pBG_frame), _map_width, _map_height));
 
 		_graphics = new Graphics();
 		_graphics.lineStyle(1, 0x88CCFF, 1);
 		addChild(_graphics);
 
 		var i: Int = cells_nb;
-		var test = 0;
 		while (i-->0)
 		{
 			obstacles_layer[i] = false;
-			buildings_layer[i] = 0;
 
 			_graphics.moveTo(_cells_pts[i].x0, _cells_pts[i].y0);
 			_graphics.lineTo(_cells_pts[i].x1, _cells_pts[i].y1);
@@ -110,6 +104,7 @@ class IsoMap extends DisplayObjectContainer
 				addChild(new DisplayObjectContainer());
 			}
 		}
+
 		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
 	}
 
@@ -117,13 +112,13 @@ class IsoMap extends DisplayObjectContainer
 	{
 		var build_data = _get_building_coord(pBuilding_type, current_overflown_cell);
 
-		if (/*build_data == null || */!build_data.can_build)
+		if (!build_data.can_build)
 		{
 			return null;
 		}
 
-		var building: Building = new Building(pBuilding_type, build_data.col, build_data.row, build_data.x, build_data.y);
-		
+		var building: Building = new Building(pBuilding_type, current_overflown_cell, build_data.x, build_data.y);
+
 		building.build();
 
 		// set the obstacles layer :
@@ -134,7 +129,6 @@ class IsoMap extends DisplayObjectContainer
 		while (i-->0)
 		{
 			obstacles_layer[building_map_idx[i]] = true;
-			buildings_layer[building_map_idx[i]] = pBuilding_type;
 		}
 
 		try
@@ -167,13 +161,43 @@ class IsoMap extends DisplayObjectContainer
 			}
 			return;
 		}
-
-		var offset_x: Int = Std.int(this.x)+_offset_x;
-		var offset_y: Int = Std.int(this.y)+_offset_y;
 		
-		if (IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, offset_x, offset_y, cell_width, cell_height, cells_nb, cols_nb))
+		if (IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), cell_width, cell_height, cells_nb, cols_nb))
 		{
-			current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, offset_x, offset_y, cell_width, cell_height, cols_nb);
+
+			current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), cell_width, cell_height, cols_nb);
+
+			var i: Int = buildings_list.length;
+			var map_x_on_screen: Float = InputInfos.mouse_x - x;
+			var map_y_on_screen: Float = InputInfos.mouse_y - y;
+			var next_focused: Building = null;
+
+			//focused_building = null;
+
+			while (i-->0)
+			{
+				if (	map_x_on_screen >= buildings_list[i].x
+					&&	map_x_on_screen <= buildings_list[i].x + buildings_list[i].width
+					&&	map_y_on_screen >= buildings_list[i].y - buildings_list[i].height
+					&&	map_y_on_screen <= buildings_list[i].y)
+				{// mouse over
+					if (buildings_list[i].all_map_index.indexOf(current_overflown_cell) == -1)
+					{
+						buildings_list[i].is_clickable = focused_building == null || focused_building.row >= buildings_list[i].row;
+					}
+					else
+					{
+						next_focused = buildings_list[i];
+						buildings_list[i].is_clickable = true;
+					}
+				}
+				else
+				{
+					buildings_list[i].is_clickable = true;
+				}
+			}
+
+			focused_building = next_focused;
 		}
 
 		if (_is_clicking && !InputInfos.is_mouse_down) // click relaché après avoir été appuyé
@@ -201,6 +225,7 @@ class IsoMap extends DisplayObjectContainer
 
 		// déplacements de la map sur les bords de l'écran :
 
+/*
 		if (InputInfos.mouse_x < DeviceCapabilities.width*_screen_margin && InputInfos.mouse_x >= 0 && x < 0) // left
 		{
 			_screen_move_x = Std.int((DeviceCapabilities.width*_screen_margin-InputInfos.mouse_x)*_screen_move_speed);
@@ -237,6 +262,7 @@ class IsoMap extends DisplayObjectContainer
 			x += _screen_move_x;
 			y += _screen_move_y;
 		}
+*/
 
 		_graphics.visible = GameInfo.building_2_build > 0;
 
@@ -244,25 +270,22 @@ class IsoMap extends DisplayObjectContainer
 		{
 			var build_data: Dynamic = _get_building_coord(GameInfo.building_2_build, current_overflown_cell);
 
-			//if (build_data != null)
-			//{
-				if (_previewing_building == null)
-				{
-					_previewing_building = new PreviewBuilding(GameInfo.building_2_build, build_data.x, build_data.y);
-					addChild(_previewing_building);
-				}
+			if (_previewing_building == null)
+			{
+				_previewing_building = new PreviewBuilding(GameInfo.building_2_build, build_data.x, build_data.y);
+				addChild(_previewing_building);
+			}
 
-				if (!build_data.can_build && _previewing_building.tint == 0xFFFFFF)
-				{
-					_previewing_building.tint = PreviewBuilding.CANT_BUILD_COLOR;
-				}
-				else if (build_data.can_build && _previewing_building.tint != 0xFFFFFF)
-				{
-					_previewing_building.tint = 0xFFFFFF;
-				}
+			if (!build_data.can_build && _previewing_building.tint == 0xFFFFFF)
+			{
+				_previewing_building.tint = PreviewBuilding.CANT_BUILD_COLOR;
+			}
+			else if (build_data.can_build && _previewing_building.tint != 0xFFFFFF)
+			{
+				_previewing_building.tint = 0xFFFFFF;
+			}
 
-				_previewing_building.set_position(build_data.x, build_data.y);
-			//}
+			_previewing_building.set_position(build_data.x, build_data.y);
 		}
 	}
 
@@ -277,6 +300,7 @@ class IsoMap extends DisplayObjectContainer
 			if (new_building != null)
 			{
 				GameInfo.building_2_build = 0;
+				buildings_list.push(new_building);
 				removeChild(_previewing_building);
 				_previewing_building = null;
 			}
@@ -285,19 +309,10 @@ class IsoMap extends DisplayObjectContainer
 
 	private function _get_building_coord (pBuilding_type: Int, index: Int): Dynamic
 	{
-		/*var offset_x: Int = Std.int(this.x)+_offset_x;
-		var offset_y: Int = Std.int(this.y)+_offset_y;
-		
-		if (!IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, offset_x, offset_y, cell_width, cell_height, cells_nb, cols_nb))
-		{
-			return null;
-		}*/
-
-		//var index: Int = IsoTools.cell_index_from_xy(pX, pY, offset_x, offset_y, cell_width, cell_height, cols_nb);
 		var col: Float = IsoTools.cell_col(index, cols_nb);
 		var row: Float = IsoTools.cell_row(index, cols_nb);
-		var new_x: Int = IsoTools.cell_x(col, cell_width, _offset_x);
-		var new_y: Int = IsoTools.cell_y(row, cell_height, _offset_y);
+		var new_x: Int = IsoTools.cell_x(col, cell_width, 0);
+		var new_y: Int = IsoTools.cell_y(row, cell_height, 0);
 		var can_build: Bool = true;
 
 		// vérification de l'obstacles_layer :
