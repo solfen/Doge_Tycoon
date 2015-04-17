@@ -1,5 +1,6 @@
 package;
 
+import haxe.Timer;
 import utils.system.DeviceCapabilities;
 import utils.events.Event;
 import utils.game.IsoTools;
@@ -27,32 +28,39 @@ class IsoMap extends DisplayObjectContainer
 
 	public var obstacles_layer: Array<Bool>;
 	public var buildings_layer: Array<Int>;
+	public var current_overflown_cell: Int;
 
+	private var _previewing_building: PreviewBuilding;
 	private var _graphics: Graphics;
-	private var _screen_margin: Float;
-	private var _screen_move_speed: Float;
-	private var _screen_move_max_to_build: Int;
+	private var _cells_pts: Array<Dynamic<Int>>;
 	private var _old_x: Float;
 	private var _old_y: Float;
+	private var _screen_margin: Float;
+	private var _screen_move_speed: Float;
+	private var _time_to_move_screen: Float;
+	private var _screen_move_delay: Float;
+	private var _screen_move_max_to_build: Int;
+	private var _screen_move_x: Int;
+	private var _screen_move_y: Int;
 	private var _offset_x: Int;
 	private var _offset_y: Int;
-	private var _cells_pts: Array<Dynamic<Int>>;
 	private var _map_width: Int;
 	private var _map_height: Int;
 	private var _is_clicking: Bool;
-	private var _previewing_building: PreviewBuilding;
 
 /* ---------------------------------------------------------------------------------------- */
 
-	public function new (pBG_url: String, pCols_nb: Int, pRows_nb: Int, pCell_width: Int, pCell_height: Int): Void 
+	public function new (pBG_frame: String, pCols_nb: Int, pRows_nb: Int, pCell_width: Int, pCell_height: Int): Void 
 	{
 		super();
 
 		singleton = this;
 
-		_screen_margin = 0.03;
+		/* some configuration, have to be public ? */
+		_screen_margin = 0.0333;
 		_screen_move_speed = 0.5;
 		_screen_move_max_to_build = 64;
+		_screen_move_delay = 0.7;
 		_is_clicking = false;
 
 		cols_nb = pCols_nb;
@@ -65,6 +73,9 @@ class IsoMap extends DisplayObjectContainer
 		_map_height = rows_nb * cell_height;
 		_offset_x = 0;
 		_offset_y = 0;
+		_screen_move_x = 0;
+		_screen_move_y = 0;
+		_time_to_move_screen = Timer.stamp();
 		_cells_pts = IsoTools.all_map_pts_xy(_offset_x, _offset_y, cell_width, cell_height, cols_nb*rows_nb, cols_nb);
 		
 		x = _old_x = Std.int(DeviceCapabilities.width*0.5 - _map_width*0.5);
@@ -73,7 +84,8 @@ class IsoMap extends DisplayObjectContainer
 		obstacles_layer = new Array<Bool>();
 		buildings_layer = new Array<Int>();
 
-		addChild(new TilingSprite(Texture.fromImage(pBG_url), _map_width, _map_height));
+		addChild(new TilingSprite(Texture.fromFrame(pBG_frame), _map_width, _map_height));
+		//addChild(new TilingSprite(Texture.fromImage(pBG_frame), _map_width, _map_height));
 
 		_graphics = new Graphics();
 		_graphics.lineStyle(1, 0x88CCFF, 1);
@@ -103,9 +115,9 @@ class IsoMap extends DisplayObjectContainer
 
 	public function build_building (pBuilding_type: Int, pX: Int, pY: Int): Building
 	{
-		var build_data = _get_building_coord(pBuilding_type, pX, pY);
+		var build_data = _get_building_coord(pBuilding_type, current_overflown_cell);
 
-		if (build_data == null || !build_data.can_build)
+		if (/*build_data == null || */!build_data.can_build)
 		{
 			return null;
 		}
@@ -156,6 +168,14 @@ class IsoMap extends DisplayObjectContainer
 			return;
 		}
 
+		var offset_x: Int = Std.int(this.x)+_offset_x;
+		var offset_y: Int = Std.int(this.y)+_offset_y;
+		
+		if (IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, offset_x, offset_y, cell_width, cell_height, cells_nb, cols_nb))
+		{
+			current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, offset_x, offset_y, cell_width, cell_height, cols_nb);
+		}
+
 		if (_is_clicking && !InputInfos.is_mouse_down) // click relaché après avoir été appuyé
 		{
 			_is_clicking = false;
@@ -178,33 +198,54 @@ class IsoMap extends DisplayObjectContainer
 			y = y>0 ? 0 : y<DeviceCapabilities.height-_map_height ? DeviceCapabilities.height-_map_height : y;
 		}
 
+
 		// déplacements de la map sur les bords de l'écran :
-		if (InputInfos.mouse_x < DeviceCapabilities.width*_screen_margin && x < 0) // left
+
+		if (InputInfos.mouse_x < DeviceCapabilities.width*_screen_margin && InputInfos.mouse_x >= 0 && x < 0) // left
 		{
-			x += Std.int((DeviceCapabilities.width*_screen_margin-InputInfos.mouse_x)*_screen_move_speed);
+			_screen_move_x = Std.int((DeviceCapabilities.width*_screen_margin-InputInfos.mouse_x)*_screen_move_speed);
 		}
-		else if (InputInfos.mouse_x > DeviceCapabilities.width*(1-_screen_margin) && x > DeviceCapabilities.width-_map_width) // right
+		else if (InputInfos.mouse_x > DeviceCapabilities.width*(1-_screen_margin) && InputInfos.mouse_x <= DeviceCapabilities.width && x > DeviceCapabilities.width-_map_width) // right
 		{
-			x += Std.int((DeviceCapabilities.width*(1-_screen_margin)-InputInfos.mouse_x)*_screen_move_speed);
+			_screen_move_x = Std.int((DeviceCapabilities.width*(1-_screen_margin)-InputInfos.mouse_x)*_screen_move_speed);
+		}
+		else
+		{
+			_screen_move_x = 0;
+		}
+		
+		if (InputInfos.mouse_y < DeviceCapabilities.height*_screen_margin && InputInfos.mouse_y >= 0 && y < 0) // up
+		{
+			_screen_move_y = Std.int((DeviceCapabilities.height*_screen_margin-InputInfos.mouse_y)*_screen_move_speed);
+		}
+		else if (InputInfos.mouse_y > DeviceCapabilities.height*(1-_screen_margin) && InputInfos.mouse_y <= DeviceCapabilities.height && y > DeviceCapabilities.height-_map_height) // down
+		{
+			_screen_move_y = Std.int((DeviceCapabilities.height*(1-_screen_margin)-InputInfos.mouse_y)*_screen_move_speed);
+		}
+		else
+		{
+			_screen_move_y = 0;
 		}
 
-		if (InputInfos.mouse_y < DeviceCapabilities.height*_screen_margin && y < 0) // up
+		if (_screen_move_x == 0 && _screen_move_y == 0)
 		{
-			y += Std.int((DeviceCapabilities.height*_screen_margin-InputInfos.mouse_y)*_screen_move_speed);
+			_time_to_move_screen = Timer.stamp() + _screen_move_delay; // delay
 		}
-		else if (InputInfos.mouse_y > DeviceCapabilities.height*(1-_screen_margin) && y > DeviceCapabilities.height-_map_height) // down
+		else if (Timer.stamp() > _time_to_move_screen)
+		//else if (InputInfos.mouse_x == _last_mouse_x && InputInfos.mouse_y == _last_mouse_y)
 		{
-			y += Std.int((DeviceCapabilities.height*(1-_screen_margin)-InputInfos.mouse_y)*_screen_move_speed);
+			x += _screen_move_x;
+			y += _screen_move_y;
 		}
 
 		_graphics.visible = GameInfo.building_2_build > 0;
 
 		if (GameInfo.building_2_build > 0) // building preview
 		{
-			var build_data: Dynamic = _get_building_coord(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y);
+			var build_data: Dynamic = _get_building_coord(GameInfo.building_2_build, current_overflown_cell);
 
-			if (build_data != null)
-			{
+			//if (build_data != null)
+			//{
 				if (_previewing_building == null)
 				{
 					_previewing_building = new PreviewBuilding(GameInfo.building_2_build, build_data.x, build_data.y);
@@ -221,7 +262,7 @@ class IsoMap extends DisplayObjectContainer
 				}
 
 				_previewing_building.set_position(build_data.x, build_data.y);
-			}
+			//}
 		}
 	}
 
@@ -242,17 +283,17 @@ class IsoMap extends DisplayObjectContainer
 		}
 	}
 
-	private function _get_building_coord (pBuilding_type: Int, pX: Int, pY: Int): Dynamic
+	private function _get_building_coord (pBuilding_type: Int, index: Int): Dynamic
 	{
-		var offset_x: Int = Std.int(this.x)+_offset_x;
+		/*var offset_x: Int = Std.int(this.x)+_offset_x;
 		var offset_y: Int = Std.int(this.y)+_offset_y;
 		
-		if (!IsoTools.is_inside_map(pX, pY, offset_x, offset_y, cell_width, cell_height, cells_nb, cols_nb))
+		if (!IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, offset_x, offset_y, cell_width, cell_height, cells_nb, cols_nb))
 		{
 			return null;
-		}
+		}*/
 
-		var index: Int = IsoTools.cell_index_from_xy(pX, pY, offset_x, offset_y, cell_width, cell_height, cols_nb);
+		//var index: Int = IsoTools.cell_index_from_xy(pX, pY, offset_x, offset_y, cell_width, cell_height, cols_nb);
 		var col: Float = IsoTools.cell_col(index, cols_nb);
 		var row: Float = IsoTools.cell_row(index, cols_nb);
 		var new_x: Int = IsoTools.cell_x(col, cell_width, _offset_x);

@@ -1,5 +1,5 @@
 #I Need to use ctrl+B to build 	as ctrl+Enter does not write in js file
 -main Main
--cp C:\wamp\www\Doge_Tycoon\Social_City_Builder\src
--js C:\wamp\www\Doge_Tycoon\Social_City_Builder\bin\Structure.js
+-cp src
+-js bin/main.js
 -lib pixijs

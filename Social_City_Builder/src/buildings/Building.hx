@@ -3,6 +3,7 @@ package buildings;
 import haxe.Timer;
 import utils.system.DeviceCapabilities;
 import utils.events.Event;
+//import utils.game.IsoTools;
 import pixi.display.MovieClip;
 import pixi.InteractionData;
 import pixi.display.Sprite;
@@ -16,19 +17,19 @@ import pixi.geom.Rectangle;
  */
 class Building extends MovieClip
 {
-	public static var CASINO 		: Int 	=	0x01;
-	public static var EGLISE 		: Int 	=	0x02;
-	public static var HANGAR_BLEU 	: Int 	=	0x03;
-	public static var HANGAR_CYAN 	: Int 	=	0x04;
-	public static var HANGAR_JAUNE 	: Int 	=	0x05;
-	public static var HANGAR_ROUGE 	: Int 	=	0x06;
-	public static var HANGAR_VERT 	: Int 	=	0x07;
-	public static var HANGAR_VIOLET : Int 	=	0x08;
-	public static var LABO 			: Int 	=	0x09;
-	public static var NICHE 		: Int 	=	0x0A;
-	public static var PAS_DE_TIR 	: Int 	=	0x0B;
-	public static var ENTREPOT 		: Int 	=	0x0C;
-	public static var MUSEE 		: Int 	=	0x0D;
+	public static var CASINO 		: Int 	=	0x001;
+	public static var EGLISE 		: Int 	=	0x002;
+	public static var HANGAR_BLEU 	: Int 	=	0x003;
+	public static var HANGAR_CYAN 	: Int 	=	0x004;
+	public static var HANGAR_JAUNE 	: Int 	=	0x005;
+	public static var HANGAR_ROUGE 	: Int 	=	0x006;
+	public static var HANGAR_VERT 	: Int 	=	0x007;
+	public static var HANGAR_VIOLET : Int 	=	0x008;
+	public static var LABO 			: Int 	=	0x009;
+	public static var NICHE 		: Int 	=	0x00A;
+	public static var PAS_DE_TIR 	: Int 	=	0x00B;
+	public static var ENTREPOT 		: Int 	=	0x00C;
+	public static var MUSEE 		: Int 	=	0x00D;
 
 	public static var LVL_1 		: Int 	= 	0x100;
 	public static var LVL_2 		: Int 	= 	0x200;
@@ -96,12 +97,13 @@ class Building extends MovieClip
 		loop = true;
 		animationSpeed = 0.333;
 		click = _on_click;
+		mouseover = _on_mouseover;
 		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
 	}
 
 	public function get_id (): Int
 	{
-		return type|lvl;
+		return type | lvl;
 	}
 
 	public function get_config (): Dynamic
@@ -169,6 +171,11 @@ class Building extends MovieClip
 			popin.PopinManager.getInstance().openContextPopin(width*0.5/DeviceCapabilities.width, -height*0.5/DeviceCapabilities.height, this);
 			GameInfo.is_building_context_pop_open = true;
 		}
+	}
+
+	private function _on_mouseover (p_data: InteractionData): Void
+	{
+		// indexOf if (IsoMap.singleton.current_overflown_cell)
 	}
 
 	private function _get_texture (): Array<Texture>
