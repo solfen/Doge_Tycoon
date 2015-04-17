@@ -30,6 +30,7 @@ class MyPopin extends DisplayObjectContainer
 	private var headerTextures:Map<String,Texture>;
 	private var mouse_wheel_dir:Int;
 	private var startScrollY:Float;
+	private var maxDragY:Float;
 	
 	public function new(startX:Float=0,startY:Float=0, texturePath:String, ?isModal:Bool=false) 
 	{
@@ -104,11 +105,11 @@ class MyPopin extends DisplayObjectContainer
 		};
 		scrollIndicator.mousemove = function(data){
 			var newY:Float = data.getLocalPosition(scrollIndicator.parent).y - scrollDragSy;
+			maxDragY = containers["verticalScroller"].height-icons["contentBackground"].height + 100; // 100 is totaly changeable
 			if(scrollDragging && newY > 0.23*background.height-background.height/2 && newY < 0.635*background.height-background.height/2) {
 				var interval:Float = (0.635*background.height-background.height/2) - (0.23*background.height-background.height/2 );
-				var maxScroll:Float = containers["verticalScroller"].height-icons["contentBackground"].height + 100; // 100 is totaly changeable
 				scrollIndicator.y = newY;
-				containers["verticalScroller"].y =  - Std.int(((newY - (0.23*background.height-background.height/2)) * maxScroll  / interval)); // math stuff fait à l'arrache (plus ou moins)
+				containers["verticalScroller"].y =  - Std.int(((newY - (0.23*background.height-background.height/2)) * maxDragY  / interval)); // math stuff fait à l'arrache (plus ou moins)
 			}
 		}
 		icons["scrollingIndicator"] = scrollIndicator;
@@ -125,12 +126,13 @@ class MyPopin extends DisplayObjectContainer
 		|| InputInfos.mouse_y - y+background.height/2 < background.y )
 			return;
 
+		var maxScrollY:Float = containers["verticalScroller"].height - icons["articleBase"].height*3+25;
 		var contentDeltaY:Float = -(mouse_wheel_dir + InputInfos.mouse_wheel_dir)/3 * icons["articleBase"].height * 0.5;
 		if(contentDeltaY <= 0
-		&& contentDeltaY > -(containers["verticalScroller"].height - icons["articleBase"].height*3+25)) {
+		&& contentDeltaY > -maxScrollY) {
 			mouse_wheel_dir += InputInfos.mouse_wheel_dir;
 			containers["verticalScroller"].y = Std.int(startScrollY + contentDeltaY);
-			//TO DO MOVE SCROLL BAR
+			scrollIndicator.y = Std.int((-(contentDeltaY/maxScrollY)*(0.635-0.23) + 0.23) * background.height-background.height/2);
 		}
 		InputInfos.mouse_wheel_dir = 0; // !! BAD FIND ANOTHER WAY
 	}

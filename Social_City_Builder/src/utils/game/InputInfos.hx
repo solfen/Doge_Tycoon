@@ -71,6 +71,7 @@ class InputInfos
 	}
 	private function _on_wheel (pData: Dynamic):Void
 	{
+		pData.preventDefault();
 		//trace("wheel:", pData.deltaY); // multiple de 100 sur chrome, multiple de 3 sur firefox
 		mouse_wheel_dir = pData.deltaY < 0 ? -1 : 1; // uniquement la direction
 		trace("wheel direction:", mouse_wheel_dir);

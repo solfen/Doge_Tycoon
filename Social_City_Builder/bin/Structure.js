@@ -401,6 +401,7 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 	,onLoadComplete: function(pEvent) {
 		pEvent.target.removeEventListener("onProgress",$bind(this,this.onLoadProgress));
 		pEvent.target.removeEventListener("onComplete",$bind(this,this.onLoadComplete));
+		scenes.ScenesManager.getInstance().loadScene("GameScene");
 	}
 	,onFacebookConnect: function(pResponse) {
 		haxe.Log.trace(pResponse.status,{ fileName : "Main.hx", lineNumber : 116, className : "Main", methodName : "onFacebookConnect"});
@@ -1192,11 +1193,11 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 		};
 		this.scrollIndicator.mousemove = function(data2) {
 			var newY = data2.getLocalPosition(_g.scrollIndicator.parent).y - _g.scrollDragSy;
+			_g.maxDragY = _g.containers.get("verticalScroller").height - _g.icons.get("contentBackground").height + 100;
 			if(_g.scrollDragging && newY > 0.23 * _g.background.height - _g.background.height / 2 && newY < 0.635 * _g.background.height - _g.background.height / 2) {
 				var interval = 0.635 * _g.background.height - _g.background.height / 2 - (0.23 * _g.background.height - _g.background.height / 2);
-				var maxScroll = _g.containers.get("verticalScroller").height - _g.icons.get("contentBackground").height + 100;
 				_g.scrollIndicator.y = newY;
-				_g.containers.get("verticalScroller").y = -((newY - (0.23 * _g.background.height - _g.background.height / 2)) * maxScroll / interval | 0);
+				_g.containers.get("verticalScroller").y = -((newY - (0.23 * _g.background.height - _g.background.height / 2)) * _g.maxDragY / interval | 0);
 			}
 		};
 		var v = this.scrollIndicator;
@@ -1209,10 +1210,12 @@ popin.MyPopin.prototype = $extend(pixi.display.DisplayObjectContainer.prototype,
 	}
 	,scroll: function() {
 		if(utils.game.InputInfos.mouse_wheel_dir == 0 || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 > this.background.x + this.background.width || utils.game.InputInfos.mouse_x - this.x + this.background.width / 2 < this.background.x || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 > this.background.y + this.background.height || utils.game.InputInfos.mouse_y - this.y + this.background.height / 2 < this.background.y) return;
+		var maxScrollY = this.containers.get("verticalScroller").height - this.icons.get("articleBase").height * 3 + 25;
 		var contentDeltaY = -(this.mouse_wheel_dir + utils.game.InputInfos.mouse_wheel_dir) / 3 * this.icons.get("articleBase").height * 0.5;
-		if(contentDeltaY <= 0 && contentDeltaY > -(this.containers.get("verticalScroller").height - this.icons.get("articleBase").height * 3 + 25)) {
+		if(contentDeltaY <= 0 && contentDeltaY > -maxScrollY) {
 			this.mouse_wheel_dir += utils.game.InputInfos.mouse_wheel_dir;
 			this.containers.get("verticalScroller").y = this.startScrollY + contentDeltaY | 0;
+			this.scrollIndicator.y = (-(contentDeltaY / maxScrollY) * 0.405 + 0.23) * this.background.height - this.background.height / 2 | 0;
 		}
 		utils.game.InputInfos.mouse_wheel_dir = 0;
 	}
@@ -2128,8 +2131,9 @@ utils.game.InputInfos.prototype = {
 		utils.game.InputInfos.mouse_y = pData.clientY;
 	}
 	,_on_wheel: function(pData) {
+		pData.preventDefault();
 		if(pData.deltaY < 0) utils.game.InputInfos.mouse_wheel_dir = -1; else utils.game.InputInfos.mouse_wheel_dir = 1;
-		haxe.Log.trace("wheel direction:",{ fileName : "InputInfos.hx", lineNumber : 74, className : "utils.game.InputInfos", methodName : "_on_wheel", customParams : [utils.game.InputInfos.mouse_wheel_dir]});
+		haxe.Log.trace("wheel direction:",{ fileName : "InputInfos.hx", lineNumber : 75, className : "utils.game.InputInfos", methodName : "_on_wheel", customParams : [utils.game.InputInfos.mouse_wheel_dir]});
 	}
 	,__class__: utils.game.InputInfos
 };
