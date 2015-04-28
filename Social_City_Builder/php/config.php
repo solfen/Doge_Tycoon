@@ -1,5 +1,5 @@
 <?php
-	$source = 'mysql:host=localhost;dbname=dogeexplorer';
-	$user = 'dogeexplorer';
-	$motDePasse = 'doge2015';
+	$src = 'mysql:host=localhost;dbname=dogeexplorer_dev';
+	$user = 'root';
+	$pwd = '';
 ?>

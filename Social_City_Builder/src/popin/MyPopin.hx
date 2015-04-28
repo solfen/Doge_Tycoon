@@ -155,7 +155,6 @@ class MyPopin extends DisplayObjectContainer
 	}
 	private function onResize():Void{
 		// * screen width so that it's in % of screen
-		trace("WUT???");
 		x=Std.int(startX*DeviceCapabilities.width);
 		y=Std.int(startY*DeviceCapabilities.height);
 	}

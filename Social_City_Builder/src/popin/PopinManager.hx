@@ -44,7 +44,7 @@ class PopinManager extends DisplayObjectContainer
 		childs[popinName] = Type.createInstance( Type.resolveClass("popin."+popinName), [pX,pY,buildingAttached]);
 		addChild(childs[popinName]);
 
-		currentPopinName = popinName != "PopinInventory" ? popinName:currentPopinName; // beacuse inventory can be opened with other popins
+		currentPopinName = popinName != "PopinInventory" ? popinName:currentPopinName; // beacuse inventory can be opened along with other popins
 	}
 	public function openContextPopin(pX:Float, pY:Float,buildingAttached:buildings.Building){
 		childs["PopinUpgrade"] = Type.createInstance( Type.resolveClass("popin."+"PopinUpgrade"), [pX,pY,buildingAttached]);

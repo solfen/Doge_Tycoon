@@ -130,10 +130,30 @@ class Main extends EventDispatcher
 		trace(pResponse.status);
 		if(pResponse.status == 'connected'){
 			trace("awww yeah ! you're in !");
-			FB.ui({method: 'share',href: 'https://developers.facebook.com/docs'},test);
+			FB.api(
+			  'me/space_dogs_tycoon:find',
+			  'post',
+			  {
+			    artefact: "http://samples.ogp.me/884406454948358",
+			    //fb:'explicitly_shared',
+			  },
+			  function(response) {
+			  	trace(response);
+			  }
+			);
+			/*FB.ui({
+			  method: 'share_open_graph',
+			  action_type: 'og.likes',
+			  action_properties: haxe.Json.stringify({
+			      object:'http://samples.ogp.me/884406454948358',
+			  })
+			}, function(response){});*/
 		}
 		else if(pResponse.status == 'not_authorized'){
 			trace("Oh no ! you're not identified");
+			FB.login(function(response){
+				FB.getLoginStatus(onFacebookConnect);
+			}, {scope: 'publish_actions,email'});
 		}
 	}
 	private function test(){

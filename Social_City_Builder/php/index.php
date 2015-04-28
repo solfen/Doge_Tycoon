@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("vendor/autoload.php");
-include("api/config.php");
+include("config.php");
 use Facebook\FacebookSession;
 use Facebook\FacebookRequest;
 use Facebook\GraphUser;
@@ -13,7 +13,7 @@ $APP_ID = "855211017867902";
 $APP_SECRET = "ed316cbb88696b4a16f4a53a77aff738";
 FacebookSession::setDefaultApplication($APP_ID,$APP_SECRET);
 
-$connexion = new PDO($source, $user, $motDePasse);
+$connexion = new PDO($src, $user, $pwd);
 $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $connexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
  
@@ -61,6 +61,15 @@ Appel à l'Open Graph de Facebook
 if($session)
 {
     try{
+        $request = new FacebookRequest(
+          $session,
+          'POST',
+          'me/space_dogs_tycoon:find',
+          array(
+            'artefact' => "http://samples.ogp.me/884406454948358"
+          )
+        );
+        $request->execute();
         $request = new FacebookRequest($session, 'GET', '/me?fields=id,name,email');
         $response = $request->execute();
         $graphObject = $response->getGraphObject();
@@ -90,7 +99,7 @@ else
 {
     //Si l'utilisateur n'a pas encore autorisé l'application
     $helper = new FacebookRedirectLoginHelper("https://apps.facebook.com/".$APP_ID."/");
-    $auth_url = $helper->getLoginUrl(['email']);
+    $auth_url = $helper->getLoginUrl(['email','publish_actions']);
     echo '<script>top.location.href = "'.$auth_url.'";</script>';
 }
 ?>

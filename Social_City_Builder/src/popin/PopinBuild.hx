@@ -135,7 +135,7 @@ class PopinBuild extends MyPopin
 					GameInfo.ressources[i.name].userPossesion -= i.quantity;
 				}
 				GameInfo.building_2_build = article.buildingID;
-				HudManager.getInstance().updateChildText();
+				HudManager.getInstance().updateChildsText();
 				GameInfo.can_map_update = true;
 				PopinManager.getInstance().closePopin("PopinBuild");
 				PopinManager.getInstance().updateInventory();
@@ -154,7 +154,7 @@ class PopinBuild extends MyPopin
 
 			if(GameInfo.ressources['hardMoney'].userPossesion >= article.hardPrice){
 				GameInfo.ressources['hardMoney'].userPossesion -= article.hardPrice;
-				HudManager.getInstance().updateChildText();
+				HudManager.getInstance().updateChildsText();
 				GameInfo.building_2_build = article.buildingID;
 				GameInfo.can_map_update = true;
 				PopinManager.getInstance().closePopin("PopinBuild");

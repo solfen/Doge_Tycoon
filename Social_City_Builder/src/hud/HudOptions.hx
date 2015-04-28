@@ -9,8 +9,6 @@ import pixi.InteractionData;
 // if the change texture repeats itself among all the HUD it will be put in IconHUD
 class HudOptions extends IconHud
 {
-	private static var instance: HudOptions;
-
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)

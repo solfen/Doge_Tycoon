@@ -18,9 +18,9 @@ class HudDestroy extends IconHud
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {
-		GameInfo.isDestroyMode ? changeTexture("normal") : changeTexture("active");
-		GameInfo.isDestroyMode = !GameInfo.isDestroyMode;
 		GameInfo.isUpgradeMode = false;
+		GameInfo.isDestroyMode = true;
+		changeTexture("active");
 		hud.HudManager.getInstance().setChildTexture("HudUpgrade", 'normal');
 	}
 }

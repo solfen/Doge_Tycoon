@@ -40,19 +40,21 @@ class HudManager extends DisplayObjectContainer
 		/*addContainer(0.94,0,'HudLeft',0.05,0.05,'right');
 		addHud(new HudOptions(0,hudTopY),"HudOptions",'HudLeft');*/
 		
-		addContainer(0.01,0.9,'HudBottom',.98,0.01,'right');
-		/*addHud(new HudDestroy(0,hudBottomY),"HudDestroy", 'HudBottom');
-		addHud(new HudObservatory(0,hudBottomY),"HudObservatory", 'HudBottom');*/
-		addHud(new HudInventory(0,hudBottomY),"HudInventory", 'HudBottom');
-		addHud(new HudQuests(0,hudBottomY),"HudQuests", 'HudBottom');
-		addHud(new HudMarket(0,hudBottomY-0.01),"HudMarket", 'HudBottom');
-		addHud(new HudShop(0,hudBottomY-0.008),"HudShop", 'HudBottom');
-		addHud(new HudBuild(0,hudBottomY),"HudBuild", 'HudBottom');
+		addContainer(0.2,0.9,'HudBottomRight',.78,0.01,'right');
+		addContainer(0.01,0.9,'HudBottomLeft',.28,0.01,'left');
+		addHud(new HudDestroy(0,hudBottomY),"HudDestroy", 'HudBottomLeft');
+		addHud(new HudUpgrade(0,hudBottomY),"HudUpgrade", 'HudBottomLeft');
+		/*addHud(new HudObservatory(0,hudBottomY),"HudObservatory", 'HudBottomRight');*/
+		addHud(new HudInventory(0,hudBottomY),"HudInventory", 'HudBottomRight');
+		addHud(new HudQuests(0,hudBottomY),"HudQuests", 'HudBottomRight');
+		addHud(new HudMarket(0,hudBottomY-0.01),"HudMarket", 'HudBottomRight');
+		addHud(new HudShop(0,hudBottomY-0.008),"HudShop", 'HudBottomRight');
+		addHud(new HudBuild(0,hudBottomY),"HudBuild", 'HudBottomRight');
 
 		resizeHud();
 		Main.getInstance().addEventListener(Event.RESIZE, resizeHud);
 		refreshChildsInfoTimer = new haxe.Timer(refreshChildsInterval);
-		refreshChildsInfoTimer.run = updateChildText;
+		refreshChildsInfoTimer.run = updateChildsText;
 	}
 	// this fonction resize and reposition all the hud
 	// TODO : too greedy find a way to enchange the perfs
@@ -84,11 +86,21 @@ class HudManager extends DisplayObjectContainer
 			container.obj.position.y = Math.min(Std.int(container.startY*DeviceCapabilities.height),DeviceCapabilities.height-container.obj.children[0].height);
 		}
 	}
-	public function updateChildText(){
+	public function updateChildsText(){
 		for(child in childs){
 			if(child.isUpdatable){
 				child.updateInfo();
 			}
+		}
+	}
+	public function setChildTexture(pName:String,state:String):Void{
+		if(childs[pName] != null){
+			childs[pName].changeTexture(state);
+		}
+	}
+	public function setAllChildTexture(state:String):Void{
+		for(child in childs){
+			child.changeTexture(state);
 		}
 	}
 	private function addContainer(x:Float,y:Float,name:String,maxWidth:Float,interval:Float,?align:String='left'){

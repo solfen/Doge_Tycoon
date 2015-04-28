@@ -59,6 +59,9 @@ class PopinMarket extends MyPopin
 			addIcon(0.115,0.17+y,'assets/UI/PopInMarket/PopInMarketBgArticle.png',"articleBase",containers["verticalScroller"],false);
 			addIcon(0.13,0.1875+y,article.previewImg,"ArticlePreview",containers["verticalScroller"],false);
 			addText(0.298,0.18+y,'FuturaStdHeavy','25px',article.name,'titleText',containers["verticalScroller"]);
+			addText(0.32,0.345+y,'FuturaStdHeavy','15px','Price','priceText',containers["verticalScroller"]);
+			addText(0.525,0.345+y,'FuturaStdHeavy','15px','Quantity','quantityText',containers["verticalScroller"]);
+
 			addIcon(0.42,0.253+y,'assets/UI/PopInMarket/PopInMarketNbArticleNormal.png',"1unit"+cpt,containers["verticalScroller"],true,'assets/UI/PopInMarket/PopInMarketNbArticleActive.png',true);
 			addText(0.45,0.263+y,'FuturaStdHeavy','25px','x1','1unitText',containers["verticalScroller"]);
 			addIcon(0.52,0.253+y,'assets/UI/PopInMarket/PopInMarketNbArticleNormal.png',"10unit"+cpt,containers["verticalScroller"],true,'assets/UI/PopInMarket/PopInMarketNbArticleActive.png',true);
@@ -73,7 +76,7 @@ class PopinMarket extends MyPopin
 			article.lastQuantitySell = 0;
 			if(currentTab == 'buyTab'){
 				cost = article.buyCost;
-				/*if(article.lastQuantityBuy) // if user has already selected a quantity we select it by default (as it might leads to user mistakes i comented it maybe let the user choose in config)
+				/*if(article.lastQuantityBuy) // if user has already selected a quantity we select it by default (as it might leads to user mistakes i comented it, maybe let the user choose in config)
 					icons[article.lastQuantityBuy+"unit"+cpt].setTextureToActive();*/
 			}
 			else{
@@ -143,7 +146,7 @@ class PopinMarket extends MyPopin
 					GameInfo.ressources['fric'].userPossesion -= cost;
 					GameInfo.ressources['poudre'+index].userPossesion += GameInfo.ressources['poudre'+index].lastQuantityBuy;
 					trace(GameInfo.ressources['poudre'+index].userPossesion);
-					HudManager.getInstance().updateChildText();
+					HudManager.getInstance().updateChildsText();
 					PopinManager.getInstance().updateInventory();
 				}
 			}
@@ -152,7 +155,7 @@ class PopinMarket extends MyPopin
 				if(GameInfo.ressources['poudre'+index].userPossesion >= GameInfo.ressources['poudre'+index].lastQuantitySell){
 					GameInfo.ressources['fric'].userPossesion += cost;
 					GameInfo.ressources['poudre'+index].userPossesion -= GameInfo.ressources['poudre'+index].lastQuantitySell;
-					HudManager.getInstance().updateChildText();
+					HudManager.getInstance().updateChildsText();
 					PopinManager.getInstance().updateInventory();
 				}
 			}
