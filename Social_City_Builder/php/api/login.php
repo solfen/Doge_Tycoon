@@ -60,6 +60,9 @@ Appel à l'Open Graph de Facebook
 */
 if($session)
 {
+
+    
+    // handle the response
     $request = new FacebookRequest($session, 'GET', '/me');
     $response = $request->execute();
     $graphObject = $response->getGraphObject();

@@ -14,6 +14,8 @@ class PopinInventory extends MyPopin
 	private var articleHeight:Float = Texture.fromImage("assets/UI/PopInInventory/PopInInventoryArticleBg.png").height;
 	private var articleInterline:Float = 0.01;
 	private var hasVerticalScrollBar:Bool = false;
+	private var isDraging:Bool = false;
+	private var scrollHandle:Float = 0;
 	private var textColor:String = "black";
 
 	private function new(?startX:Float,?startY:Float) 

@@ -364,6 +364,8 @@ class GameInfo
  	public static var loaderCompletion:Float = 0; // when we're loading the game we need to know the % of completion
  	public static var dogeNumber:Float = 20;
  	public static var dogeMaxNumber:Float = 25;
+ 	public static var isUpgradeMode:Bool = false;
+ 	public static var isDestroyMode:Bool = false;
  	public static var stockPercent:Float = 50;
  	public static var building_2_build: Int = Building.PAS_DE_TIR;
  	public static var can_map_update: Bool = true; 	

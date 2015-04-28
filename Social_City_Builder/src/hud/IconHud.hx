@@ -39,7 +39,7 @@ class IconHud extends Sprite {
 	}
 
 	//check the state and if we have the according texture
-	private function changeTexture(state:String){
+	public function changeTexture(state:String){
 		if(state == "active" && activeTexture != null){
 			setTexture(activeTexture);
 		}
