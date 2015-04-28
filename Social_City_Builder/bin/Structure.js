@@ -25,6 +25,7 @@ buildings.Building = function(p_type,p_index,pX,pY) {
 	this.buttonMode = true;
 	this.loop = true;
 	this.animationSpeed = 0.333;
+	this._fading_speed = 0.8;
 	this.all_map_index = buildings.Building.get_map_idx(this.map_origin_index,this.width_in_tiles_nb,this.height_in_tiles_nb);
 	this.click = $bind(this,this._on_click);
 	Main.getInstance().addEventListener("Event.GAME_LOOP",$bind(this,this._update));
@@ -81,7 +82,7 @@ buildings.Building.prototype = $extend(PIXI.MovieClip.prototype,{
 				this.play();
 			}
 		}
-		if(this.is_clickable) this.alpha = Math.min(1,this.alpha + Main.getInstance().delta_time * 20); else this.alpha = Math.max(0.5,this.alpha - Main.getInstance().delta_time * 20);
+		if(this.is_clickable) this.alpha = Math.min(1,this.alpha + Main.getInstance().delta_time * this._fading_speed); else this.alpha = Math.max(0.4,this.alpha - Main.getInstance().delta_time * this._fading_speed);
 	}
 	,_on_click: function(p_data) {
 		if(!this.is_builded || !this.is_clickable || !GameInfo.can_map_update) return;
@@ -342,6 +343,7 @@ var Main = function() {
 	Main.stage = new PIXI.Stage(4160703);
 	this.renderer = PIXI.autoDetectRenderer(utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());
 	this.delta_time = 0;
+	this._old_stamp = haxe.Timer.stamp();
 	Main.stats = new Stats();
 	Main.stats.domElement.style.position = "absolute";
 	Main.stats.domElement.style.top = "0px";
@@ -402,13 +404,13 @@ Main.prototype = $extend(utils.events.EventDispatcher.prototype,{
 		console.log("succes");
 	}
 	,gameLoop: function(timestamp) {
-		var start = haxe.Timer.stamp();
+		this.delta_time = haxe.Timer.stamp() - this._old_stamp;
+		this._old_stamp = haxe.Timer.stamp();
 		Main.stats.begin();
 		window.requestAnimationFrame($bind(this,this.gameLoop));
 		this.render();
 		this.dispatchEvent(new utils.events.Event("Event.GAME_LOOP"));
 		Main.stats.end();
-		this.delta_time = haxe.Timer.stamp() - start;
 	}
 	,resize: function(pEvent) {
 		this.renderer.resize(utils.system.DeviceCapabilities.get_width(),utils.system.DeviceCapabilities.get_height());

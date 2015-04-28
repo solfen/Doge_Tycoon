@@ -165,14 +165,11 @@ class Building extends MovieClip
 
 		if (is_clickable)
 		{
-			//alpha = 1;
 			alpha = Math.min(1, alpha + Main.getInstance().delta_time * _fading_speed);
 		}
 		else
 		{
-			//alpha = 0.4;
 			alpha = Math.max(0.4, alpha - Main.getInstance().delta_time * _fading_speed);
-			//trace(Main.getInstance().delta_time * _fading_speed);
 		}
 	}
 	

@@ -120,6 +120,7 @@ class IsoMap extends DisplayObjectContainer
 		var building: Building = new Building(pBuilding_type, current_overflown_cell, build_data.x, build_data.y);
 
 		building.build();
+		buildings_list.push(building);
 
 		// set the obstacles layer :
 
@@ -144,9 +145,19 @@ class IsoMap extends DisplayObjectContainer
 		return building;
 	}
 
-	public function destroy_building (pX: Int, pY: Int) : Void
+	public function destroy_building (building: Building): Void
 	{
-		// todo: reset obstacles_layer & buildings_layer
+		var building_map_idx: Array<Int> = Building.get_map_idx(building.map_origin_index, building.width_in_tiles_nb, building.height_in_tiles_nb);
+		var i = building_map_idx.length;
+
+		while (i-->0)
+		{
+			obstacles_layer[building_map_idx[i]] = false;
+		}
+
+		buildings_list.remove(building);
+		removeChild(building);
+		building = null;
 	}
 
 	private function _update (): Void
@@ -300,7 +311,6 @@ class IsoMap extends DisplayObjectContainer
 			if (new_building != null)
 			{
 				GameInfo.building_2_build = 0;
-				buildings_list.push(new_building);
 				removeChild(_previewing_building);
 				_previewing_building = null;
 			}
