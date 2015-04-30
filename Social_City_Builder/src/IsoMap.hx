@@ -20,11 +20,11 @@ import pixi.primitives.Graphics;
 class IsoMap extends DisplayObjectContainer
 {
 	public static var singleton: IsoMap;
-	public static var cols_nb: Int;
-	public static var rows_nb: Int;
-	public static var cells_nb: Int;
-	public static var cell_width: Int;
-	public static var cell_height: Int;
+	public /*static*/ var cols_nb: Int;
+	public /*static*/ var rows_nb: Int;
+	public /*static*/ var cells_nb: Int;
+	public /*static*/ var cell_width: Int;
+	public /*static*/ var cell_height: Int;
 
 	public var buildings_list: Array<Building>;
 	public var obstacles_layer: Array<Bool>;
@@ -172,11 +172,13 @@ class IsoMap extends DisplayObjectContainer
 			}
 			return;
 		}
-		
+
 		if (IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), cell_width, cell_height, cells_nb, cols_nb))
+		//if (IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), Std.int(cell_width*this.scale.x+0.5), Std.int(cell_height*this.scale.y+0.5), cells_nb, cols_nb))
 		{
 
-			current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), cell_width, cell_height, cols_nb);
+			current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x/this.scale.x+0.5), Std.int(this.y/this.scale.y+0.5), Std.int(cell_width*this.scale.x), Std.int(cell_height*this.scale.y), cols_nb);
+			//current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), Std.int(cell_width*this.scale.x+0.5), Std.int(cell_height*this.scale.y+0.5), cols_nb);
 
 			var i: Int = buildings_list.length;
 			var map_x_on_screen: Float = InputInfos.mouse_x - x;

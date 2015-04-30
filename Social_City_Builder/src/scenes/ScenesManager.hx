@@ -10,7 +10,8 @@ class ScenesManager
 	private var currentScene:DisplayObjectContainer;
 	private var isThereAScene:Bool;
 	
-	public static function getInstance (): ScenesManager {
+	public static function getInstance (): ScenesManager
+	{
 		if (instance == null) {
 			instance = new ScenesManager();
 		}
@@ -23,10 +24,10 @@ class ScenesManager
 
 	public function loadScene (sceneName:String){
 		if(isThereAScene){
-			Main.getStage().removeChild(currentScene);
+			Main.getInstance().getStage().removeChild(currentScene);
 		}
 		currentScene = Type.createInstance( Type.resolveClass("scenes."+sceneName), [] );
-		Main.getStage().addChild(currentScene);
+		Main.getInstance().getStage().addChild(currentScene);
 		isThereAScene = true;
 	}
 	

@@ -1,5 +1,6 @@
 package utils.game;
 
+import utils.system.DeviceCapabilities;
 import js.Browser;
 
 /**
@@ -50,6 +51,7 @@ class InputInfos
 
 	private function _on_mousedown (pData: Dynamic): Void
 	{
+		pData.preventDefault();
 		is_mouse_down = true;
 		last_mouse_down_x = pData.clientX;
 		last_mouse_down_y = pData.clientY;
@@ -72,6 +74,25 @@ class InputInfos
 		pData.preventDefault();
 		//trace("wheel:", pData.deltaY); // multiple de 100 sur chrome, multiple de 3 sur firefox
 		mouse_wheel_dir = pData.deltaY < 0 ? -1 : 1; // uniquement la direction
+
+
+		// dirty, to try the zoom feature
+
+		IsoMap.singleton.scale.x += mouse_wheel_dir * 0.1;
+		IsoMap.singleton.scale.y += mouse_wheel_dir * 0.1;
+		
+
+		//IsoMap.singleton.cell_width = Std.int(IsoMap.singleton.cell_width * (1+mouse_wheel_dir * 0.1));
+		//IsoMap.singleton.cell_height = Std.int(IsoMap.singleton.cell_height * (1+mouse_wheel_dir * 0.1));
+
+		//IsoMap.singleton.cell_width = Std.int(IsoMap.singleton.scale.x * 128);
+		//IsoMap.singleton.cell_height = Std.int(IsoMap.singleton.scale.y * 64);
+
+		//IsoMap.singleton.x += (mouse_x-DeviceCapabilities.width*0.5)*0.1;
+		//IsoMap.singleton.y += (mouse_y-DeviceCapabilities.height*0.5)*0.1;
+
+		trace(IsoMap.singleton.scale.x);
+
 	}
 
 }

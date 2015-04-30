@@ -30,9 +30,9 @@ class Main extends EventDispatcher
 	
 	private static inline var CONFIG_PATH: String = "config.json";	
 	private static var instance: Main;
-	private static var stage: Stage;
 	private static var stats: Dynamic;
 	
+	private var stage: Stage;
 	private var WebFontConfig: Dynamic;
 	private var _old_stamp: Float;
 
@@ -52,7 +52,7 @@ class Main extends EventDispatcher
 	}
 
 	//return the stage. The stage is the container where we add all our graphics and containers
-	public static function getStage (): Stage
+	public function getStage (): Stage
 	{
 		return stage;
 	}

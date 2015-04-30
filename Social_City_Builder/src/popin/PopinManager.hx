@@ -88,7 +88,7 @@ class PopinManager extends DisplayObjectContainer
 	// removes all childs and put intance to null
 	public function destroy (): Void {
 		closeAllPopin();
-		Main.getStage().removeChild(this);
+		Main.getInstance().getStage().removeChild(this);
 		instance = null;
 	}
 

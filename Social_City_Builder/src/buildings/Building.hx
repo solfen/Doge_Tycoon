@@ -73,7 +73,7 @@ class Building extends MovieClip
 
 		while (i-->0)
 		{
-			map_idx[i] = pOrigin - (i % pWidth) - Std.int(i / pWidth) * IsoMap.cols_nb;
+			map_idx[i] = pOrigin - (i % pWidth) - Std.int(i / pWidth) * IsoMap.singleton.cols_nb;
 		}
 
 		return map_idx;
@@ -86,8 +86,8 @@ class Building extends MovieClip
 		type = p_type;
 		lvl = Building.LVL_1;
 		map_origin_index = p_index;
-		col = IsoTools.cell_col(map_origin_index, IsoMap.cols_nb);
-		row = IsoTools.cell_row(map_origin_index, IsoMap.cols_nb);
+		col = IsoTools.cell_col(map_origin_index, IsoMap.singleton.cols_nb);
+		row = IsoTools.cell_row(map_origin_index, IsoMap.singleton.cols_nb);
 		is_builded = true;
 		is_clickable = true;
 
@@ -121,9 +121,9 @@ class Building extends MovieClip
 
 	public function set_position (x: Int, y: Int): Void
 	{
-		x = Std.int(x-IsoMap.cell_width*(width_in_tiles_nb-1)*0.5);
+		x = Std.int(x-IsoMap.singleton.cell_width*(width_in_tiles_nb-1)*0.5);
 		//y = Std.int(y+IsoMap.cell_height*(height_in_tiles_nb-(height_in_tiles_nb>>1))); // pour centrer
-		y = y+IsoMap.cell_height;
+		y = y+IsoMap.singleton.cell_height;
 		
 		position.set(x, y);
 	}
