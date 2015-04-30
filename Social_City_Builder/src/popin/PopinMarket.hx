@@ -11,7 +11,7 @@ import pixi.display.DisplayObjectContainer;
 //Basicly any Popin is just a configuration of Mypopin
 class PopinMarket extends MyPopin
 {	
-	private var articleHeight:Float = Texture.fromImage("assets/UI/PopInMarket/PopInMarketBgArticle.png").height;
+	private var articleHeight:Float = Texture.fromFrame("assets/UI/PopInMarket/PopInMarketBgArticle.png").height;
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
 	private var currentTab:String = "buyTab";
@@ -21,8 +21,8 @@ class PopinMarket extends MyPopin
 		GameInfo.can_map_update = false;
 		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
 		headerTextures = [
-			'buy'=>Texture.fromImage('assets/UI/PopInMarket/PopInHeaderBuy.png'),
-			'sell'=>Texture.fromImage('assets/UI/PopInMarket/PopInHeaderSell.png'),
+			'buy'=>Texture.fromFrame('assets/UI/PopInMarket/PopInHeaderBuy.png'),
+			'sell'=>Texture.fromFrame('assets/UI/PopInMarket/PopInHeaderSell.png'),
 		];
 		articleHeight /= background.height; // background is defiened in MyPopin
 

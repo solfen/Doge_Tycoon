@@ -288,7 +288,7 @@ class GameInfo
  		"utilitaires": [
  			{
  				buildingID: Building.CASINO,
- 				previewImg: 'assets/UI/Icons/Buildings/popInBuiltArticlePreviewCasino.png',
+ 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewCasino.png',
  				title: 'Casino',
  				description: "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.",
  				hardPrice: 3,

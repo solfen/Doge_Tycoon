@@ -11,7 +11,7 @@ import pixi.display.DisplayObjectContainer;
 //Basicly any Popin is just a configuration of Mypopin
 class PopinInventory extends MyPopin
 {	
-	private var articleHeight:Float = Texture.fromImage("assets/UI/PopInInventory/PopInInventoryArticleBg.png").height;
+	private var articleHeight:Float = Texture.fromFrame("assets/UI/PopInInventory/PopInInventoryArticleBg.png").height;
 	private var articleInterline:Float = 0.01;
 	private var hasVerticalScrollBar:Bool = false;
 	private var isDraging:Bool = false;

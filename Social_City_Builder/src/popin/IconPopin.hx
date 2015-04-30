@@ -15,10 +15,10 @@ class IconPopin extends Sprite
 
 	public function new(pX:Float,pY:Float, texturePathNormal:String,pName:String,isInteractive:Bool,?texturePathActive:String,?pIsSelectButton:Bool=false) 
 	{
-		normalTexture = Texture.fromImage(texturePathNormal);
+		normalTexture = Texture.fromFrame(texturePathNormal);
 		isSelectButton=pIsSelectButton;
 		if(texturePathActive != null){
-			activeTexture = Texture.fromImage(texturePathActive);
+			activeTexture = Texture.fromFrame(texturePathActive);
 		}
 		super(normalTexture);	
 		x = pX;

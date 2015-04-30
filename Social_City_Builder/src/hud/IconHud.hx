@@ -17,10 +17,10 @@ class IconHud extends Sprite {
 		//textures creation. Has to have at least the normal state the others are optionals
 		normalTexture = Texture.fromFrame(texturePathNormal);
 		if(texturePathActive != null){
-			activeTexture = Texture.fromImage(texturePathActive);
+			activeTexture = Texture.fromFrame(texturePathActive);
 		}
 		/*if(texturePathHover != null){
-			hoverTexture = Texture.fromImage(texturePathHover);
+			hoverTexture = Texture.fromFrame(texturePathHover);
 		}*/
 
 		// create the icon add params it trasform to int because float position = horrible canvas perf and blurry images

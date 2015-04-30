@@ -123,14 +123,14 @@ class Main extends EventDispatcher
 	private function onLoadComplete (pEvent:Event): Void {
 		pEvent.target.removeEventListener("onProgress", onLoadProgress);
 		pEvent.target.removeEventListener("onComplete", onLoadComplete);
-		ScenesManager.getInstance().loadScene("GameScene");
 		//FB.getLoginStatus(onFacebookConnect);
+		ScenesManager.getInstance().loadScene("GameScene");
 	}
 	private function onFacebookConnect(pResponse:Dynamic){
 		trace(pResponse.status);
 		if(pResponse.status == 'connected'){
 			trace("awww yeah ! you're in !");
-			FB.api(
+			/*FB.api(
 			  'me/space_dogs_tycoon:find',
 			  'post',
 			  {
@@ -140,20 +140,20 @@ class Main extends EventDispatcher
 			  function(response) {
 			  	trace(response);
 			  }
-			);
-			/*FB.ui({
+			);*/
+			FB.ui({
 			  method: 'share_open_graph',
-			  action_type: 'og.likes',
+			  action_type: 'space_dogs_tycoon:find',
 			  action_properties: haxe.Json.stringify({
-			      object:'http://samples.ogp.me/884406454948358',
+			      'artefact':'https://fbgame.isartdigital.com/isartdigital/dogeexplorer/php/fbObjects/boot.html',
 			  })
-			}, function(response){});*/
+			}, function(response){});
 		}
 		else if(pResponse.status == 'not_authorized'){
 			trace("Oh no ! you're not identified");
 			FB.login(function(response){
 				FB.getLoginStatus(onFacebookConnect);
-			}, {scope: 'publish_actions,email'});
+			}, {scope: 'email'});
 		}
 	}
 	private function test(){

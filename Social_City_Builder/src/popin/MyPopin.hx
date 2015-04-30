@@ -42,7 +42,7 @@ class MyPopin extends DisplayObjectContainer
 		onResize();
 
 		/*if(isModal){
-			modalZone = new Sprite(Texture.fromImage("assets/alpha_bg.png")); !!! TO REDO !!!
+			modalZone = new Sprite(Texture.fromFrame("assets/alpha_bg.png")); !!! TO REDO !!!
 			modalZone.x= -startX*DeviceCapabilities.width;
 			modalZone.y= -startY*DeviceCapabilities.height;
 			modalZone.width = DeviceCapabilities.width;
@@ -54,7 +54,7 @@ class MyPopin extends DisplayObjectContainer
 		}*/
 		Main.getInstance().addEventListener(Event.RESIZE, onResize);
 
-		background = new Sprite(Texture.fromImage(texturePath));
+		background = new Sprite(Texture.fromFrame(texturePath));
 		background.anchor.set(0.5, 0.5);
 		childs["background"] = background;
 		addChild(background);

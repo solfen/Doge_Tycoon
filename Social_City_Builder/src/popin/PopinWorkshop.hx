@@ -12,7 +12,7 @@ import pixi.display.DisplayObjectContainer;
 //Basicly any Popin is just a configuration of Mypopin
 class PopinWorkshop extends MyPopin 
 {	
-	private var articleHeight:Float = Texture.fromImage("assets/UI/PopInQuest/PopInQuestBgArticle.png").height;
+	private var articleHeight:Float = Texture.fromFrame("assets/UI/PopInQuest/PopInQuestBgArticle.png").height;
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
 	private var buildingRef:String;
@@ -23,7 +23,7 @@ class PopinWorkshop extends MyPopin
 		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
 		buildingRef = ref;
 		headerTextures = [ 
-			'atelier'=>Texture.fromImage('assets/UI/PopInWorkshop/PopInWorkshopHeader.png'),
+			'atelier'=>Texture.fromFrame('assets/UI/PopInWorkshop/PopInWorkshopHeader.png'),
 		];
 		articleHeight /= background.height; // background is defiened in MyPopin
 

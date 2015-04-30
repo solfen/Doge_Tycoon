@@ -10,7 +10,7 @@ import hud.HudManager;
 //Basicly any Popin is just a configuration of Mypopin
 class PopinBuild extends MyPopin
 {	
-	private var articleHeight:Float = Texture.fromImage("assets/UI/PopInBuilt/PopInBuiltBgArticle.png").height;
+	private var articleHeight:Float = Texture.fromFrame("assets/UI/PopInBuilt/PopInBuiltBgArticle.png").height;
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
 	private var currentTab:String = "utilitairesTab";
@@ -20,9 +20,9 @@ class PopinBuild extends MyPopin
 		GameInfo.can_map_update = false;
 		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
 		headerTextures = [
-			'niches'=>Texture.fromImage('assets/UI/PopInBuilt/PopInHeaderNiches.png'),
-			'spaceships'=>Texture.fromImage('assets/UI/PopInBuilt/PopInHeaderFusees.png'),
-			'utilitaire'=>Texture.fromImage('assets/UI/PopInBuilt/PopInHeaderUtilitaires.png')
+			'niches'=>Texture.fromFrame('assets/UI/PopInBuilt/PopInHeaderNiches.png'),
+			'spaceships'=>Texture.fromFrame('assets/UI/PopInBuilt/PopInHeaderFusees.png'),
+			'utilitaire'=>Texture.fromFrame('assets/UI/PopInBuilt/PopInHeaderUtilitaires.png')
 		];
 		articleHeight /= background.height; // background is defiened in MyPopin
 

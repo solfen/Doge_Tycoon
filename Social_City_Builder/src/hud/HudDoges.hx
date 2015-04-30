@@ -23,12 +23,12 @@ class HudDoges extends IconHud
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
 		super(startX,startY,'HudPopFillBar.png',null,true,false);
 
-		barFill = new Sprite(Texture.fromImage('HudPopFill.png'));
+		barFill = new Sprite(Texture.fromFrame('HudPopFill.png'));
 		barFill.position.set(Std.int(0.23*width),Std.int(0.3*height));
 		barFill.width = Std.int(lastDogeNumber/lastDogeMaxNumber * width*.725);
 		addChild(barFill);
 
-		dogeIcon = new Sprite(Texture.fromImage('HudIconPop.png'));
+		dogeIcon = new Sprite(Texture.fromFrame('HudIconPop.png'));
 		dogeIcon.position.set(0,Std.int(0.05*height));
 		addChild(dogeIcon);
 

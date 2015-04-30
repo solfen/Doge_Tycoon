@@ -64,7 +64,7 @@ if($session)
         $request = new FacebookRequest(
           $session,
           'POST',
-          'me/space_dogs_tycoon:find',
+          '/me/space_dogs_tycoon:find',
           array(
             'artefact' => "http://samples.ogp.me/884406454948358"
           )

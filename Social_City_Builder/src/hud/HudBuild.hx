@@ -16,6 +16,12 @@ class HudBuild extends IconHud
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {
+
+		GameInfo.isDestroyMode = false;
+		GameInfo.isUpgradeMode = false;
+		hud.HudManager.getInstance().setChildTexture("HudUpgrade", 'normal');
+		hud.HudManager.getInstance().setChildTexture("HudDestroy", 'normal');
+
 		var curName:String = PopinManager.getInstance().getCurrentPopinName();
 		if(curName != null){
 			PopinManager.getInstance().closeCurentPopin();

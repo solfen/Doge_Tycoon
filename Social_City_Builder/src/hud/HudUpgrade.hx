@@ -15,7 +15,6 @@ class HudUpgrade extends IconHud
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {
-		trace(GameInfo.isUpgradeMode);
 		GameInfo.isUpgradeMode ? changeTexture("normal") : changeTexture("active") ;
 		GameInfo.isUpgradeMode = !GameInfo.isUpgradeMode;
 		GameInfo.isDestroyMode = false;
