@@ -1,0 +1,45 @@
+{
+"frames": {
+	"PopInInventoryArticleBg.png": {
+		"frame": {"x":204, "y":83, "w":160, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":160,"h":56},
+		"sourceSize": {"w":160,"h":56}
+	},
+	"PopInInventoryBackground.png": {
+		"frame": {"x":0, "y":0, "w":204, "h":543},
+		"spriteSourceSize": {"x":0,"y":0,"w":204,"h":543},
+		"sourceSize": {"w":204,"h":543}
+	},
+	"PopInInventoryCloseButtonActive.png": {
+		"frame": {"x":204, "y":182, "w":46, "h":43},
+		"spriteSourceSize": {"x":0,"y":0,"w":46,"h":43},
+		"sourceSize": {"w":46,"h":43}
+	},
+	"PopInInventoryCloseButtonNormal.png": {
+		"frame": {"x":204, "y":139, "w":46, "h":43},
+		"spriteSourceSize": {"x":0,"y":0,"w":46,"h":43},
+		"sourceSize": {"w":46,"h":43}
+	},
+	"PopInInventoryScrollingBarLong.png": {
+		"frame": {"x":385, "y":0, "w":32, "h":470},
+		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":470},
+		"sourceSize": {"w":32,"h":470}
+	},
+	"PopInInventoryScrollingTrucLong.png": {
+		"frame": {"x":204, "y":470, "w":10, "h":60},
+		"spriteSourceSize": {"x":0,"y":0,"w":10,"h":60},
+		"sourceSize": {"w":10,"h":60}
+	},
+	"PopInInventoryTitle.png": {
+		"frame": {"x":204, "y":0, "w":181, "h":83},
+		"spriteSourceSize": {"x":0,"y":0,"w":181,"h":83},
+		"sourceSize": {"w":181,"h":83}
+	}
+
+},
+"meta": {
+	"image": "sprites5.png",
+	"size": {"w": 417, "h": 543},
+	"scale": "1"
+}
+}

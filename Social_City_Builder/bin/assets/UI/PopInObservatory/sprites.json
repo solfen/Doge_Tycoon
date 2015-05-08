@@ -1,0 +1,35 @@
+{
+"frames": {
+	"PopInObservatoryArticle.png": {
+		"frame": {"x":572, "y":0, "w":172, "h":394},
+		"spriteSourceSize": {"x":0,"y":0,"w":172,"h":394},
+		"sourceSize": {"w":172,"h":394}
+	},
+	"PopInScrollOverlay.png": {
+		"frame": {"x":0, "y":0, "w":572, "h":432},
+		"spriteSourceSize": {"x":0,"y":0,"w":572,"h":432},
+		"sourceSize": {"w":572,"h":432}
+	},
+	"PopInScrollingBarHorizontal.png": {
+		"frame": {"x":0, "y":432, "w":552, "h":50},
+		"spriteSourceSize": {"x":0,"y":0,"w":552,"h":50},
+		"sourceSize": {"w":552,"h":50}
+	},
+	"PopInScrollingTrucHorizontal.png": {
+		"frame": {"x":0, "y":669, "w":85, "h":13},
+		"spriteSourceSize": {"x":0,"y":0,"w":85,"h":13},
+		"sourceSize": {"w":85,"h":13}
+	},
+	"PopInTitleObservatory.png": {
+		"frame": {"x":0, "y":482, "w":352, "h":187},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":187},
+		"sourceSize": {"w":352,"h":187}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 744, "h": 682},
+	"scale": "1"
+}
+}

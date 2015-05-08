@@ -1,0 +1,65 @@
+{
+"frames": {
+	"ContourNotAfford.png": {
+		"frame": {"x":0, "y":1494, "w":110, "h":110},
+		"spriteSourceSize": {"x":0,"y":0,"w":110,"h":110},
+		"sourceSize": {"w":110,"h":110}
+	},
+	"ContourRessourceInsuffisant.png": {
+		"frame": {"x":178, "y":1494, "w":45, "h":44},
+		"spriteSourceSize": {"x":0,"y":0,"w":45,"h":44},
+		"sourceSize": {"w":45,"h":44}
+	},
+	"Overlay.png": {
+		"frame": {"x":0, "y":0, "w":1120, "h":760},
+		"spriteSourceSize": {"x":0,"y":0,"w":1120,"h":760},
+		"sourceSize": {"w":1120,"h":760}
+	},
+	"PopInArticleLock.png": {
+		"frame": {"x":0, "y":1360, "w":537, "h":134},
+		"spriteSourceSize": {"x":0,"y":0,"w":537,"h":134},
+		"sourceSize": {"w":537,"h":134}
+	},
+	"PopInBackground.png": {
+		"frame": {"x":0, "y":760, "w":705, "h":600},
+		"spriteSourceSize": {"x":0,"y":0,"w":705,"h":600},
+		"sourceSize": {"w":705,"h":600}
+	},
+	"closeButtonActive.png": {
+		"frame": {"x":110, "y":1558, "w":68, "h":64},
+		"spriteSourceSize": {"x":0,"y":0,"w":68,"h":64},
+		"sourceSize": {"w":68,"h":64}
+	},
+	"closeButtonNormal.png": {
+		"frame": {"x":110, "y":1494, "w":68, "h":64},
+		"spriteSourceSize": {"x":0,"y":0,"w":68,"h":64},
+		"sourceSize": {"w":68,"h":64}
+	},
+	"PopInScrollBackground.png": {
+		"frame": {"x":705, "y":1192, "w":572, "h":432},
+		"spriteSourceSize": {"x":0,"y":0,"w":572,"h":432},
+		"sourceSize": {"w":572,"h":432}
+	},
+	"PopInScrollOverlay.png": {
+		"frame": {"x":705, "y":760, "w":572, "h":432},
+		"spriteSourceSize": {"x":0,"y":0,"w":572,"h":432},
+		"sourceSize": {"w":572,"h":432}
+	},
+	"PopInScrollingBar.png": {
+		"frame": {"x":1120, "y":0, "w":44, "h":427},
+		"spriteSourceSize": {"x":0,"y":0,"w":44,"h":427},
+		"sourceSize": {"w":44,"h":427}
+	},
+	"PopInScrollingTruc.png": {
+		"frame": {"x":178, "y":1538, "w":13, "h":85},
+		"spriteSourceSize": {"x":0,"y":0,"w":13,"h":85},
+		"sourceSize": {"w":13,"h":85}
+	}
+
+},
+"meta": {
+	"image": "sprites5.png",
+	"size": {"w": 1277, "h": 1624},
+	"scale": "1"
+}
+}

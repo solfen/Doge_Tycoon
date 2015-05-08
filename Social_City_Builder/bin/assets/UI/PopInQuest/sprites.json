@@ -1,0 +1,40 @@
+{
+"frames": {
+	"PopInQuestBgArticle.png": {
+		"frame": {"x":0, "y":0, "w":537, "h":134},
+		"spriteSourceSize": {"x":0,"y":0,"w":537,"h":134},
+		"sourceSize": {"w":537,"h":134}
+	},
+	"PopInQuestOngletEnCoursActive.png": {
+		"frame": {"x":55, "y":321, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInQuestOngletEnCoursNormal.png": {
+		"frame": {"x":0, "y":377, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInQuestOngletFinishActive.png": {
+		"frame": {"x":0, "y":321, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInQuestOngletFinishNormal.png": {
+		"frame": {"x":0, "y":433, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInTitleQuest.png": {
+		"frame": {"x":0, "y":134, "w":352, "h":187},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":187},
+		"sourceSize": {"w":352,"h":187}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 537, "h": 489},
+	"scale": "1"
+}
+}

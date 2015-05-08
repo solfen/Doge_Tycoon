@@ -1,0 +1,90 @@
+{
+"frames": {
+	"PopInWorkshopHammerIdle01.png": {
+		"frame": {"x":0, "y":0, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerIdle02.png": {
+		"frame": {"x":267, "y":606, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerIdle03.png": {
+		"frame": {"x":534, "y":0, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerIdle04.png": {
+		"frame": {"x":534, "y":202, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerIdle05.png": {
+		"frame": {"x":267, "y":202, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerIdle06.png": {
+		"frame": {"x":534, "y":404, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerIdle07.png": {
+		"frame": {"x":267, "y":202, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerIdle08.png": {
+		"frame": {"x":534, "y":202, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerIdle09.png": {
+		"frame": {"x":534, "y":0, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerIdle10.png": {
+		"frame": {"x":267, "y":606, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerOnClick01.png": {
+		"frame": {"x":267, "y":404, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerOnClick02.png": {
+		"frame": {"x":534, "y":606, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerOnClick03.png": {
+		"frame": {"x":267, "y":0, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerOnClick04.png": {
+		"frame": {"x":0, "y":606, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerOnClick05.png": {
+		"frame": {"x":0, "y":404, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	},
+	"PopInWorkshopHammerOnClick06.png": {
+		"frame": {"x":0, "y":202, "w":267, "h":202},
+		"spriteSourceSize": {"x":0,"y":0,"w":267,"h":202},
+		"sourceSize": {"w":267,"h":202}
+	}
+
+},
+"meta": {
+	"image": "sprites3.png",
+	"size": {"w": 801, "h": 808},
+	"scale": "1"
+}
+}

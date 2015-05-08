@@ -1,0 +1,70 @@
+{
+"frames": {
+	"PopInHeaderBuy.png": {
+		"frame": {"x":0, "y":321, "w":156, "h":63},
+		"spriteSourceSize": {"x":0,"y":0,"w":156,"h":63},
+		"sourceSize": {"w":156,"h":63}
+	},
+	"PopInHeaderSell.png": {
+		"frame": {"x":0, "y":384, "w":148, "h":63},
+		"spriteSourceSize": {"x":0,"y":0,"w":148,"h":63},
+		"sourceSize": {"w":148,"h":63}
+	},
+	"PopInMarketBgArticle.png": {
+		"frame": {"x":0, "y":0, "w":537, "h":134},
+		"spriteSourceSize": {"x":0,"y":0,"w":537,"h":134},
+		"sourceSize": {"w":537,"h":134}
+	},
+	"PopInMarketNbArticleActive.png": {
+		"frame": {"x":0, "y":447, "w":64, "h":45},
+		"spriteSourceSize": {"x":0,"y":0,"w":64,"h":45},
+		"sourceSize": {"w":64,"h":45}
+	},
+	"PopInMarketNbArticleNormal.png": {
+		"frame": {"x":0, "y":492, "w":64, "h":45},
+		"spriteSourceSize": {"x":0,"y":0,"w":64,"h":45},
+		"sourceSize": {"w":64,"h":45}
+	},
+	"PopInMarketValidActive.png": {
+		"frame": {"x":64, "y":447, "w":58, "h":61},
+		"spriteSourceSize": {"x":0,"y":0,"w":58,"h":61},
+		"sourceSize": {"w":58,"h":61}
+	},
+	"PopInMarketValidNormal.png": {
+		"frame": {"x":122, "y":447, "w":58, "h":61},
+		"spriteSourceSize": {"x":0,"y":0,"w":58,"h":61},
+		"sourceSize": {"w":58,"h":61}
+	},
+	"PopInOngletBuyActive.png": {
+		"frame": {"x":156, "y":321, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInOngletBuyNormal.png": {
+		"frame": {"x":148, "y":384, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInOngletSellActive.png": {
+		"frame": {"x":180, "y":440, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInOngletSellNormal.png": {
+		"frame": {"x":203, "y":377, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInTitleMarket.png": {
+		"frame": {"x":0, "y":134, "w":352, "h":187},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":187},
+		"sourceSize": {"w":352,"h":187}
+	}
+
+},
+"meta": {
+	"image": "sprites5.png",
+	"size": {"w": 537, "h": 537},
+	"scale": "1"
+}
+}

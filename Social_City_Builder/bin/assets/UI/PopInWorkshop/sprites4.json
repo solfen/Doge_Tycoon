@@ -1,0 +1,90 @@
+{
+"frames": {
+	"PopInTitleWorkshop.png": {
+		"frame": {"x":0, "y":171, "w":352, "h":187},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":187},
+		"sourceSize": {"w":352,"h":187}
+	},
+	"PopInWorkshopArticleBG.png": {
+		"frame": {"x":0, "y":0, "w":423, "h":134},
+		"spriteSourceSize": {"x":0,"y":0,"w":423,"h":134},
+		"sourceSize": {"w":423,"h":134}
+	},
+	"PopInWorkshopBgPlanet.png": {
+		"frame": {"x":0, "y":468, "w":131, "h":43},
+		"spriteSourceSize": {"x":0,"y":0,"w":131,"h":43},
+		"sourceSize": {"w":131,"h":43}
+	},
+	"PopInWorkshopCancelButtonActive.png": {
+		"frame": {"x":423, "y":0, "w":74, "h":77},
+		"spriteSourceSize": {"x":0,"y":0,"w":74,"h":77},
+		"sourceSize": {"w":74,"h":77}
+	},
+	"PopInWorkshopCancelButtonNormal.png": {
+		"frame": {"x":361, "y":397, "w":74, "h":77},
+		"spriteSourceSize": {"x":0,"y":0,"w":74,"h":77},
+		"sourceSize": {"w":74,"h":77}
+	},
+	"PopInWorkshopDestroyButtonActive.png": {
+		"frame": {"x":352, "y":284, "w":109, "h":113},
+		"spriteSourceSize": {"x":0,"y":0,"w":109,"h":113},
+		"sourceSize": {"w":109,"h":113}
+	},
+	"PopInWorkshopDestroyButtonNormal.png": {
+		"frame": {"x":352, "y":171, "w":109, "h":113},
+		"spriteSourceSize": {"x":0,"y":0,"w":109,"h":113},
+		"sourceSize": {"w":109,"h":113}
+	},
+	"PopInWorkshopHeader.png": {
+		"frame": {"x":0, "y":405, "w":143, "h":63},
+		"spriteSourceSize": {"x":0,"y":0,"w":143,"h":63},
+		"sourceSize": {"w":143,"h":63}
+	},
+	"PopInWorkshopLaunchButtonActive.png": {
+		"frame": {"x":252, "y":405, "w":109, "h":113},
+		"spriteSourceSize": {"x":0,"y":0,"w":109,"h":113},
+		"sourceSize": {"w":109,"h":113}
+	},
+	"PopInWorkshopLaunchButtonNormal.png": {
+		"frame": {"x":143, "y":405, "w":109, "h":113},
+		"spriteSourceSize": {"x":0,"y":0,"w":109,"h":113},
+		"sourceSize": {"w":109,"h":113}
+	},
+	"PopInWorkshopLoadFill1.png": {
+		"frame": {"x":0, "y":358, "w":311, "h":15},
+		"spriteSourceSize": {"x":0,"y":0,"w":311,"h":15},
+		"sourceSize": {"w":311,"h":15}
+	},
+	"PopInWorkshopLoadFill2.png": {
+		"frame": {"x":131, "y":468, "w":11, "h":15},
+		"spriteSourceSize": {"x":0,"y":0,"w":11,"h":15},
+		"sourceSize": {"w":11,"h":15}
+	},
+	"PopInWorkshopLoadFillBar.png": {
+		"frame": {"x":0, "y":134, "w":373, "h":37},
+		"spriteSourceSize": {"x":0,"y":0,"w":373,"h":37},
+		"sourceSize": {"w":373,"h":37}
+	},
+	"PopInWorkshopLoadIcon.png": {
+		"frame": {"x":423, "y":77, "w":51, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":51,"h":56},
+		"sourceSize": {"w":51,"h":56}
+	},
+	"PopInWorkshopParticule.png": {
+		"frame": {"x":435, "y":397, "w":50, "h":50},
+		"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+		"sourceSize": {"w":50,"h":50}
+	},
+	"PopInWorkshopTextBG.png": {
+		"frame": {"x":0, "y":373, "w":311, "h":32},
+		"spriteSourceSize": {"x":0,"y":0,"w":311,"h":32},
+		"sourceSize": {"w":311,"h":32}
+	}
+
+},
+"meta": {
+	"image": "sprites4.png",
+	"size": {"w": 497, "h": 518},
+	"scale": "1"
+}
+}
