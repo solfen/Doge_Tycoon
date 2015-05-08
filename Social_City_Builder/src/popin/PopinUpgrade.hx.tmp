@@ -8,8 +8,9 @@ import pixi.display.DisplayObjectContainer;
 import buildings.Building;
 import utils.events.Event;
 
-//old popin that is no longer used, I didn't delete it because it was a child of building and it might be usefull to know how to do that later
-//It will be deleted at the end though...
+//PopinBuild is lauched on HudBuild click (and ambulance click right now)
+//PopinBuild inherit form MyPopin who is the base class of all popin
+//Basicly any Popin is just a configuration of Mypopin
 class PopinUpgrade extends MyPopin
 {	
 	private var buildingRef:Building;

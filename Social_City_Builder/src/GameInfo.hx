@@ -8,8 +8,8 @@ class GameInfo
  	public static var ressources:Map<String,Dynamic> = [
  		'poudre0' => {
  			name: 'PLPP Yellow', //plpp stands for perlimpinpin
- 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewYellowMineral.png',
- 			iconImg: 'assets/UI/Icons/IconsRessources/IconYellowMineral.png',
+ 			previewImg: 'PopInMarketArticlePreviewYellowMineral.png',
+ 			iconImg: 'IconYellowMineral.png',
  			userPossesion: 15000,
  			buyCost: 10,
  			sellCost: 5,
@@ -18,8 +18,8 @@ class GameInfo
  		},
  		'poudre1' => {
  			name: 'PLPP Green',
- 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewGreenMineral.png',
- 			iconImg: 'assets/UI/Icons/IconsRessources/IconGreenMineral.png',
+ 			previewImg: 'PopInMarketArticlePreviewGreenMineral.png',
+ 			iconImg: 'IconGreenMineral.png',
  			userPossesion: 15000,
  			buyCost: 25,
  			sellCost: 10,
@@ -28,8 +28,8 @@ class GameInfo
  		},
  		'poudre2' => {
  			name: 'PLPP Cyan',
- 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewCyanMineral.png',
- 			iconImg: 'assets/UI/Icons/IconsRessources/IconCyanMineral.png',
+ 			previewImg: 'PopInMarketArticlePreviewCyanMineral.png',
+ 			iconImg: 'IconCyanMineral.png',
  			userPossesion: 15000,
  			buyCost: 50,
  			sellCost: 25,
@@ -38,8 +38,8 @@ class GameInfo
  		},
  		'poudre3' => { 
  			name: 'PLPP Blue',
- 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewBlueMineral.png',
- 			iconImg: 'assets/UI/Icons/IconsRessources/IconBlueMineral.png',
+ 			previewImg: 'PopInMarketArticlePreviewBlueMineral.png',
+ 			iconImg: 'IconBlueMineral.png',
  			userPossesion: 15000,
  			buyCost: 100,
  			sellCost: 40,
@@ -48,8 +48,8 @@ class GameInfo
  		}, 		
  		'poudre4' => {
  			name: 'PLPP Purple',
- 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewPurpleMineral.png',
- 			iconImg: 'assets/UI/Icons/IconsRessources/IconPurpleMineral.png',
+ 			previewImg: 'PopInMarketArticlePreviewPurpleMineral.png',
+ 			iconImg: 'IconPurpleMineral.png',
  			userPossesion: 15000,
  			buyCost: 300,
  			sellCost: 200,
@@ -58,8 +58,8 @@ class GameInfo
  		},
  		'poudre5' => {
  			name: 'PLPP Red',
- 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInMarketArticlePreviewRedMineral.png',
- 			iconImg: 'assets/UI/Icons/IconsRessources/IconRedMineral.png',
+ 			previewImg: 'PopInMarketArticlePreviewRedMineral.png',
+ 			iconImg: 'IconRedMineral.png',
  			userPossesion: 15000,
  			buyCost: 1000,
  			sellCost: 700,
@@ -68,14 +68,14 @@ class GameInfo
  		},
  		'fric' => {
  			name: 'Dogeflooz',
- 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png',
- 			iconImg: 'assets/UI/Icons/IconsRessources/IconDogeflooz.png',
+ 			previewImg: 'PopInShopArticlePreview2Dogeflooz.png',
+ 			iconImg: 'IconDogeflooz.png',
  			userPossesion: 5000,
  		},
  		'hardMoney' => {
  			name: "Os D'or",
- 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png',
- 			iconImg: 'assets/UI/Icons/IconsRessources/IconOsDor.png',
+ 			previewImg: 'PopInShopArticlePreview2Os.png',
+ 			iconImg: 'IconOsDor.png',
  			userPossesion: 15000,
  		}
  	];
@@ -144,25 +144,25 @@ class GameInfo
  		'soft' => [
 	 		'Dogeflooz1' => {
 	 			name: 'Dogeflooz x5000',
-	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Dogeflooz.png',
+	 			previewImg: 'PopInShopArticlePreview2Dogeflooz.png',
 	 			text: "Besoin d'un petit coup de boost ?\nUn peu juste pour le loyer ce mois ci ?\nLe pack NoobDoge est fait pour vous !",
 	 			price: 01
 	 		},
 	 		'Dogeflooz2' => {
 	 			name: 'Dogeflooz2 x50 000',
-	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Dogeflooz.png',
+	 			previewImg: 'PopInShopArticlePreview3Dogeflooz.png',
 	 			text: "Il y a des choses qui ne s'achètent pas\nPour tout le reste, il y a le Dogeflooz",
 	 			price: 05,
 	 		},
 	 		'Dogeflooz3' => {
 	 			name: 'Dogeflooz2 x500 000',
-	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Dogeflooz.png',
+	 			previewImg: 'PopInShopArticlePreview4Dogeflooz.png',
 	 			text: "Une banque qui appartient a son\nDogeFlooz ça change tout",
 	 			price: 25,
 	 		}, 		
 	 		'Dogeflooz4' => {
 	 			name: 'Dogeflooz2 x5 000 000',
-	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Dogeflooz.png',
+	 			previewImg: 'PopInShopArticlePreview5Dogeflooz.png',
 	 			text: "En panne de slogans connus,\nrevenez plus tard",
 	 			price: 99,
 	 		}
@@ -170,25 +170,25 @@ class GameInfo
  		'hard' => [
 	 		"Os1" => {
 	 			name: "Os d'or",
-	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview2Os.png',
+	 			previewImg: 'PopInShopArticlePreview2Os.png',
 	 			text: "Tout ce qui brille n'est pas de l'or\nMais ces os le sont bien",
 	 			price: 1,
 	 		}, 		
 	 		"Os2" => {
 	 			name: "Os d'or x50",
-	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview3Os.png',
+	 			previewImg: 'PopInShopArticlePreview3Os.png',
 	 			text: "Avec tout cet or, vous allez conquérir\nle monde, que dis-je l'espace !",
 	 			price: 5,
 	 		}, 		
 	 		"Os3" => {
 	 			name: "Os d'or x500",
-	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview4Os.png',
+	 			previewImg: 'PopInShopArticlePreview4Os.png',
 	 			text: "Aucune description ne poura définir\nprécisément la qualitée de ce pack",
 	 			price: 25,
 	 		}, 		
 	 		"Os4" => {
 	 			name: "Os d'or x5000",
-	 			previewImg: 'assets/UI/Icons/PreviewRessources/PopInShopArticlePreview5Os.png',
+	 			previewImg: 'PopInShopArticlePreview5Os.png',
 	 			text: "Ce pack ce passe d'une description\ncar il se suffit à lui même",
 	 			price: 99,
 	 		},
@@ -198,7 +198,7 @@ class GameInfo
  		"niches": [
  			{
  				buildingID: Building.NICHE,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewNiche.png',
+ 				previewImg: 'PopInBuiltArticlePreviewNiche.png',
  				title: 'Niche en Bois',
  				description: "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.",
  				hardPrice: 3,
@@ -213,7 +213,7 @@ class GameInfo
  			{
 
  				buildingID: Building.HANGAR_JAUNE,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar1.png',
+ 				previewImg: 'PopInBuiltArticlePreviewHangar1.png',
  				title: 'Atelier Destination SprungField',
  				description: 'Boite magique où les fusées sont assemblées avec amour et bonne humeur.\nToute les rumeur au sujet des coups de fouet électrique ne sont que calomnies.',
  				hardPrice: 3,
@@ -225,7 +225,7 @@ class GameInfo
  			},
  			{
  				buildingID: Building.HANGAR_VERT,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar2.png',
+ 				previewImg: 'PopInBuiltArticlePreviewHangar2.png',
  				title: 'Atelier Destination Modor',
  				description: "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
  				hardPrice: 3,
@@ -237,7 +237,7 @@ class GameInfo
  			},
  			{
  				buildingID: Building.HANGAR_CYAN,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar3.png',
+ 				previewImg: 'PopInBuiltArticlePreviewHangar3.png',
  				title: 'Atelier Destination Namok',
  				description: "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
  				hardPrice: 3,
@@ -249,7 +249,7 @@ class GameInfo
  			}, 			
  			{
  				buildingID: Building.HANGAR_BLEU,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar4.png',
+ 				previewImg: 'PopInBuiltArticlePreviewHangar4.png',
  				title: 'Atelier Destination Terre',
  				description: "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
  				hardPrice: 3,
@@ -261,7 +261,7 @@ class GameInfo
  			},
  			{
  				buildingID: Building.HANGAR_VIOLET,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar5.png',
+ 				previewImg: 'PopInBuiltArticlePreviewHangar5.png',
  				title: 'Atelier Destination Wundërland',
  				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
  				hardPrice: 3,
@@ -273,7 +273,7 @@ class GameInfo
  			},
  			{
  				buildingID: Building.HANGAR_ROUGE,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewHangar6.png',
+ 				previewImg: 'PopInBuiltArticlePreviewHangar6.png',
  				title: 'Atelier Destination StarWat',
  				description: "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",
  				hardPrice: 3,
@@ -288,7 +288,7 @@ class GameInfo
  		"utilitaires": [
  			{
  				buildingID: Building.CASINO,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewCasino.png',
+ 				previewImg: 'PopInBuiltArticlePreviewCasino.png',
  				title: 'Casino',
  				description: "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.",
  				hardPrice: 3,
@@ -300,7 +300,7 @@ class GameInfo
  			},
  			{
 				buildingID: Building.EGLISE,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEglise.png',
+ 				previewImg: 'PopInBuiltArticlePreviewEglise.png',
  				title: 'Église',
  				description: "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.",
  				hardPrice: 3,
@@ -312,7 +312,7 @@ class GameInfo
  			},
  			{
 				buildingID: Building.ENTREPOT,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewEntrepot.png',
+ 				previewImg: 'PopInBuiltArticlePreviewEntrepot.png',
  				title: 'Entrepot',
  				description: "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.",
  				hardPrice: 3,
@@ -324,7 +324,7 @@ class GameInfo
  			},
  			{
 				buildingID: Building.LABO,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewLabo.png',
+ 				previewImg: 'PopInBuiltArticlePreviewLabo.png',
  				title: 'Labo',
  				description: "Les labos servent à faire avancer la recherche.\nNos chiens ont une idée de ce qu'il font ne vous en faites pas.",
  				hardPrice: 3,
@@ -336,7 +336,7 @@ class GameInfo
  			},		
  			{
 				buildingID: Building.MUSEE,
- 				previewImg: 'assets/UI/Icons/Buildings/PopInBuiltArticlePreviewMusee.png',
+ 				previewImg: 'PopInBuiltArticlePreviewMusee.png',
  				title: 'Musée',
  				description: "Le Mussee est l'endroit ou vous présentez vos artefacts aliens au monde.\nEt en plus ça rapporte un max",
  				hardPrice: 3,
@@ -348,17 +348,50 @@ class GameInfo
  			}, 
  		],
  	};
- 	public static var buildings:Map<String,Dynamic> = [ //temp, pour l'instant popinWorshop en a besoin mais pas à l'avenir
+ 	public static var workshopsModels:Map<String,Dynamic> = [
  		'hangarNamok'=> {
  			destination:'Namok',
- 			previewImg: 'assets/UI/Icons/Planet/IconNamek.png',
- 			level: 1,
- 			ressources: [
- 				{"name":"fric","quantity":"1000"},
- 				{"name":"poudre0","quantity":"10"},
- 				{"name":"poudre1","quantity":"25"},
+ 			previewImg: 'IconNamek.png',
+ 			spaceships: [
+ 				{
+ 					name: "Fusée Bleue Niveau 1",
+ 					previewImg: "IconFuseeBleu1.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60 //sec
+	 			},
+ 				{
+ 					name: "Fusée Bleue Niveau 2",
+ 					previewImg: "IconFuseeBleu2.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60 //sec
+	 			},
+ 				{
+ 					name: "Fusée Bleue Niveau 3",
+ 					previewImg: "IconFuseeBleu3.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60 //sec
+	 			},
  			],
-
+ 		}
+ 	];
+ 	public static var actualWorkshops:Map<String,Dynamic> = [
+ 		'51'=> {
+ 			workshopType: 'hangarNamok',
+ 			level: 2,
+ 			state: 'buy', // || 'build' || 'launch'
+ 			buildTimeStart: 0,
  		}
  	];
  	public static var loaderCompletion:Float = 0; // when we're loading the game we need to know the % of completion

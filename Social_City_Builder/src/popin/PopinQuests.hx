@@ -10,7 +10,7 @@ import pixi.display.DisplayObjectContainer;
 //Basicly any Popin is just a configuration of Mypopin
 class PopinQuests extends MyPopin
 {	
-	private var articleHeight:Float = Texture.fromFrame("assets/UI/PopInQuest/PopInQuestBgArticle.png").height;
+	private var articleHeight:Float = Texture.fromFrame("PopInQuestBgArticle.png").height;
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
 	private var currentTab:String = "currentQuestsTab";
@@ -18,21 +18,21 @@ class PopinQuests extends MyPopin
 	private function new(?startX:Float,?startY:Float) 
 	{
 		GameInfo.can_map_update = false;
-		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
+		super(startX,startY, "PopInBackground.png");
 		articleHeight /= background.height; // background is defiened in MyPopin
 
-		addIcon(-0.15,-0.15,'assets/UI/PopInQuest/PopInTitleQuest.png',"popInTitle",this,false);
-		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollBackground.png',"contentBackground",this,false);
+		addIcon(-0.15,-0.15,'PopInTitleQuest.png',"popInTitle",this,false);
+		addIcon(0.09,0.15,'PopInScrollBackground.png',"contentBackground",this,false);
 
-		addIcon(-0.02,0.17,'assets/UI/PopInQuest/PopInQuestOngletEnCoursNormal.png',"currentQuestsTab",this,true,'assets/UI/PopInQuest/PopInQuestOngletEnCoursActive.png',true);
-		addIcon(-0.02,0.29,'assets/UI/PopInQuest/PopInQuestOngletFinishNormal.png',"finishedQuestsTab",this,true,'assets/UI/PopInQuest/PopInQuestOngletFinishActive.png',true);
-		addIcon(0.95, 0,'assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png',"closeButton",this,true,'assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png',true);
+		addIcon(-0.02,0.17,'PopInQuestOngletEnCoursNormal.png',"currentQuestsTab",this,true,'PopInQuestOngletEnCoursActive.png',true);
+		addIcon(-0.02,0.29,'PopInQuestOngletFinishNormal.png',"finishedQuestsTab",this,true,'PopInQuestOngletFinishActive.png',true);
+		addIcon(0.95, 0,'closeButtonNormal.png',"closeButton",this,true,'closeButtonActive.png',true);
 
 		addContainer("verticalScroller",this,0,0);
 		addMask(icons["contentBackground"].x, icons["contentBackground"].y+3, icons["contentBackground"].width, icons["contentBackground"].height-6,containers["verticalScroller"]);
 		addBuildArticles(GameInfo.questsArticles.current);
 		icons['currentQuestsTab'].setTextureToActive();
-		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollOverlay.png',"scrollOverlay",this,false);
+		addIcon(0.09,0.15,'PopInScrollOverlay.png',"scrollOverlay",this,false);
 	}
 
 	// This is an easy way to add articles in the popin
@@ -46,8 +46,8 @@ class PopinQuests extends MyPopin
 		for(i in ItemsConfig){
 			var y:Float = cpt*(articleHeight+articleInterline);
 			var rewards:Array<Dynamic> = i.rewards;
-			addIcon(0.115,0.175+y,'assets/UI/PopInQuest/PopInQuestBgArticle.png',"articleBase",containers["verticalScroller"],false);
-			addIcon(0.13,0.1875+y,'assets/UI/Icons/Dogs/'+i.previewImg+'.png',"ArticlePreview",containers["verticalScroller"],false);
+			addIcon(0.115,0.175+y,'PopInQuestBgArticle.png',"articleBase",containers["verticalScroller"],false);
+			addIcon(0.13,0.1875+y, i.previewImg+'.png',"ArticlePreview",containers["verticalScroller"],false);
 			addText(0.298,0.175+y,'FuturaStdHeavy','25px',i.title,'titleText',containers["verticalScroller"]);
 			addText(0.298,0.225+y,'FuturaStdMedium','12px',i.description,'Description',containers["verticalScroller"]);
 			addText(0.71,0.215+y,'FuturaStdHeavy','18px','Récompenses','rewarsText',containers["verticalScroller"]);

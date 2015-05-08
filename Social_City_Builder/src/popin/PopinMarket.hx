@@ -11,7 +11,7 @@ import pixi.display.DisplayObjectContainer;
 //Basicly any Popin is just a configuration of Mypopin
 class PopinMarket extends MyPopin
 {	
-	private var articleHeight:Float = Texture.fromFrame("assets/UI/PopInMarket/PopInMarketBgArticle.png").height;
+	private var articleHeight:Float = Texture.fromFrame("PopInMarketBgArticle.png").height;
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
 	private var currentTab:String = "buyTab";
@@ -19,26 +19,26 @@ class PopinMarket extends MyPopin
 	private function new(?startX:Float,?startY:Float) 
 	{
 		GameInfo.can_map_update = false;
-		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
+		super(startX,startY, "PopInBackground.png");
 		headerTextures = [
-			'buy'=>Texture.fromFrame('assets/UI/PopInMarket/PopInHeaderBuy.png'),
-			'sell'=>Texture.fromFrame('assets/UI/PopInMarket/PopInHeaderSell.png'),
+			'buy'=>Texture.fromFrame('PopInHeaderBuy.png'),
+			'sell'=>Texture.fromFrame('PopInHeaderSell.png'),
 		];
 		articleHeight /= background.height; // background is defiened in MyPopin
 
 		addHeader(0.65,0.05,headerTextures['buy']);
-		addIcon(-0.15,-0.15,'assets/UI/PopInMarket/PopInTitleMarket.png',"popInTitle",this,false);
-		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollBackground.png',"contentBackground",this,false);
+		addIcon(-0.15,-0.15,'PopInTitleMarket.png',"popInTitle",this,false);
+		addIcon(0.09,0.15,'PopInScrollBackground.png',"contentBackground",this,false);
 
-		addIcon(-0.02,0.17,'assets/UI/PopInMarket/PopInOngletBuyNormal.png',"buyTab",this,true,'assets/UI/PopInMarket/PopInOngletBuyActive.png',true);
-		addIcon(-0.02,0.29,'assets/UI/PopInMarket/PopInOngletSellNormal.png',"sellTab",this,true,'assets/UI/PopInMarket/PopInOngletSellActive.png',true);
-		addIcon(0.95, 0,'assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png',"closeButton",this,true,'assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png',true);
+		addIcon(-0.02,0.17,'PopInOngletBuyNormal.png',"buyTab",this,true,'PopInOngletBuyActive.png',true);
+		addIcon(-0.02,0.29,'PopInOngletSellNormal.png',"sellTab",this,true,'PopInOngletSellActive.png',true);
+		addIcon(0.95, 0,'closeButtonNormal.png',"closeButton",this,true,'closeButtonActive.png',true);
 
 		addContainer("verticalScroller",this,0,0);
 		addMask(icons["contentBackground"].x, icons["contentBackground"].y+3, icons["contentBackground"].width, icons["contentBackground"].height-6,containers["verticalScroller"]);
 		addMarketArticles(GameInfo.ressources);
 		icons["buyTab"].setTextureToActive();
-		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollOverlay.png',"scrollOverlay",this,false);
+		addIcon(0.09,0.15,'PopInScrollOverlay.png',"scrollOverlay",this,false);
 	}
 
 	// This is an easy way to add articles in the popin
@@ -56,19 +56,19 @@ class PopinMarket extends MyPopin
 			var article = GameInfo.ressources[i];
 			var y:Float = cpt*(articleHeight+articleInterline);
 
-			addIcon(0.115,0.17+y,'assets/UI/PopInMarket/PopInMarketBgArticle.png',"articleBase",containers["verticalScroller"],false);
+			addIcon(0.115,0.17+y,'PopInMarketBgArticle.png',"articleBase",containers["verticalScroller"],false);
 			addIcon(0.13,0.1875+y,article.previewImg,"ArticlePreview",containers["verticalScroller"],false);
 			addText(0.298,0.18+y,'FuturaStdHeavy','25px',article.name,'titleText',containers["verticalScroller"]);
 			addText(0.32,0.345+y,'FuturaStdHeavy','15px','Price','priceText',containers["verticalScroller"]);
 			addText(0.525,0.345+y,'FuturaStdHeavy','15px','Quantity','quantityText',containers["verticalScroller"]);
 
-			addIcon(0.42,0.253+y,'assets/UI/PopInMarket/PopInMarketNbArticleNormal.png',"1unit"+cpt,containers["verticalScroller"],true,'assets/UI/PopInMarket/PopInMarketNbArticleActive.png',true);
+			addIcon(0.42,0.253+y,'PopInMarketNbArticleNormal.png',"1unit"+cpt,containers["verticalScroller"],true,'PopInMarketNbArticleActive.png',true);
 			addText(0.45,0.263+y,'FuturaStdHeavy','25px','x1','1unitText',containers["verticalScroller"]);
-			addIcon(0.52,0.253+y,'assets/UI/PopInMarket/PopInMarketNbArticleNormal.png',"10unit"+cpt,containers["verticalScroller"],true,'assets/UI/PopInMarket/PopInMarketNbArticleActive.png',true);
+			addIcon(0.52,0.253+y,'PopInMarketNbArticleNormal.png',"10unit"+cpt,containers["verticalScroller"],true,'PopInMarketNbArticleActive.png',true);
 			addText(0.535,0.263+y,'FuturaStdHeavy','25px','x10','10unitText',containers["verticalScroller"]);
-			addIcon(0.62,0.253+y,'assets/UI/PopInMarket/PopInMarketNbArticleNormal.png',"100unit"+cpt,containers["verticalScroller"],true,'assets/UI/PopInMarket/PopInMarketNbArticleActive.png',true);
+			addIcon(0.62,0.253+y,'PopInMarketNbArticleNormal.png',"100unit"+cpt,containers["verticalScroller"],true,'PopInMarketNbArticleActive.png',true);
 			addText(0.625,0.263+y,'FuturaStdHeavy','25px','x100','100unitText',containers["verticalScroller"]);
-			addIcon(0.757,0.24+y,'assets/UI/PopInMarket/PopInMarketValidNormal.png',"validBtn"+cpt,containers["verticalScroller"],true,'assets/UI/PopInMarket/PopInMarketValidActive.png',true);
+			addIcon(0.757,0.24+y,'PopInMarketValidNormal.png',"validBtn"+cpt,containers["verticalScroller"],true,'PopInMarketValidActive.png',true);
 
 			addIcon(0.31,0.253+y,GameInfo.ressources['fric'].iconImg,"SoftRessource",containers["verticalScroller"],false);
 			var cost:Float;

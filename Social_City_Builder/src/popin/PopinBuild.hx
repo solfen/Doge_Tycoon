@@ -10,7 +10,7 @@ import hud.HudManager;
 //Basicly any Popin is just a configuration of Mypopin
 class PopinBuild extends MyPopin
 {	
-	private var articleHeight:Float = Texture.fromFrame("assets/UI/PopInBuilt/PopInBuiltBgArticle.png").height;
+	private var articleHeight:Float = Texture.fromFrame("PopInBuiltBgArticle.png").height;
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
 	private var currentTab:String = "utilitairesTab";
@@ -18,28 +18,28 @@ class PopinBuild extends MyPopin
 	private function new(?startX:Float,?startY:Float) 
 	{
 		GameInfo.can_map_update = false;
-		super(startX,startY, "assets/UI/PopIn/PopInBackground.png");
+		super(startX,startY, "PopInBackground.png");
 		headerTextures = [
-			'niches'=>Texture.fromFrame('assets/UI/PopInBuilt/PopInHeaderNiches.png'),
-			'spaceships'=>Texture.fromFrame('assets/UI/PopInBuilt/PopInHeaderFusees.png'),
-			'utilitaire'=>Texture.fromFrame('assets/UI/PopInBuilt/PopInHeaderUtilitaires.png')
+			'niches'=>Texture.fromFrame('PopInHeaderNiches.png'),
+			'spaceships'=>Texture.fromFrame('PopInHeaderFusees.png'),
+			'utilitaire'=>Texture.fromFrame('PopInHeaderUtilitaires.png')
 		];
 		articleHeight /= background.height; // background is defiened in MyPopin
 
 		addHeader(0.65,0.05,headerTextures['utilitaire']);
-		addIcon(-0.15,-0.15,'assets/UI/PopInBuilt/PopInTitleConstruction.png',"popInTitle",this,false);
-		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollBackground.png',"contentBackground",this,false);
+		addIcon(-0.15,-0.15,'PopInTitleConstruction.png',"popInTitle",this,false);
+		addIcon(0.09,0.15,'PopInScrollBackground.png',"contentBackground",this,false);
 
-		addIcon(-0.02,0.17,'assets/UI/PopInBuilt/PopInOngletNicheNormal.png',"nicheTab",this,true,'assets/UI/PopInBuilt/PopInOngletNicheActive.png',true);
-		addIcon(-0.02,0.29,'assets/UI/PopInBuilt/PopInOngletFuseeNormal.png',"spaceshipTab",this,true,'assets/UI/PopInBuilt/PopInOngletFuseeActive.png',true);
-		addIcon(-0.02,0.41,'assets/UI/PopInBuilt/PopInOngletUtilitairesNormal.png',"utilitairesTab",this,true,'assets/UI/PopInBuilt/PopInOngletUtilitairesActive.png',true);
-		addIcon(0.95, 0,'assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png',"closeButton",this,true,'assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png',true);
+		addIcon(-0.02,0.17,'PopInOngletNicheNormal.png',"nicheTab",this,true,'PopInOngletNicheActive.png',true);
+		addIcon(-0.02,0.29,'PopInOngletFuseeNormal.png',"spaceshipTab",this,true,'PopInOngletFuseeActive.png',true);
+		addIcon(-0.02,0.41,'PopInOngletUtilitairesNormal.png',"utilitairesTab",this,true,'PopInOngletUtilitairesActive.png',true);
+		addIcon(0.95, 0,'closeButtonNormal.png',"closeButton",this,true,'closeButtonActive.png',true);
 
 		addContainer("verticalScroller",this,0,0);
 		addMask(icons["contentBackground"].x, icons["contentBackground"].y+3, icons["contentBackground"].width, icons["contentBackground"].height-6,containers["verticalScroller"]);
 		addBuildArticles(GameInfo.buildMenuArticles.utilitaires);
 		icons[currentTab].setTextureToActive();
-		addIcon(0.09,0.15,'assets/UI/PopIn/PopInScrollOverlay.png',"scrollOverlay",this,false);
+		addIcon(0.09,0.15,'PopInScrollOverlay.png',"scrollOverlay",this,false);
 	}
 
 	// This is an easy way to add articles in the popin
@@ -53,9 +53,9 @@ class PopinBuild extends MyPopin
 		for(i in ItemsConfig){
 			var y:Float = cpt*(articleHeight+articleInterline);
 			var ressources:Array<Dynamic> = i.ressources;
-			addIcon(0.115,0.175+y,'assets/UI/PopInBuilt/PopInBuiltBgArticle.png',"articleBase",containers["verticalScroller"],false);
-			addIcon(0.687,0.309+y,'assets/UI/PopInBuilt/PopInBuiltSoftNormal.png',"buildSoft"+cpt,containers["verticalScroller"],true,'assets/UI/PopInBuilt/PopInBuiltSoftActive.png',true);
-			addIcon(0.815,0.309+y,'assets/UI/PopInBuilt/PopInBuiltHardNormal.png',"buildHard"+cpt,containers["verticalScroller"],true,'assets/UI/PopInBuilt/PopInBuiltHardActive.png',true);
+			addIcon(0.115,0.175+y,'PopInBuiltBgArticle.png',"articleBase",containers["verticalScroller"],false);
+			addIcon(0.687,0.309+y,'PopInBuiltSoftNormal.png',"buildSoft"+cpt,containers["verticalScroller"],true,'PopInBuiltSoftActive.png',true);
+			addIcon(0.815,0.309+y,'PopInBuiltHardNormal.png',"buildHard"+cpt,containers["verticalScroller"],true,'PopInBuiltHardActive.png',true);
 			addIcon(0.13,0.1875+y,i.previewImg,"ArticlePreview",containers["verticalScroller"],false);
 			addIcon(0.748,0.3+y,GameInfo.ressources['hardMoney'].iconImg,"HardRessource",containers["verticalScroller"],false);
 			addText(0.77,0.34+y,'FuturaStdHeavy','15px',i.hardPrice,'HardRessourcePrice',containers["verticalScroller"],'white');

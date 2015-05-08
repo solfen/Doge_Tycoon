@@ -11,7 +11,7 @@ import pixi.display.DisplayObjectContainer;
 //Basicly any Popin is just a configuration of Mypopin
 class PopinInventory extends MyPopin
 {	
-	private var articleHeight:Float = Texture.fromFrame("assets/UI/PopInInventory/PopInInventoryArticleBg.png").height;
+	private var articleHeight:Float = Texture.fromFrame("PopInInventoryArticleBg.png").height;
 	private var articleInterline:Float = 0.01;
 	private var hasVerticalScrollBar:Bool = false;
 	private var isDraging:Bool = false;
@@ -20,12 +20,12 @@ class PopinInventory extends MyPopin
 
 	private function new(?startX:Float,?startY:Float) 
 	{
-		super(startX,startY, "assets/UI/PopInInventory/PopInInventoryBackground.png");
+		super(startX,startY, "PopInInventoryBackground.png");
 		articleHeight /= background.height; // background is defiened in MyPopin
 
-		addIcon(0,0,'assets/UI/PopInInventory/PopInInventoryBackground.png',"contentBackground",this,false);
-		addIcon(-0.15,-0.1,'assets/UI/PopInInventory/PopInInventoryTitle.png',"title",this,false);
-		addIcon(0.875, -0.025,'assets/UI/PopInInventory/PopInInventoryCloseButtonNormal.png',"closeButton",this,true,'assets/UI/PopInInventory/PopInInventoryCloseButtonActive.png',true);
+		addIcon(0,0,'PopInInventoryBackground.png',"contentBackground",this,false);
+		addIcon(-0.15,-0.1,'PopInInventoryTitle.png',"title",this,false);
+		addIcon(0.875, -0.025,'PopInInventoryCloseButtonNormal.png',"closeButton",this,true,'PopInInventoryCloseButtonActive.png',true);
 
 		addContainer("verticalScroller",this,0,0);
 		//addMask(icons["contentBackground"].x, icons["contentBackground"].y+3, icons["contentBackground"].width, icons["contentBackground"].height-6,containers["verticalScroller"]);
@@ -44,7 +44,7 @@ class PopinInventory extends MyPopin
 			var article = GameInfo.ressources[i];
 			var y:Float = cpt*(articleHeight+articleInterline);
 
-			addIcon(0.1,0.065+y,'assets/UI/PopInInventory/PopInInventoryArticleBg.png',"articleBase",containers["verticalScroller"],false);
+			addIcon(0.1,0.065+y,'PopInInventoryArticleBg.png',"articleBase",containers["verticalScroller"],false);
 			addIcon(0.135,0.069+y,article.iconImg,"ArticlePreview",containers["verticalScroller"],false);
 			addText(0.40,0.069+y,'FuturaStdHeavy','15px',article.name,'nameText',containers["verticalScroller"],textColor);
 			addText(0.4,0.12+y,'FuturaStdHeavy','15px',article.userPossesion,'titleText',containers["verticalScroller"],textColor);

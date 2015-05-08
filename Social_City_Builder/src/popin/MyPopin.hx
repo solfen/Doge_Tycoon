@@ -96,8 +96,8 @@ class MyPopin extends DisplayObjectContainer
 
 	//place a vertical scrollBar, the scroll action is automaticly added to containers["verticalScroller"]
 	private function addVerticalScrollBar(){
-		addIcon(0.91,0.15,'assets/UI/PopIn/PopInScrollingBar.png',"scrollingBar",this,false);
-		scrollIndicator = new IconPopin(Std.int(0.933*background.width-background.width/2),Std.int(0.23*background.height-background.height/2),'assets/UI/PopIn/PopInScrollingTruc.png',"scrollingIndicator",true);
+		addIcon(0.91,0.15,'PopInScrollingBar.png',"scrollingBar",this,false);
+		scrollIndicator = new IconPopin(Std.int(0.933*background.width-background.width/2),Std.int(0.23*background.height-background.height/2),'PopInScrollingTruc.png',"scrollingIndicator",true);
 		scrollIndicator.mousedown = function(data) {
 			scrollDragging = true;
 			scrollDragSy = data.getLocalPosition(scrollIndicator).y * scrollIndicator.scale.y;	
