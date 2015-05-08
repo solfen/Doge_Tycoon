@@ -16,7 +16,7 @@ FacebookSession::setDefaultApplication($APP_ID,$APP_SECRET);
 $connexion = new PDO($src, $user, $pwd);
 $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $connexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
- 
+if($_GET['request_ids'])
 /**
 Récupération d'une session si on a pas de token en mémoire
 */
