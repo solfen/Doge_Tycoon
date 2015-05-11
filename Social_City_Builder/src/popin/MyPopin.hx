@@ -71,6 +71,7 @@ class MyPopin extends DisplayObjectContainer
 		icons[name] = icon;
 		target.addChild(icon);
 	}
+
 	private function addHeader(x:Float,y:Float,startTexture:Texture){
 		header = new Sprite(startTexture);
 		header.position.set(Std.int(x*background.width-background.width/2),Std.int(y*background.height-background.height/2));

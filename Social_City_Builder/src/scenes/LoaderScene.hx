@@ -69,7 +69,7 @@ class LoaderScene extends DisplayObjectContainer
 		loadingBar= new Sprite(Texture.fromFrame('assets/UI/SplashScreen/LoadingFillBar.png'));
 		loadingFillStart = new Sprite(Texture.fromFrame('assets/UI/SplashScreen/LoadingFill01.png'));
 		loadingFillEnd = new Sprite(Texture.fromFrame('assets/UI/SplashScreen/LoadingFill03.png'));
-		loadingFillMidlle = new TilingSprite(Texture.fromFrame('assets/UI/SplashScreen/LoadingFill02.png'), 350, loadingFillStart.height);
+		loadingFillMidlle = new TilingSprite(Texture.fromFrame('assets/UI/SplashScreen/LoadingFill02.png'), 0, loadingFillStart.height);
 		phraseText = new Text("", textStyle);
 		changePhrase();
 

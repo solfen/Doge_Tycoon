@@ -356,6 +356,7 @@ class GameInfo
  				{
  					name: "Fusée Bleue Niveau 1",
  					previewImg: "IconFuseeBleu1.png",
+ 					ref: 'Blue1',
  					ressources: [
 		 				{"name":"fric","quantity":"1000"},
 		 				{"name":"poudre0","quantity":"10"},
@@ -365,6 +366,7 @@ class GameInfo
 	 			},
  				{
  					name: "Fusée Bleue Niveau 2",
+ 					ref: 'Blue2',
  					previewImg: "IconFuseeBleu2.png",
  					ressources: [
 		 				{"name":"fric","quantity":"1000"},
@@ -375,6 +377,7 @@ class GameInfo
 	 			},
  				{
  					name: "Fusée Bleue Niveau 3",
+ 					ref: 'Blue3',
  					previewImg: "IconFuseeBleu3.png",
  					ressources: [
 		 				{"name":"fric","quantity":"1000"},
@@ -390,7 +393,8 @@ class GameInfo
  		'51'=> {
  			workshopType: 'hangarNamok',
  			level: 2,
- 			state: 'buy', // || 'build' || 'launch'
+ 			state: 'build', // || 'buy' || 'launch'
+ 			refSpaceship: 0,
  			buildTimeStart: 0,
  		}
  	];
