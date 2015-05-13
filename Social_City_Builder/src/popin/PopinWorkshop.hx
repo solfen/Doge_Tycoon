@@ -37,7 +37,6 @@ class PopinWorkshop extends MyPopin
 	private var quantityStepX:Float = 0.07;
 	private var quantityY:Float = 0.31;
 
-	
 	private var guiListValuesBuild:Array<String> = ["backTextX","backTextY","infoTextX","infoTextY","spaceshipBuildImgX","spaceshipBuildImgY","loadbarBackX","loadbarBackY","loadBarFillX","loadBarFillY","loadBarFillMaxWidth","cancelBuildX","cancelBuildY","buildLoadIconX","buildLoadIconY"];
 	private var backTextX:Float = 0.3;
 	private var backTextY:Float = 0.18;
@@ -56,12 +55,24 @@ class PopinWorkshop extends MyPopin
 	private var buildLoadIconY:Float = 0.76;
 	private var loadingBar:TilingSprite;
 
-	private var guiListValuesLaunch:Array<String> = [];
+	private var guiListValuesLaunch:Array<String> = ["backTextLaunchX","backTextLaunchY","infoTextLaunchX","infoTextLaunchY","spaceshipLaunchImgX","spaceshipLaunchImgY","destroyShipX","destroyShipY","launchShipX","launchShipY","dogPosY","dogPosX"];
+	private var backTextLaunchX:Float = 0.29;
+	private var backTextLaunchY:Float = 0.17;
+	private var infoTextLaunchX:Float = 0.43;
+	private var infoTextLaunchY:Float = 0.18;
+	private var spaceshipLaunchImgX:Float = 0.3;
+	private var spaceshipLaunchImgY:Float = 0.25;
+	private var destroyShipX:Float = 0.765;
+	private var destroyShipY:Float = 0.7;
+	private var launchShipX:Float = 0.12;
+	private var launchShipY:Float = 0.7;
+	private var dogPosY:Float = 0.02;
+	private var dogPosX:Float = -0.7;
+
 
 
 	private function new(?startX:Float,?startY:Float,?optParams:Map<String,Dynamic>) 
 	{
-		debugGUI('build');
 		GameInfo.can_map_update = false;
 		super(startX,startY, "PopInBackground.png");
 		workshopConfig = GameInfo.actualWorkshops['51']; // TODO : obtain ID from param
@@ -75,8 +86,8 @@ class PopinWorkshop extends MyPopin
 		addIcon(0.95, 0,'closeButtonNormal.png',"closeButton",this,true,'closeButtonActive.png',true);
 		addIcon(-0.15,-0.15,'PopInTitleWorkshop.png',"popInTitle",this,false);
 		addIcon(-0.4,0.27,'assets/Dogs/DogHangarWorkshop.png',"dog",this,false);
-		workshopConfig.state == 'buy' ? addBuyState():null;
-		workshopConfig.state == 'build' ? addBuildState():null;
+		workshopConfig.state == 'buy' ? addBuyState(): workshopConfig.state == 'build' ? addBuildState() : addLaunchState();
+		debugGUI(workshopConfig.state);
 	}
 
 	// This is an easy way to add articles in the popin
@@ -106,7 +117,6 @@ class PopinWorkshop extends MyPopin
 		addIcon(spaceshipBuildImgX,spaceshipBuildImgY,'PopInWorkshopFuseeNotReady'+workShopModel.spaceships[workshopConfig.refSpaceship].ref+'.png',"destinationTextBg",containers["verticalScroller"],false);
 
 		addIcon(loadbarBackX,loadbarBackY,'PopInWorkshopLoadFillBar.png',"destinationTextBg",containers["verticalScroller"],false);
-
 		loadingBar = new TilingSprite(Texture.fromFrame('PopInWorkshopLoadFill1.png'), 0, 15);
 		loadingBar.anchor.set(0,0.5);
 		loadingBar.position.set(Std.int(loadBarFillX*background.width-background.width/2),Std.int(loadBarFillY*background.height-background.height/2));
@@ -117,8 +127,14 @@ class PopinWorkshop extends MyPopin
 		refreshBuildBar();
 		Main.getInstance().addEventListener(Event.GAME_LOOP, refreshBuildBar);
 	}
-	private function addLauchState() : Void {
-
+	private function addLaunchState() : Void {
+		addIcon(backTextLaunchX,backTextLaunchY,'PopInWorkshopTextBG.png',"PopInWorkshopTextBG",containers["verticalScroller"],false);
+		addText(infoTextLaunchX,infoTextLaunchY,'FuturaStdHeavy','15px','La fussée est prête !','aideText',containers["verticalScroller"],'white');
+		addIcon(spaceshipLaunchImgX,spaceshipLaunchImgY,'PopInWorkshopFuseeReady'+workShopModel.spaceships[workshopConfig.refSpaceship].ref+'.png',"destinationTextBg",containers["verticalScroller"],false);
+		addIcon(destroyShipX,destroyShipY,'PopInWorkshopDestroyButtonNormal.png',"destroyShip",containers["verticalScroller"],true,'PopInWorkshopDestroyButtonActive.png',true);
+		addIcon(launchShipX,launchShipY,'PopInWorkshopLaunchButtonNormal.png',"launchShip",containers["verticalScroller"],true,'PopInWorkshopLaunchButtonActive.png',true);
+		removeChild(icons["dog"]);
+		addIcon(dogPosX,dogPosY,'assets/Dogs/DogPasDeTir.png',"dog",this,false);		
 	}
 	private function refreshBuildBar() {
 		var progressPercent = ((haxe.Timer.stamp() - workshopConfig.buildTimeStart) /  workShopModel.spaceships[workshopConfig.refSpaceship].constructionTime) ;
@@ -127,7 +143,7 @@ class PopinWorkshop extends MyPopin
 			workshopConfig.state = 'launch';
 			Main.getInstance().removeEventListener(Event.GAME_LOOP, refreshBuildBar);
 			containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
-			addLauchState();
+			addLaunchState();
 		}
 	}
 
@@ -160,6 +176,14 @@ class PopinWorkshop extends MyPopin
 				close();
 			}
 		}
+		else if(pEvent.target._name == 'launchShip'){
+			GameInfo.shipToLaunch = workShopModel.spaceships[workshopConfig.refSpaceship].ref;
+			close();
+		}
+		else if(pEvent.target._name == 'destroyShip'){
+			workshopConfig.state = 'buy';
+			close();
+		}
 	}
 	private function close(){
 		GameInfo.can_map_update = true;
@@ -168,14 +192,14 @@ class PopinWorkshop extends MyPopin
 	}
 	private function refresh(type:String) {
 		containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
-		type == "buy" ? addBuyState() : type == 'build' ? addBuildState() : null;
+		type == "buy" ? addBuyState() : type == 'build' ? addBuildState() : addLaunchState();
 	}
 	private function debugGUI(type:String){
 		gui = new GUI();
 		//gui.remember(this);
 		var listValues:Array<String> = type == "build" ?  guiListValuesBuild : type == 'buy' ? guiListValuesBuy : guiListValuesLaunch;
 		for(i in listValues){
-			gui.add(this, i,0,1).step(0.0001).onChange(function(newValue) {
+			gui.add(this, i,-1,1).step(0.0001).onChange(function(newValue) {
 				refresh(type);
 			});
 		}

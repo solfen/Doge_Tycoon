@@ -22,5 +22,6 @@ class HudDestroy extends IconHud
 		GameInfo.isDestroyMode = !GameInfo.isDestroyMode;
 		GameInfo.isUpgradeMode = false;
 		hud.HudManager.getInstance().setChildTexture("HudUpgrade", 'normal');
+		trace(GameInfo.isDestroyMode);
 	}
 }
