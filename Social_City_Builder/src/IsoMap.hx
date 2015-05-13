@@ -5,8 +5,7 @@ import utils.system.DeviceCapabilities;
 import utils.events.Event;
 import utils.game.IsoTools;
 import utils.game.InputInfos;
-import buildings.Building;
-import buildings.PreviewBuilding;
+import buildings.*;
 import pixi.display.DisplayObjectContainer;
 import pixi.display.Sprite;
 import pixi.extras.TilingSprite;
@@ -117,7 +116,26 @@ class IsoMap extends DisplayObjectContainer
 			return null;
 		}
 
-		var building: Building = new Building(pBuilding_type, current_overflown_cell, build_data.x, build_data.y);
+		var building: Building = switch (pBuilding_type)
+		{
+			case Building.CASINO:
+				new Casino(current_overflown_cell, build_data.x, build_data.y);
+			case Building.EGLISE:
+				new Eglise(current_overflown_cell, build_data.x, build_data.y);
+			case Building.HANGAR_BLEU | Building.HANGAR_CYAN | Building.HANGAR_JAUNE | Building.HANGAR_ROUGE | Building.HANGAR_VERT | Building.HANGAR_VIOLET:
+				new Hangar(pBuilding_type, current_overflown_cell, build_data.x, build_data.y);
+			case Building.LABO:
+				new Labo(current_overflown_cell, build_data.x, build_data.y);
+			case Building.NICHE:
+				new Niche(current_overflown_cell, build_data.x, build_data.y);
+			case Building.PAS_DE_TIR:
+				new Pas_de_tir(current_overflown_cell, build_data.x, build_data.y);
+			case Building.ENTREPOT:
+				new Entrepot(current_overflown_cell, build_data.x, build_data.y);
+			case Building.MUSEE:
+				new Musee(current_overflown_cell, build_data.x, build_data.y);
+			case _: null;
+		}
 
 		building.build();
 		buildings_list.push(building);
