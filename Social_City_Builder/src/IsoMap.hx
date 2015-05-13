@@ -19,11 +19,11 @@ import pixi.primitives.Graphics;
 class IsoMap extends DisplayObjectContainer
 {
 	public static var singleton: IsoMap;
-	public /*static*/ var cols_nb: Int;
-	public /*static*/ var rows_nb: Int;
-	public /*static*/ var cells_nb: Int;
-	public /*static*/ var cell_width: Int;
-	public /*static*/ var cell_height: Int;
+	public var cols_nb: Int;
+	public var rows_nb: Int;
+	public var cells_nb: Int;
+	public var cell_width: Int;
+	public var cell_height: Int;
 
 	public var buildings_list: Array<Building>;
 	public var obstacles_layer: Array<Bool>;
@@ -193,11 +193,9 @@ class IsoMap extends DisplayObjectContainer
 		}
 
 		if (IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), cell_width, cell_height, cells_nb, cols_nb))
-		//if (IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), Std.int(cell_width*this.scale.x+0.5), Std.int(cell_height*this.scale.y+0.5), cells_nb, cols_nb))
 		{
 
 			current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x/this.scale.x+0.5), Std.int(this.y/this.scale.y+0.5), Std.int(cell_width*this.scale.x), Std.int(cell_height*this.scale.y), cols_nb);
-			//current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), Std.int(cell_width*this.scale.x+0.5), Std.int(cell_height*this.scale.y+0.5), cols_nb);
 
 			var i: Int = buildings_list.length;
 			var map_x_on_screen: Float = InputInfos.mouse_x - x;
@@ -344,18 +342,25 @@ class IsoMap extends DisplayObjectContainer
 		var row: Float = IsoTools.cell_row(index, cols_nb);
 		var new_x: Int = IsoTools.cell_x(col, cell_width, 0);
 		var new_y: Int = IsoTools.cell_y(row, cell_height, 0);
-		var can_build: Bool = true;
 
 		// vérification de l'obstacles_layer :
 
 		var conf = GameInfo.BUILDINGS_CONFIG[pBuilding_type|Building.LVL_1];
 		var building_map_idx: Array<Int> = Building.get_map_idx(index, conf.width, conf.height);
-		var i: Int = building_map_idx.length;
 
-		while (can_build && i-->0)
+		var can_build: Bool = IsoTools.cell_col(building_map_idx[0], cols_nb) > IsoTools.cell_col(building_map_idx[Std.int(conf.width-1)], cols_nb)
+					&& IsoTools.cell_row(building_map_idx[building_map_idx.length-1], cols_nb) > 0;
+
+		if (can_build)
 		{
-			if (obstacles_layer[building_map_idx[i]]) {
-				can_build = false;
+			var i: Int = building_map_idx.length;
+
+			while (can_build && i-->0)
+			{
+				if (obstacles_layer[building_map_idx[i]])
+				{
+					can_build = false;
+				}
 			}
 		}
 
