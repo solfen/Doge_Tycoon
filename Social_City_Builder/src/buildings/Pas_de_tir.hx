@@ -15,6 +15,6 @@ class Pas_de_tir extends Building
 	public function new (p_index: Int, pX: Int, pY: Int): Void
 	{
 		super(Building.PAS_DE_TIR, p_index, pX, pY);
-		
+		outline_thick_max = 9;
 	}
 }

@@ -15,6 +15,6 @@ class Niche extends Building
 	public function new (p_index: Int, pX: Int, pY: Int): Void
 	{
 		super(Building.NICHE, p_index, pX, pY);
-		
+		outline_thick_max = 3;
 	}
 }

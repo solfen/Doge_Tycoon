@@ -214,20 +214,27 @@ class IsoMap extends DisplayObjectContainer
 					if (buildings_list[i].all_map_index.indexOf(current_overflown_cell) == -1)
 					{
 						buildings_list[i].is_clickable = focused_building == null || focused_building.row >= buildings_list[i].row;
+						buildings_list[i].outline_fade_out();
+						//buildings_list[i].outline_thick = 0;
+						//buildings_list[i].filter.set_thickness(0);
 					}
 					else
 					{
 						next_focused = buildings_list[i];
 						buildings_list[i].is_clickable = true;
+						buildings_list[i].outline_fade_in();
 					}
 				}
 				else
 				{
 					buildings_list[i].is_clickable = true;
+					buildings_list[i].outline_fade_out();
 				}
 			}
 
 			focused_building = next_focused;
+			//focused_building.outline_fade_in();
+
 		}
 
 		if (_is_clicking && !InputInfos.is_mouse_down) // click relaché après avoir été appuyé
