@@ -146,6 +146,11 @@ class Building extends MovieClip
 			build();
 		}
 	}
+	public function destroy (): Void 
+	{
+		trace("destroy");
+		IsoMap.singleton.destroy_building(this);
+	}
 
 	private function _update (): Void
 	{
@@ -179,10 +184,14 @@ class Building extends MovieClip
 		{
 			return;
 		}
-		if(GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)
+		if (GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)
 		{
 			GameInfo.ressources['fric'].userPossesion--;
 			upgrade();
+		}
+		else if (GameInfo.isDestroyMode)
+		{
+			destroy();
 		}
 	}
 
