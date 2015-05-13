@@ -115,8 +115,15 @@
 
 	function get_all_player_data ($config) {
 
-		$player = get_db_select_query($config, '*', '`players`', '`facebookID`="'.$config['facebookID'].'"')[0];
+		$players = get_db_select_query($config, '*', '`players`', '`facebookID`="'.$config['facebookID'].'"');
 
+
+		if (!$players) {
+
+			return null;
+		}
+		
+		$player = $players[0];
 		//print_r($player);
 		//echo '<br>empty($player[ID]) ? '.empty($player['ID']).'<br>';
 
@@ -127,12 +134,13 @@
 
 		return [
 			'player' => $player,
-			'artefacts' => get_db_select_query($config, '*', '`collected_artefacts`', '`player_id`="'.$player['ID'].'"'),
-			'buildings' => get_db_select_query($config, '*', '`builded_buildings`', '`player_id`="'.$player['ID'].'"'),
-			'planets' => get_db_select_query($config, '*', '`explored_planets`', '`player_id`="'.$player['ID'].'"'),
-			'quests' => get_db_select_query($config, '*', '`player_quests`', '`player_id`="'.$player['ID'].'"'),
-			'rocket' => get_db_select_query($config, '*', '`player_rocket`', '`player_id`="'.$player['ID'].'"')
+			'artefacts' => get_db_select_query($config, '*', '`collected_artefacts`', '`playerID`="'.$player['ID'].'"'),
+			'buildings' => get_db_select_query($config, '*', '`builded_buildings`', '`playerID`="'.$player['ID'].'"'),
+			'planets' => get_db_select_query($config, '*', '`explored_planets`', '`playerID`="'.$player['ID'].'"'),
+			'quests' => get_db_select_query($config, '*', '`player_quests`', '`playerID`="'.$player['ID'].'"'),
+			'rocket' => get_db_select_query($config, '*', '`player_rocket`', '`playerID`="'.$player['ID'].'"')
 		];
+
 	}
 
 	function get_db_select_query ($config, $select, $from, $where) {
@@ -141,7 +149,13 @@
 
 		try {
 
-			return $config['connexion']->query($req)->fetchAll();
+			$res =  $config['connexion']->query($req);
+
+			if ($res->rowCount() == 0) {
+				return null;
+			}
+
+			return $res->fetchAll();
 
 		} catch (PDOExeption $e) {
 

@@ -78,7 +78,7 @@ class InputInfos
 
 		// dirty, to try the zoom feature
 
-		IsoMap.singleton.scale.x += mouse_wheel_dir * 0.1;
+		/*IsoMap.singleton.scale.x += mouse_wheel_dir * 0.1;
 		IsoMap.singleton.scale.y += mouse_wheel_dir * 0.1;
 		
 
@@ -91,7 +91,7 @@ class InputInfos
 		//IsoMap.singleton.x += (mouse_x-DeviceCapabilities.width*0.5)*0.1;
 		//IsoMap.singleton.y += (mouse_y-DeviceCapabilities.height*0.5)*0.1;
 
-		trace(IsoMap.singleton.scale.x);
+		trace(IsoMap.singleton.scale.x);*/
 
 	}
 
