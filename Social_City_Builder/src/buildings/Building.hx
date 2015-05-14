@@ -4,6 +4,7 @@ import haxe.Timer;
 import utils.system.DeviceCapabilities;
 import utils.events.Event;
 import utils.game.IsoTools;
+import utils.game.OutlineFilter;
 import utils.game.InputInfos;
 import pixi.display.MovieClip;
 import pixi.InteractionData;
@@ -36,11 +37,14 @@ class Building extends MovieClip
 	public static var LVL_2 		: Int 	= 	0x200;
 	public static var LVL_3 		: Int 	=	0x300;
 	
+	public var filter: OutlineFilter;
 	public var all_map_index: Array<Int>;
 	public var config: Dynamic;
 	public var col: Float;
 	public var row: Float;
 	public var building_end_time: Float; // utile pour determiner les gains
+	public var outline_thick: Float;
+	public var outline_thick_max: Float;
 	public var type: Int;
 	public var lvl: Int;
 	public var map_origin_index: Int;
@@ -101,6 +105,11 @@ class Building extends MovieClip
 		loop = true;
 		animationSpeed = 0.333;
 		_fading_speed = 0.8;
+		outline_thick_max = 7;
+		outline_thick = 0;
+
+		filter = new OutlineFilter(Std.int(texture.baseTexture.width), Std.int(texture.baseTexture.height), outline_thick, 0x00ff00);
+		filters = [filter];
 
 		all_map_index = get_map_idx(map_origin_index, width_in_tiles_nb, height_in_tiles_nb);
 
@@ -121,7 +130,7 @@ class Building extends MovieClip
 	public function set_position (x: Int, y: Int): Void
 	{
 		x = Std.int(x-IsoMap.singleton.cell_width*(width_in_tiles_nb-1)*0.5);
-		//y = Std.int(y+IsoMap.cell_height*(height_in_tiles_nb-(height_in_tiles_nb>>1))); // pour centrer
+		//y = Std.int(y+IsoMap.cell_height*(height_in_tiles_nb-(height_in_tiles_nb>>1))); // pour centrer par rapport au curseur
 		y = y+IsoMap.singleton.cell_height;
 		
 		position.set(x, y);
@@ -145,17 +154,32 @@ class Building extends MovieClip
 			build();
 		}
 	}
+
 	public function destroy (): Void 
 	{
 		trace("destroy");
 		IsoMap.singleton.destroy_building(this);
 	}
 
+	public function outline_fade_in (): Void
+	{
+		outline_thick = Math.min(outline_thick_max, outline_thick + Main.getInstance().delta_time * _fading_speed * outline_thick_max);
+		filter.set_thickness(outline_thick);
+	}
+
+	public function outline_fade_out (): Void
+	{
+		outline_thick = 0;
+		filter.set_thickness(0);
+		// outline_thick = Math.max(0, outline_thick - Main.getInstance().delta_time * _fading_speed * outline_thick_max);
+		// filter.set_thickness(outline_thick);
+	}
+
 	private function _update (): Void
 	{
 		if (!is_builded)
 		{
-			var color: Int = Std.int((Timer.stamp()-_building_start_time)/(building_end_time-_building_start_time)*0x99);
+			var color: Int = Std.int( (Timer.stamp() - _building_start_time) / (building_end_time-_building_start_time ) * 0x99 );
 
 			tint = (color<<16) | (color<<8) | color; // 0x000000 -> 0x999999
 

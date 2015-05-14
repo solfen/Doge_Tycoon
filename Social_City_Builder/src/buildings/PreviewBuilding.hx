@@ -20,6 +20,8 @@ class PreviewBuilding extends Building
 		interactive = false;
 		buttonMode = false;
 		alpha = 0.7;
+		filter = null;
+		//filters = [];
 	}
 
 	private override function _update (): Void // overriding
