@@ -20,7 +20,7 @@ class MyPopin extends DisplayObjectContainer
 	private var startY:Float;
 	private var background:Sprite;
 	private var modalZone:Sprite;
-	private var childs:Map<String, Sprite> = new Map();
+	private var texts:Map<String, Text> = new Map();
 	private var icons:Map<String, IconPopin> = new Map();
 	private var containers:Map<String, DisplayObjectContainer> = new Map();
 	private var currentChild:Sprite;
@@ -56,8 +56,7 @@ class MyPopin extends DisplayObjectContainer
 
 		background = new Sprite(Texture.fromFrame(texturePath));
 		background.anchor.set(0.5, 0.5);
-		childs["background"] = background;
-		addChild(background);
+		addChild(background);		
 	}
 
 	// creates an IconPopin and puts it in the childs array
@@ -82,7 +81,7 @@ class MyPopin extends DisplayObjectContainer
 		var tempText:Text = new Text(txt, style);
 		tempText.position.x = Std.int(x*background.width-background.width/2);
 		tempText.position.y = Std.int(y*background.height-background.height/2); 
-		childs[name] = tempText;
+		texts[name] = tempText;
 		target.addChild(tempText);
 	}
 	// put a mask on a container so if its childs are outside of the mask they wont be rendered
@@ -146,6 +145,7 @@ class MyPopin extends DisplayObjectContainer
 		icons["scrollingIndicator"] = null;
 		icons["scrollingBar"] = null;
 	}
+
 	// add a DisplayObjectContainer à la popin. attention : Les containers ne sont pas dans childs mais dans containers
 	private function addContainer(name:String,target:DisplayObjectContainer,?x:Float=0,?y:Float=0){
 		var temp:DisplayObjectContainer = new DisplayObjectContainer();
@@ -154,6 +154,7 @@ class MyPopin extends DisplayObjectContainer
 		containers[name] = temp;
 		target.addChild(temp);
 	}
+
 	private function onResize():Void{
 		// * screen width so that it's in % of screen
 		x=Std.int(startX*DeviceCapabilities.width);
@@ -168,7 +169,6 @@ class MyPopin extends DisplayObjectContainer
 	// empty function so that we can capture the clickEvent on the modal and not on anythingBelow
 	private function stopClickEventPropagation(pEvent:InteractionData){}
 	
-	// !! ask mathieu if when we destroy a popin it destroy its childs too !!
 	public function destroy (): Void {
 		Main.getInstance().removeEventListener(Event.GAME_LOOP, scroll);
 	}

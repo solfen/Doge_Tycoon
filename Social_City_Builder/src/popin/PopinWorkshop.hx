@@ -8,15 +8,17 @@ import externs.dat.gui.GUI;
 import utils.events.Event;
 import hud.HudManager;
 import pixi.extras.TilingSprite;
+import utils.game.ParticleSystem;
+import utils.game.Cursor;
 //Popinworkshop is lauched on hangar click
-//PopinBuild inherit form MyPopin who is the base class of all popin
-//Basicly any Popin is just a configuration of Mypopin
+// It's prety huge and I could cut it into three popins but then I would have to choose which one to open in hangard click. And now that I write that I realise that it's not stupid at all so I'll probably do that after I get some sleep.
 class PopinWorkshop extends MyPopin 
 {	
 	private var articleHeight:Float = Texture.fromFrame("PopInQuestBgArticle.png").height;
 	private var hasVerticalScrollBar:Bool = false;
 	private var workShopModel:Dynamic;
 	private var workshopConfig:Dynamic;
+	private var particleSystem:ParticleSystem;
 
 	private var gui:GUI;
 	private var guiListValuesBuy:Array<String> = ["articleBaseX","articleBaseY","articleInterline","articleNameX","articleNameY","articleBuildX","articleBuildY","articlePreviewX","articlePreviewY","startRessourcesX","stepRessourceX","ressourcesY","startQuantityX","quantityStepX","quantityY"];
@@ -37,7 +39,7 @@ class PopinWorkshop extends MyPopin
 	private var quantityStepX:Float = 0.07;
 	private var quantityY:Float = 0.31;
 
-	private var guiListValuesBuild:Array<String> = ["backTextX","backTextY","infoTextX","infoTextY","spaceshipBuildImgX","spaceshipBuildImgY","loadbarBackX","loadbarBackY","loadBarFillX","loadBarFillY","loadBarFillMaxWidth","cancelBuildX","cancelBuildY","buildLoadIconX","buildLoadIconY"];
+	private var guiListValuesBuild:Array<String> = ["backTextX","backTextY","infoTextX","infoTextY","spaceshipBuildImgX","spaceshipBuildImgY","loadbarBackX","loadbarBackY","loadBarFillX","loadBarFillY","loadBarFillMaxWidth","cancelBuildX","cancelBuildY","buildLoadIconX","buildLoadIconY","buildTimeLeftX","buildTimeLeftY"];
 	private var backTextX:Float = 0.3;
 	private var backTextY:Float = 0.18;
 	private var infoTextX:Float = 0.36;
@@ -53,6 +55,8 @@ class PopinWorkshop extends MyPopin
 	private var cancelBuildY:Float = 0.75;
 	private var buildLoadIconX:Float = 0.26;
 	private var buildLoadIconY:Float = 0.76;
+	private var buildTimeLeftX:Float = 0.45;
+	private var buildTimeLeftY:Float = 0.86;
 	private var loadingBar:TilingSprite;
 
 	private var guiListValuesLaunch:Array<String> = ["backTextLaunchX","backTextLaunchY","infoTextLaunchX","infoTextLaunchY","spaceshipLaunchImgX","spaceshipLaunchImgY","destroyShipX","destroyShipY","launchShipX","launchShipY","dogPosY","dogPosX"];
@@ -75,7 +79,7 @@ class PopinWorkshop extends MyPopin
 	{
 		GameInfo.can_map_update = false;
 		super(startX,startY, "PopInBackground.png");
-		workshopConfig = GameInfo.actualWorkshops['51']; // TODO : obtain ID from param
+		workshopConfig = optParams['config']; // TODO : obtain ID from param
 		workShopModel = GameInfo.workshopsModels[workshopConfig.workshopType];
 		headerTextures = [ 
 			'atelier'=>Texture.fromFrame('PopInWorkshopHeader.png'),
@@ -87,7 +91,8 @@ class PopinWorkshop extends MyPopin
 		addIcon(-0.15,-0.15,'PopInTitleWorkshop.png',"popInTitle",this,false);
 		addIcon(-0.4,0.27,'assets/Dogs/DogHangarWorkshop.png',"dog",this,false);
 		workshopConfig.state == 'buy' ? addBuyState(): workshopConfig.state == 'build' ? addBuildState() : addLaunchState();
-		debugGUI(workshopConfig.state);
+
+		//debugGUI('build');
 	}
 
 	// This is an easy way to add articles in the popin
@@ -108,43 +113,64 @@ class PopinWorkshop extends MyPopin
 				addIcon(startRessourcesX+stepRessourceX*j,ressourcesY+y,GameInfo.ressources[ressources[j].name].iconImg,"ressource"+j, containers["verticalScroller"],false);
 				addText(startQuantityX+quantityStepX*j,quantityY+y,'FuturaStdHeavy','13px',ressources[j].quantity,"ressourceQunatity"+j, containers["verticalScroller"],'white');
 			}
+			removeChild(icons["dog"]);
+			addIcon(-0.4,0.27,'assets/Dogs/DogHangarWorkshop.png',"dog",this,false);	
 		}
 	}
 
 	private function addBuildState() : Void { 
 		addIcon(backTextX,backTextY,'PopInWorkshopTextBG.png',"PopInWorkshopTextBG",containers["verticalScroller"],false);
 		addText(infoTextX,infoTextY,'FuturaStdHeavy','15px','Accélérez la production en cliquant !','aideText',containers["verticalScroller"],'white');
-		addIcon(spaceshipBuildImgX,spaceshipBuildImgY,'PopInWorkshopFuseeNotReady'+workShopModel.spaceships[workshopConfig.refSpaceship].ref+'.png',"destinationTextBg",containers["verticalScroller"],false);
-
-		addIcon(loadbarBackX,loadbarBackY,'PopInWorkshopLoadFillBar.png',"destinationTextBg",containers["verticalScroller"],false);
+		addIcon(spaceshipBuildImgX,spaceshipBuildImgY,'PopInWorkshopFuseeNotReady'+workShopModel.spaceships[workshopConfig.shipIndex].ref+'.png',"buildImage",containers["verticalScroller"],true);
+		addIcon(loadbarBackX,loadbarBackY,'PopInWorkshopLoadFillBar.png',"fillBarBack",containers["verticalScroller"],false);
 		loadingBar = new TilingSprite(Texture.fromFrame('PopInWorkshopLoadFill1.png'), 0, 15);
 		loadingBar.anchor.set(0,0.5);
 		loadingBar.position.set(Std.int(loadBarFillX*background.width-background.width/2),Std.int(loadBarFillY*background.height-background.height/2));
 		containers["verticalScroller"].addChild(loadingBar);
 		addIcon(buildLoadIconX,buildLoadIconY,'PopInWorkshopLoadIcon.png',"buildLoadIcon",containers["verticalScroller"],false);
 		addIcon(cancelBuildX,cancelBuildY,'PopInWorkshopCancelButtonNormal.png',"cancelBuild",containers["verticalScroller"],true,'PopInWorkshopCancelButtonActive.png',true);
-		workshopConfig.buildTimeStart = haxe.Timer.stamp();
-		refreshBuildBar();
+		removeChild(icons["dog"]);
+		addIcon(-0.4,0.27,'assets/Dogs/DogHangarWorkshop.png',"dog",this,false);	
+		addText(buildTimeLeftX,buildTimeLeftY,'FuturaStdHeavy','15px','','buildtTimeLeft',containers["verticalScroller"],'white');
+		
+		particleSystem = new ParticleSystem("PopInWorkshopLoadIcon.png");
+		addChild(particleSystem);
+
 		Main.getInstance().addEventListener(Event.GAME_LOOP, refreshBuildBar);
+		icons["buildImage"].mouseover = function(data:InteractionData){
+			Cursor.getInstance().setCursorToHammer();
+		}
+		icons["buildImage"].mouseout = function(data:InteractionData){
+			Cursor.getInstance().setCursorToDoge();
+		}
 	}
+
 	private function addLaunchState() : Void {
 		addIcon(backTextLaunchX,backTextLaunchY,'PopInWorkshopTextBG.png',"PopInWorkshopTextBG",containers["verticalScroller"],false);
 		addText(infoTextLaunchX,infoTextLaunchY,'FuturaStdHeavy','15px','La fussée est prête !','aideText',containers["verticalScroller"],'white');
-		addIcon(spaceshipLaunchImgX,spaceshipLaunchImgY,'PopInWorkshopFuseeReady'+workShopModel.spaceships[workshopConfig.refSpaceship].ref+'.png',"destinationTextBg",containers["verticalScroller"],false);
+		addIcon(spaceshipLaunchImgX,spaceshipLaunchImgY,'PopInWorkshopFuseeReady'+workShopModel.spaceships[workshopConfig.shipIndex].ref+'.png',"destinationTextBg",containers["verticalScroller"],false);
 		addIcon(destroyShipX,destroyShipY,'PopInWorkshopDestroyButtonNormal.png',"destroyShip",containers["verticalScroller"],true,'PopInWorkshopDestroyButtonActive.png',true);
 		addIcon(launchShipX,launchShipY,'PopInWorkshopLaunchButtonNormal.png',"launchShip",containers["verticalScroller"],true,'PopInWorkshopLaunchButtonActive.png',true);
 		removeChild(icons["dog"]);
 		addIcon(dogPosX,dogPosY,'assets/Dogs/DogPasDeTir.png',"dog",this,false);		
 	}
+
 	private function refreshBuildBar() {
-		var progressPercent = ((haxe.Timer.stamp() - workshopConfig.buildTimeStart) /  workShopModel.spaceships[workshopConfig.refSpaceship].constructionTime) ;
+		var timeElapsed:Float = haxe.Timer.stamp() - workshopConfig.buildTimeStart;
+		var timeLeft:Float = Std.int(workShopModel.spaceships[workshopConfig.shipIndex].constructionTime - timeElapsed);
+		var progressPercent:Float = timeElapsed /  workShopModel.spaceships[workshopConfig.shipIndex].constructionTime;
 		loadingBar.width = progressPercent * (loadBarFillMaxWidth*background.width-background.width/2);
 		if(progressPercent >= 1){
+			removeChild(particleSystem);
+			particleSystem.destroy();
+			particleSystem = null;
 			workshopConfig.state = 'launch';
 			Main.getInstance().removeEventListener(Event.GAME_LOOP, refreshBuildBar);
 			containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
+			Cursor.getInstance().setCursorToDoge();
 			addLaunchState();
 		}
+		texts['buildtTimeLeft'].setText('Temps restant : ' + utils.game.FormatTools.formatSeconds(timeLeft));
 	}
 
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
@@ -173,16 +199,31 @@ class PopinWorkshop extends MyPopin
 				HudManager.getInstance().updateChildsText();
 				PopinManager.getInstance().updateInventory();
 				workshopConfig.buildTimeStart = haxe.Timer.stamp();
-				close();
+				workshopConfig.state = "build";
+				workshopConfig.shipIndex = index;
+				containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
+				addBuildState();
 			}
 		}
+		else if(pEvent.target._name == 'buildImage'){
+			particleSystem.startParticlesEmission(pEvent.originalEvent.clientX-0.35*Cursor.getInstance().currentCursorImg.width, pEvent.originalEvent.clientY+0.1*Cursor.getInstance().currentCursorImg.height);
+			workshopConfig.buildTimeStart -= workShopModel.spaceships[workshopConfig.shipIndex].constructionTime * workShopModel.spaceships[workshopConfig.shipIndex].clickBonus;
+		}
+		else if(pEvent.target._name == 'cancelBuild'){
+			workshopConfig.state = 'buy';
+			Main.getInstance().removeEventListener(Event.GAME_LOOP, refreshBuildBar);
+			containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
+			addBuyState();
+		}
 		else if(pEvent.target._name == 'launchShip'){
-			GameInfo.shipToLaunch = workShopModel.spaceships[workshopConfig.refSpaceship].ref;
+			workshopConfig.state = 'buy';
+			GameInfo.shipToLaunch = workShopModel.spaceships[workshopConfig.shipIndex].ref;
 			close();
 		}
 		else if(pEvent.target._name == 'destroyShip'){
 			workshopConfig.state = 'buy';
-			close();
+			containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
+			addBuyState();
 		}
 	}
 	private function close(){
@@ -202,6 +243,15 @@ class PopinWorkshop extends MyPopin
 			gui.add(this, i,-1,1).step(0.0001).onChange(function(newValue) {
 				refresh(type);
 			});
+		}
+	}
+	override public function destroy() : Void {
+		super.destroy();
+		if(particleSystem != null){
+			removeChild(particleSystem);
+			particleSystem.destroy();
+			particleSystem = null;
+			Main.getInstance().removeEventListener(Event.GAME_LOOP,refreshBuildBar);
 		}
 	}
 }

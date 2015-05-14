@@ -348,56 +348,261 @@ class GameInfo
  			}, 
  		],
  	};
- 	public static var workshopsModels:Map<String,Dynamic> = [
- 		'hangarNamok'=> {
- 			destination:'Namok',
- 			previewImg: 'IconNamek.png',
+ 	public static var workshopsModels:Map<Int,Dynamic> = [
+ 		Building.HANGAR_JAUNE=> {
+ 			destination:'SprungField',
+ 			previewImg: 'IconSpringfield.png',
  			spaceships: [
  				{
- 					name: "Fusée Bleue Niveau 1",
- 					previewImg: "IconFuseeBleu1.png",
- 					ref: 'Blue1',
+ 					name: "Fusée jaune Niveau 1",
+ 					previewImg: "IconFuseeJaune1.png",
+ 					ref: 'JauneLv1',
  					ressources: [
 		 				{"name":"fric","quantity":"1000"},
 		 				{"name":"poudre0","quantity":"10"},
 		 				{"name":"poudre1","quantity":"25"},
  					],
- 					constructionTime: 60 //sec
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.01
 	 			},
  				{
- 					name: "Fusée Bleue Niveau 2",
- 					ref: 'Blue2',
+ 					name: "Fusée jaune niveau 2",
+ 					ref: 'JauneLv2',
+ 					previewImg: "IconFuseeJaune2.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.005
+	 			},
+ 				{
+ 					name: "Fusée jaune niveau 3",
+ 					ref: 'JauneLv3',
+ 					previewImg: "IconFuseeJaune3.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.0025
+	 			},
+ 			],
+ 		},
+ 		Building.HANGAR_VERT=> {
+ 			destination:'Modor',
+ 			previewImg: 'IconPlaneteMilieu.png',
+ 			spaceships: [
+ 				{
+ 					name: "Fusée verte Niveau 1",
+ 					previewImg: "IconFuseeVert1.png",
+ 					ref: 'VertLv1',
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.01
+	 			},
+ 				{
+ 					name: "Fusée verte niveau 2",
+ 					ref: 'VertLv2',
+ 					previewImg: "IconFuseeVert2.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.005
+	 			},
+ 				{
+ 					name: "Fusée verte niveau 3",
+ 					ref: 'VertLv3',
+ 					previewImg: "IconFuseeVert3.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.0025
+	 			},
+ 			],
+ 		}, 		
+ 		Building.HANGAR_CYAN=> {
+ 			destination:'Namok',
+ 			previewImg: 'IconNamek.png',
+ 			spaceships: [
+ 				{
+ 					name: "Fusée cyan Niveau 1",
+ 					previewImg: "IconFuseeCyan1.png",
+ 					ref: 'CyanLv1',
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.01
+	 			},
+ 				{
+ 					name: "Fusée cyan niveau 2",
+ 					ref: 'CyanLv2',
+ 					previewImg: "IconFuseeCyan2.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.005
+	 			},
+ 				{
+ 					name: "Fusée cyan niveau 3",
+ 					ref: 'CyanLv3',
+ 					previewImg: "IconFuseeCyan3.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.0025
+	 			},
+ 			],
+ 		}, 		
+ 		Building.HANGAR_BLEU=> {
+ 			destination:'Terre',
+ 			previewImg: 'IconTerre.png',
+ 			spaceships: [
+ 				{
+ 					name: "Fusée bleue Niveau 1",
+ 					previewImg: "IconFuseeBleu1.png",
+ 					ref: 'BleuLv1',
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.01
+	 			},
+ 				{
+ 					name: "Fusée bleue niveau 2",
+ 					ref: 'BleuLv2',
  					previewImg: "IconFuseeBleu2.png",
  					ressources: [
 		 				{"name":"fric","quantity":"1000"},
 		 				{"name":"poudre0","quantity":"10"},
 		 				{"name":"poudre1","quantity":"25"},
  					],
- 					constructionTime: 60 //sec
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.005
 	 			},
  				{
- 					name: "Fusée Bleue Niveau 3",
- 					ref: 'Blue3',
+ 					name: "Fusée bleue niveau 3",
+ 					ref: 'BleuLv3',
  					previewImg: "IconFuseeBleu3.png",
  					ressources: [
 		 				{"name":"fric","quantity":"1000"},
 		 				{"name":"poudre0","quantity":"10"},
 		 				{"name":"poudre1","quantity":"25"},
  					],
- 					constructionTime: 60 //sec
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.0025
 	 			},
  			],
- 		}
+ 		}, 		
+ 		Building.HANGAR_VIOLET=> {
+ 			destination:'Wundërland',
+ 			previewImg: 'IconWonderland.png',
+ 			spaceships: [
+ 				{
+ 					name: "Fusée violete Niveau 1",
+ 					previewImg: "IconFuseeViolet1.png",
+ 					ref: 'VioletLv1',
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.01
+	 			},
+ 				{
+ 					name: "Fusée violete niveau 2",
+ 					ref: 'VioletLv2',
+ 					previewImg: "IconFuseeViolet2.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.005
+	 			},
+ 				{
+ 					name: "Fusée violete niveau 3",
+ 					ref: 'VioletLv3',
+ 					previewImg: "IconFuseeViolet3.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.0025
+	 			},
+ 			],
+ 		}, 		
+ 		Building.HANGAR_ROUGE=> {
+ 			destination:'StarWat',
+ 			previewImg: 'IconPlaneteDesEtoiles.png',
+ 			spaceships: [
+ 				{
+ 					name: "Fusée rouge niveau 1",
+ 					previewImg: "IconFuseeOrange1.png",
+ 					ref: 'OrangeLv1',
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.01
+	 			},
+ 				{
+ 					name: "Fusée rouge niveau 2",
+ 					ref: 'OrangeLv2',
+ 					previewImg: "IconFuseeOrange2.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.005
+	 			},
+ 				{
+ 					name: "Fusée rouge niveau 3",
+ 					ref: 'OrangeLv3',
+ 					previewImg: "IconFuseeOrange3.png",
+ 					ressources: [
+		 				{"name":"fric","quantity":"1000"},
+		 				{"name":"poudre0","quantity":"10"},
+		 				{"name":"poudre1","quantity":"25"},
+ 					],
+ 					constructionTime: 60, //sec
+ 					clickBonus: 0.0025
+	 			},
+ 			],
+ 		},
  	];
- 	public static var actualWorkshops:Map<String,Dynamic> = [
- 		'51'=> {
- 			workshopType: 'hangarNamok',
- 			level: 2,
- 			state: 'launch', // || 'buy' || 'build'
- 			refSpaceship: 0,
- 			buildTimeStart: 0,
- 		}
- 	];
+
  	public static var loaderCompletion:Float = 0; // when we're loading the game we need to know the % of completion
  	public static var dogeNumber:Float = 20;
  	public static var dogeMaxNumber:Float = 25;

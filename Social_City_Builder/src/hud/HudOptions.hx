@@ -19,7 +19,5 @@ class HudOptions extends IconHud
 		var curName:String = PopinManager.getInstance().getCurrentPopinName();
 		if(curName != "PopinInventory")
 			PopinManager.getInstance().closeCurentPopin();
-		if(curName != "PopinWorkshop")
-			PopinManager.getInstance().openPopin("PopinWorkshop", 0.5, 0.5);
 	}
 }
