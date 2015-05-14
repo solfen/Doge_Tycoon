@@ -4,6 +4,7 @@ import pixi.display.DisplayObjectContainer;
 import pixi.display.Sprite;
 import utils.events.Event;
 import utils.game.InputInfos;
+import utils.game.Cursor;
 import pixi.InteractionData;
 import pixi.textures.Texture;
 import hud.HudManager;
@@ -34,8 +35,7 @@ class GameScene extends DisplayObjectContainer
 		addChild(IsoMap.singleton);
 		addChild(HudManager.getInstance());
 		addChild(PopinManager.getInstance());
-
-		Main.getInstance().addEventListener(Event.GAME_LOOP, doAction);
+		addChild(Cursor.getInstance());
 		Main.getInstance().addEventListener(Event.RESIZE, resize);
 	}
 

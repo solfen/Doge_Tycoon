@@ -81,7 +81,7 @@ class Building extends MovieClip
 
 	public function new (p_type: Int, p_index: Int, pX: Int, pY: Int): Void
 	{
-		_cheat_ratio = 0.3; // pour construire + vite, parce que c'est long sinon !
+		_cheat_ratio = 0.01; // pour construire + vite, parce que c'est long sinon !
 		
 		type = p_type;
 		lvl = Building.LVL_1;
@@ -98,7 +98,6 @@ class Building extends MovieClip
 		anchor.set(0, 1);
 		set_position(pX, pY);
 		interactive = true;
-		buttonMode = true;
 		loop = true;
 		animationSpeed = 0.333;
 		_fading_speed = 0.8;
@@ -192,6 +191,7 @@ class Building extends MovieClip
 		else if (GameInfo.isDestroyMode)
 		{
 			destroy();
+			return;
 		}
 	}
 

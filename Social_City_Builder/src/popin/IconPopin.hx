@@ -25,7 +25,6 @@ class IconPopin extends Sprite
 		y = pY;
 		_name = pName;
 		interactive = isInteractive;
-		buttonMode = isInteractive;
 		if(isInteractive && !isSelectButton){
 			mouseover = onMouseOver;
 			mouseout  = onMouseOut;

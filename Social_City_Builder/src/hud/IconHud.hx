@@ -29,7 +29,6 @@ class IconHud extends Sprite {
 
 		if(isInteractive){
 			interactive 	= true;
-			buttonMode 		= true;
 			mousedown 		= onMouseDown;
 			mouseup  		= onMouseUp;
 			mouseupoutside 	= onMouseUp;
