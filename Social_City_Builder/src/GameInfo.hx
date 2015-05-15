@@ -93,7 +93,7 @@ class GameInfo
  			{
  				previewImg: 'IconDogWorkshop',
  				title: 'Premier atelier',
- 				description: "Les ateliers servent à construire les fussées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les batiments peuvent être\nachetés depuis le menu de construction",
+ 				description: "Les ateliers servent à construire les fusées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les bâtiments peuvent être\nachetés depuis le menu de construction",
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
@@ -102,7 +102,7 @@ class GameInfo
  			{
  				previewImg: 'IconDogWorkshop',
  				title: "Première fusée",
- 				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et comencez la\n construction de la fusée. N'oubliez pas de fouett..\n*hum* motiver vos employés en cliquant sur\n l'icone dans le atelier",
+ 				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et commencez la\n construction de la fusée. N'oubliez pas de fouet..\n*hum* motiver vos employés en cliquant sur\n l’icône dans le atelier",
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
@@ -110,8 +110,8 @@ class GameInfo
  			},
  			{
  				previewImg: 'IconDogAstro',
- 				title: "La conquète de l'espace !",
- 				description: "Votre première fusée est prète à partir !\nVous n'avez plus qu'a appuyer sur le gros\nboutton vert pour la lancer. Ca ne devrait pas être\ntrop compliqué non ?",
+ 				title: "La conquête de l'espace !",
+ 				description: "Votre première fusée est prête à partir !\nVous n'avez plus qu'a appuyer sur le gros\nbouton vert pour la lancer. Ça ne devrait pas être\ntrop compliqué non ?",
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
@@ -183,7 +183,7 @@ class GameInfo
 	 		"Os3" => {
 	 			name: "Os d'or x500",
 	 			previewImg: 'PopInShopArticlePreview4Os.png',
-	 			text: "Aucune description ne poura définir\nprécisément la qualitée de ce pack",
+	 			text: "Aucune description ne pourra définir\nprécisément la qualité de ce pack",
 	 			price: 25,
 	 		}, 		
 	 		"Os4" => {
@@ -313,7 +313,7 @@ class GameInfo
  			{
 				buildingID: Building.ENTREPOT,
  				previewImg: 'PopInBuiltArticlePreviewEntrepot.png',
- 				title: 'Entrepot',
+ 				title: 'Entrepôt',
  				description: "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.",
  				hardPrice: 3,
  				ressources: [
@@ -338,7 +338,7 @@ class GameInfo
 				buildingID: Building.MUSEE,
  				previewImg: 'PopInBuiltArticlePreviewMusee.png',
  				title: 'Musée',
- 				description: "Le Mussee est l'endroit ou vous présentez vos artefacts aliens au monde.\nEt en plus ça rapporte un max",
+ 				description: "Le Mussée est l'endroit ou vous présentez vos artefacts aliens au monde.\nEt en plus ça rapporte un max",
  				hardPrice: 3,
  				ressources: [
  					{"name":"fric","quantity":1000},
@@ -362,7 +362,7 @@ class GameInfo
 		 				{"name":"poudre0","quantity":"10"},
 		 				{"name":"poudre1","quantity":"25"},
  					],
- 					constructionTime: 60, //sec
+ 					constructionTime: 1, //sec
  					clickBonus: 0.01
 	 			},
  				{
@@ -522,7 +522,7 @@ class GameInfo
  			previewImg: 'IconWonderland.png',
  			spaceships: [
  				{
- 					name: "Fusée violete Niveau 1",
+ 					name: "Fusée violette Niveau 1",
  					previewImg: "IconFuseeViolet1.png",
  					ref: 'VioletLv1',
  					ressources: [
@@ -534,7 +534,7 @@ class GameInfo
  					clickBonus: 0.01
 	 			},
  				{
- 					name: "Fusée violete niveau 2",
+ 					name: "Fusée violette niveau 2",
  					ref: 'VioletLv2',
  					previewImg: "IconFuseeViolet2.png",
  					ressources: [
@@ -546,7 +546,7 @@ class GameInfo
  					clickBonus: 0.005
 	 			},
  				{
- 					name: "Fusée violete niveau 3",
+ 					name: "Fusée violette niveau 3",
  					ref: 'VioletLv3',
  					previewImg: "IconFuseeViolet3.png",
  					ressources: [
