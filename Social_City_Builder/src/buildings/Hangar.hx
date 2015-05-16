@@ -6,10 +6,7 @@ import popin.PopinManager;
 //import utils.game.InputInfos;
 import pixi.InteractionData;
 
-/**
- * ...
- * @author Lucien Boudy
- */
+
 class Hangar extends Building
 {
 	private var workshopConfig:Map<String,Dynamic> = [

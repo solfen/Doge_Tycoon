@@ -609,6 +609,9 @@ class GameInfo
  	public static var isUpgradeMode:Bool = false;
  	public static var isDestroyMode:Bool = false;
  	public static var stockPercent:Float = 50;
+ 	public static var faithPercent:Float = 0.5;
+ 	public static var faithLossSpeed:Float = 0.001;
+ 	public static var prayerEffect:Float = 0.005;
  	public static var building_2_build: Int = Building.PAS_DE_TIR;
  	public static var shipToLaunch: String;
  	public static var can_map_update: Bool = true; 	

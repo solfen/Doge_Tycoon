@@ -6,7 +6,8 @@ import popin.PopinQuests;
 import popin.PopinWorkshop;
 import popin.PopinInventory;
 import popin.PopinShop;
-import popin.MyPopin;
+import popin.PopinShop;
+import popin.PopinChurch;
 import pixi.InteractionData;
 import pixi.display.DisplayObjectContainer;
 
@@ -26,9 +27,9 @@ class PopinManager extends DisplayObjectContainer
 	public function new()  {
 		super();
 	}
-	public function updateInventory(){
-		if(isPopinOpen("PopinInventory")){
-			childs["PopinInventory"].update();
+	public function updatePopin(popinName:String){
+		if(isPopinOpen(popinName)){
+			childs[popinName].update();
 		}
 	}
 	public function getCurrentPopinName():String{

@@ -3,7 +3,6 @@ import popin.MyPopin;
 import popin.PopinManager;
 import pixi.InteractionData;
 import pixi.textures.Texture;
-import pixi.display.DisplayObjectContainer;
 import externs.dat.gui.GUI;
 import utils.events.Event;
 import hud.HudManager;
@@ -197,7 +196,7 @@ class PopinWorkshop extends MyPopin
 					GameInfo.ressources[i.name].userPossesion -= i.quantity;
 				}
 				HudManager.getInstance().updateChildsText();
-				PopinManager.getInstance().updateInventory();
+				PopinManager.getInstance().updatePopin("PopinInventory");
 				workshopConfig.buildTimeStart = haxe.Timer.stamp();
 				workshopConfig.state = "build";
 				workshopConfig.shipIndex = index;
