@@ -1,0 +1,55 @@
+{
+"frames": {
+	"PopinChurchClick_0.png": {
+		"frame": {"x":704, "y":354, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	},
+	"PopinChurchClick_1.png": {
+		"frame": {"x":704, "y":0, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	},
+	"PopinChurchClick_2.png": {
+		"frame": {"x":352, "y":708, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	},
+	"PopinChurchClick_3.png": {
+		"frame": {"x":704, "y":708, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	},
+	"PopinChurchClick_4.png": {
+		"frame": {"x":352, "y":0, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	},
+	"PopinChurchClick_5.png": {
+		"frame": {"x":0, "y":708, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	},
+	"PopinChurchClick_6.png": {
+		"frame": {"x":0, "y":354, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	},
+	"PopinChurchClick_7.png": {
+		"frame": {"x":0, "y":0, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	},
+	"PopinChurchClick_8.png": {
+		"frame": {"x":352, "y":354, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 1056, "h": 1062},
+	"scale": "1"
+}
+}

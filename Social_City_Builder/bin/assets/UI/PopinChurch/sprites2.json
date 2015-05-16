@@ -1,0 +1,40 @@
+{
+"frames": {
+	"PopInChurchFaithIcon.png": {
+		"frame": {"x":352, "y":37, "w":62, "h":62},
+		"spriteSourceSize": {"x":0,"y":0,"w":62,"h":62},
+		"sourceSize": {"w":62,"h":62}
+	},
+	"PopInChurchFaithParticule.png": {
+		"frame": {"x":352, "y":37, "w":62, "h":62},
+		"spriteSourceSize": {"x":0,"y":0,"w":62,"h":62},
+		"sourceSize": {"w":62,"h":62}
+	},
+	"PopInChurchFillBar.png": {
+		"frame": {"x":0, "y":0, "w":373, "h":37},
+		"spriteSourceSize": {"x":0,"y":0,"w":373,"h":37},
+		"sourceSize": {"w":373,"h":37}
+	},
+	"PopInChurchTextBG.png": {
+		"frame": {"x":0, "y":574, "w":311, "h":32},
+		"spriteSourceSize": {"x":0,"y":0,"w":311,"h":32},
+		"sourceSize": {"w":311,"h":32}
+	},
+	"PopInTitleEglise.png": {
+		"frame": {"x":0, "y":391, "w":352, "h":183},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":183},
+		"sourceSize": {"w":352,"h":183}
+	},
+	"PopinChurchClick_9.png": {
+		"frame": {"x":0, "y":37, "w":352, "h":354},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":354},
+		"sourceSize": {"w":352,"h":354}
+	}
+
+},
+"meta": {
+	"image": "sprites2.png",
+	"size": {"w": 414, "h": 606},
+	"scale": "1"
+}
+}
