@@ -31,14 +31,8 @@ class ParticleSystem extends SpriteBatch
 		lifeTime = pLifeTime;
 		Main.getInstance().addEventListener(Event.GAME_LOOP, animate);
 	}
-	private function createParticles(nb){
-		for(i in 0...nb){
-			var particle:Particle = new Particle(baseTexture);
-			particle.visible = false;
-			particle.anchor.set(0.5,0.5);
-			particlesArr.push(particle);
-			addChild(particle);
-		}
+	public function setParticlesNb(pParticlesNb:Int) : Void {
+		particlesNb = pParticlesNb;
 	}
 	public function startParticlesEmission(startX:Float,startY:Float){
 		var particlesNeeded:Int = particlesNb - (particlesArr.length - visiblesParticles);
@@ -59,6 +53,16 @@ class ParticleSystem extends SpriteBatch
 			cpt++;
 		}
 		visiblesParticles += partcilesEmited;
+	}
+
+	private function createParticles(nb){
+		for(i in 0...nb){
+			var particle:Particle = new Particle(baseTexture);
+			particle.visible = false;
+			particle.anchor.set(0.5,0.5);
+			particlesArr.push(particle);
+			addChild(particle);
+		}
 	}
 
 	private function animate(){

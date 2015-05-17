@@ -8,6 +8,7 @@ import popin.PopinInventory;
 import popin.PopinShop;
 import popin.PopinShop;
 import popin.PopinChurch;
+import popin.PopinMusee;
 import pixi.InteractionData;
 import pixi.display.DisplayObjectContainer;
 

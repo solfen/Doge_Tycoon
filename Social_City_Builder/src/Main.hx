@@ -199,7 +199,8 @@ class Main extends EventDispatcher
 		Browser.window.requestAnimationFrame(cast gameLoop);
 		render();		
 		dispatchEvent(new Event(Event.GAME_LOOP));
-		GameInfo.faithPercent -= Math.max(GameInfo.faithLossSpeed * delta_time,0);
+		GameInfo.faithPercent = Math.max(GameInfo.faithPercent - GameInfo.faithLossSpeed * delta_time,0);
+		GameInfo.ressources['fric'].userPossesion += GameInfo.museeSoftSpeed * delta_time;
 		popin.PopinManager.getInstance().updatePopin("PopinChurch");
 		stats.end();
 	}
