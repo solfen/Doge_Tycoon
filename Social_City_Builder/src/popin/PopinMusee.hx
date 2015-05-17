@@ -12,12 +12,18 @@ import pixi.InteractionData;
 class PopinMusee extends MyPopin 
 {	
 	private var hasVerticalScrollBar:Bool = false;
+	private var articleWidth:Float = Texture.fromFrame("PopInMuseeArticleBg.png").width;
+	private var articleInterline:Float = 0.08;
 	private var clickImage:MovieClip;
 	private var clickImageAnimationSpeed:Float = 0.25;
 	private var clickImageTexturesNb:Int = 10;
 	private var clickImageTextures:Array<Texture> = [];
 	private var particleSystem:ParticleSystem;
-	private var faithBar:TilingSprite;
+	private var completionBar:TilingSprite;
+	private var completionBarMaxWidth:Float = 0.87;
+	private var currentTab:String = "myArtefactsTab";
+	private var planetsNames:Array<String> = ["SprungField","Mordor","Namok","Terre","Wundërland","StarWat"];
+	private var lastPlanetIcon:IconPopin;
 
 	private var gui:GUI;
 	private var guiValuesList:Array<String> = ["clickImageAnimationSpeed","headerX","headerY","backTextX","backTextY","infoTextX","infoTextY","clickImageX","clickImageY","museeInfoX","museeInfoY"];
@@ -35,31 +41,69 @@ class PopinMusee extends MyPopin
 	private var minParticlesNb:Int = 3;
 	private var cheatDogeClick:Float = 1;
 
+	private var guiValuesListArtefacts:Array<String> = ["completionBarMaxWidth","planetTabX","planetTabY","planetTabInterval","articleInterline","articleBaseX","articleBaseY","actionButtonX","actionButtonY","articleImageX","articleImageY","articleNbX","articleNbY","headerMyAretefactsX","headerMyAretefactsY","backFillBarX","backFillBarY","loadbarStartX","loadbarStartY","completionInfoX","completionInfoY","scrollBackroundX","scrollBackroundY","scrollBarX","scrollBarY","scrollIndicOffsetX","scrollIndicOffsetY"];
+	private var headerMyAretefactsX:Float = 0.58;
+	private var headerMyAretefactsY:Float = 0.05;
+	private var backFillBarX:Float = 0.13;
+	private var backFillBarY:Float = 0.15;
+	private var loadbarStartX:Float = 0.319;
+	private var loadbarStartY:Float = 0.168;
+	private var completionInfoX:Float = 0.80;
+	private var completionInfoY:Float = 0.16;
+	private var scrollBackroundX:Float = 0.11;
+	private var scrollBackroundY:Float = 0.5;
+	private var scrollBarX:Float = 0.82;
+	private var scrollBarY:Float = 0.84;
+	private var scrollIndicOffsetX:Float = -0.415;
+	private var scrollIndicOffsetY:Float = 0.025;
+
+	private var articleBaseX:Float = 0.149;
+	private var articleBaseY:Float = 0.539;
+	private var actionButtonX:Float = 0.214;
+	private var actionButtonY:Float = 0.74;
+	private var articleImageX:Float = 0.158;
+	private var articleImageY:Float = 0.55;
+	private var articleNbX:Float = 0.171;
+	private var articleNbY:Float = 0.755;
+
+	private var planetTabX:Float = 0.93;
+	private var planetTabY:Float = 0.13;
+	private var planetTabInterval:Float = 0.128;
+
+
 	private function new(?startX:Float,?startY:Float,?optParams:Map<String,Dynamic>) 
 	{
 		GameInfo.can_map_update = false;
 		super(startX,startY, "PopInBackground.png");
-		headerTextures = [ 
-			'acceuil'=>Texture.fromFrame('PopInHeaderAccueilMusee.png'),
-			'monMusee'=>Texture.fromFrame('PopInHeaderMonMusee.png'),
-			'musseeAmis'=>Texture.fromFrame('PopInHeaderMuseeAmis.png'),
-		];
-		addContainer('main', this);
-		addAll();
-
-		//debugGUI();
+		articleWidth /= background.height; // background is defiened in MyPopin
+		addBasePopin();
+		changeTab();
+		debugGUI();
 	}
 
-	private function addAll() : Void {
-		addHeader(headerX,headerY,headerTextures['acceuil']);
-		addIcon(0.95, 0,'closeButtonNormal.png',"closeButton",containers['main'],true,'closeButtonActive.png',true);
-		addIcon(-0.15,-0.15,'PopInMuseeTitle.png',"popInTitle",containers['main'],false);
-		addIcon(-0.45,0.27,'assets/Dogs/DogMusee.png',"dog",containers['main'],false);
+	private function addBasePopin() : Void {
+		headerTextures = [ 
+			'homeTab'=>Texture.fromFrame('PopInHeaderAccueilMusee.png'),
+			'myArtefactsTab'=>Texture.fromFrame('PopInHeaderMonMusee.png'),
+			'amisArtefactsTab'=>Texture.fromFrame('PopInHeaderMuseeAmis.png'),
+		];
+		addHeader(headerX,headerY,headerTextures[currentTab]);
+		addContainer('main', this);
+		addIcon(-0.02,0.17,'PopInOngletHomeNormal.png',"homeTab",this,true,'PopInOngletHomeActive.png',true);
+		addIcon(-0.02,0.29,'PopInOngletArtefactNormal.png',"myArtefactsTab",this,true,'PopInOngletArtefactActive.png',true);
+		addIcon(-0.02,0.41,'PopInOngletArtefactAmisNormal.png',"amisArtefactsTab",this,true,'PopInOngletArtefactAmisActive.png',true);
+
+		addIcon(0.95, 0,'closeButtonNormal.png',"closeButton",this,true,'closeButtonActive.png',true);
+		addIcon(-0.15,-0.15,'PopInMuseeTitle.png',"popInTitle",this,false);
+		addIcon(-0.7,0.4,'assets/Dogs/DogMusee.png',"dog",this,false);
+	}
+
+	private function addHomeTab() : Void {
+		header.position.set(Std.int(headerX*background.width-background.width/2),Std.int(headerY*background.height-background.height/2));
 		addIcon(backTextX,backTextY,'PopInMuseeTextBG.png',"PopInMuseeTextBG",containers['main'],false);
 		addText(infoTextX,infoTextY,'FuturaStdHeavy','15px','Une visite par clic !','aideText',containers['main'],'white');
 		addText(museeInfoX,museeInfoY,'FuturaStdHeavy','16px','','museeInfo',containers['main'],'white');
 
-		
 		for(i in 0...clickImageTexturesNb){
 			clickImageTextures.push(Texture.fromFrame("PopinMuseeClick_"+i+".png"));
 		}
@@ -73,14 +117,62 @@ class PopinMusee extends MyPopin
 
 		particleSystem = new ParticleSystem("PopInMuseeParticule.png");
 		addChild(particleSystem);
-
+		
 		update();
 	}
+	private function addMyArtefactsTab() : Void {
+		addContainer('verticalScroller', this);
+		header.position.set(Std.int(headerMyAretefactsX*background.width-background.width/2),Std.int(headerMyAretefactsY*background.height-background.height/2));
+		addIcon(backFillBarX,backFillBarY,'PopInMuseeCompletionFillBar.png',"completionFillBar",containers['main'],false);
 
-	override public function update() : Void {
-		var speed:String = Std.string(GameInfo.museeSoftSpeed);
-		speed  = speed.substr(0, speed.indexOf('.')+3);
-		texts['museeInfo'].setText('Dogeflooz/sec : ' + speed);
+		addIcon(loadbarStartX,loadbarStartY,'PopInMuseeCompletionFill1.png',"fillLeft",containers['main'],false);
+		completionBar = new TilingSprite(Texture.fromFrame('PopInMuseeCompletionFill2.png'), 1, icons["fillLeft"].height);
+		completionBar.anchor.set(0,0);
+		completionBar.position.set(icons["fillLeft"].position.x+icons["fillLeft"].width,icons["fillLeft"].position.y);
+		containers['main'].addChild(completionBar);
+		addIcon(0,loadbarStartY,'PopInMuseeCompletionFill3.png',"fillRight",containers['main'],false);
+		icons['fillRight'].position.x = completionBar.position.x+completionBar.width;
+		addText(completionInfoX,completionInfoY,'FuturaStdHeavy','15px','','completionInfo',containers['main'],'white');
+
+		for(i in 0...6){
+			addIcon(planetTabX,planetTabY+i*planetTabInterval,'PopInMuseeBoutonNormal_'+i+'.png',"planetTab"+i,containers['main'],true,'PopInMuseeBoutonActive_'+i+'.png',true);
+		}
+		addIcon(scrollBackroundX,scrollBackroundY,'PopInMuseeScrollBackground.png',"contentBackground",containers['main'],false);
+		//addMask(icons["contentBackground"].x+3, icons["contentBackground"].y, icons["contentBackground"].width-6, icons["contentBackground"].height,containers["verticalScroller"]);
+		addIcon(icons["contentBackground"].x,icons["contentBackground"].y,'PopInScrollOverlay.png',"scrollOverlay",containers['main'],false);
+	}
+	private function addAmisArtefactsTab() : Void {
+
+	}
+	private function addArtefactPlanet(ItemsConfig:Array<Dynamic>){
+		var cpt:Int = 0;
+		var itemOwnedNb:Int = 0;
+		if(hasVerticalScrollBar){
+			removeVerticalScrollBar();
+			hasVerticalScrollBar = false;
+		}
+		for(i in ItemsConfig){
+			var x:Float = cpt*(articleWidth+articleInterline);
+			addIcon(articleBaseX+x,articleBaseY,'PopInMuseeArticleBg.png',"articleBase",containers["verticalScroller"],false);
+			addIcon(articleImageX+x,articleImageY,i.img,"articleImage",containers["verticalScroller"],false);
+			addText(articleNbX+x,articleNbY,'FuturaStdHeavy','15px','x'+i.userPossesion,'articleNb',containers["verticalScroller"],'white');
+			if(i.userPossesion > 0){
+				itemOwnedNb++;
+			}
+			if(i.userPossesion > 1){
+				addIcon(actionButtonX+x,actionButtonY,'PopInMuseeBoutonDonnerNormal.png',"actionButton"+cpt,containers["verticalScroller"],true,'PopInMuseeBoutonDonnerActive.png',true);
+			}
+			if( (cpt*(articleWidth+articleInterline)+articleWidth)*background.width > icons["contentBackground"].width && !hasVerticalScrollBar){
+				addScrollBar(false,scrollBarX,scrollBarY,scrollIndicOffsetX,scrollIndicOffsetY,containers["main"]);
+				hasVerticalScrollBar = true;
+			}
+			cpt++;
+		}
+		completionBar.width = itemOwnedNb/ItemsConfig.length * (completionBarMaxWidth*(background.width-background.width/2));
+		icons['fillRight'].position.x = completionBar.position.x+completionBar.width;
+		var percent:String = Std.string(itemOwnedNb/ItemsConfig.length *100);
+		percent  = percent.indexOf('.') != -1 ? percent.substr(0, percent.indexOf('.')+2) : percent;
+		texts['completionInfo'].setText(percent + "%");
 	}
 
 	private function visit(pEvent:Dynamic) : Void {
@@ -91,37 +183,70 @@ class PopinMusee extends MyPopin
 		update();
 	}
 
+	private function changeTab() : Void {
+		//GameInfo.musseVisiteGain = cheatDogeClick;
+		containers['main'].children = [];
+		containers.exists('verticalScroller') ? containers['verticalScroller'].children = [] : null;
+		currentTab == 'homeTab' ? icons['homeTab'].setTextureToActive() : null;
+		currentTab == 'myArtefactsTab' ? icons['myArtefactsTab'].setTextureToNormal() : null;
+		currentTab == 'amisArtefactsTab' ? icons['amisArtefactsTab'].setTextureToNormal() : null;
+		header.setTexture(headerTextures[currentTab]);
+		currentTab == 'homeTab' ? addHomeTab() : currentTab == 'myArtefactsTab' ? addMyArtefactsTab() : addAmisArtefactsTab();
+	}
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
-	override private function childClick(pEvent:Dynamic){
+	override private function childClick(pEvent:Dynamic) : Void {
 		if(pEvent.target._name == "closeButton"){
 			GameInfo.can_map_update = true;
 			if(gui != null) gui.destroy();
 			PopinManager.getInstance().closePopin("PopinMusee");
 		}
+		else if(pEvent.target._name == "homeTab" && currentTab != "homeTab"){
+			
+		}
+		else if(pEvent.target._name == "myArtefactsTab" && currentTab != "myArtefactsTab"){
+			
+		}
+		else if(pEvent.target._name == "amisArtefactsTab" && currentTab != "amisArtefactsTab"){
+			
+		}
+		else if(pEvent.target._name.indexOf("planetTab") != -1){
+			var index:Int = Std.parseInt(pEvent.target._name.split('planetTab')[1]);
+			lastPlanetIcon != null ? lastPlanetIcon.setTextureToNormal() : null;
+			lastPlanetIcon = pEvent.target;
+			addArtefactPlanet(GameInfo.artefacts[planetsNames[index]]);
+		}		
+		else if(pEvent.target._name.indexOf("actionButton") != -1){
+			var index:Int = Std.parseInt(pEvent.target._name.split('actionButton')[1]);
+			trace("need popin fb pour donner l'artefact : "+index+" de la planete : " + planetsNames[Std.parseInt(lastPlanetIcon._name.split('planetTab')[1])]);
+		}
 	}
 
-	private function refresh() {
-		GameInfo.musseVisiteGain = cheatDogeClick;
-		containers['main'].removeChildren(0,children.length);
-		addAll();
+	override private function childUpOutside(pEvent:Dynamic) : Void {
+		if(pEvent.target._name == "closeButton"){
+			icons["closeButton"].setTextureToNormal();
+		}
+		else if(pEvent.target._name.indexOf("planetTab") != -1){
+			pEvent.target.setTextureToNormal();
+		}
 	}
-	private function debugGUI(){
+
+	private function debugGUI() : Void {
 		gui = new GUI();
 		//gui.remember(this);
-		for(i in guiValuesList){
+		for(i in guiValuesListArtefacts){
 			gui.add(this, i,-1,1).onChange(function(newValue) {
-				refresh();
+				changeTab();
 			});			
 		}
 		gui.add(this, "maxParticlesNb",0,100).onChange(function(newValue) {
-			refresh();
+			changeTab();
 		});			
 		gui.add(this, "minParticlesNb",0,100).onChange(function(newValue) {
-			refresh();
+			changeTab();
 		});			
 		gui.add(this, "cheatDogeClick",0,100).onChange(function(newValue) {
-			refresh();
+			changeTab();
 		});
 	}
 

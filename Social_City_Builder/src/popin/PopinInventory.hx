@@ -50,7 +50,7 @@ class PopinInventory extends MyPopin
 			addText(0.4,0.12+y,'FuturaStdHeavy','15px',article.userPossesion,'titleText',containers["verticalScroller"],textColor);
 
 			if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > icons["contentBackground"].height && !hasVerticalScrollBar){
-				addVerticalScrollBar();
+				addScrollBar();
 				hasVerticalScrollBar = true;
 			}
 			cpt++;

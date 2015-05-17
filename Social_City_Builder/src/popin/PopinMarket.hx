@@ -87,7 +87,7 @@ class PopinMarket extends MyPopin
 			addText(0.317,0.3+y,'FuturaStdHeavy','13px',cost+'',"SoftRessourcePrice",containers["verticalScroller"],'white');
 
 			if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > icons["contentBackground"].height && !hasVerticalScrollBar){
-				addVerticalScrollBar();
+				addScrollBar();
 				hasVerticalScrollBar = true;
 			}
 			cpt++;

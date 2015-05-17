@@ -61,7 +61,7 @@ class PopinShop extends MyPopin
 			addText(0.66,0.26+y,'FuturaStdHeavy','25px',i.price+'€',"price",containers["verticalScroller"]);
 
 			if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > icons["contentBackground"].height && !hasVerticalScrollBar){
-				addVerticalScrollBar();
+				addScrollBar();
 				hasVerticalScrollBar = true;
 			}
 			cpt++;

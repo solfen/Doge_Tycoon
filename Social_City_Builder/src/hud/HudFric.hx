@@ -24,7 +24,6 @@ class HudFric extends IconHud
 		updateInfo();
 	}
 	override public function updateInfo(){
-		trace("caaaa");
 		if(lastFric != GameInfo.ressources['fric'].userPossesion){
 			lastFric = GameInfo.ressources['fric'].userPossesion;
 			fricText.setText(Std.int(lastFric)+'');

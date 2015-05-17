@@ -283,7 +283,6 @@ class GameInfo
  					{"name":"poudre1","quantity":25},
  				]
  			},
- 			
  		],
  		"utilitaires": [
  			{
@@ -601,6 +600,39 @@ class GameInfo
 	 			},
  			],
  		},
+ 	];
+ 	public static var artefacts:Map<String,Dynamic> = [
+ 		'SprungField' => [
+ 			{name:'Skate',userPossesion:99,img:'IconArtefactsSimpsons1.png'},
+ 			{name:'Bière',userPossesion:1,img:'IconArtefactsSimpsons2.png'},
+ 			{name:'Donut',userPossesion:1,img:'IconArtefactsSimpsons3.png'},
+ 		],
+ 		'Mordor' => [
+ 			{name:'Cheveux',userPossesion:1,img:'IconArtefactsLotr1.png'},
+ 			{name:'Sting',userPossesion:0,img:'IconArtefactsLotr2.png'},
+ 			{name:'Précieux',userPossesion:1,img:'IconArtefactsLotr3.png'},
+ 		],
+ 		'Namok' => [
+ 			{name:'Armure',userPossesion:1,img:'IconArtefactsDbz1.png'},
+ 			{name:'Nuage',userPossesion:1,img:'IconArtefactsDbz2.png'},
+ 			{name:'Kinto-un',userPossesion:1,img:'IconArtefactsDbz3.png'},
+ 		],
+ 		'Terre' => [
+ 			{name:'Casserole',userPossesion:1,img:'IconArtefactsTerre1.png'},
+ 			{name:'Bote',userPossesion:1,img:'IconArtefactsTerre2.png'},
+ 			{name:'Smartphone',userPossesion:0,img:'IconArtefactsTerre3.png'},
+ 		],
+ 		'Wundërland' => [
+ 			{name:'Chapeau',userPossesion:1,img:'IconArtefactsWonderland1.png'},
+ 			{name:'Tasse',userPossesion:1,img:'IconArtefactsWonderland2.png'},
+ 			{name:'Potion',userPossesion:0,img:'IconArtefactsWonderland3.png'},
+ 		],
+ 		'StarWat' => [
+ 			{name:'Casque',userPossesion:1,img:'IconArtefactsStarwars1.png'},
+ 			{name:'Sabre',userPossesion:10,img:'IconArtefactsStarwars2.png'},
+ 			{name:'Blaster',userPossesion:0,img:'IconArtefactsStarwars3.png'},
+ 		]
+ 		
  	];
 
  	public static var loaderCompletion:Float = 0; // when we're loading the game we need to know the % of completion

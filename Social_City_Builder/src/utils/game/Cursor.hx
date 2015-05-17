@@ -14,6 +14,9 @@ class Cursor extends pixi.display.DisplayObjectContainer
 	private var dogeFingerTextureNormal:Texture;
 	private var dogeFingerTextureActive:Texture;
 	public var currentCursorImg:Sprite;
+	public var dogeFingerOffsetX:Float = -7;
+	public var dogeFingerOffsetY:Float = -3;
+
 
 	public static function getInstance (): Cursor {
 		if (instance == null) instance = new Cursor();
@@ -77,7 +80,7 @@ class Cursor extends pixi.display.DisplayObjectContainer
 	}
 	private function onMousemove(data) : Void {
 		if(dogeFinger.visible){
-			dogeFinger.position.set(data.clientX,data.clientY);
+			dogeFinger.position.set(data.clientX+dogeFingerOffsetX,data.clientY+dogeFingerOffsetY);
 		}		
 		if(hammer.visible){
 			hammer.position.set(data.clientX,data.clientY);

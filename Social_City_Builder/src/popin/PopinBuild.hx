@@ -68,7 +68,7 @@ class PopinBuild extends MyPopin
 			}
 
 			if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > icons["contentBackground"].height && !hasVerticalScrollBar){
-				addVerticalScrollBar();
+				addScrollBar();
 				hasVerticalScrollBar = true;
 			}
 			cpt++;

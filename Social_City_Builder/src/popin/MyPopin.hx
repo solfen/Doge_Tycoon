@@ -28,11 +28,13 @@ class MyPopin extends DisplayObjectContainer
 	private var graphics:Graphics;
 	private var scrollDragging:Bool = false;
 	private var scrollDragSy:Float;
+	private var scrollDragSx:Float;
 	private var header:Sprite;
 	private var headerTextures:Map<String,Texture>;
 	private var mouse_wheel_dir:Int;
 	private var startScrollY:Float;
 	private var maxDragY:Float;
+	private var maxDragX:Float;
 	
 	public function new(pstartX:Float=0,pstartY:Float=0, texturePath:String, ?isModal:Bool=false) 
 	{
@@ -94,32 +96,46 @@ class MyPopin extends DisplayObjectContainer
 		target.mask = graphics; // this line assign the mask at the container and all of his childrens (present past and future)
 	}
 
-	//place a vertical scrollBar, the scroll action is automaticly added to containers["verticalScroller"]
-	private function addVerticalScrollBar(){
-		addIcon(0.91,0.15,'PopInScrollingBar.png',"scrollingBar",this,false);
-		scrollIndicator = new IconPopin(Std.int(0.933*background.width-background.width/2),Std.int(0.23*background.height-background.height/2),'PopInScrollingTruc.png',"scrollingIndicator",true);
+	//place a scrollBar, the scroll action is automaticly added to containers["verticalScroller"]
+	private function addScrollBar(?isVertical:Bool=true,?x:Float=0.91,?y:Float=0.15,?indicOffsetX:Float=0.023,?indicOffsetY:Float=0.08,?target:DisplayObjectContainer){
+		target = target != null ? target : this;
+		addIcon(x,y,'PopInScrollingBar.png',"scrollingBar",target,false);
+		icons["scrollingBar"].rotation = isVertical ? 0:Math.PI/2;
+		scrollIndicator = new IconPopin(Std.int((x+indicOffsetX)*background.width-background.width/2),Std.int((y+indicOffsetY)*background.height-background.height/2),'PopInScrollingTruc.png',"scrollingIndicator",true);
 		scrollIndicator.mousedown = function(data) {
 			scrollDragging = true;
 			scrollDragSy = data.getLocalPosition(scrollIndicator).y * scrollIndicator.scale.y;	
+			scrollDragSx = data.getLocalPosition(scrollIndicator).x * scrollIndicator.scale.x;	
 		};
 		scrollIndicator.mouseup = scrollIndicator.mouseupoutside = function(data) {
 			scrollDragging = false;
 		};
 		scrollIndicator.mousemove = function(data){
+			var barLength:Float = 0.405; //made by iteration
+			var barLengthX:Float = 0.35; // no idea why it has to be different with the X axis 
 			var newY:Float = data.getLocalPosition(scrollIndicator.parent).y - scrollDragSy;
+			var newX:Float = data.getLocalPosition(scrollIndicator.parent).x - scrollDragSx;
 			maxDragY = containers["verticalScroller"].height-icons["contentBackground"].height + 100; // 100 is totaly changeable
-			if(scrollDragging && newY > 0.23*background.height-background.height/2 && newY < 0.635*background.height-background.height/2) {
-				var interval:Float = (0.635*background.height-background.height/2) - (0.23*background.height-background.height/2 );
+			maxDragX = containers["verticalScroller"].width-icons["contentBackground"].width + 100; // 100 is totaly changeable
+			if(isVertical && scrollDragging && newY > (y+indicOffsetY)*background.height-background.height/2 && newY < (y+indicOffsetY+barLength)*background.height-background.height/2) {
+				var interval:Float = ((y+indicOffsetY+barLength)*background.height-background.height/2) - ((y+indicOffsetY)*background.height-background.height/2 );
 				scrollIndicator.y = newY;
-				containers["verticalScroller"].y =  - Std.int(((newY - (0.23*background.height-background.height/2)) * maxDragY  / interval)); // math stuff fait à l'arrache (plus ou moins)
+				containers["verticalScroller"].y =  - Std.int(((newY - ((y+indicOffsetY)*background.height-background.height/2)) * maxDragY  / interval)); // math stuff fait à l'arrache (plus ou moins)
+			}
+			else if(!isVertical && scrollDragging && newX > (x+indicOffsetX)*background.width-background.width/2 && newX < (x+indicOffsetX+barLengthX)*background.width-background.width/2){
+				var interval:Float = ((x+indicOffsetX+barLengthX)*background.width-background.width/2) - ((x+indicOffsetX)*background.width-background.width/2);
+				scrollIndicator.x = newX;
+				containers["verticalScroller"].x =  - Std.int(((newX - ((x+indicOffsetX)*background.width-background.width/2)) * maxDragX  / interval)); // math stuff fait à l'arrache (plus ou moins)
 			}
 		}
+		scrollIndicator.rotation = isVertical ? 0:Math.PI/2;
 		icons["scrollingIndicator"] = scrollIndicator;
-		addChild(scrollIndicator);
+		target.addChild(scrollIndicator);
 		mouse_wheel_dir = InputInfos.mouse_wheel_dir;
 		startScrollY = containers["verticalScroller"].y;
 		Main.getInstance().addEventListener(Event.GAME_LOOP, scroll);
 	}
+
 	private function scroll(){
 		if(InputInfos.mouse_wheel_dir == 0 
 		|| InputInfos.mouse_x - x+background.width/2  > background.x + background.width  

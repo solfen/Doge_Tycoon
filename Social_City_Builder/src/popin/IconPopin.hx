@@ -7,7 +7,7 @@ import pixi.display.Sprite;
 // IconPopin is a pixi.Sprite tuned for the Popin use.
 class IconPopin extends Sprite
 {
-	private var _name:String;
+	public var _name:String;
 	private var normalTexture:Texture;
 	private var activeTexture:Texture = null;
 	private var isSelectButton:Bool = false;
