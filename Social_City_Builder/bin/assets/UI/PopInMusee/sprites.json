@@ -1,0 +1,230 @@
+{
+"frames": {
+	"PopInHeaderAccueilMusee.png": {
+		"frame": {"x":0, "y":991, "w":315, "h":63},
+		"spriteSourceSize": {"x":0,"y":0,"w":315,"h":63},
+		"sourceSize": {"w":315,"h":63}
+	},
+	"PopInHeaderMonMusee.png": {
+		"frame": {"x":0, "y":1086, "w":219, "h":63},
+		"spriteSourceSize": {"x":0,"y":0,"w":219,"h":63},
+		"sourceSize": {"w":219,"h":63}
+	},
+	"PopInHeaderMuseeAmis.png": {
+		"frame": {"x":0, "y":87, "w":384, "h":63},
+		"spriteSourceSize": {"x":0,"y":0,"w":384,"h":63},
+		"sourceSize": {"w":384,"h":63}
+	},
+	"PopInMuseeArticleBg.png": {
+		"frame": {"x":219, "y":1086, "w":120, "h":159},
+		"spriteSourceSize": {"x":0,"y":0,"w":120,"h":159},
+		"sourceSize": {"w":120,"h":159}
+	},
+	"PopInMuseeBoutonDbzActive.png": {
+		"frame": {"x":352, "y":247, "w":73, "h":75},
+		"spriteSourceSize": {"x":0,"y":3,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonDbzNormal.png": {
+		"frame": {"x":388, "y":991, "w":73, "h":78},
+		"spriteSourceSize": {"x":0,"y":0,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonDemanderActive.png": {
+		"frame": {"x":64, "y":1266, "w":64, "h":26},
+		"spriteSourceSize": {"x":0,"y":3,"w":64,"h":29},
+		"sourceSize": {"w":64,"h":29}
+	},
+	"PopInMuseeBoutonDemanderNormal.png": {
+		"frame": {"x":0, "y":1240, "w":64, "h":29},
+		"spriteSourceSize": {"x":0,"y":0,"w":64,"h":29},
+		"sourceSize": {"w":64,"h":29}
+	},
+	"PopInMuseeBoutonDonnerActive.png": {
+		"frame": {"x":64, "y":1240, "w":64, "h":26},
+		"spriteSourceSize": {"x":0,"y":3,"w":64,"h":29},
+		"sourceSize": {"w":64,"h":29}
+	},
+	"PopInMuseeBoutonDonnerNormal.png": {
+		"frame": {"x":0, "y":1269, "w":64, "h":29},
+		"spriteSourceSize": {"x":0,"y":0,"w":64,"h":29},
+		"sourceSize": {"w":64,"h":29}
+	},
+	"PopInMuseeBoutonLotrActive.png": {
+		"frame": {"x":146, "y":1225, "w":73, "h":75},
+		"spriteSourceSize": {"x":0,"y":3,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonLotrNormal.png": {
+		"frame": {"x":315, "y":991, "w":73, "h":78},
+		"spriteSourceSize": {"x":0,"y":0,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonSimpsonsActive.png": {
+		"frame": {"x":412, "y":1144, "w":73, "h":75},
+		"spriteSourceSize": {"x":0,"y":3,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonSimpsonsNormal.png": {
+		"frame": {"x":339, "y":1220, "w":73, "h":78},
+		"spriteSourceSize": {"x":0,"y":0,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonSwActive.png": {
+		"frame": {"x":339, "y":1147, "w":73, "h":73},
+		"spriteSourceSize": {"x":0,"y":5,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonSwNormal.png": {
+		"frame": {"x":146, "y":1149, "w":73, "h":76},
+		"spriteSourceSize": {"x":0,"y":2,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonTerreActive.png": {
+		"frame": {"x":73, "y":1162, "w":73, "h":75},
+		"spriteSourceSize": {"x":0,"y":3,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonTerreNormal.png": {
+		"frame": {"x":339, "y":1069, "w":73, "h":78},
+		"spriteSourceSize": {"x":0,"y":0,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonWonderActive.png": {
+		"frame": {"x":412, "y":1069, "w":73, "h":75},
+		"spriteSourceSize": {"x":0,"y":3,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeBoutonWonderNormal.png": {
+		"frame": {"x":0, "y":1162, "w":73, "h":78},
+		"spriteSourceSize": {"x":0,"y":0,"w":73,"h":78},
+		"sourceSize": {"w":73,"h":78}
+	},
+	"PopInMuseeCompletionFillBar.png": {
+		"frame": {"x":0, "y":50, "w":520, "h":37},
+		"spriteSourceSize": {"x":0,"y":0,"w":520,"h":37},
+		"sourceSize": {"w":520,"h":37}
+	},
+	"PopInMuseeFriendBg.png": {
+		"frame": {"x":352, "y":150, "w":73, "h":97},
+		"spriteSourceSize": {"x":0,"y":0,"w":73,"h":97},
+		"sourceSize": {"w":73,"h":97}
+	},
+	"PopInMuseeParticule.png": {
+		"frame": {"x":412, "y":1219, "w":72, "h":73},
+		"spriteSourceSize": {"x":0,"y":0,"w":72,"h":73},
+		"sourceSize": {"w":72,"h":73}
+	},
+	"PopInMuseeTextBG.png": {
+		"frame": {"x":0, "y":1054, "w":311, "h":32},
+		"spriteSourceSize": {"x":0,"y":0,"w":311,"h":32},
+		"sourceSize": {"w":311,"h":32}
+	},
+	"PopInMuseeTitle.png": {
+		"frame": {"x":0, "y":150, "w":352, "h":187},
+		"spriteSourceSize": {"x":0,"y":0,"w":352,"h":187},
+		"sourceSize": {"w":352,"h":187}
+	},
+	"PopInMuseelPhotoBorders.png": {
+		"frame": {"x":425, "y":87, "w":63, "h":64},
+		"spriteSourceSize": {"x":0,"y":0,"w":63,"h":64},
+		"sourceSize": {"w":63,"h":64}
+	},
+	"PopInOngletArtefactActive.png": {
+		"frame": {"x":274, "y":1245, "w":55, "h":54},
+		"spriteSourceSize": {"x":0,"y":2,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInOngletArtefactAmisActive.png": {
+		"frame": {"x":219, "y":1245, "w":55, "h":54},
+		"spriteSourceSize": {"x":0,"y":2,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInOngletArtefactAmisNormal.png": {
+		"frame": {"x":425, "y":263, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInOngletArtefactNormal.png": {
+		"frame": {"x":425, "y":151, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInOngletHomeActive.png": {
+		"frame": {"x":461, "y":991, "w":55, "h":54},
+		"spriteSourceSize": {"x":0,"y":2,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInOngletHomeNormal.png": {
+		"frame": {"x":425, "y":207, "w":55, "h":56},
+		"spriteSourceSize": {"x":0,"y":0,"w":55,"h":56},
+		"sourceSize": {"w":55,"h":56}
+	},
+	"PopInScrollingBar.png": {
+		"frame": {"x":0, "y":0, "w":552, "h":50},
+		"spriteSourceSize": {"x":0,"y":0,"w":552,"h":50},
+		"sourceSize": {"w":552,"h":50}
+	},
+	"PopInScrollingTruc.png": {
+		"frame": {"x":0, "y":1149, "w":85, "h":13},
+		"spriteSourceSize": {"x":0,"y":0,"w":85,"h":13},
+		"sourceSize": {"w":85,"h":13}
+	},
+	"PopinMuseeClick_0.png": {
+		"frame": {"x":975, "y":654, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	},
+	"PopinMuseeClick_1.png": {
+		"frame": {"x":975, "y":327, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	},
+	"PopinMuseeClick_2.png": {
+		"frame": {"x":877, "y":0, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	},
+	"PopinMuseeClick_3.png": {
+		"frame": {"x":650, "y":654, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	},
+	"PopinMuseeClick_4.png": {
+		"frame": {"x":650, "y":327, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	},
+	"PopinMuseeClick_5.png": {
+		"frame": {"x":552, "y":0, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	},
+	"PopinMuseeClick_6.png": {
+		"frame": {"x":325, "y":664, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	},
+	"PopinMuseeClick_7.png": {
+		"frame": {"x":325, "y":337, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	},
+	"PopinMuseeClick_8.png": {
+		"frame": {"x":0, "y":664, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	},
+	"PopinMuseeClick_9.png": {
+		"frame": {"x":0, "y":337, "w":325, "h":327},
+		"spriteSourceSize": {"x":0,"y":0,"w":325,"h":327},
+		"sourceSize": {"w":325,"h":327}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 1300, "h": 1300},
+	"scale": "1"
+}
+}

@@ -1,0 +1,25 @@
+{
+"frames": {
+	"PopInMuseeCompletionFill1.png": {
+		"frame": {"x":11, "y":0, "w":11, "h":13},
+		"spriteSourceSize": {"x":0,"y":0,"w":11,"h":13},
+		"sourceSize": {"w":11,"h":13}
+	},
+	"PopInMuseeCompletionFill2.png": {
+		"frame": {"x":0, "y":13, "w":11, "h":13},
+		"spriteSourceSize": {"x":0,"y":0,"w":11,"h":13},
+		"sourceSize": {"w":11,"h":13}
+	},
+	"PopInMuseeCompletionFill3.png": {
+		"frame": {"x":0, "y":0, "w":11, "h":13},
+		"spriteSourceSize": {"x":0,"y":0,"w":11,"h":13},
+		"sourceSize": {"w":11,"h":13}
+	}
+
+},
+"meta": {
+	"image": "sprites2.png",
+	"size": {"w": 22, "h": 26},
+	"scale": "1"
+}
+}
