@@ -177,7 +177,7 @@ class PopinMusee extends MyPopin
 
 	private function visit(pEvent:Dynamic) : Void {
 		GameInfo.ressources['fric'].userPossesion += GameInfo.musseVisiteGain;
-		hud.HudManager.getInstance().updateChildsText();
+		hud.HudManager.getInstance().updateChilds();
 		particleSystem.setParticlesNb(Std.int(Math.min(GameInfo.musseVisiteGain*minParticlesNb,maxParticlesNb)));
 		particleSystem.startParticlesEmission(pEvent.originalEvent.clientX,pEvent.originalEvent.clientY);
 		update();

@@ -2,6 +2,7 @@ package hud;
 
 import utils.system.DeviceCapabilities;
 import pixi.display.DisplayObjectContainer;
+import pixi.text.Text;
 import hud.IconHud;
 import utils.events.Event;
 import haxe.Timer;
@@ -11,6 +12,7 @@ class HudManager extends DisplayObjectContainer
 {
 	private static var instance: HudManager;
 	private var childs:Map<String,IconHud> = new Map();
+	private var texts:Map<String, Text> = new Map();
 	private var containers:Map<String,Dynamic> = new Map();
 	private var currentChild: IconHud;
 	private var hudWidthInterval = 0.05;
@@ -51,10 +53,12 @@ class HudManager extends DisplayObjectContainer
 		addHud(new HudShop(0,hudBottomY-0.008),"HudShop", 'HudBottomRight');
 		addHud(new HudBuild(0,hudBottomY),"HudBuild", 'HudBottomRight');
 
+		addContainer(0,0.8,'TextInfo',1,0.01,'center');
+		addInfoText('FuturaStdHeavy','20px',"[MODE : DESTRUCTION]","feedBackText", 'TextInfo','red','center');
 		resizeHud();
 		Main.getInstance().addEventListener(Event.RESIZE, resizeHud);
 		refreshChildsInfoTimer = new haxe.Timer(refreshChildsInterval);
-		refreshChildsInfoTimer.run = updateChildsText;
+		refreshChildsInfoTimer.run = updateChilds;
 	}
 	// this fonction resize and reposition all the hud
 	// TODO : too greedy find a way to enchange the perfs
@@ -86,11 +90,16 @@ class HudManager extends DisplayObjectContainer
 			container.obj.position.y = Math.min(Std.int(container.startY*DeviceCapabilities.height),DeviceCapabilities.height-container.obj.children[0].height);
 		}
 	}
-	public function updateChildsText(){
+	public function updateChilds(){
 		for(child in childs){
 			if(child.isUpdatable){
 				child.updateInfo();
 			}
+		}
+	}
+	public function setChildText(childName:String,newText:String) : Void {
+		if(texts[childName] != null){
+			texts[childName].setText(newText);
 		}
 	}
 	public function setChildTexture(pName:String,state:String):Void{
@@ -118,6 +127,12 @@ class HudManager extends DisplayObjectContainer
 	private function addHud(child:IconHud,name:String,target:String){
 		childs[name] = child;
 		containers[target].obj.addChild(child);
+	}
+	private function addInfoText(font:String,fontSize:String,txt:String,name:String,target:String,?color:String="black",?pAlign:String="left"): Void {
+		var style:TextStyle = {font:fontSize+" "+font,align:pAlign,fill:color};
+		var tempText:Text = new Text(txt, style);
+		texts[name] = tempText;
+		containers[target].obj.addChild(tempText);
 	}
 
 	// removes all childs then put its instance to null

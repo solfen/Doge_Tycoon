@@ -1,0 +1,25 @@
+{
+"frames": {
+	"PopInTitleReturn.png": {
+		"frame": {"x":0, "y":177, "w":354, "h":187},
+		"spriteSourceSize": {"x":5,"y":3,"w":365,"h":190},
+		"sourceSize": {"w":365,"h":190}
+	},
+	"PopinArticleBgReturn.png": {
+		"frame": {"x":0, "y":0, "w":572, "h":177},
+		"spriteSourceSize": {"x":0,"y":0,"w":572,"h":177},
+		"sourceSize": {"w":572,"h":177}
+	},
+	"PopinReturnHeader.png": {
+		"frame": {"x":0, "y":364, "w":232, "h":50},
+		"spriteSourceSize": {"x":0,"y":0,"w":232,"h":50},
+		"sourceSize": {"w":232,"h":50}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 572, "h": 414},
+	"scale": "1"
+}
+}

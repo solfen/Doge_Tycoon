@@ -146,7 +146,7 @@ class PopinMarket extends MyPopin
 					GameInfo.ressources['fric'].userPossesion -= cost;
 					GameInfo.ressources['poudre'+index].userPossesion += GameInfo.ressources['poudre'+index].lastQuantityBuy;
 					trace(GameInfo.ressources['poudre'+index].userPossesion);
-					HudManager.getInstance().updateChildsText();
+					HudManager.getInstance().updateChilds();
 					PopinManager.getInstance().updatePopin("PopinInventory");
 				}
 			}
@@ -155,7 +155,7 @@ class PopinMarket extends MyPopin
 				if(GameInfo.ressources['poudre'+index].userPossesion >= GameInfo.ressources['poudre'+index].lastQuantitySell){
 					GameInfo.ressources['fric'].userPossesion += cost;
 					GameInfo.ressources['poudre'+index].userPossesion -= GameInfo.ressources['poudre'+index].lastQuantitySell;
-					HudManager.getInstance().updateChildsText();
+					HudManager.getInstance().updateChilds();
 					PopinManager.getInstance().updatePopin("PopinInventory");
 				}
 			}
