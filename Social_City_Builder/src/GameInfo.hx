@@ -209,6 +209,8 @@ class GameInfo
  	public static var buildMenuArticles:Dynamic = {
  		"niches": [
  			{
+ 				isAvailable : true,
+ 				isOneshot : false,
  				buildingID: Building.NICHE,
  				previewImg: 'PopInBuiltArticlePreviewNiche.png',
  				title: 'Niche en Bois',
@@ -224,6 +226,8 @@ class GameInfo
  		"spacechips": [
  			{
 
+ 				isAvailable : true,
+ 				isOneshot : false,
  				buildingID: Building.HANGAR_JAUNE,
  				previewImg: 'PopInBuiltArticlePreviewHangar1.png',
  				title: 'Atelier Destination SprungField',
@@ -236,6 +240,8 @@ class GameInfo
  				]
  			},
  			{
+ 				isAvailable : true,
+ 				isOneshot : false,
  				buildingID: Building.HANGAR_VERT,
  				previewImg: 'PopInBuiltArticlePreviewHangar2.png',
  				title: 'Atelier Destination Modor',
@@ -248,6 +254,8 @@ class GameInfo
  				]
  			},
  			{
+ 				isAvailable : true,
+ 				isOneshot : false,
  				buildingID: Building.HANGAR_CYAN,
  				previewImg: 'PopInBuiltArticlePreviewHangar3.png',
  				title: 'Atelier Destination Namok',
@@ -260,6 +268,8 @@ class GameInfo
  				]
  			}, 			
  			{
+ 				isAvailable : true,
+ 				isOneshot : false,
  				buildingID: Building.HANGAR_BLEU,
  				previewImg: 'PopInBuiltArticlePreviewHangar4.png',
  				title: 'Atelier Destination Terre',
@@ -272,6 +282,8 @@ class GameInfo
  				]
  			},
  			{
+ 				isAvailable : true,
+ 				isOneshot : false,
  				buildingID: Building.HANGAR_VIOLET,
  				previewImg: 'PopInBuiltArticlePreviewHangar5.png',
  				title: 'Atelier Destination Wundërland',
@@ -284,6 +296,8 @@ class GameInfo
  				]
  			},
  			{
+ 				isAvailable : true,
+ 				isOneshot : false,
  				buildingID: Building.HANGAR_ROUGE,
  				previewImg: 'PopInBuiltArticlePreviewHangar6.png',
  				title: 'Atelier Destination StarWat',
@@ -298,6 +312,8 @@ class GameInfo
  		],
  		"utilitaires": [
  			{
+ 				isAvailable : false,
+ 				isOneshot : true,
  				buildingID: Building.CASINO,
  				previewImg: 'PopInBuiltArticlePreviewCasino.png',
  				title: 'Casino',
@@ -310,6 +326,8 @@ class GameInfo
  				]
  			},
  			{
+				isAvailable : true,
+				isOneshot : true,
 				buildingID: Building.EGLISE,
  				previewImg: 'PopInBuiltArticlePreviewEglise.png',
  				title: 'Église',
@@ -322,6 +340,8 @@ class GameInfo
  				]
  			},
  			{
+				isAvailable : false,
+				isOneshot : false,
 				buildingID: Building.ENTREPOT,
  				previewImg: 'PopInBuiltArticlePreviewEntrepot.png',
  				title: 'Entrepôt',
@@ -334,6 +354,8 @@ class GameInfo
  				]
  			},
  			{
+				isAvailable : false,
+				isOneshot : false,
 				buildingID: Building.LABO,
  				previewImg: 'PopInBuiltArticlePreviewLabo.png',
  				title: 'Labo',
@@ -346,6 +368,8 @@ class GameInfo
  				]
  			},		
  			{
+				isAvailable : true,
+				isOneshot : true,
 				buildingID: Building.MUSEE,
  				previewImg: 'PopInBuiltArticlePreviewMusee.png',
  				title: 'Musée',

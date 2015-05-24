@@ -46,32 +46,44 @@ class PopinBuild extends MyPopin
 	// It reads the config in GameInfo and translate it in sprites
 	private function addBuildArticles(ItemsConfig:Array<Dynamic>){
 		var cpt:Int = 0;
+		var buildingIndex:Int = 0;
 		if(hasVerticalScrollBar){
 			removeVerticalScrollBar();
 			hasVerticalScrollBar = false;
 		}
 		for(i in ItemsConfig){
-			var y:Float = cpt*(articleHeight+articleInterline);
-			var ressources:Array<Dynamic> = i.ressources;
-			addIcon(0.115,0.175+y,'PopInBuiltBgArticle.png',"articleBase",containers["verticalScroller"],false);
-			addIcon(0.687,0.309+y,'PopInBuiltSoftNormal.png',"buildSoft"+cpt,containers["verticalScroller"],true,'PopInBuiltSoftActive.png',true);
-			addIcon(0.815,0.309+y,'PopInBuiltHardNormal.png',"buildHard"+cpt,containers["verticalScroller"],true,'PopInBuiltHardActive.png',true);
-			addIcon(0.13,0.1875+y,i.previewImg,"ArticlePreview",containers["verticalScroller"],false);
-			addIcon(0.748,0.3+y,GameInfo.ressources['hardMoney'].iconImg,"HardRessource",containers["verticalScroller"],false);
-			addText(0.77,0.34+y,'FuturaStdHeavy','15px',i.hardPrice,'HardRessourcePrice',containers["verticalScroller"],'white');
-			addText(0.298,0.18+y,'FuturaStdHeavy','25px',i.title,'titleText',containers["verticalScroller"]);
-			addText(0.298,0.23+y,'FuturaStdMedium','12px',i.description,'Description',containers["verticalScroller"]);
+			if(!i.isOneshot || (GameInfo.buildingsGameplay[i.buildingID | buildings.Building.LVL_1].userPossesion 
+			+ GameInfo.buildingsGameplay[i.buildingID | buildings.Building.LVL_2].userPossesion
+			+ GameInfo.buildingsGameplay[i.buildingID | buildings.Building.LVL_3].userPossesion < 1)){
 
-			for(j in 0...ressources.length){
-				addIcon(0.298+0.065*j,0.3+y,GameInfo.ressources[ressources[j].name].iconImg,"SoftRessource"+j, containers["verticalScroller"],false);
-				addText(0.305+0.065*j,0.345+y,'FuturaStdHeavy','13px',ressources[j].quantity,"SoftRessourcePrice"+j, containers["verticalScroller"],'white');
-			}
+				var y:Float = cpt*(articleHeight+articleInterline);
+				var ressources:Array<Dynamic> = i.ressources;
 
-			if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > icons["contentBackground"].height && !hasVerticalScrollBar){
-				addScrollBar();
-				hasVerticalScrollBar = true;
+				addIcon(0.115,0.175+y,'PopInBuiltBgArticle.png',"articleBase",containers["verticalScroller"],false);
+				addIcon(0.687,0.309+y,'PopInBuiltSoftNormal.png',"buildSoft"+buildingIndex,containers["verticalScroller"],true,'PopInBuiltSoftActive.png',true);
+				addIcon(0.815,0.309+y,'PopInBuiltHardNormal.png',"buildHard"+buildingIndex,containers["verticalScroller"],true,'PopInBuiltHardActive.png',true);
+				addIcon(0.13,0.1875+y,i.previewImg,"ArticlePreview",containers["verticalScroller"],false);
+				addIcon(0.748,0.3+y,GameInfo.ressources['hardMoney'].iconImg,"HardRessource",containers["verticalScroller"],false);
+				addText(0.77,0.34+y,'FuturaStdHeavy','15px',i.hardPrice,'HardRessourcePrice',containers["verticalScroller"],'white');
+				addText(0.298,0.18+y,'FuturaStdHeavy','25px',i.title,'titleText',containers["verticalScroller"]);
+				addText(0.298,0.23+y,'FuturaStdMedium','12px',i.description,'Description',containers["verticalScroller"]);
+
+				for(j in 0...ressources.length){
+					addIcon(0.298+0.065*j,0.3+y,GameInfo.ressources[ressources[j].name].iconImg,"SoftRessource"+j, containers["verticalScroller"],false);
+					addText(0.305+0.065*j,0.345+y,'FuturaStdHeavy','13px',ressources[j].quantity,"SoftRessourcePrice"+j, containers["verticalScroller"],'white');
+				}
+
+				if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > icons["contentBackground"].height && !hasVerticalScrollBar){
+					addScrollBar();
+					hasVerticalScrollBar = true;
+				}
+
+				if(!i.isAvailable){
+					addIcon(0.115,0.175+y,'PopInArticleLock.png',"articleLocked",containers["verticalScroller"],true);
+				}
+				cpt++;
 			}
-			cpt++;
+			buildingIndex++;
 		}
 	}
 
