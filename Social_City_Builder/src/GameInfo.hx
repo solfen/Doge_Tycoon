@@ -312,7 +312,7 @@ class GameInfo
  		],
  		"utilitaires": [
  			{
- 				isAvailable : false,
+ 				isAvailable : true,
  				isOneshot : true,
  				buildingID: Building.CASINO,
  				previewImg: 'PopInBuiltArticlePreviewCasino.png',
@@ -340,7 +340,7 @@ class GameInfo
  				]
  			},
  			{
-				isAvailable : false,
+				isAvailable : true,
 				isOneshot : false,
 				buildingID: Building.ENTREPOT,
  				previewImg: 'PopInBuiltArticlePreviewEntrepot.png',
@@ -354,7 +354,7 @@ class GameInfo
  				]
  			},
  			{
-				isAvailable : false,
+				isAvailable : true,
 				isOneshot : false,
 				buildingID: Building.LABO,
  				previewImg: 'PopInBuiltArticlePreviewLabo.png',
@@ -776,7 +776,7 @@ class GameInfo
  	public static var isUpgradeMode:Bool = false;
  	public static var isDestroyMode:Bool = false;
  	public static var stockPercent:Float = 50;
- 	public static var faithPercent:Float = 0.1;
+ 	public static var faithPercent:Float = 0;
  	public static var faithLossSpeed:Float = 0.001;
  	public static var prayerEffect:Float = 0.005;
  	public static var museeSoftSpeed:Float = 10;

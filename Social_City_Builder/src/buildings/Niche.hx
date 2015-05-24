@@ -16,7 +16,7 @@ class Niche extends Building
 	public function new (p_index: Int, pX: Int, pY: Int): Void
 	{
 		super(Building.NICHE, p_index, pX, pY);
-		outline_thick_max = 3;
+		outline_thick_max = 1;
 		GameInfo.dogeMaxNumber += GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesMaxGain;
 		nbDogesInside += GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesMaxGain;
 

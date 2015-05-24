@@ -21,6 +21,7 @@ class Hangar extends Building
 	public function new (p_type: Int, p_index: Int, pX: Int, pY: Int): Void // attention, le type (la couleur) doit être précisié
 	{
 		super(p_type, p_index, pX, pY);
+		outline_thick_max = 1;
 		workshopConfig['config'].workshopType = p_type;
 	}
 	override private function _on_click (p_data: InteractionData): Void

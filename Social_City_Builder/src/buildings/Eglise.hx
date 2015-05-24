@@ -15,7 +15,7 @@ class Eglise extends Building
 
 	public function new (p_index: Int, pX: Int, pY: Int): Void {
 		super(Building.EGLISE, p_index, pX, pY);
-		outline_thick_max = 6;
+		outline_thick_max = 3;
 	}
 	override private function _on_click (p_data: InteractionData): Void {
 		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
