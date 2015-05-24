@@ -30,7 +30,7 @@ class PopinQuests extends MyPopin
 
 		addContainer("verticalScroller",this,0,0);
 		addMask(icons["contentBackground"].x, icons["contentBackground"].y+3, icons["contentBackground"].width, icons["contentBackground"].height-6,containers["verticalScroller"]);
-		addBuildArticles(GameInfo.questsArticles.current);
+		addBuildArticles(GameInfo.questsArticles['current']);
 		icons['currentQuestsTab'].setTextureToActive();
 		addIcon(0.09,0.15,'PopInScrollOverlay.png',"scrollOverlay",this,false);
 	}
@@ -75,7 +75,7 @@ class PopinQuests extends MyPopin
 		else if(pEvent.target._name == "currentQuestsTab" && currentTab != "currentQuestsTab"){
 			containers["verticalScroller"].children = [];
 			containers["verticalScroller"].position.set(0,0);
-			addBuildArticles(GameInfo.questsArticles.current);
+			addBuildArticles(GameInfo.questsArticles["current"]);
 			currentTab = "currentQuestsTab";
 			//header.setTexture(headerTextures['niches']);
 			icons['finishedQuestsTab'].setTextureToNormal();
@@ -83,7 +83,7 @@ class PopinQuests extends MyPopin
 		else if(pEvent.target._name == "finishedQuestsTab" && currentTab != "finishedQuestsTab"){
 			containers["verticalScroller"].children = [];
 			containers["verticalScroller"].position.set(0,0);
-			addBuildArticles(GameInfo.questsArticles.finished);
+			addBuildArticles(GameInfo.questsArticles['finished']);
 			currentTab = "finishedQuestsTab";
 			//header.setTexture(headerTextures['spaceships']);
 			icons['currentQuestsTab'].setTextureToNormal();

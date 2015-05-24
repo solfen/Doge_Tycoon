@@ -14,7 +14,7 @@ class Hangar extends Building
 			workshopType: 0,
 			level: 1,
 			state: 'buy', // || 'launch' || 'build'
-			shipIndex: 0,
+			spaceShip: "",
 			buildTimeStart: 0,
 		}
 	];
@@ -27,6 +27,7 @@ class Hangar extends Building
 	{
 		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
 		{
+			trace(alpha);
 			return;
 		}
 		if (GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)

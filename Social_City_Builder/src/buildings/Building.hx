@@ -148,6 +148,7 @@ class Building extends MovieClip
 	{
 		if (lvl < Building.LVL_3)
 		{
+			GameInfo.buildingsGameplay[type | lvl].userPossesion--;
 			lvl += 0x100;
 			textures = _get_texture();
 			gotoAndStop(0);
@@ -157,6 +158,7 @@ class Building extends MovieClip
 
 	public function destroy (): Void 
 	{
+		GameInfo.buildingsGameplay[type | lvl].userPossesion--;
 		trace("destroy");
 		IsoMap.singleton.destroy_building(this);
 	}
@@ -185,6 +187,7 @@ class Building extends MovieClip
 
 			if (Timer.stamp() >= building_end_time)
 			{
+				GameInfo.buildingsGameplay[type | lvl].userPossesion++;
 				is_builded = true;
 				tint = 0xFFFFFF;
 				play();
@@ -205,6 +208,7 @@ class Building extends MovieClip
 	{
 		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
 		{
+			trace(alpha);
 			return;
 		}
 		if (GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)

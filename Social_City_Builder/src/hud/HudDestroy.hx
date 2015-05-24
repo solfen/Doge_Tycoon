@@ -3,6 +3,7 @@ package hud;
 import hud.IconHud;
 import popin.PopinManager;
 import pixi.InteractionData;
+import hud.HudManager;
 
 // HudBuild is the BuildIcon of the Hud, it opens the build menu
 // IconHud is a pixi.Sprite tuned for the HUD use.
@@ -19,9 +20,10 @@ class HudDestroy extends IconHud
 	
 	override private function onClick (pData:InteractionData) : Void {
 		GameInfo.isDestroyMode ? changeTexture("normal") : changeTexture("active");
+		GameInfo.isDestroyMode ? HudManager.getInstance().setChildText("modInfo","") : HudManager.getInstance().setChildText("modInfo","[MODE : DESTRUCTION]");
 		GameInfo.isDestroyMode = !GameInfo.isDestroyMode;
 		GameInfo.isUpgradeMode = false;
-		hud.HudManager.getInstance().setChildTexture("HudUpgrade", 'normal');
+		HudManager.getInstance().setChildTexture("HudUpgrade", 'normal');
 		trace(GameInfo.isDestroyMode);
 	}
 }

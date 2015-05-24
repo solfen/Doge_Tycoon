@@ -53,8 +53,8 @@ class HudManager extends DisplayObjectContainer
 		addHud(new HudShop(0,hudBottomY-0.008),"HudShop", 'HudBottomRight');
 		addHud(new HudBuild(0,hudBottomY),"HudBuild", 'HudBottomRight');
 
-		addContainer(0,0.8,'TextInfo',1,0.01,'center');
-		addInfoText('FuturaStdHeavy','20px',"[MODE : DESTRUCTION]","feedBackText", 'TextInfo','red','center');
+		addContainer(0,0.8,'modInfo',1,0.01,'center');
+		addInfoText('FuturaStdHeavy','20px',"","modInfo", 'modInfo','red','center');
 		resizeHud();
 		Main.getInstance().addEventListener(Event.RESIZE, resizeHud);
 		refreshChildsInfoTimer = new haxe.Timer(refreshChildsInterval);
@@ -100,6 +100,7 @@ class HudManager extends DisplayObjectContainer
 	public function setChildText(childName:String,newText:String) : Void {
 		if(texts[childName] != null){
 			texts[childName].setText(newText);
+			resizeHud();
 		}
 	}
 	public function setChildTexture(pName:String,state:String):Void{

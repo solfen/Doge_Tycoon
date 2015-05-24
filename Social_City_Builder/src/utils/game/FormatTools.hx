@@ -14,6 +14,7 @@ class FormatTools
 		var sec:String = secondsNb % 60 + " secondes";
 		return days+hours+minutes+sec;
 	}
+	//TODO so that when we have big numbers it would be formated porperly for display use
 	public static function formatNumbers(number:Float) : String {
 		return '';
 	}

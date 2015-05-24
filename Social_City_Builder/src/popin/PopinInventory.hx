@@ -41,19 +41,21 @@ class PopinInventory extends MyPopin
 			hasVerticalScrollBar = false;
 		}
 		for(i in ItemsConfig.keys()){
-			var article = GameInfo.ressources[i];
-			var y:Float = cpt*(articleHeight+articleInterline);
+			if(i != 'doges'){
+				var article = GameInfo.ressources[i];
+				var y:Float = cpt*(articleHeight+articleInterline);
 
-			addIcon(0.1,0.065+y,'PopInInventoryArticleBg.png',"articleBase",containers["verticalScroller"],false);
-			addIcon(0.135,0.069+y,article.iconImg,"ArticlePreview",containers["verticalScroller"],false);
-			addText(0.40,0.069+y,'FuturaStdHeavy','15px',article.name,'nameText',containers["verticalScroller"],textColor);
-			addText(0.4,0.12+y,'FuturaStdHeavy','15px',article.userPossesion,'titleText',containers["verticalScroller"],textColor);
+				addIcon(0.1,0.065+y,'PopInInventoryArticleBg.png',"articleBase",containers["verticalScroller"],false);
+				addIcon(0.135,0.069+y,article.iconImg,"ArticlePreview",containers["verticalScroller"],false);
+				addText(0.40,0.069+y,'FuturaStdHeavy','15px',article.name,'nameText',containers["verticalScroller"],textColor);
+				addText(0.4,0.12+y,'FuturaStdHeavy','15px',Std.int(article.userPossesion) +'','titleText',containers["verticalScroller"],textColor);
 
-			if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > icons["contentBackground"].height && !hasVerticalScrollBar){
-				addScrollBar();
-				hasVerticalScrollBar = true;
+				if( (cpt*(articleHeight+articleInterline)+articleHeight)*background.height > icons["contentBackground"].height && !hasVerticalScrollBar){
+					addScrollBar();
+					hasVerticalScrollBar = true;
+				}
+				cpt++;	
 			}
-			cpt++;
 		}
 	}
 

@@ -102,7 +102,7 @@ class PopinWorkshop extends MyPopin
 		addText(0.105,0.41,'FuturaStdHeavy','14px',workShopModel.destination,'description',containers["verticalScroller"],'white');
 		for(i in 0...workshopConfig.level){
 			var y:Float = i*(articleHeight+articleInterline);
-			var article:Dynamic =  workShopModel.spaceships[i];
+			var article:Dynamic =  GameInfo.rocketsConfig[workShopModel.spaceships[i]];
 			var ressources:Array<Dynamic> = article.ressources;
 			addIcon(articleBaseX,articleBaseY+y,'PopInWorkshopArticleBG.png',"articleBase"+i,containers["verticalScroller"],false);
 			addIcon(articlePreviewX,articlePreviewY+y,article.previewImg,"ArticlePreview"+i,containers["verticalScroller"],false);
@@ -120,7 +120,7 @@ class PopinWorkshop extends MyPopin
 	private function addBuildState() : Void { 
 		addIcon(backTextX,backTextY,'PopInWorkshopTextBG.png',"PopInWorkshopTextBG",containers["verticalScroller"],false);
 		addText(infoTextX,infoTextY,'FuturaStdHeavy','15px','Accélérez la production en cliquant !','aideText',containers["verticalScroller"],'white');
-		addIcon(spaceshipBuildImgX,spaceshipBuildImgY,'PopInWorkshopFuseeNotReady'+workShopModel.spaceships[workshopConfig.shipIndex].ref+'.png',"buildImage",containers["verticalScroller"],true);
+		addIcon(spaceshipBuildImgX,spaceshipBuildImgY,'PopInWorkshopFuseeNotReady'+workshopConfig.spaceShip+'.png',"buildImage",containers["verticalScroller"],true);
 		addIcon(loadbarBackX,loadbarBackY,'PopInWorkshopLoadFillBar.png',"fillBarBack",containers["verticalScroller"],false);
 		loadingBar = new TilingSprite(Texture.fromFrame('PopInWorkshopLoadFill1.png'), 0, 15);
 		loadingBar.anchor.set(0,0.5);
@@ -147,17 +147,18 @@ class PopinWorkshop extends MyPopin
 	private function addLaunchState() : Void {
 		addIcon(backTextLaunchX,backTextLaunchY,'PopInWorkshopTextBG.png',"PopInWorkshopTextBG",containers["verticalScroller"],false);
 		addText(infoTextLaunchX,infoTextLaunchY,'FuturaStdHeavy','15px','La fussée est prête !','aideText',containers["verticalScroller"],'white');
-		addIcon(spaceshipLaunchImgX,spaceshipLaunchImgY,'PopInWorkshopFuseeReady'+workShopModel.spaceships[workshopConfig.shipIndex].ref+'.png',"destinationTextBg",containers["verticalScroller"],false);
+		addIcon(spaceshipLaunchImgX,spaceshipLaunchImgY,'PopInWorkshopFuseeReady'+workshopConfig.spaceShip+'.png',"destinationTextBg",containers["verticalScroller"],false);
 		addIcon(destroyShipX,destroyShipY,'PopInWorkshopDestroyButtonNormal.png',"destroyShip",containers["verticalScroller"],true,'PopInWorkshopDestroyButtonActive.png',true);
 		addIcon(launchShipX,launchShipY,'PopInWorkshopLaunchButtonNormal.png',"launchShip",containers["verticalScroller"],true,'PopInWorkshopLaunchButtonActive.png',true);
 		removeChild(icons["dog"]);
 		addIcon(dogPosX,dogPosY,'assets/Dogs/DogPasDeTir.png',"dog",this,false);		
 	}
 
+	// Pass this in gameplay update ?
 	private function refreshBuildBar() {
 		var timeElapsed:Float = haxe.Timer.stamp() - workshopConfig.buildTimeStart;
-		var timeLeft:Float = Std.int(workShopModel.spaceships[workshopConfig.shipIndex].constructionTime - timeElapsed);
-		var progressPercent:Float = timeElapsed /  workShopModel.spaceships[workshopConfig.shipIndex].constructionTime;
+		var timeLeft:Float = Std.int(GameInfo.rocketsConfig[workshopConfig.spaceShip].constructionTime - timeElapsed);
+		var progressPercent:Float = timeElapsed /  GameInfo.rocketsConfig[workshopConfig.spaceShip].constructionTime;
 		loadingBar.width = progressPercent * (loadBarFillMaxWidth*background.width-background.width/2);
 		if(progressPercent >= 1){
 			removeChild(particleSystem);
@@ -182,7 +183,7 @@ class PopinWorkshop extends MyPopin
 			icons[pEvent.target._name].setTextureToNormal();
 
 			var index:Int = Std.parseInt(pEvent.target._name.split('buildSoft')[1]); // deduce the index from the name
-			var ressources:Array<Dynamic> = workShopModel.spaceships[index].ressources;
+			var ressources:Array<Dynamic> = GameInfo.rocketsConfig[workShopModel.spaceships[index]].ressources;
 			var canBuy:Bool = true;
 
 			for(i in ressources){
@@ -195,18 +196,19 @@ class PopinWorkshop extends MyPopin
 				for(i in ressources){
 					GameInfo.ressources[i.name].userPossesion -= i.quantity;
 				}
-				HudManager.getInstance().updateChildsText();
+				HudManager.getInstance().updateChilds();
 				PopinManager.getInstance().updatePopin("PopinInventory");
 				workshopConfig.buildTimeStart = haxe.Timer.stamp();
 				workshopConfig.state = "build";
-				workshopConfig.shipIndex = index;
+				workshopConfig.spaceShip = workShopModel.spaceships[index];
 				containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
+				GameInfo.rockets.rocketsConstructedNb++;
 				addBuildState();
 			}
 		}
 		else if(pEvent.target._name == 'buildImage'){
 			particleSystem.startParticlesEmission(pEvent.originalEvent.clientX-0.35*Cursor.getInstance().currentCursorImg.width, pEvent.originalEvent.clientY+0.1*Cursor.getInstance().currentCursorImg.height);
-			workshopConfig.buildTimeStart -= workShopModel.spaceships[workshopConfig.shipIndex].constructionTime * workShopModel.spaceships[workshopConfig.shipIndex].clickBonus;
+			workshopConfig.buildTimeStart -= GameInfo.rocketsConfig[workshopConfig.spaceShip].constructionTime * GameInfo.rocketsConfig[workshopConfig.spaceShip].clickBonus;
 		}
 		else if(pEvent.target._name == 'cancelBuild'){
 			workshopConfig.state = 'buy';
@@ -216,7 +218,10 @@ class PopinWorkshop extends MyPopin
 		}
 		else if(pEvent.target._name == 'launchShip'){
 			workshopConfig.state = 'buy';
-			GameInfo.shipToLaunch = workShopModel.spaceships[workshopConfig.shipIndex].ref;
+			GameInfo.rockets.rocketsLaunchedNb++;
+			GameInfo.shipToLaunch = workshopConfig.spaceShip;
+			GameInfo.rockets.currentRocket = workshopConfig.spaceShip;
+			GameInfo.rockets.currentRocketLaunchTime = haxe.Timer.stamp();
 			close();
 		}
 		else if(pEvent.target._name == 'destroyShip'){

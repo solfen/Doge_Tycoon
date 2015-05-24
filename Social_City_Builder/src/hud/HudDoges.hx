@@ -37,11 +37,11 @@ class HudDoges extends IconHud
 		updateInfo();
 	}
 	override public function updateInfo(){
-		if(lastDogeNumber != GameInfo.dogeNumber || lastDogeMaxNumber != GameInfo.dogeMaxNumber){
-			lastDogeNumber = GameInfo.dogeNumber;
+		if(lastDogeNumber != GameInfo.ressources['doges'].userPossesion || lastDogeMaxNumber != GameInfo.dogeMaxNumber){
+			lastDogeNumber = GameInfo.ressources['doges'].userPossesion;
 			lastDogeMaxNumber = GameInfo.dogeMaxNumber;
-			barFill.width = Std.int(lastDogeNumber/lastDogeMaxNumber * width*.72);
-			dogeNumberText.setText(lastDogeNumber+'/'+lastDogeMaxNumber);
+			barFill.width = Std.int(Std.int(lastDogeNumber)/lastDogeMaxNumber * width*.72);
+			dogeNumberText.setText(Std.int(lastDogeNumber)+'/'+Std.int(lastDogeMaxNumber));
 			var xPos:Float = Math.max(dogeIcon.x+dogeIcon.width,barFill.width-dogeNumberText.width+barFill.x-width*0.02);
 			dogeNumberText.position.set(Std.int(xPos),Std.int(height/1.8 - dogeNumberText.height/2));
 		}

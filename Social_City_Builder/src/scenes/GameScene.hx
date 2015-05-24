@@ -36,7 +36,8 @@ class GameScene extends DisplayObjectContainer
 		addChild(HudManager.getInstance());
 		addChild(PopinManager.getInstance());
 		addChild(Cursor.getInstance());
-		Main.getInstance().addEventListener(Event.RESIZE, resize);
+		GameUpdate.getInstance();
+		//Main.getInstance().addEventListener(Event.RESIZE, resize);
 	}
 
 	public function doAction (): Void
