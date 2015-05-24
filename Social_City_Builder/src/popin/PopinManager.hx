@@ -18,6 +18,7 @@ class PopinManager extends DisplayObjectContainer
 {
 	//all the childs are stocked in an associative array where their name are the keys. That allows cool stuf (like in closePopin)
 	private var childs:Map<String, MyPopin> = new Map();
+	private var popinQueue:Array<Dynamic> = [];
 	private var currentPopinName:String = null;
 	private static var instance: PopinManager;
 
@@ -29,17 +30,21 @@ class PopinManager extends DisplayObjectContainer
 	public function new()  {
 		super();
 	}
+
 	public function updatePopin(popinName:String){
 		if(isPopinOpen(popinName)){
 			childs[popinName].update();
 		}
 	}
+
 	public function getCurrentPopinName():String{
 		return currentPopinName;
 	}
+
 	public function isPopinOpen(pName:String):Bool{
 		return childs.exists(pName);
 	}
+
 	//instantiate any popIn just with its name so that anywhere in the code we can open a popin with a string
 	// by doing PopinManager.getInstance().openPopin("popinName")
 	public function openPopin(popinName:String, ?pX:Float, ?pY:Float,?optParams:Map<String,Dynamic>){
@@ -48,21 +53,41 @@ class PopinManager extends DisplayObjectContainer
 		currentPopinName = popinName != "PopinInventory" ? popinName:currentPopinName; // beacuse inventory can be opened along with other popins
 	}
 
+	public function addPopinToQueue(popinName:String, ?pX:Float, ?pY:Float, ?optParams:Map<String,Dynamic>) : Void {
+		if(currentPopinName == null){
+			openPopin(popinName, pX, pY, optParams);
+		}
+		else{
+			popinQueue.push({name : popinName, x : pX, y : pY, params : optParams});	
+		}
+	}
+
+	private function openPopinAfter() : Void {
+		if(popinQueue.length > 0){
+			openPopin(popinQueue[0].name, popinQueue[0].x, popinQueue[0].y, popinQueue[0].params);
+			popinQueue.splice(0,1);
+		}
+		else{
+			currentPopinName = null;
+		}
+	}
+
 	public function closePopin(popinName:String){
 		childs[popinName].destroy();
 		removeChild(childs[popinName]);
-
 		childs.remove(popinName);
-		currentPopinName = popinName == "PopinInventory" ? currentPopinName:null;
+		openPopinAfter();
 	}
+
 	public function closeCurentPopin():Void{
 		if(currentPopinName != null){
 			childs[currentPopinName].destroy();
 			removeChild(childs[currentPopinName]);
 			childs.remove(currentPopinName);
-			currentPopinName = null;
+			openPopinAfter();
 		}
 	}
+
 	public function closeAllPopin(){
 		for(key in childs.keys()){
 			childs[key].destroy();

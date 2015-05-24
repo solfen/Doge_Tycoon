@@ -64,7 +64,7 @@ class GameUpdate
 				for(j in rewards){
 					GameInfo.ressources[j.name].userPossesion += Std.int(j.quantity);
 					hud.HudManager.getInstance().updateChilds();
-					popin.PopinManager.getInstance().updatePopin("PopinInventory");
+					PopinManager.getInstance().updatePopin("PopinInventory");
 				}		
 				GameInfo.questsArticles["finished"].push(i);
 				GameInfo.questsArticles["current"].remove(i);
@@ -74,7 +74,7 @@ class GameUpdate
 		if(GameInfo.rockets.currentRocket != null && haxe.Timer.stamp() >= GameInfo.rockets.currentRocketLaunchTime + GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].timeToDestination) {
 			var data:Map<String,Dynamic> = ['destination' => GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].destination];
 			GameInfo.rockets.currentRocket = null;
-			PopinManager.getInstance().openPopin("PopinSpaceShipReturn",0.5,0.5, data);
+			PopinManager.getInstance().addPopinToQueue("PopinSpaceShipReturn",0.5,0.5, data);
 		}
 
 	}
