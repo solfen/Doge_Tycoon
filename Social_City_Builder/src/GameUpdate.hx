@@ -47,27 +47,34 @@ class GameUpdate
 		GameInfo.ressources['doges'].userPossesion = Math.min(GameInfo.ressources['doges'].userPossesion + doges * mainInstance.delta_time,GameInfo.dogeMaxNumber);
 
 
-		// TO BE PUT IN QUEST UPDATE
-		for( i in GameInfo.questsArticles["current"]){
+		// TO BE PUT IN QUEST UPDATE ?
+		for( i in 0...GameInfo.questsArticles["current"].length){
+			var quest:Dynamic = GameInfo.questsArticles["current"][i];
 			var questAcomplished:Bool = false;
-			if(i.condition.building && GameInfo.buildingsGameplay[i.condition.building].userPossesion >= i.condition.numberToHave){
+			if(quest.condition.building && GameInfo.buildingsGameplay[quest.condition.building].userPossesion >= quest.condition.numberToHave){
 				questAcomplished = true;
 			}
-			else if(i.condition.rocketsConstructedNb && GameInfo.rockets.rocketsConstructedNb >= i.condition.rocketsConstructedNb){
+			else if(quest.condition.rocketsConstructedNb && GameInfo.rockets.rocketsConstructedNb >= quest.condition.rocketsConstructedNb){
 				questAcomplished = true;
 			}
-			else if(i.condition.rocketsLaunchedNb && GameInfo.rockets.rocketsLaunchedNb >= i.condition.rocketsLaunchedNb){
+			else if(quest.condition.rocketsLaunchedNb && GameInfo.rockets.rocketsLaunchedNb >= quest.condition.rocketsLaunchedNb){
 				questAcomplished = true;
 			}
 			if(questAcomplished){
-				var rewards:Array<Dynamic> = i.rewards; 
+				var rewards:Array<Dynamic> = quest.rewards; 
 				for(j in rewards){
 					GameInfo.ressources[j.name].userPossesion += Std.int(j.quantity);
-					hud.HudManager.getInstance().updateChilds();
-					PopinManager.getInstance().updatePopin("PopinInventory");
 				}		
-				GameInfo.questsArticles["finished"].push(i);
-				GameInfo.questsArticles["current"].remove(i);
+				hud.HudManager.getInstance().updateChilds();
+				PopinManager.getInstance().updatePopin("PopinInventory");
+
+				var data:Map<String,Dynamic> = ['quest' => quest];
+				PopinManager.getInstance().addPopinToQueue("PopinQuestFinished",0.5,0.5, data);
+
+				GameInfo.questsArticles["finished"].push(quest);
+				GameInfo.questsArticles["current"].remove(quest);
+
+				break;
 			}
 		}
 

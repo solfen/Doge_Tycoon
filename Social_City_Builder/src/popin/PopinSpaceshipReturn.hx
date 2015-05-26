@@ -53,7 +53,7 @@ class PopinSpaceShipReturn extends MyPopin
 		addContainer("main",this,0,0);
 		addRessources();
 		addArtefacts();
-		addIcon(-0.73,0.02,'assets/Dogs/DogPasDeTir.png',"dog",this,false);
+		addIcon(-0.73,0.02,'assets/Dogs/DogAstro.png',"dog",this,false);
 		//debugGUI();
 	}
 

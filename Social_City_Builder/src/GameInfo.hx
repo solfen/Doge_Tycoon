@@ -88,7 +88,7 @@ class GameInfo
  	public static var questsArticles:Map<String, Array<Dynamic>> = [
  		'current'=> [
  			{
- 				previewImg: 'IconDogNiche',
+ 				dog: 'Niche',
  				title: 'Première niche',
  				description: "Pas de niches, pas d'employés.Pas d'employés, pas\nde fusées.Pas de fusées... pas de fusées.\nOuvrez-donc le menu de construction.\nPuis achetez et construisez une niche !",
  				condition: {"building":Building.NICHE | Building.LVL_1, "numberToHave" : 1 },
@@ -98,7 +98,7 @@ class GameInfo
  				]
  			},
  			{
- 				previewImg: 'IconDogWorkshop',
+ 				dog: 'Workshop',
  				title: 'Premier atelier',
  				description: "Les ateliers servent à construire les fusées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les bâtiments peuvent être\nachetés depuis le menu de construction",
  				condition: {"building":Building.HANGAR_JAUNE | Building.LVL_1, "numberToHave" : 1 },
@@ -108,7 +108,7 @@ class GameInfo
  				]
  			},
  			{
- 				previewImg: 'IconDogWorkshop',
+ 				dog: 'Workshop',
  				title: "Première fusée",
  				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et commencez la\n construction de la fusée. N'oubliez pas de fouet..\n*hum* motiver vos employés en cliquant sur\n l’icône dans le atelier",
  				condition: {"rocketsConstructedNb":1},
@@ -118,7 +118,7 @@ class GameInfo
  				]
  			},
  			{
- 				previewImg: 'IconDogAstro',
+ 				dog: 'Astro',
  				title: "La conquête de l'espace !",
  				description: "Votre première fusée est prête à partir !\nVous n'avez plus qu'a appuyer sur le gros\nbouton vert pour la lancer. Ça ne devrait pas être\ntrop compliqué non ?",
  				condition: {"rocketsLaunchedNb": 1 },
@@ -128,7 +128,7 @@ class GameInfo
  				]
  			},
  			{
- 				previewImg: 'IconDogCasino',
+ 				dog: 'Casino',
  				title: "Black jack and...",
  				condition: {"building":Building.CASINO | Building.LVL_1, "numberToHave" : 1 },
  				description: "Vos employés veulent se détendre, vous voulez\n vous remplir les poches.\nUn casino semble le parfait compromis",
@@ -138,7 +138,7 @@ class GameInfo
  				]
  			},
  			{
- 				previewImg: 'IconDogMusee',
+ 				dog: 'Musee',
  				title: "La culture ça rapporte",
  				condition: {"building":Building.MUSEE | Building.LVL_1, "numberToHave" : 1 },
  				description: "Les artefacts que vous trouvez sur les planètes\nsont incroyablement rares Et comme ce qui est\nrare est cher, les billets ne sont pas donnés. Entre la\nboutique de souvenirs et les entrées, vous allez\nencaisser sec !",

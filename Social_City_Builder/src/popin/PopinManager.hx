@@ -10,6 +10,7 @@ import popin.PopinShop;
 import popin.PopinChurch;
 import popin.PopinMusee;
 import popin.PopinSpaceShipReturn;
+import popin.PopinQuestFinished;
 import pixi.InteractionData;
 import pixi.display.DisplayObjectContainer;
 

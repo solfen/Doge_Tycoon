@@ -88,7 +88,7 @@ class PopinWorkshop extends MyPopin
 		addHeader(0.65,0.05,headerTextures['atelier']);
 		addIcon(0.95, 0,'closeButtonNormal.png',"closeButton",this,true,'closeButtonActive.png',true);
 		addIcon(-0.15,-0.15,'PopInTitleWorkshop.png',"popInTitle",this,false);
-		addIcon(-0.4,0.27,'assets/Dogs/DogHangarWorkshop.png',"dog",this,false);
+		addIcon(-0.4,0.27,'assets/Dogs/DogWorkshop.png',"dog",this,false);
 		workshopConfig.state == 'buy' ? addBuyState(): workshopConfig.state == 'build' ? addBuildState() : addLaunchState();
 
 		//debugGUI('build');
@@ -113,7 +113,7 @@ class PopinWorkshop extends MyPopin
 				addText(startQuantityX+quantityStepX*j,quantityY+y,'FuturaStdHeavy','13px',ressources[j].quantity,"ressourceQunatity"+j, containers["verticalScroller"],'white');
 			}
 			removeChild(icons["dog"]);
-			addIcon(-0.4,0.27,'assets/Dogs/DogHangarWorkshop.png',"dog",this,false);	
+			addIcon(-0.4,0.27,'assets/Dogs/DogWorkshop.png',"dog",this,false);	
 		}
 	}
 
@@ -129,7 +129,7 @@ class PopinWorkshop extends MyPopin
 		addIcon(buildLoadIconX,buildLoadIconY,'PopInWorkshopLoadIcon.png',"buildLoadIcon",containers["verticalScroller"],false);
 		addIcon(cancelBuildX,cancelBuildY,'PopInWorkshopCancelButtonNormal.png',"cancelBuild",containers["verticalScroller"],true,'PopInWorkshopCancelButtonActive.png',true);
 		removeChild(icons["dog"]);
-		addIcon(-0.4,0.27,'assets/Dogs/DogHangarWorkshop.png',"dog",this,false);	
+		addIcon(-0.4,0.27,'assets/Dogs/DogWorkshop.png',"dog",this,false);	
 		addText(buildTimeLeftX,buildTimeLeftY,'FuturaStdHeavy','15px','','buildtTimeLeft',containers["verticalScroller"],'white');
 		
 		particleSystem = new ParticleSystem("PopInWorkshopLoadIcon.png");
@@ -151,7 +151,7 @@ class PopinWorkshop extends MyPopin
 		addIcon(destroyShipX,destroyShipY,'PopInWorkshopDestroyButtonNormal.png',"destroyShip",containers["verticalScroller"],true,'PopInWorkshopDestroyButtonActive.png',true);
 		addIcon(launchShipX,launchShipY,'PopInWorkshopLaunchButtonNormal.png',"launchShip",containers["verticalScroller"],true,'PopInWorkshopLaunchButtonActive.png',true);
 		removeChild(icons["dog"]);
-		addIcon(dogPosX,dogPosY,'assets/Dogs/DogPasDeTir.png',"dog",this,false);		
+		addIcon(dogPosX,dogPosY,'assets/Dogs/DogAstro.png',"dog",this,false);		
 	}
 
 	// Pass this in gameplay update ?

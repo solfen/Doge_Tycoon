@@ -30,14 +30,14 @@ class PopinQuests extends MyPopin
 
 		addContainer("verticalScroller",this,0,0);
 		addMask(icons["contentBackground"].x, icons["contentBackground"].y+3, icons["contentBackground"].width, icons["contentBackground"].height-6,containers["verticalScroller"]);
-		addBuildArticles(GameInfo.questsArticles['current']);
+		addQuests(GameInfo.questsArticles['current']);
 		icons['currentQuestsTab'].setTextureToActive();
 		addIcon(0.09,0.15,'PopInScrollOverlay.png',"scrollOverlay",this,false);
 	}
 
 	// This is an easy way to add articles in the popin
 	// It reads the config in GameInfo and translate it in sprites
-	private function addBuildArticles(ItemsConfig:Array<Dynamic>){
+	private function addQuests(ItemsConfig:Array<Dynamic>){
 		var cpt:Int = 0;
 		if(hasVerticalScrollBar){
 			removeVerticalScrollBar();
@@ -47,7 +47,7 @@ class PopinQuests extends MyPopin
 			var y:Float = cpt*(articleHeight+articleInterline);
 			var rewards:Array<Dynamic> = i.rewards;
 			addIcon(0.115,0.175+y,'PopInQuestBgArticle.png',"articleBase",containers["verticalScroller"],false);
-			addIcon(0.13,0.1875+y, i.previewImg+'.png',"ArticlePreview",containers["verticalScroller"],false);
+			addIcon(0.13,0.1875+y, "IconDog"+i.dog+'.png',"ArticlePreview",containers["verticalScroller"],false);
 			addText(0.298,0.175+y,'FuturaStdHeavy','25px',i.title,'titleText',containers["verticalScroller"]);
 			addText(0.298,0.225+y,'FuturaStdMedium','12px',i.description,'Description',containers["verticalScroller"]);
 			addText(0.71,0.215+y,'FuturaStdHeavy','18px','Récompenses','rewarsText',containers["verticalScroller"]);
@@ -75,7 +75,7 @@ class PopinQuests extends MyPopin
 		else if(pEvent.target._name == "currentQuestsTab" && currentTab != "currentQuestsTab"){
 			containers["verticalScroller"].children = [];
 			containers["verticalScroller"].position.set(0,0);
-			addBuildArticles(GameInfo.questsArticles["current"]);
+			addQuests(GameInfo.questsArticles["current"]);
 			currentTab = "currentQuestsTab";
 			//header.setTexture(headerTextures['niches']);
 			icons['finishedQuestsTab'].setTextureToNormal();
@@ -83,7 +83,7 @@ class PopinQuests extends MyPopin
 		else if(pEvent.target._name == "finishedQuestsTab" && currentTab != "finishedQuestsTab"){
 			containers["verticalScroller"].children = [];
 			containers["verticalScroller"].position.set(0,0);
-			addBuildArticles(GameInfo.questsArticles['finished']);
+			addQuests(GameInfo.questsArticles['finished']);
 			currentTab = "finishedQuestsTab";
 			//header.setTexture(headerTextures['spaceships']);
 			icons['currentQuestsTab'].setTextureToNormal();
