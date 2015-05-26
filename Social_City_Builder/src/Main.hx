@@ -13,6 +13,8 @@ import pixi.text.Text;
 import externs.FB;
 import externs.WebFontLoader;
 import scenes.ScenesManager;
+import externs.Howl;
+import externs.Howler;
 
 /**
  * Classe d'initialisation et lancement du jeu
@@ -27,6 +29,7 @@ class Main extends EventDispatcher
 	 */
 	public var renderer: WebGLRenderer;
 	public var delta_time: Float;
+	public var music: Howl;
 	
 	private static inline var CONFIG_PATH: String = "config.json";	
 	private static var instance: Main;
@@ -90,6 +93,15 @@ class Main extends EventDispatcher
 			}
 		};
 		WebFontLoader.load(WebFontConfig);
+
+		music = new Howl({
+		  urls: ['assets/Sounds/Monkeys_Spinning_Monkeys.ogg'],
+		  buffer:true,
+		  autoplay: false,
+		  loop: true,
+		  volume: 0.5,
+		});
+		//music.play();
 		
 		gameLoop(0);
 	}
