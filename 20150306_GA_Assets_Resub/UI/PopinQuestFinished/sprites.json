@@ -1,0 +1,15 @@
+{
+"frames": {
+	"PopinQuestFinishedHeader.png": {
+		"frame": {"x":0, "y":0, "w":259, "h":63},
+		"spriteSourceSize": {"x":0,"y":0,"w":259,"h":63},
+		"sourceSize": {"w":259,"h":63}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 259, "h": 63},
+	"scale": "1"
+}
+}
