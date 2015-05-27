@@ -26,7 +26,7 @@ class OutlineFilter extends AbstractFilter
 
 		_fragment_src = [
 
-			'precision mediump float;',
+			'precision lowp float;', // mediump ?
 			'varying vec2 vTextureCoord;',
 			'uniform sampler2D texture;',
 			'uniform float thickness;',
@@ -43,7 +43,7 @@ class OutlineFilter extends AbstractFilter
 			'        vec4 ownColor = texture2D(texture, vTextureCoord);',
 			'        vec4 curColor;',
 			'        float maxAlpha = 0.;',
-			'        for (float angle = 0.; angle < PI * 2.; angle += 0.5 ) {',
+			'        for (float angle = 0.; angle < PI * 2.; angle += 0.5) {',
 			'            curColor = texture2D(texture, vec2(vTextureCoord.x + thickness * px.x * cos(angle), vTextureCoord.y + thickness * px.y * sin(angle)));',
 			'            maxAlpha = max(maxAlpha, curColor.a);',
 			'        }',

@@ -165,7 +165,6 @@ class IsoMap extends DisplayObjectContainer
 
 	public function destroy_building (building: Building): Void
 	{
-		trace("destroying");
 		var building_map_idx: Array<Int> = Building.get_map_idx(building.map_origin_index, building.width_in_tiles_nb, building.height_in_tiles_nb);
 		var i = building_map_idx.length;
 
@@ -175,7 +174,7 @@ class IsoMap extends DisplayObjectContainer
 		}
 
 		buildings_list.remove(building);
-		removeChild(building);
+		building.parent.removeChild(building);
 		building = null;
 	}
 
