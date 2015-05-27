@@ -44,6 +44,7 @@ class Building extends MovieClip
 	public var row: Float;
 	public var building_end_time: Float; // utile pour determiner les gains
 	public var outline_thick: Float;
+	public var outline_thick_min: Float;
 	public var outline_thick_max: Float;
 	public var type: Int;
 	public var lvl: Int;
@@ -105,6 +106,7 @@ class Building extends MovieClip
 		loop = true;
 		animationSpeed = 0.333;
 		_fading_speed = 0.8;
+		outline_thick_min = 1;
 		outline_thick_max = 7;
 		outline_thick = 0;
 
@@ -164,7 +166,7 @@ class Building extends MovieClip
 
 	public function outline_fade_in (): Void
 	{
-		outline_thick = Math.min(outline_thick_max, outline_thick + Main.getInstance().delta_time * _fading_speed * outline_thick_max);
+		outline_thick = Math.max(outline_thick_min, Math.min(outline_thick_max, outline_thick + Main.getInstance().delta_time * _fading_speed * outline_thick_max));
 		filter.set_thickness(outline_thick);
 	}
 

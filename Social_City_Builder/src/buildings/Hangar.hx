@@ -9,21 +9,28 @@ import pixi.InteractionData;
 
 class Hangar extends Building
 {
-	private var workshopConfig:Map<String,Dynamic> = [
-		'config'=> {
-			workshopType: 0,
-			level: 1,
-			state: 'buy', // || 'launch' || 'build'
-			spaceShip: "",
-			buildTimeStart: 0,
-		}
-	];
+	
+	private var workshopConfig: Map<String,Dynamic>;
+
 	public function new (p_type: Int, p_index: Int, pX: Int, pY: Int): Void // attention, le type (la couleur) doit être précisié
 	{
 		super(p_type, p_index, pX, pY);
+
 		outline_thick_max = 1;
-		workshopConfig['config'].workshopType = p_type;
+		outline_thick_min = 0.1;
+
+		workshopConfig= [
+			'config'=> {
+				workshopType: p_type,
+				level: 1,
+				state: 'buy', // || 'launch' || 'build'
+				spaceShip: "",
+				buildTimeStart: 0
+			}
+		];
 	}
+
+
 	override private function _on_click (p_data: InteractionData): Void
 	{
 		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
@@ -31,6 +38,7 @@ class Hangar extends Building
 			trace(alpha);
 			return;
 		}
+
 		if (GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)
 		{
 			GameInfo.ressources['fric'].userPossesion--;
@@ -41,12 +49,15 @@ class Hangar extends Building
 			destroy();
 			return;
 		}
-		else{
-			PopinManager.getInstance().openPopin("PopinWorkshop", 0.5, 0.5,workshopConfig);	
+		else
+		{
+			PopinManager.getInstance().openPopin("PopinWorkshop", 0.5, 0.5, workshopConfig);	
 		}
 	}
-	override public function upgrade(){
+
+	override public function upgrade ()
+	{
 		super.upgrade();
-		workshopConfig['config'].level += workshopConfig['config'].level == 3 ? 0:1;
+		workshopConfig['config'].level += workshopConfig['config'].level == 3 ? 0 : 1;
 	}
 }

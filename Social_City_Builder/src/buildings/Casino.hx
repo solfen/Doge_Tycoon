@@ -15,6 +15,8 @@ class Casino extends Building
 	public function new (p_index: Int, pX: Int, pY: Int): Void
 	{
 		super(Building.CASINO, p_index, pX, pY);
+		
 		outline_thick_max = 3;
+		outline_thick_min = 0.3;
 	}
 }

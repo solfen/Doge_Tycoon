@@ -354,7 +354,7 @@ class IsoMap extends DisplayObjectContainer
 		var conf = GameInfo.BUILDINGS_CONFIG[pBuilding_type|Building.LVL_1];
 		var building_map_idx: Array<Int> = Building.get_map_idx(index, conf.width, conf.height);
 
-		var can_build: Bool = IsoTools.cell_col(building_map_idx[0], cols_nb) > IsoTools.cell_col(building_map_idx[Std.int(conf.width-1)], cols_nb)
+		var can_build: Bool = IsoTools.cell_col(building_map_idx[0], cols_nb) >= IsoTools.cell_col(building_map_idx[Std.int(conf.width-1)], cols_nb)
 					&& IsoTools.cell_row(building_map_idx[building_map_idx.length-1], cols_nb) > 0;
 
 		if (can_build)

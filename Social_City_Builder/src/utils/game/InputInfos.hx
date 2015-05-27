@@ -37,14 +37,14 @@ class InputInfos
 			Browser.window.onmousedown = _on_mousedown;
 			Browser.window.onmouseup = _on_mouseup;
 		}
+
 		if (listen_mousemove)
 		{
 			Browser.window.onmousemove = _on_mousemove;
 		}
-		if(listen_wheel)
+
+		if (listen_wheel)
 		{
-			//Browser.window.onmousewheel = _on_wheel; // --> marche uniquement dans Chrome
-			//Browser.window.onwheel = _on_wheel; // --> non implémenté dans haxe
 			Browser.window.addEventListener('wheel', _on_wheel, false);
 		}
 	}

@@ -13,15 +13,21 @@ import pixi.InteractionData;
 class Eglise extends Building
 {
 
-	public function new (p_index: Int, pX: Int, pY: Int): Void {
+	public function new (p_index: Int, pX: Int, pY: Int): Void
+	{
 		super(Building.EGLISE, p_index, pX, pY);
+
 		outline_thick_max = 3;
+		outline_thick_min = 0.3;
 	}
-	override private function _on_click (p_data: InteractionData): Void {
+
+	override private function _on_click (p_data: InteractionData): Void
+	{
 		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
 		{
 			return;
 		}
+
 		if (GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)
 		{
 			GameInfo.ressources['fric'].userPossesion--;
@@ -32,7 +38,8 @@ class Eglise extends Building
 			destroy();
 			return;
 		}
-		else {
+		else
+		{
 			PopinManager.getInstance().openPopin("PopinChurch", 0.5, 0.5);	
 		}
 	}
