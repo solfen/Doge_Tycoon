@@ -214,6 +214,7 @@ class IsoMap extends DisplayObjectContainer
 					{
 						buildings_list[i].is_clickable = focused_building == null || focused_building.row >= buildings_list[i].row;
 						buildings_list[i].outline_fade_out();
+						buildings_list[i].is_focus = false;
 						//buildings_list[i].outline_thick = 0;
 						//buildings_list[i].filter.set_thickness(0);
 					}
@@ -222,12 +223,14 @@ class IsoMap extends DisplayObjectContainer
 						next_focused = buildings_list[i];
 						buildings_list[i].is_clickable = true;
 						buildings_list[i].outline_fade_in();
+						buildings_list[i].is_focus = true;
 					}
 				}
 				else
 				{
 					buildings_list[i].is_clickable = true;
 					buildings_list[i].outline_fade_out();
+					buildings_list[i].is_focus = false;
 				}
 			}
 

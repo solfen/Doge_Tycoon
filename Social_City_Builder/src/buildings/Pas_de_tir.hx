@@ -13,7 +13,7 @@ class Pas_de_tir extends Building
 	private var shipLaunching: MovieClip;
 	private var shipToRemove: Bool;
 	private var shipErasingSpeed: Float;
-	private var shipLaunchingTextures :Array<Texture>;
+	private var shipLaunchingTextures: Array<Texture>;
 
 	private var gui: GUI;
 	private var guiListValues: Array<String>;
@@ -21,12 +21,13 @@ class Pas_de_tir extends Building
 	private var shipOffestY: Float;
 	private var shipAnimationSpeed: Float;
 
+
 	public function new (p_index: Int, pX: Int, pY: Int) : Void
 	{
 		super(Building.PAS_DE_TIR, p_index, pX, pY);
 
 		outline_thick_max = 9;
-		outline_thick_min = 1.9;
+		//outline_thick_min = 1;
 
 		shipToRemove = false;
 		shipErasingSpeed = 0.01;
@@ -35,20 +36,6 @@ class Pas_de_tir extends Building
 		shipOffestX = 0.465;
 		shipOffestY = 0.15;
 		shipAnimationSpeed = 0.22;
-	}
-	
-	override private function _on_click (p_data: InteractionData): Void
-	{
-		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
-		{
-			return;
-		}
-
-		if (GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)
-		{
-			GameInfo.ressources['fric'].userPossesion--;
-			upgrade();
-		}
 	}
 
 	override private function _update () : Void
@@ -91,12 +78,12 @@ class Pas_de_tir extends Building
 		}
 	}
 
-	private function shipLaunched() : Void
+	private function shipLaunched () : Void
 	{
 		shipToRemove = true;
 	}
 
-	private function debugGUI() : Void
+	private function debugGUI () : Void
 	{
 		gui = new GUI();
 

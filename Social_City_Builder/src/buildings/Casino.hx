@@ -17,6 +17,6 @@ class Casino extends Building
 		super(Building.CASINO, p_index, pX, pY);
 		
 		outline_thick_max = 3;
-		outline_thick_min = 0.3;
+		//outline_thick_min = 1;
 	}
 }

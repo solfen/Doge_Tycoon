@@ -18,19 +18,20 @@ class Niche extends Building
 		super(Building.NICHE, p_index, pX, pY);
 		
 		outline_thick_max = 1;
-		outline_thick_min = 0.1;
-		GameInfo.dogeMaxNumber += GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesMaxGain;
-		nbDogesInside = GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesMaxGain;
+		//outline_thick_min = 1;
+
+		GameInfo.dogeMaxNumber += GameInfo.buildingsGameplay[get_id()].dogesMaxGain;
+		nbDogesInside = GameInfo.buildingsGameplay[get_id()].dogesMaxGain;
 	}
 
-	override public function upgrade(): Void 
+	override public function upgrade (): Void 
 	{
 		super.upgrade();
 
 		if (lvl < Building.LVL_3)
 		{
-			GameInfo.dogeMaxNumber += GameInfo.buildingsGameplay[Building.NICHE | lvl].dogesMaxGain;	
-			nbDogesInside += GameInfo.buildingsGameplay[Building.NICHE | lvl].dogesMaxGain;	
+			GameInfo.dogeMaxNumber += GameInfo.buildingsGameplay[get_id()].dogesMaxGain;	
+			nbDogesInside += GameInfo.buildingsGameplay[get_id()].dogesMaxGain;	
 		}
 	}
 

@@ -37,6 +37,14 @@ class Building extends MovieClip
 	public static var LVL_2 		: Int 	= 	0x200;
 	public static var LVL_3 		: Int 	=	0x300;
 	
+	public static var CLICK_VALUE : Dynamic<Int> = {
+		CANT_CLICK 	: 0,
+		UPGRADE 	: 1,
+		DESTROY 	: 2,
+		NOTHING 	: 3,
+		OTHER 		: 4
+	};
+
 	public var filter: OutlineFilter;
 	public var all_map_index: Array<Int>;
 	public var config: Dynamic;
@@ -54,10 +62,12 @@ class Building extends MovieClip
 	public var building_time: Int;
 	public var is_builded: Bool;
 	public var is_clickable: Bool;
+	public var is_focus: Bool;
 
 	private var _cheat_ratio: Float;
 	private var _building_start_time: Float;
 	private var _fading_speed: Float;
+	private var _can_click: Bool;
 
 /* ---------------------------------------------------------------------------------------- */
 
@@ -95,12 +105,14 @@ class Building extends MovieClip
 		row = IsoTools.cell_row(map_origin_index, IsoMap.singleton.cols_nb);
 		is_builded = true;
 		is_clickable = true;
+		is_focus = false;
+		_can_click = false;
 
 		width_in_tiles_nb = get_config().width;
 		height_in_tiles_nb = get_config().height;
 
 		super(_get_texture());
-		anchor.set(0, 1);
+		anchor.set(0, 1); // botom left
 		set_position(pX, pY);
 		interactive = true;
 		loop = true;
@@ -115,7 +127,6 @@ class Building extends MovieClip
 
 		all_map_index = get_map_idx(map_origin_index, width_in_tiles_nb, height_in_tiles_nb);
 
-		click = _on_click;
 		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
 	}
 
@@ -150,7 +161,8 @@ class Building extends MovieClip
 	{
 		if (lvl < Building.LVL_3)
 		{
-			GameInfo.buildingsGameplay[type|lvl].userPossesion--;
+			GameInfo.buildingsGameplay[get_id()].userPossesion--;
+
 			lvl += 0x100;
 			textures = _get_texture();
 			gotoAndStop(0);
@@ -160,7 +172,7 @@ class Building extends MovieClip
 
 	public function destroy (): Void 
 	{
-		GameInfo.buildingsGameplay[type|lvl].userPossesion--;
+		GameInfo.buildingsGameplay[get_id()].userPossesion--;
 		IsoMap.singleton.destroy_building(this);
 	}
 
@@ -188,7 +200,7 @@ class Building extends MovieClip
 
 			if (Timer.stamp() >= building_end_time)
 			{
-				GameInfo.buildingsGameplay[type|lvl].userPossesion++;
+				GameInfo.buildingsGameplay[get_id()].userPossesion++;
 				is_builded = true;
 				tint = 0xFFFFFF;
 				play();
@@ -203,25 +215,47 @@ class Building extends MovieClip
 		{
 			alpha = Math.max(0.4, alpha - Main.getInstance().delta_time * _fading_speed);
 		}
+
+		if (is_focus)
+		{
+			if (_can_click && !InputInfos.is_mouse_down)
+			{
+				_can_click = false;
+				_on_click();
+			}
+			else if (!_can_click && InputInfos.is_mouse_down)
+			{
+				_can_click = true;
+			}
+		}
+		else
+		{
+			_can_click = false;
+		}
 	}
 	
-	private function _on_click (p_data: InteractionData): Void
+	private function _on_click (): Int
 	{
 		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
 		{
-			trace(alpha);
-			return;
+			return CLICK_VALUE.CANT_CLICK;
 		}
+
 		if (GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)
 		{
 			GameInfo.ressources['fric'].userPossesion--;
 			upgrade();
+
+			return CLICK_VALUE.UPGRADE;
 		}
 		else if (GameInfo.isDestroyMode)
 		{
 			destroy();
-			return;
+
+			return CLICK_VALUE.DESTROY;
 		}
+
+		return CLICK_VALUE.NOTHING;
 	}
 
 	private function _get_texture (): Array<Texture>

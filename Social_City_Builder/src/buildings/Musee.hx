@@ -17,29 +17,18 @@ class Musee extends Building
 		super(Building.MUSEE, p_index, pX, pY);
 
 		outline_thick_max = 1;
-		outline_thick_min = 0.1;
+		//outline_thick_min = 1;
 	}
 
-	override private function _on_click (p_data: InteractionData): Void
+	override private function _on_click (): Int
 	{
-		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
+		if (super._on_click() == Building.CLICK_VALUE.NOTHING)
 		{
-			return;
-		}
+			popin.PopinManager.getInstance().openPopin("PopinMusee", 0.5, 0.5);
 
-		if (GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)
-		{
-			GameInfo.ressources['fric'].userPossesion--;
-			upgrade();
+			return Building.CLICK_VALUE.OTHER;
 		}
-		else if (GameInfo.isDestroyMode)
-		{
-			destroy();
-			return;
-		}
-		else
-		{
-			popin.PopinManager.getInstance().openPopin("PopinMusee", 0.5, 0.5);	
-		}
+		
+		return Building.CLICK_VALUE.NOTHING;
 	}
 }

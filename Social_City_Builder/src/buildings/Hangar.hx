@@ -17,9 +17,9 @@ class Hangar extends Building
 		super(p_type, p_index, pX, pY);
 
 		outline_thick_max = 1;
-		outline_thick_min = 0.1;
+		//outline_thick_min = 1;
 
-		workshopConfig= [
+		workshopConfig = [
 			'config'=> {
 				workshopType: p_type,
 				level: 1,
@@ -31,33 +31,22 @@ class Hangar extends Building
 	}
 
 
-	override private function _on_click (p_data: InteractionData): Void
+	override private function _on_click (): Int
 	{
-		if (!is_builded || !is_clickable || !GameInfo.can_map_update)
+		if (super._on_click() == Building.CLICK_VALUE.NOTHING)
 		{
-			trace(alpha);
-			return;
+			PopinManager.getInstance().openPopin("PopinWorkshop", 0.5, 0.5, workshopConfig);
+
+			return Building.CLICK_VALUE.OTHER;
 		}
 
-		if (GameInfo.isUpgradeMode && GameInfo.ressources['fric'].userPossesion > 0)
-		{
-			GameInfo.ressources['fric'].userPossesion--;
-			upgrade();
-		}
-		else if (GameInfo.isDestroyMode)
-		{
-			destroy();
-			return;
-		}
-		else
-		{
-			PopinManager.getInstance().openPopin("PopinWorkshop", 0.5, 0.5, workshopConfig);	
-		}
+		return Building.CLICK_VALUE.NOTHING;
 	}
 
 	override public function upgrade ()
 	{
 		super.upgrade();
+
 		workshopConfig['config'].level += workshopConfig['config'].level == 3 ? 0 : 1;
 	}
 }

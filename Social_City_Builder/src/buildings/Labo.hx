@@ -17,6 +17,6 @@ class Labo extends Building
 		super(Building.LABO, p_index, pX, pY);
 		
 		outline_thick_max = 1;
-		outline_thick_min = 0.1;
+		//outline_thick_min = 1;
 	}
 }

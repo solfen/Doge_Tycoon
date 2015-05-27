@@ -17,6 +17,6 @@ class Entrepot extends Building
 		super(Building.ENTREPOT, p_index, pX, pY);
 		
 		outline_thick_max = 1.5;
-		outline_thick_min = 0.15;
+		//outline_thick_min = 1;
 	}
 }
