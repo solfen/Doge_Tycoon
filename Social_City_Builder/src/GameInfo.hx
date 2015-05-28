@@ -89,6 +89,8 @@ class GameInfo
  		'current'=> [
  			{
  				dog: 'Niche',
+ 				dogX: -0.55,
+ 				dogY: 0.16,
  				title: 'Première niche',
  				description: "Pas de niches, pas d'employés.Pas d'employés, pas\nde fusées.Pas de fusées... pas de fusées.\nOuvrez-donc le menu de construction.\nPuis achetez et construisez une niche !",
  				condition: {"building":Building.NICHE | Building.LVL_1, "numberToHave" : 1 },
@@ -99,6 +101,8 @@ class GameInfo
  			},
  			{
  				dog: 'Workshop',
+ 				dogX: -0.55,
+ 				dogY: 0.16,
  				title: 'Premier atelier',
  				description: "Les ateliers servent à construire les fusées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les bâtiments peuvent être\nachetés depuis le menu de construction",
  				condition: {"building":Building.HANGAR_JAUNE | Building.LVL_1, "numberToHave" : 1 },
@@ -109,6 +113,8 @@ class GameInfo
  			},
  			{
  				dog: 'Workshop',
+ 				dogX: -0.55,
+ 				dogY: 0.16,
  				title: "Première fusée",
  				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et commencez la\n construction de la fusée. N'oubliez pas de fouet..\n*hum* motiver vos employés en cliquant sur\n l’icône dans le atelier",
  				condition: {"rocketsConstructedNb":1},
@@ -119,6 +125,8 @@ class GameInfo
  			},
  			{
  				dog: 'Astro',
+ 				dogX: -0.8,
+ 				dogY: 0.16,
  				title: "La conquête de l'espace !",
  				description: "Votre première fusée est prête à partir !\nVous n'avez plus qu'a appuyer sur le gros\nbouton vert pour la lancer. Ça ne devrait pas être\ntrop compliqué non ?",
  				condition: {"rocketsLaunchedNb": 1 },
@@ -129,6 +137,8 @@ class GameInfo
  			},
  			{
  				dog: 'Casino',
+ 				dogX: -0.95,
+ 				dogY: 0.16,
  				title: "Black jack and...",
  				condition: {"building":Building.CASINO | Building.LVL_1, "numberToHave" : 1 },
  				description: "Vos employés veulent se détendre, vous voulez\n vous remplir les poches.\nUn casino semble le parfait compromis",
@@ -138,6 +148,8 @@ class GameInfo
  				]
  			},
  			{
+ 				dogX: -0.55,
+ 				dogY: 0.16,
  				dog: 'Musee',
  				title: "La culture ça rapporte",
  				condition: {"building":Building.MUSEE | Building.LVL_1, "numberToHave" : 1 },
@@ -511,7 +523,7 @@ class GameInfo
  		Building.LABO | Building.LVL_2 => { userPossesion:0 },
  		Building.LABO | Building.LVL_3 => { userPossesion:0 },
 
- 		Building.NICHE | Building.LVL_1 => { userPossesion:10, dogesPerSecond : 0.1, dogesMaxGain: 5},
+ 		Building.NICHE | Building.LVL_1 => { userPossesion:0, dogesPerSecond : 0.1, dogesMaxGain: 5},
  		Building.NICHE | Building.LVL_2 => { userPossesion:0, dogesPerSecond : 0.1, dogesMaxGain: 10},
  		Building.NICHE | Building.LVL_3 => { userPossesion:0, dogesPerSecond : 0.1 , dogesMaxGain: 20},
 
@@ -782,7 +794,7 @@ class GameInfo
  	public static var museeSoftSpeed:Float = 10;
  	public static var musseVisiteGain:Float = 1;
 
- 	public static var building_2_build: Int = Building.HANGAR_JAUNE;
+ 	public static var building_2_build: Int = Building.MUSEE;
  	public static var shipToLaunch: String;
  	public static var can_map_update: Bool = true; 	
  	public static var is_building_context_pop_open: Bool = false;

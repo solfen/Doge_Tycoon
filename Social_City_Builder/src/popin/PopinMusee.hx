@@ -41,7 +41,7 @@ class PopinMusee extends MyPopin
 	private var minParticlesNb:Int = 3;
 	private var cheatDogeClick:Float = 1;
 
-	private var guiValuesListArtefacts:Array<String> = ["completionBarMaxWidth","planetTabX","planetTabY","planetTabInterval","articleInterline","articleBaseX","articleBaseY","actionButtonX","actionButtonY","articleImageX","articleImageY","articleNbX","articleNbY","headerMyAretefactsX","headerMyAretefactsY","backFillBarX","backFillBarY","loadbarStartX","loadbarStartY","completionInfoX","completionInfoY","scrollBackroundX","scrollBackroundY","scrollBarX","scrollBarY","scrollIndicOffsetX","scrollIndicOffsetY"];
+	private var guiValuesListArtefacts:Array<String> = ["completionBarMaxWidth","planetTabX","planetTabY","planetTabInterval","articleInterline","articleBaseX","articleBaseY","actionButtonX","actionButtonY","articleImageX","articleImageY","articleNbX","articleNbY","headerMyAretefactsX","headerMyAretefactsY","backFillBarX","backFillBarY","loadbarStartX","loadbarStartY","completionInfoX","completionInfoY","scrollBackroundX","scrollBackroundY","scrollBarX","scrollBarY","scrollIndicOffsetX","scrollIndicOffsetY","artefactTxtX","artefactTxtY"];
 	private var headerMyAretefactsX:Float = 0.58;
 	private var headerMyAretefactsY:Float = 0.05;
 	private var backFillBarX:Float = 0.13;
@@ -51,20 +51,22 @@ class PopinMusee extends MyPopin
 	private var completionInfoX:Float = 0.80;
 	private var completionInfoY:Float = 0.16;
 	private var scrollBackroundX:Float = 0.11;
-	private var scrollBackroundY:Float = 0.5;
+	private var scrollBackroundY:Float = 0.56;
 	private var scrollBarX:Float = 0.82;
 	private var scrollBarY:Float = 0.84;
 	private var scrollIndicOffsetX:Float = -0.415;
 	private var scrollIndicOffsetY:Float = 0.025;
+	private var artefactTxtX:Float = 0.13;
+	private var artefactTxtY:Float = 0.5;
 
 	private var articleBaseX:Float = 0.149;
-	private var articleBaseY:Float = 0.539;
+	private var articleBaseY:Float = 0.599;
 	private var actionButtonX:Float = 0.214;
-	private var actionButtonY:Float = 0.74;
+	private var actionButtonY:Float = 0.8;
 	private var articleImageX:Float = 0.158;
-	private var articleImageY:Float = 0.55;
+	private var articleImageY:Float = 0.61;
 	private var articleNbX:Float = 0.171;
-	private var articleNbY:Float = 0.755;
+	private var articleNbY:Float = 0.815;
 
 	private var planetTabX:Float = 0.93;
 	private var planetTabY:Float = 0.13;
@@ -95,7 +97,7 @@ class PopinMusee extends MyPopin
 
 		addIcon(0.95, 0,'closeButtonNormal.png',"closeButton",this,true,'closeButtonActive.png',true);
 		addIcon(-0.15,-0.15,'PopInMuseeTitle.png',"popInTitle",this,false);
-		addIcon(-0.7,0.4,'assets/Dogs/DogMusee.png',"dog",this,false);
+		addIcon(-0.55,0.5,'assets/Dogs/DogMusee.png',"dog",this,false);
 	}
 
 	private function addHomeTab() : Void {
@@ -137,9 +139,14 @@ class PopinMusee extends MyPopin
 		for(i in 0...6){
 			addIcon(planetTabX,planetTabY+i*planetTabInterval,'PopInMuseeBoutonNormal_'+i+'.png',"planetTab"+i,containers['main'],true,'PopInMuseeBoutonActive_'+i+'.png',true);
 		}
+
+		addText(artefactTxtX,artefactTxtY,'FuturaStdHeavy','25px',"ARTEFACTS :",'ressourceTxt',containers["main"]);
 		addIcon(scrollBackroundX,scrollBackroundY,'PopInMuseeScrollBackground.png',"contentBackground",containers['main'],false);
 		//addMask(icons["contentBackground"].x+3, icons["contentBackground"].y, icons["contentBackground"].width-6, icons["contentBackground"].height,containers["verticalScroller"]);
 		addIcon(icons["contentBackground"].x,icons["contentBackground"].y,'PopInScrollOverlay.png',"scrollOverlay",containers['main'],false);
+		icons["planetTab0"].setTextureToActive();
+		lastPlanetIcon = icons["planetTab0"];
+		addArtefactPlanet(GameInfo.artefacts[planetsNames[0]]);
 	}
 	private function addAmisArtefactsTab() : Void {
 
@@ -187,9 +194,9 @@ class PopinMusee extends MyPopin
 		//GameInfo.musseVisiteGain = cheatDogeClick;
 		containers['main'].children = [];
 		containers.exists('verticalScroller') ? containers['verticalScroller'].children = [] : null;
-		currentTab == 'homeTab' ? icons['homeTab'].setTextureToActive() : null;
-		currentTab == 'myArtefactsTab' ? icons['myArtefactsTab'].setTextureToNormal() : null;
-		currentTab == 'amisArtefactsTab' ? icons['amisArtefactsTab'].setTextureToNormal() : null;
+		currentTab == 'homeTab' ? icons['homeTab'].setTextureToActive() : icons['homeTab'].setTextureToNormal();
+		currentTab == 'myArtefactsTab' ? icons['myArtefactsTab'].setTextureToActive() : icons['myArtefactsTab'].setTextureToNormal();
+		currentTab == 'amisArtefactsTab' ? icons['amisArtefactsTab'].setTextureToActive() : icons['amisArtefactsTab'].setTextureToNormal();
 		header.setTexture(headerTextures[currentTab]);
 		currentTab == 'homeTab' ? addHomeTab() : currentTab == 'myArtefactsTab' ? addMyArtefactsTab() : addAmisArtefactsTab();
 	}
@@ -202,13 +209,16 @@ class PopinMusee extends MyPopin
 			PopinManager.getInstance().closePopin("PopinMusee");
 		}
 		else if(pEvent.target._name == "homeTab" && currentTab != "homeTab"){
-			
+			currentTab = "homeTab";
+			changeTab();
 		}
 		else if(pEvent.target._name == "myArtefactsTab" && currentTab != "myArtefactsTab"){
-			
+			currentTab = "myArtefactsTab";
+			changeTab();
 		}
 		else if(pEvent.target._name == "amisArtefactsTab" && currentTab != "amisArtefactsTab"){
-			
+			currentTab = "amisArtefactsTab";
+			changeTab();
 		}
 		else if(pEvent.target._name.indexOf("planetTab") != -1){
 			var index:Int = Std.parseInt(pEvent.target._name.split('planetTab')[1]);

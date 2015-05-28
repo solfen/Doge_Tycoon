@@ -38,6 +38,8 @@ class PopinSpaceShipReturn extends MyPopin
 	private var artefactsTxtY:Float = 0.54;
 	private var artefactsNbX:Float = 0.17;
 	private var artefactsNbY:Float = 0.81;
+	private var dogPosX:Float = 0.81;
+	private var dogPosY:Float = 0.81;
 
 
 	private function new(?startX:Float,?startY:Float, ?optParam:Map<String,Dynamic>) 

@@ -44,7 +44,7 @@ class PopinQuestFinished extends MyPopin
 		addContainer("main",this,0,0);
 		addQuest();
 		addRessources();
-		//debugGUI();
+		debugGUI();
 	}
 	private function addQuest() {
 		addText(0.115,0.15,'FuturaStdHeavy','25px',"QUETE :",'ressourceTxt',containers["main"]);
@@ -52,7 +52,7 @@ class PopinQuestFinished extends MyPopin
 		addIcon(0.13,0.21, 'IconDog'+quest.dog+'.png',"ArticlePreview",containers["main"],false);
 		addText(0.298,0.2,'FuturaStdHeavy','25px',quest.title,'titleText',containers["main"]);
 		addText(0.298,0.25,'FuturaStdMedium','12px',quest.description,'Description',containers["main"]);
-		addIcon(quest.dogX,quest.dogY,'assets/Dogs/Dog' + quest.dog + '.png',"dog",containers["main"],false);
+		addIcon(dogPosX,dogPosY,'assets/Dogs/Dog' + quest.dog + '.png',"dog",this,false);
 	}
 	private function addRessources(){
 		addIcon(ressourcesBackX, ressourcesBackY,'PopinArticleBgReturn.png',"ressourcesBack",containers["main"],false);

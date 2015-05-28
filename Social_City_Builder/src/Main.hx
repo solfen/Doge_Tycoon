@@ -10,7 +10,6 @@ import pixi.loaders.AssetLoader;
 import pixi.renderers.webgl.WebGLRenderer;
 import pixi.utils.Detector;
 import pixi.text.Text;
-import externs.FB;
 import externs.WebFontLoader;
 import scenes.ScenesManager;
 import externs.Howl;
@@ -124,7 +123,7 @@ class Main extends EventDispatcher
 		var lLoader:AssetLoader = new AssetLoader(LoadInfo.loadAssets);
 		lLoader.addEventListener("onProgress", onLoadProgress);
 		lLoader.addEventListener("onComplete", onLoadComplete);
-		//FB.getLoginStatus(onFacebookConnect);
+		//utils.server.MyFbHelper.getInstance();
 		lLoader.load();
 	}
 	
