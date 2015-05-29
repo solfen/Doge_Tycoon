@@ -29,6 +29,7 @@ class IsoMap extends DisplayObjectContainer
 	public var obstacles_layer: Array<Bool>;
 	public var focused_building: Building;
 	public var current_overflown_cell: Int;
+	public var clicked: Bool;
 
 	private var _previewing_building: PreviewBuilding;
 	private var _graphics: Graphics;
@@ -44,7 +45,7 @@ class IsoMap extends DisplayObjectContainer
 	private var _screen_move_y: Int;
 	private var _map_width: Int;
 	private var _map_height: Int;
-	private var _is_clicking: Bool;
+	private var _can_click: Bool;
 
 /* ---------------------------------------------------------------------------------------- */
 
@@ -58,7 +59,8 @@ class IsoMap extends DisplayObjectContainer
 		_screen_move_speed = 0.5;
 		_screen_move_max_to_build = 64;
 		_screen_move_delay = 0.7;
-		_is_clicking = false;
+		_can_click = false;
+		clicked = false;
 
 		cols_nb = pCols_nb;
 		rows_nb = pRows_nb;
@@ -182,7 +184,9 @@ class IsoMap extends DisplayObjectContainer
 	{
 		if (!GameInfo.can_map_update)
 		{
-			_is_clicking = false; // pour le reset du click, si on est dans l'interface par exemple
+			_can_click = false; // pour le reset du click, si on est dans l'interface par exemple
+			clicked = false;
+			
 			if (_previewing_building != null) // reset du preview s'il y en avait un (indecision)
 			{
 				removeChild(_previewing_building);
@@ -193,8 +197,8 @@ class IsoMap extends DisplayObjectContainer
 
 		if (IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), cell_width, cell_height, cells_nb, cols_nb))
 		{
-
-			current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x/this.scale.x+0.5), Std.int(this.y/this.scale.y+0.5), Std.int(cell_width*this.scale.x), Std.int(cell_height*this.scale.y), cols_nb);
+			//current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x+0.5), Std.int(this.y+0.5), Std.int(cell_width*this.scale.x), Std.int(cell_height*this.scale.y), cols_nb);
+			current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x+0.5), Std.int(this.y+0.5), Std.int(cell_width), Std.int(cell_height), cols_nb);
 
 			var i: Int = buildings_list.length;
 			var map_x_on_screen: Float = InputInfos.mouse_x - x;
@@ -215,8 +219,6 @@ class IsoMap extends DisplayObjectContainer
 						buildings_list[i].is_clickable = focused_building == null || focused_building.row >= buildings_list[i].row;
 						buildings_list[i].outline_fade_out();
 						buildings_list[i].is_focus = false;
-						//buildings_list[i].outline_thick = 0;
-						//buildings_list[i].filter.set_thickness(0);
 					}
 					else
 					{
@@ -239,26 +241,27 @@ class IsoMap extends DisplayObjectContainer
 
 		}
 
-		if (_is_clicking && !InputInfos.is_mouse_down) // click relaché après avoir été appuyé
+		if (_can_click && !InputInfos.is_mouse_down) // click relaché après avoir été appuyé
 		{
-			_is_clicking = false;
+			_can_click = false;
 			_on_click();
 		}
-		else if (!_is_clicking && InputInfos.is_mouse_down) // click appuyé
+		else if (!_can_click && InputInfos.is_mouse_down) // click appuyé
 		{
 			_old_x = x;
 			_old_y = y;
-			_is_clicking = true;
+			_can_click = true;
+			clicked = false;
 		}
 
 		if (InputInfos.is_mouse_down)
 		{
 			// déplacement sur la map au click
-			x = InputInfos.mouse_x - (InputInfos.last_mouse_down_x-_old_x);
-			x = x>0 ? 0 : x<DeviceCapabilities.width-_map_width ? DeviceCapabilities.width-_map_width : x;
+			x = InputInfos.mouse_x - (InputInfos.last_mouse_down_x - _old_x);
+			x = x > 0 ? 0 : x < DeviceCapabilities.width - _map_width ? DeviceCapabilities.width - _map_width : x;
 
-			y = InputInfos.mouse_y - (InputInfos.last_mouse_down_y-_old_y);
-			y = y>0 ? 0 : y<DeviceCapabilities.height-_map_height ? DeviceCapabilities.height-_map_height : y;
+			y = InputInfos.mouse_y - (InputInfos.last_mouse_down_y - _old_y);
+			y = y > 0 ? 0 : y < DeviceCapabilities.height - _map_height ? DeviceCapabilities.height - _map_height : y;
 		}
 
 
@@ -330,17 +333,21 @@ class IsoMap extends DisplayObjectContainer
 
 	private function _on_click (): Void
 	{
-		if (GameInfo.building_2_build > 0
-			&& Std.int(_old_x/_screen_move_max_to_build)==Std.int(x/_screen_move_max_to_build)
-			&& Std.int(_old_y/_screen_move_max_to_build)==Std.int(y/_screen_move_max_to_build))
+		if (Std.int(_old_x / _screen_move_max_to_build) == Std.int( x / _screen_move_max_to_build)
+			&& Std.int(_old_y / _screen_move_max_to_build) == Std.int( y / _screen_move_max_to_build))
 		{
-			var new_building: Building = build_building(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y);
-			
-			if (new_building != null)
+			clicked = true;
+
+			if (GameInfo.building_2_build > 0)
 			{
-				GameInfo.building_2_build = 0;
-				removeChild(_previewing_building);
-				_previewing_building = null;
+				var new_building: Building = build_building(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y);
+				
+				if (new_building != null)
+				{
+					GameInfo.building_2_build = 0;
+					removeChild(_previewing_building);
+					_previewing_building = null;
+				}
 			}
 		}
 	}

@@ -219,7 +219,7 @@ class Building extends MovieClip
 
 		if (is_focus)
 		{
-			if (_can_click && !InputInfos.is_mouse_down)
+			if (_can_click && !InputInfos.is_mouse_down && IsoMap.singleton.clicked)
 			{
 				_can_click = false;
 				_on_click();

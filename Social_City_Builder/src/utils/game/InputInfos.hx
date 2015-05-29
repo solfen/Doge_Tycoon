@@ -75,28 +75,27 @@ class InputInfos
 		//trace("wheel:", pData.deltaY); // multiple de 100 sur chrome, multiple de 3 sur firefox
 		mouse_wheel_dir = pData.deltaY < 0 ? -1 : 1; // uniquement la direction
 
-/*
+
 		// dirty, to try the zoom feature
 
-		IsoMap.singleton.scale.x += mouse_wheel_dir * 0.1; // zoom
-		IsoMap.singleton.scale.y += mouse_wheel_dir * 0.1;
+		//IsoMap.singleton.scale.x -= mouse_wheel_dir * 0.1; // zoom
+		//IsoMap.singleton.scale.y -= mouse_wheel_dir * 0.1;
 		
 		// 1/ redéfinir la taille des cellules isométriques
 
-		//IsoMap.singleton.cell_width = Std.int(IsoMap.singleton.cell_width * (1+mouse_wheel_dir * 0.1));
-		//IsoMap.singleton.cell_height = Std.int(IsoMap.singleton.cell_height * (1+mouse_wheel_dir * 0.1));
-
-		IsoMap.singleton.cell_width = Std.int(IsoMap.singleton.scale.x * 128);
-		IsoMap.singleton.cell_height = Std.int(IsoMap.singleton.scale.y * 64);
+		// current cell
 
 		// 2/ déplacer la map pour "recentrer" autour du curseur (sauvegarder l'ancienne position)
 
 
-		//IsoMap.singleton.x += (mouse_x-DeviceCapabilities.width*0.5)*0.1;
-		//IsoMap.singleton.y += (mouse_y-DeviceCapabilities.height*0.5)*0.1;
+		//IsoMap.singleton.x += (mouse_x - DeviceCapabilities.width * 0.5) * 0.1;
+		//IsoMap.singleton.y += (mouse_y - DeviceCapabilities.height * 0.5) * 0.1;
 
-		trace("zoom: ", IsoMap.singleton.scale.x);
-*/
+		//IsoMap.singleton.x += Std.int(128*64 * 0.05 + 0.5) * mouse_wheel_dir;
+		//IsoMap.singleton.y += Std.int(64*64 * 0.05 + 0.5) * mouse_wheel_dir;
+
+		//trace("zoom: ", IsoMap.singleton.scale.x);
+
 	}
 
 }
