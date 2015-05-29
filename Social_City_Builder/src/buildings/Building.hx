@@ -118,7 +118,7 @@ class Building extends MovieClip
 		loop = true;
 		animationSpeed = 0.333;
 		_fading_speed = 0.8;
-		outline_thick_min = 1;
+		outline_thick_min = 0.1;
 		outline_thick_max = 7;
 		outline_thick = 0;
 
@@ -172,8 +172,9 @@ class Building extends MovieClip
 
 	public function destroy (): Void 
 	{
-		GameInfo.buildingsGameplay[get_id()].userPossesion--;
-		IsoMap.singleton.destroy_building(this);
+		Main.getInstance().removeEventListener(Event.GAME_LOOP, _update);
+		filter = null;
+		parent.removeChild(this);
 	}
 
 	public function outline_fade_in (): Void
@@ -250,7 +251,9 @@ class Building extends MovieClip
 		}
 		else if (GameInfo.isDestroyMode)
 		{
-			destroy();
+			GameInfo.buildingsGameplay[get_id()].userPossesion--;
+
+			IsoMap.singleton.destroy_building(this);
 
 			return CLICK_VALUE.DESTROY;
 		}

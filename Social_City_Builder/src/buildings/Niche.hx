@@ -35,10 +35,16 @@ class Niche extends Building
 		}
 	}
 
-	override public function destroy (): Void 
+	override private function _on_click (): Int
 	{
-		super.destroy();
-		GameInfo.buildingsGameplay[type | lvl].userPossesion--;
-		GameInfo.dogeMaxNumber -= nbDogesInside;	
+		if (super._on_click() == Building.CLICK_VALUE.DESTROY)
+		{
+			GameInfo.buildingsGameplay[get_id()].userPossesion--;
+			GameInfo.dogeMaxNumber -= nbDogesInside;
+
+			return Building.CLICK_VALUE.OTHER;
+		}
+
+		return Building.CLICK_VALUE.NOTHING;
 	}
 }

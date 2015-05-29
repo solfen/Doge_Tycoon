@@ -174,7 +174,7 @@ class IsoMap extends DisplayObjectContainer
 		}
 
 		buildings_list.remove(building);
-		building.parent.removeChild(building);
+		building.destroy();
 		building = null;
 	}
 

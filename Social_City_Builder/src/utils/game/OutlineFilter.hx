@@ -36,7 +36,7 @@ class OutlineFilter extends AbstractFilter
 			'vec2 px = vec2(pixelWidth, pixelHeight);',
 
 			'void main (void) {',
-			'    if (thickness < .5) {',
+			'    if (thickness < .1) {',
 			'        gl_FragColor = texture2D(texture, vTextureCoord);',
 			'	} else {',
 			'        const float PI = 3.14159265358979323846264;',
