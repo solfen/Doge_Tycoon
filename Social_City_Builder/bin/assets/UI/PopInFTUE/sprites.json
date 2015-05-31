@@ -1,0 +1,20 @@
+{
+"frames": {
+	"PopInFTUEHeader.png": {
+		"frame": {"x":0, "y":187, "w":220, "h":59},
+		"spriteSourceSize": {"x":0,"y":0,"w":220,"h":59},
+		"sourceSize": {"w":220,"h":59}
+	},
+	"PopInFTUETitle.png": {
+		"frame": {"x":0, "y":0, "w":353, "h":187},
+		"spriteSourceSize": {"x":0,"y":0,"w":353,"h":187},
+		"sourceSize": {"w":353,"h":187}
+	}
+
+},
+"meta": {
+	"image": "sprites.png",
+	"size": {"w": 353, "h": 246},
+	"scale": "1"
+}
+}
