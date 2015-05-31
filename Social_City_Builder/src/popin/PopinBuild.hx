@@ -18,6 +18,7 @@ class PopinBuild extends MyPopin
 	private function new(?startX:Float,?startY:Float) 
 	{
 		GameInfo.can_map_update = false;
+		trace(startX,startY);
 		super(startX,startY, "PopInBackground.png");
 		headerTextures = [
 			'niches'=>Texture.fromFrame('PopInHeaderNiches.png'),

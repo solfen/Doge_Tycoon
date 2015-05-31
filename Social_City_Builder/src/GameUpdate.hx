@@ -13,6 +13,9 @@ class GameUpdate
 
 	private static var instance: GameUpdate;
 	private var mainInstance: Main;
+	private var ftue1 : Bool = false;
+	private var ftue2 : Bool = false;
+	private var ftueParam : Map<String,Dynamic>;
 	
 	public static function getInstance (): GameUpdate {
 		if (instance == null) instance = new GameUpdate();
@@ -20,6 +23,7 @@ class GameUpdate
 	}
 	
 	private function new() {
+		trace(Building.CASINO | Building.LVL_1);
 		mainInstance = Main.getInstance();	
 		Main.getInstance().addEventListener(Event.GAME_LOOP, update); 
 	}
@@ -82,6 +86,17 @@ class GameUpdate
 			var data:Map<String,Dynamic> = ['destination' => GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].destination];
 			GameInfo.rockets.currentRocket = null;
 			PopinManager.getInstance().addPopinToQueue("PopinSpaceShipReturn",0.5,0.5, data);
+		}
+
+		if(!ftue1){
+			ftueParam = ['ftueIndex' => 0];
+			PopinManager.getInstance().openPopin("PopinFTUE",0.5,0.5,ftueParam);
+			ftue1 = true;
+		}
+		else if(!ftue2 && GameInfo.buildingsGameplay[Building.PAS_DE_TIR | Building.LVL_1].userPossesion > 0){
+			ftueParam = ['ftueIndex' => 1];
+			PopinManager.getInstance().openPopin("PopinFTUE",0.5,0.5,ftueParam);
+			ftue2 = true;
 		}
 
 	}

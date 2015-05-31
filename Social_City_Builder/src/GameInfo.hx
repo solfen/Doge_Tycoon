@@ -794,14 +794,13 @@ class GameInfo
  	public static var museeSoftSpeed:Float = 10;
  	public static var musseVisiteGain:Float = 1;
 
- 	public static var building_2_build: Int = Building.MUSEE;
+ 	public static var building_2_build: Int = Building.PAS_DE_TIR;
  	public static var shipToLaunch: String;
  	public static var can_map_update: Bool = true; 	
  	public static var is_building_context_pop_open: Bool = false;
 
  	public static var BUILDINGS_IMG_FOLDER_PATH: String = "assets/Buildings/";
 	public static var BUILDINGS_IMG_EXTENSION: String = ".png";
-
 	public static var BUILDINGS_CONFIG: Map<Int, Dynamic> = [
 		/* img format : "XXX_NN.png" */
 

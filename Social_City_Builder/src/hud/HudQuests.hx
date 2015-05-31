@@ -10,6 +10,7 @@ import pixi.InteractionData;
 class HudQuests extends IconHud
 {
 	private static var instance: HudQuests;
+	private var ftue3:Bool = false;
 
 	private function new(startX:Float,startY:Float) 
 	{
@@ -23,7 +24,13 @@ class HudQuests extends IconHud
 			PopinManager.getInstance().closeCurentPopin();
 			GameInfo.can_map_update = true;
 		}
-		if(curName != "PopinQuests")
+		if(curName != "PopinQuests"){
 			PopinManager.getInstance().openPopin("PopinQuests", 0.5, 0.55);
+			if(!ftue3){
+				var ftueParam:Map<String, Dynamic> = ['ftueIndex' => 2];
+				PopinManager.getInstance().addPopinToQueue("PopinFTUE",0.5,0.5,ftueParam);
+				ftue3 = true;
+			}
+		}
 	}	
 }

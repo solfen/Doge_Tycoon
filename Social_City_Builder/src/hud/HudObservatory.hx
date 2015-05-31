@@ -24,6 +24,6 @@ class HudObservatory extends IconHud
 			GameInfo.can_map_update = true;
 		}
 		if(curName != "PopinObservatory")
-			PopinManager.getInstance().openPopin("PopinObservatory", 0.5, 0.5);
+			PopinManager.getInstance().openPopin("PopinObservatory", 0.5, 0.55);
 	}
 }
