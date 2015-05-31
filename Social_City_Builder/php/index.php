@@ -61,15 +61,6 @@ Appel à l'Open Graph de Facebook
 if($session)
 {
     try{
-        $request = new FacebookRequest(
-          $session,
-          'POST',
-          '/me/space_dogs_tycoon:find',
-          array(
-            'artefact' => "http://samples.ogp.me/884406454948358"
-          )
-        );
-        $request->execute();
         $request = new FacebookRequest($session, 'GET', '/me?fields=id,name,email');
         $response = $request->execute();
         $graphObject = $response->getGraphObject();
@@ -93,6 +84,8 @@ if($session)
         $requete = $connexion->prepare('INSERT INTO `players`(`ID`, `facebookID`, `login`, `email`, `level`) VALUES ("",:id,:name,:email,1)');
         $resultat = $requete->execute( array(':id' => $id,':name'=>$name,':email'=>$email) );
     }
+    $_SESSION["facebookID"] = $id;
+    
     echo '<script>window.location.replace("/bin/index.html")</script>'; 
 }
 else
