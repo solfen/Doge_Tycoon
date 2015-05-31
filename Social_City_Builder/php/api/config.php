@@ -5,7 +5,7 @@
 	$user = 'dogeexplorer';
 	$pwd = 'doge2015';*/
 
-	$src = 'mysql:host=127.0.0.1;dbname=doge_tycoon';
+	$src = 'mysql:host=127.0.0.1;dbname=dogeexplorer_dev';
 	$user = 'root';
 	$pwd = '';
 

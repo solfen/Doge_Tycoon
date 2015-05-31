@@ -51,7 +51,6 @@ if($session)
         exit;
     }
 
-    // Enregistrer le token en BDD
 }
  
  
@@ -60,17 +59,16 @@ Appel à l'Open Graph de Facebook
 */
 if($session)
 {
-
-    
     // handle the response
     $request = new FacebookRequest($session, 'GET', '/me');
     $response = $request->execute();
     $graphObject = $response->getGraphObject();
     $graphObject = $response->getGraphObject(GraphUser::className());
     $user_id = $graphObject->getId();
-	$requete = 'SELECT `facebookID` FROM `players` WHERE facebookID ="'.$user_id.'"';
-	$resultat = $connexion->query($requete);
-	print_r($resultat->rowCount());
+    $requete = 'SELECT `facebookID` FROM `players` WHERE facebookID ="'.$user_id.'"';
+    $resultat = $connexion->query($requete);
+    print_r($resultat->rowCount());
+
 }
 else
 {

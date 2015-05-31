@@ -38,41 +38,14 @@ class MyFbHelper
 		  method: 'share_open_graph',
 		  action_type: 'space_dogs_tycoon:find',
 		  action_properties: haxe.Json.stringify({
-		      'artefact':'https://fbgame.isartdigital.com/isartdigital/dogeexplorer/FbObjects/boot.html',
-		      'scrap' : true
+		      'artefact':'https://fbgame.isartdigital.com/isartdigital/dogeexplorer/FbObjects/boot.html'
 		  })
 		}, function(response){});
-		/*FB.api(
-		  'me/objects/space_dogs_tycoon:artefact',
-		  'post',
-		  {
-		    'og:url': 'https://fbgame.isartdigital.com/isartdigital/dogeexplorer/php/fbObjects/boot.html',
-		    'og:title': 'Awesome boot',
-		    'og:type': 'space_dogs_tycoon:artefact',
-		    'og:image': 'https://fbgame.isartdigital.com/isartdigital/dogeexplorer/bin/assets/UI/Icons/Artefacts/IconArtefactsTerre2.png',
-		    'og:description': 'My boot is so awesome that it can cure cancer',
-		    'fb:app_id': 855211017867902
-		  },
-		  function(response) {
-		    trace(response);
-		  }
-		);*/
 	}
 
 	private function onFacebookConnect(pResponse:Dynamic){
 		if(pResponse.status == 'connected'){
-			findArtefact();
-			/*FB.api(
-			  'me/space_dogs_tycoon:find',
-			  'post',
-			  {
-			    artefact: "http://samples.ogp.me/884406454948358",
-			    //fb:'explicitly_shared',
-			  },
-			  function(response) {
-			  	trace(response);
-			  }
-			);*/
+			shareGame();
 		}
 		else if(pResponse.status == 'not_authorized'){
 			trace("Oh no ! you're not identified");
@@ -80,8 +53,5 @@ class MyFbHelper
 				FB.getLoginStatus(onFacebookConnect);
 			}, {scope: 'publish_actions,email'});
 		}
-	}
-	private function test(){
-		trace("succes");
 	}
 }
