@@ -1,0 +1,94 @@
+/!\Nous ne souhaitons pas être noté./!\
+
+Contenu développé :
+
+	achat bâtiments
+	construction bâtiments
+	upgrade bâtiments (bouton en bas à gauche)
+	destruction bâtiments (bouton en bas à gauche)
+	possibilité d'avoir des bâtiments pouvant n'être construits qu'une seule fois, via config
+	possibilité d'avoir des bâtiments qui ne sont pas débloqué, via config
+	feedback lors de la construction d'un bâtiment
+	feedback lors du survol d'un bâtiment
+
+	
+	vente des ressources (icône en forme de chariot)
+	achat des ressources (icône en forme de chariot)
+
+	missions diverses (icône en forme de livre)
+	missions sont complété quand leur conditions sont remplies
+
+	inventaire affiche toute les ressources disponibles
+	la popin d'inventaire peut être ouverte en même temps que d'autres popins
+
+	Hud haut affiche certaines ressources et est mis à jour automatiquement
+	
+	les niches font gagner de la population avec le temps et augmentent le nombre de pop max
+	
+	L'Église à une popin fonctionnelle lorsque l'on clique dessus
+	Dans la popin de l'église on peut cliquer pour augmenter sa foi et avoir un feedback de particules
+	la foi diminue avec le temps
+
+	le musée possède une popin lorsque l'on clique dessus
+	le mussé a trois onglets : l'onglet accueil permet de cliquer pour gagner de la soft
+	l'onglet mes artefacts montres les artefacts du joueur
+	
+	Les ateliers ont une popin lorsque l'on clique dessus
+	la popin des ateliers est liée au bâtiment sur lequel on a cliqué
+	les ateliers peuvent servir a construire puis lancer des fusées
+	on peut accélérer la construction d'une fusée en cliquant sur son image
+
+	Les fusées peuvent être lancées
+	lorsque une fusée est lancée, une animation à la base de lancement est jouée
+	les fusées rapportent des artefacts et des ressources
+	lorsqu'une fusée revient, une popin est ouverte
+
+	les popins événementielles (pas actionée par une action du joueur) ne s'ouvrent que quand le joueur n'a pas de popin d'ouverte
+
+	FTUE très basique renvoyant sur les missions qui donnent au joueur des objectifs permettant de prendre le jeu en main
+
+	indication quand le joueur est en mode upgrade ou destruction (attention il y a un bug connu)
+	
+	musique de fond (désactivé dans le code car gênante lors du développement et absence de bouton mute)
+	
+
+Contenu a faire :
+	
+	gros travail pour le développement de la partie serveur qui est pour l'instant quasi inexistante
+	intégration des mécaniques Facebook (prototype de ces mécaniques déjà dispo)
+	la foi dans l'église n'a pas encore d'influence sur le gameplay
+	petits chiens qui se déplacent sur la map
+	décors pour égayer la map
+	feedback audio quand retour de fusée
+	popin de la base de lancement qui permet de voir l'avancé des fusées dans l'espace
+	finir la popin du musée
+	feedback quand le joueur n'a pas les moyens pour effectuer une action (audio et visuel)
+	plus de missions pour guider le joueur
+	infobulle au survol des éléments du hud pour fournir des explications
+	coût d'upgrade des bâtiments (actuellement juste 1 de soft)
+	Équilibrage (absolument pas fait pour l'instant)
+	tweens pour les popins
+	crédits (pas oublier le gars de la musique)
+	Externaliser la config dans un JSON a part
+	Casino
+	Options
+	inventaire limité par la quantité max
+	Église avec zone d'effet
+
+
+BUGS :
+	scroll bar apparait horizontale la première fois qu'on lance le jeu, rafraichir la page règle le problème
+	FB is not defined parfois (problème d'asynchrone)
+	fussé passe devant les buildings si il y en a devant le pas de tir (problème d'enfant pixijs)
+	les indications du mode actuel ne sont pas remise à 0 quand on ouvre une popin
+
+	
+	
+	
+	
+
+	
+
+	
+	
+	

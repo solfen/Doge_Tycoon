@@ -22,9 +22,9 @@ class Pas_de_tir extends Building
 	private var shipAnimationSpeed: Float;
 
 
-	public function new (p_index: Int, pX: Int, pY: Int) : Void
+	public function new (pBdd_id:String, p_index: Int, pX: Int, pY: Int) : Void
 	{
-		super(Building.PAS_DE_TIR, p_index, pX, pY);
+		super(Building.PAS_DE_TIR, pBdd_id, p_index, pX, pY);
 
 		outline_thick_max = 9;
 		//outline_thick_min = 1;

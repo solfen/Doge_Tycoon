@@ -65,7 +65,6 @@ class Main extends EventDispatcher
 	private function new ()
 	{
 		super();
-
 		stage = new Stage(0x3f7cbf);
 
 		renderer = Detector.autoDetectRenderer(DeviceCapabilities.width, DeviceCapabilities.height); // voir ce que ça donne dans facebook
@@ -136,6 +135,7 @@ class Main extends EventDispatcher
 		pEvent.target.removeEventListener("onProgress", onLoadProgress);
 		pEvent.target.removeEventListener("onComplete", onLoadComplete);
 		ScenesManager.getInstance().loadScene("GameScene");
+		utils.game.LoadConfig.load();
 	}
 	
 	

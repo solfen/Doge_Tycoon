@@ -50,6 +50,7 @@ class Building extends MovieClip
 	public var config: Dynamic;
 	public var col: Float;
 	public var row: Float;
+	public var bdd_id: String;
 	public var building_end_time: Float; // utile pour determiner les gains
 	public var outline_thick: Float;
 	public var outline_thick_min: Float;
@@ -61,6 +62,7 @@ class Building extends MovieClip
 	public var height_in_tiles_nb: Int;
 	public var building_time: Int;
 	public var is_builded: Bool;
+	public var is_checking_with_server: Bool;
 	public var is_clickable: Bool;
 	public var is_focus: Bool;
 
@@ -94,7 +96,7 @@ class Building extends MovieClip
 		return map_idx;
 	}
 
-	public function new (p_type: Int, p_index: Int, pX: Int, pY: Int): Void
+	public function new (p_type: Int, pBdd_id: String, p_index: Int, pX: Int, pY: Int): Void
 	{
 		_cheat_ratio = 0.01; // pour construire + vite, parce que c'est long sinon !
 		
@@ -103,7 +105,9 @@ class Building extends MovieClip
 		map_origin_index = p_index;
 		col = IsoTools.cell_col(map_origin_index, IsoMap.singleton.cols_nb);
 		row = IsoTools.cell_row(map_origin_index, IsoMap.singleton.cols_nb);
+		bdd_id = pBdd_id;
 		is_builded = true;
+		is_checking_with_server = false;
 		is_clickable = true;
 		is_focus = false;
 		_can_click = false;
@@ -128,6 +132,20 @@ class Building extends MovieClip
 		all_map_index = get_map_idx(map_origin_index, width_in_tiles_nb, height_in_tiles_nb);
 
 		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
+
+		if (p_index != -1) 
+		{
+			var params: Map<String,String> = 
+			[
+				"facebookID" => GameInfo.facebookID,
+				"event_name" => 'build_building',
+				"building_builded_id" => bdd_id,
+				"building_id" => (type | lvl) + '',
+				"col" => col + '',
+				"row" => row + ''
+			];
+			utils.server.MyAjax.call("data.php", params, function(){} );
+		}
 	}
 
 	public function get_id (): Int
@@ -161,6 +179,21 @@ class Building extends MovieClip
 	{
 		if (lvl < Building.LVL_3)
 		{
+			var params: Map<String,String> = 
+			[
+				"facebookID" => GameInfo.facebookID,
+				"event_name" => 'upgrade_building',
+				"building_builded_id" => bdd_id,
+				"building_id" => (type | (lvl + 0x100)) + '',
+			];
+			utils.server.MyAjax.call("data.php", params, _finish_upgrade );
+		}
+	}
+
+	private function _finish_upgrade (data:String) : Void 
+	{
+		if(data == "1") 
+		{
 			GameInfo.buildingsGameplay[get_id()].userPossesion--;
 
 			lvl += 0x100;
@@ -191,9 +224,26 @@ class Building extends MovieClip
 		// filter.set_thickness(outline_thick);
 	}
 
+	private function _build_end (data: String): Void 
+	{
+		if (data.charAt(0) == '1')
+		{
+			GameInfo.buildingsGameplay[get_id()].userPossesion++;
+			is_builded = true;
+			tint = 0xFFFFFF;
+			play();
+			is_checking_with_server = false;
+		}
+		else if (data.charAt(0) == '{') 
+		{
+			building_end_time = Std.int(haxe.Json.parse(data).durationLeft) + Timer.stamp();
+			is_checking_with_server = false;
+		}
+	}
+
 	private function _update (): Void
 	{
-		if (!is_builded)
+		if (!is_builded && !is_checking_with_server)
 		{
 			var color: Int = Std.int( (Timer.stamp() - _building_start_time) / (building_end_time-_building_start_time ) * 0x99 );
 
@@ -201,10 +251,15 @@ class Building extends MovieClip
 
 			if (Timer.stamp() >= building_end_time)
 			{
-				GameInfo.buildingsGameplay[get_id()].userPossesion++;
-				is_builded = true;
-				tint = 0xFFFFFF;
-				play();
+				is_checking_with_server = true;
+
+				var params: Map<String,String> = 
+				[
+					"facebookID" => GameInfo.facebookID,
+					"event_name" => 'check_building_end',
+					"building_builded_id" => bdd_id,
+				];
+				utils.server.MyAjax.call("data.php", params, _build_end);
 			}
 		}
 
@@ -251,6 +306,14 @@ class Building extends MovieClip
 		}
 		else if (GameInfo.isDestroyMode)
 		{
+			var params: Map<String,String> = 
+			[
+				"facebookID" => GameInfo.facebookID,
+				"event_name" => 'destroy_building',
+				"building_builded_id" => bdd_id,
+			];
+			utils.server.MyAjax.call("data.php", params, function(){} );
+
 			GameInfo.buildingsGameplay[get_id()].userPossesion--;
 
 			IsoMap.singleton.destroy_building(this);

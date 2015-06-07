@@ -18,6 +18,9 @@ class PopinWorkshop extends MyPopin
 	private var workShopModel:Dynamic;
 	private var workshopConfig:Dynamic;
 	private var particleSystem:ParticleSystem;
+	private var ressources:Array<Dynamic>;
+	private var index:Int;
+	private var is_checking_with_server:Bool = false;
 
 	private var gui:GUI;
 	private var guiListValuesBuy:Array<String> = ["articleBaseX","articleBaseY","articleInterline","articleNameX","articleNameY","articleBuildX","articleBuildY","articlePreviewX","articlePreviewY","startRessourcesX","stepRessourceX","ressourcesY","startQuantityX","quantityStepX","quantityY"];
@@ -159,8 +162,25 @@ class PopinWorkshop extends MyPopin
 		var timeElapsed:Float = haxe.Timer.stamp() - workshopConfig.buildTimeStart;
 		var timeLeft:Float = Std.int(GameInfo.rocketsConfig[workshopConfig.spaceShip].constructionTime - timeElapsed);
 		var progressPercent:Float = timeElapsed /  GameInfo.rocketsConfig[workshopConfig.spaceShip].constructionTime;
-		loadingBar.width = progressPercent * (loadBarFillMaxWidth*background.width-background.width/2);
-		if(progressPercent >= 1){
+		loadingBar.width = Math.min(Math.max(0,progressPercent),1) * (loadBarFillMaxWidth*background.width-background.width/2);
+		texts['buildtTimeLeft'].setText('Temps restant : ' + utils.game.FormatTools.formatSeconds(timeLeft));
+
+		if(progressPercent >= 1 && !is_checking_with_server){
+			is_checking_with_server = true;
+
+			var params:Map<String,String> = [
+				"facebookID"  => GameInfo.facebookID,
+				"event_name"  => 'check_end_rocket_build',
+				"rocket_builded_id" => workshopConfig.spaceShipID,
+				"clickNb"=>workshopConfig.clickNb
+			];
+			utils.server.MyAjax.call("data.php", params, finishBuild );
+		}
+	}
+	private function finishBuild(data:String) {
+		is_checking_with_server = false;
+
+		if(data == "1"){
 			removeChild(particleSystem);
 			particleSystem.destroy();
 			particleSystem = null;
@@ -170,9 +190,43 @@ class PopinWorkshop extends MyPopin
 			Cursor.getInstance().setCursorToDoge();
 			addLaunchState();
 		}
-		texts['buildtTimeLeft'].setText('Temps restant : ' + utils.game.FormatTools.formatSeconds(timeLeft));
+		else if(data.charAt(0) == '{') {
+			workshopConfig.buildTimeStart = haxe.Timer.stamp() + Std.int(haxe.Json.parse(data).durationLeft) - GameInfo.rocketsConfig[workshopConfig.spaceShip].constructionTime;
+		}
 	}
 
+	private function finnishBuy(data:String){
+		is_checking_with_server = false;
+		if(data.charAt(0) != "0") {
+			workshopConfig.spaceShipID = data;
+			for(i in ressources){
+				GameInfo.ressources[i.name].userPossesion -= i.quantity;
+			}
+			HudManager.getInstance().updateChilds();
+			PopinManager.getInstance().updatePopin("PopinInventory");
+			workshopConfig.buildTimeStart = haxe.Timer.stamp();
+			workshopConfig.state = "build";
+			workshopConfig.spaceShip = workShopModel.spaceships[index];
+			containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
+			GameInfo.rockets.rocketsConstructedNb++;
+			addBuildState();
+		}
+		else {
+			//error feedback
+		}
+	}
+	private function finishLaunch(data:String) {
+		is_checking_with_server = false;
+		if(data.charAt(0) != "0") {
+			workshopConfig.state = 'buy';
+			GameInfo.rockets.rocketsLaunchedNb++;
+			GameInfo.shipToLaunch = workshopConfig.spaceShip;
+			GameInfo.rockets.currentRocket = workshopConfig.spaceShip;
+			GameInfo.rockets.currentRocketID = workshopConfig.spaceShipID;
+			GameInfo.rockets.currentRocketLaunchTime = haxe.Timer.stamp();
+			close();
+		}
+	}
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
 	override private function childClick(pEvent:Dynamic){
@@ -182,8 +236,8 @@ class PopinWorkshop extends MyPopin
 		else if(pEvent.target._name.indexOf("buildSoft") != -1){
 			icons[pEvent.target._name].setTextureToNormal();
 
-			var index:Int = Std.parseInt(pEvent.target._name.split('buildSoft')[1]); // deduce the index from the name
-			var ressources:Array<Dynamic> = GameInfo.rocketsConfig[workShopModel.spaceships[index]].ressources;
+			index = Std.parseInt(pEvent.target._name.split('buildSoft')[1]); // deduce the index from the name
+			ressources = GameInfo.rocketsConfig[workShopModel.spaceships[index]].ressources;
 			var canBuy:Bool = true;
 
 			for(i in ressources){
@@ -192,39 +246,52 @@ class PopinWorkshop extends MyPopin
 					break;
 				}
 			}
-			if(canBuy){
-				for(i in ressources){
-					GameInfo.ressources[i.name].userPossesion -= i.quantity;
-				}
-				HudManager.getInstance().updateChilds();
-				PopinManager.getInstance().updatePopin("PopinInventory");
-				workshopConfig.buildTimeStart = haxe.Timer.stamp();
-				workshopConfig.state = "build";
-				workshopConfig.spaceShip = workShopModel.spaceships[index];
-				containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
-				GameInfo.rockets.rocketsConstructedNb++;
-				addBuildState();
+			if(canBuy && !is_checking_with_server){
+				is_checking_with_server = true;
+
+				var params:Map<String,String> = [
+					"facebookID"  => GameInfo.facebookID,
+					"event_name"  => 'build_rocket',
+					"rocket_ref" => workShopModel.spaceships[index],
+				];
+				utils.server.MyAjax.call("data.php", params, finnishBuy );
 			}
 		}
 		else if(pEvent.target._name == 'buildImage'){
+			workshopConfig.clickNb++;
 			particleSystem.startParticlesEmission(pEvent.originalEvent.clientX-0.35*Cursor.getInstance().currentCursorImg.width, pEvent.originalEvent.clientY+0.1*Cursor.getInstance().currentCursorImg.height);
 			workshopConfig.buildTimeStart -= GameInfo.rocketsConfig[workshopConfig.spaceShip].constructionTime * GameInfo.rocketsConfig[workshopConfig.spaceShip].clickBonus;
 		}
 		else if(pEvent.target._name == 'cancelBuild'){
+			var params:Map<String,String> = [
+				"facebookID"  => GameInfo.facebookID,
+				"event_name"  => 'destroy_rocket',
+				"rocket_builded_id" => workshopConfig.spaceShipID,
+			];
+			utils.server.MyAjax.call("data.php", params, finishBuild );
+
 			workshopConfig.state = 'buy';
 			Main.getInstance().removeEventListener(Event.GAME_LOOP, refreshBuildBar);
 			containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
 			addBuyState();
 		}
-		else if(pEvent.target._name == 'launchShip'){
-			workshopConfig.state = 'buy';
-			GameInfo.rockets.rocketsLaunchedNb++;
-			GameInfo.shipToLaunch = workshopConfig.spaceShip;
-			GameInfo.rockets.currentRocket = workshopConfig.spaceShip;
-			GameInfo.rockets.currentRocketLaunchTime = haxe.Timer.stamp();
-			close();
+		else if(pEvent.target._name == 'launchShip' && !is_checking_with_server){
+			is_checking_with_server = true;
+			var params:Map<String,String> = [
+				"facebookID"  => GameInfo.facebookID,
+				"event_name"  => 'launch_rocket',
+				"rocket_builded_id" => workshopConfig.spaceShipID,
+			];
+			utils.server.MyAjax.call("data.php", params, finishLaunch );
 		}
 		else if(pEvent.target._name == 'destroyShip'){
+			var params:Map<String,String> = [
+				"facebookID"  => GameInfo.facebookID,
+				"event_name"  => 'destroy_rocket',
+				"rocket_builded_id" => workshopConfig.spaceShipID,
+			];
+			utils.server.MyAjax.call("data.php", params, function(){} );
+
 			workshopConfig.state = 'buy';
 			containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
 			addBuyState();

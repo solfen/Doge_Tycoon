@@ -14,6 +14,8 @@ class PopinBuild extends MyPopin
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
 	private var currentTab:String = "utilitairesTab";
+	private var ressources:Array<Dynamic>;
+	private var article: Dynamic = {};
 
 	private function new(?startX:Float,?startY:Float) 
 	{
@@ -87,6 +89,34 @@ class PopinBuild extends MyPopin
 			buildingIndex++;
 		}
 	}
+	private function finnishBuy(data:String){
+		if(data.charAt(0) != "0"){
+			for(i in ressources){
+				GameInfo.ressources[i.name].userPossesion -= i.quantity;
+			}
+			GameInfo.building_2_build = article.buildingID;
+			GameInfo.building_2_build_bdd_id = data;
+
+			HudManager.getInstance().updateChilds();
+			GameInfo.can_map_update = true;
+			PopinManager.getInstance().closePopin("PopinBuild");
+			PopinManager.getInstance().updatePopin("PopinInventory");
+		}
+	}	
+
+	private function finnishBuyHard(data:String){
+		if(data.charAt(0) != "0"){
+			GameInfo.ressources['hardMoney'].userPossesion -= article.hardPrice;
+			HudManager.getInstance().updateChilds();
+
+			GameInfo.building_2_build = article.buildingID;
+			GameInfo.building_2_build_bdd_id = data;
+			
+			GameInfo.can_map_update = true;
+			PopinManager.getInstance().closePopin("PopinBuild");
+			PopinManager.getInstance().updatePopin("PopinInventory");
+		}
+	}
 
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
@@ -125,8 +155,6 @@ class PopinBuild extends MyPopin
 		else if(pEvent.target._name.indexOf("buildSoft") != -1){
 			icons[pEvent.target._name].setTextureToNormal();
 			var index:Int = Std.parseInt(pEvent.target._name.split('buildSoft')[1]); // deduce the index from the name
-			var ressources:Array<Dynamic>;
-			var article:Dynamic = {};
 			var canBuy:Bool = true;
 
 			if(currentTab == "nicheTab")
@@ -144,20 +172,18 @@ class PopinBuild extends MyPopin
 				}
 			}
 			if(canBuy){
-				for(i in ressources){
-					GameInfo.ressources[i.name].userPossesion -= i.quantity;
-				}
-				GameInfo.building_2_build = article.buildingID;
-				HudManager.getInstance().updateChilds();
-				GameInfo.can_map_update = true;
-				PopinManager.getInstance().closePopin("PopinBuild");
-				PopinManager.getInstance().updatePopin("PopinInventory");
+				var params:Map<String,String> = [
+					"facebookID"  => GameInfo.facebookID,
+					"event_name"  => 'buy_building',
+					"building_id" => (article.buildingID | buildings.Building.LVL_1) + '',
+					"isSoft" 	  => "1"
+				];
+				utils.server.MyAjax.call("data.php", params, finnishBuy );
 			}
 		}
 		else if(pEvent.target._name.indexOf("buildHard") != -1){
 			icons[pEvent.target._name].setTextureToNormal();
 			var index:Int = Std.parseInt(pEvent.target._name.split('buildHard')[1]);
-			var article:Dynamic = {};
 			if(currentTab == "nicheTab")
 				article = GameInfo.buildMenuArticles.niches[index];
 			else if(currentTab == "spaceshipTab")
@@ -166,12 +192,13 @@ class PopinBuild extends MyPopin
 				article = GameInfo.buildMenuArticles.utilitaires[index];
 
 			if(GameInfo.ressources['hardMoney'].userPossesion >= article.hardPrice){
-				GameInfo.ressources['hardMoney'].userPossesion -= article.hardPrice;
-				HudManager.getInstance().updateChilds();
-				GameInfo.building_2_build = article.buildingID;
-				GameInfo.can_map_update = true;
-				PopinManager.getInstance().closePopin("PopinBuild");
-				PopinManager.getInstance().updatePopin("PopinInventory");
+				var params:Map<String,String> = [
+					"facebookID"  => GameInfo.facebookID,
+					"event_name"  => 'buy_building',
+					"building_id" => (article.buildingID | buildings.Building.LVL_1) + '',
+					"isSoft" 	  => "0"
+				];
+				utils.server.MyAjax.call("data.php", params, finnishBuyHard );
 			}
 		}
 	}

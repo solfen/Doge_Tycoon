@@ -12,9 +12,9 @@ class Hangar extends Building
 	
 	private var workshopConfig: Map<String,Dynamic>;
 
-	public function new (p_type: Int, p_index: Int, pX: Int, pY: Int): Void // attention, le type (la couleur) doit être précisié
+	public function new (pBdd_id: String, p_type: Int, p_index: Int, pX: Int, pY: Int): Void // attention, le type (la couleur) doit être précisié
 	{
-		super(p_type, p_index, pX, pY);
+		super(p_type, pBdd_id, p_index, pX, pY);
 
 		outline_thick_max = 1;
 		//outline_thick_min = 1;
@@ -25,6 +25,8 @@ class Hangar extends Building
 				level: 1,
 				state: 'buy', // || 'launch' || 'build'
 				spaceShip: "",
+				spaceShipID: "",
+				clickNb: 0,
 				buildTimeStart: 0
 			}
 		];

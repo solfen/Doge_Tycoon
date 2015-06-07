@@ -97,7 +97,8 @@ class GameInfo
  				rewards: [
  					{"name":"fric","quantity":"100"},
  					{"name":"poudre0","quantity":"10"},
- 				]
+ 				],
+ 				bdd_id: "1"
  			},
  			{
  				dog: 'Workshop',
@@ -105,11 +106,12 @@ class GameInfo
  				dogY: 0.16,
  				title: 'Premier atelier',
  				description: "Les ateliers servent à construire les fusées.\nPour l'instant vos pauvres employés s'ennuient à mourir.\nSoyez gentil et donnez leur du travail !\nPour rappel, les bâtiments peuvent être\nachetés depuis le menu de construction",
- 				condition: {"building":Building.HANGAR_JAUNE | Building.LVL_1, "numberToHave" : 1 },
+ 				condition: {"building":Building.HANGAR_JAUNE | Building.LVL_1, "numberToHave" : 0 },
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
- 				]
+ 				],
+ 				bdd_id: "4"
  			},
  			{
  				dog: 'Workshop',
@@ -121,7 +123,8 @@ class GameInfo
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
- 				]
+ 				],
+ 				bdd_id: "5"
  			},
  			{
  				dog: 'Astro',
@@ -133,7 +136,8 @@ class GameInfo
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
- 				]
+ 				],
+ 				bdd_id: "6"
  			},
  			{
  				dog: 'Casino',
@@ -145,7 +149,8 @@ class GameInfo
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
- 				]
+ 				],
+ 				bdd_id: "7"
  			},
  			{
  				dogX: -0.55,
@@ -157,7 +162,8 @@ class GameInfo
  				rewards: [
  					{"name":"fric","quantity":"1000"},
  					{"name":"poudre0","quantity":"10"},
- 				]
+ 				],
+ 				bdd_id: "8"
  			}
  		],
  		'finished' => [
@@ -524,8 +530,8 @@ class GameInfo
  		Building.LABO | Building.LVL_3 => { userPossesion:0 },
 
  		Building.NICHE | Building.LVL_1 => { userPossesion:0, dogesPerSecond : 0.1, dogesMaxGain: 5},
- 		Building.NICHE | Building.LVL_2 => { userPossesion:0, dogesPerSecond : 0.1, dogesMaxGain: 10},
- 		Building.NICHE | Building.LVL_3 => { userPossesion:0, dogesPerSecond : 0.1 , dogesMaxGain: 20},
+ 		Building.NICHE | Building.LVL_2 => { userPossesion:0, dogesPerSecond : 0.2, dogesMaxGain: 10},
+ 		Building.NICHE | Building.LVL_3 => { userPossesion:0, dogesPerSecond : 0.3 , dogesMaxGain: 20},
 
  		Building.PAS_DE_TIR | Building.LVL_1 => { userPossesion:0 },
  		Building.PAS_DE_TIR | Building.LVL_2 => { userPossesion:0 },
@@ -543,6 +549,7 @@ class GameInfo
  		"rocketsConstructedNb" : 0,
  		"rocketsLaunchedNb" : 0,
  		"currentRocket" : null,
+ 		"currentRocketID" : "",
  		"currentRocketLaunchTime" : 0 //timestamp,
  	}
  	public static var rocketsConfig : Map<String, Dynamic> = [
@@ -554,7 +561,7 @@ class GameInfo
 				{"name":"doges","quantity":"10"},
 				{"name":"poudre1","quantity":"25"},
 			],
-			constructionTime: 1, //sec
+			constructionTime: 8, //sec
 			clickBonus: 0.01,
 			timeToDestination: 5, //sec
 			destination: "Namok"
@@ -782,8 +789,8 @@ class GameInfo
  		}
  	];
 
+ 	public static var facebookID:String = '818989511510138';
  	public static var loaderCompletion:Float = 0; // when we're loading the game we need to know the % of completion
- 	public static var dogeNumber:Float = 20;
  	public static var dogeMaxNumber:Float = 25;
  	public static var isUpgradeMode:Bool = false;
  	public static var isDestroyMode:Bool = false;
@@ -793,8 +800,11 @@ class GameInfo
  	public static var prayerEffect:Float = 0.005;
  	public static var museeSoftSpeed:Float = 10;
  	public static var musseVisiteGain:Float = 1;
+ 	public static var churchClicks:Int = 0;
+ 	public static var museumClicks:Int = 0;
 
  	public static var building_2_build: Int = Building.PAS_DE_TIR;
+ 	public static var building_2_build_bdd_id: String = "";
  	public static var shipToLaunch: String;
  	public static var can_map_update: Bool = true; 	
  	public static var is_building_context_pop_open: Bool = false;

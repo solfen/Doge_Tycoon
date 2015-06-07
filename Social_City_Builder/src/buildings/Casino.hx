@@ -12,9 +12,9 @@ import buildings.Building;
 class Casino extends Building
 {
 
-	public function new (p_index: Int, pX: Int, pY: Int): Void
+	public function new (pBdd_id: String, p_index: Int, pX: Int, pY: Int): Void
 	{
-		super(Building.CASINO, p_index, pX, pY);
+		super(Building.CASINO, pBdd_id, p_index, pX, pY);
 		
 		outline_thick_max = 3;
 		//outline_thick_min = 1;

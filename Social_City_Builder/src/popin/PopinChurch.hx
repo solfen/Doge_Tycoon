@@ -91,6 +91,7 @@ class PopinChurch extends MyPopin
 	}
 
 	private function pray(pEvent:Dynamic) : Void {
+		GameInfo.churchClicks++;
 		GameInfo.faithPercent = Math.min(GameInfo.faithPercent+GameInfo.prayerEffect,1);
 		particleSystem.startParticlesEmission(pEvent.originalEvent.clientX,pEvent.originalEvent.clientY);
 		update();

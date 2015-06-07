@@ -109,7 +109,7 @@ class IsoMap extends DisplayObjectContainer
 		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
 	}
 
-	public function build_building (pBuilding_type: Int, pX: Int, pY: Int): Building
+	public function build_building (pBuilding_type: Int, pX: Int, pY: Int, pBdd_id: String): Building
 	{
 		var build_data = _get_building_coord(pBuilding_type, current_overflown_cell);
 
@@ -121,21 +121,21 @@ class IsoMap extends DisplayObjectContainer
 		var building: Building = switch (pBuilding_type)
 		{
 			case Building.CASINO:
-				new Casino(current_overflown_cell, build_data.x, build_data.y);
+				new Casino(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
 			case Building.EGLISE:
-				new Eglise(current_overflown_cell, build_data.x, build_data.y);
+				new Eglise(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
 			case Building.HANGAR_BLEU | Building.HANGAR_CYAN | Building.HANGAR_JAUNE | Building.HANGAR_ROUGE | Building.HANGAR_VERT | Building.HANGAR_VIOLET:
-				new Hangar(pBuilding_type, current_overflown_cell, build_data.x, build_data.y);
+				new Hangar(pBdd_id, pBuilding_type, current_overflown_cell, build_data.x, build_data.y);
 			case Building.LABO:
-				new Labo(current_overflown_cell, build_data.x, build_data.y);
+				new Labo(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
 			case Building.NICHE:
-				new Niche(current_overflown_cell, build_data.x, build_data.y);
+				new Niche(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
 			case Building.PAS_DE_TIR:
-				new Pas_de_tir(current_overflown_cell, build_data.x, build_data.y);
+				new Pas_de_tir(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
 			case Building.ENTREPOT:
-				new Entrepot(current_overflown_cell, build_data.x, build_data.y);
+				new Entrepot(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
 			case Building.MUSEE:
-				new Musee(current_overflown_cell, build_data.x, build_data.y);
+				new Musee(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
 			case _: null;
 		}
 
@@ -340,11 +340,12 @@ class IsoMap extends DisplayObjectContainer
 
 			if (GameInfo.building_2_build > 0)
 			{
-				var new_building: Building = build_building(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y);
+				var new_building: Building = build_building(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y, GameInfo.building_2_build_bdd_id);
 				
 				if (new_building != null)
 				{
 					GameInfo.building_2_build = 0;
+					GameInfo.building_2_build_bdd_id = "";
 					removeChild(_previewing_building);
 					_previewing_building = null;
 				}

@@ -15,6 +15,8 @@ class PopinMarket extends MyPopin
 	private var articleInterline:Float = 0.03;
 	private var hasVerticalScrollBar:Bool = false;
 	private var currentTab:String = "buyTab";
+	private var cost:Float;
+	private var currentRessourceIndex:Int;
 
 	private function new(?startX:Float,?startY:Float) 
 	{
@@ -94,6 +96,30 @@ class PopinMarket extends MyPopin
 		}
 	}
 
+	private function finnishBuy(data:String){
+		if(data.charAt(0) == "1"){
+			GameInfo.ressources['fric'].userPossesion -= cost;
+			GameInfo.ressources['poudre'+currentRessourceIndex].userPossesion += GameInfo.ressources['poudre'+currentRessourceIndex].lastQuantityBuy;
+			HudManager.getInstance().updateChilds();
+			PopinManager.getInstance().updatePopin("PopinInventory");
+		}
+		else {
+			//feedback error
+		}
+	}
+
+	private function finnishSell(data:String){
+		if(data.charAt(0) == "1"){
+			GameInfo.ressources['fric'].userPossesion += cost;
+			GameInfo.ressources['poudre'+currentRessourceIndex].userPossesion -= GameInfo.ressources['poudre'+currentRessourceIndex].lastQuantitySell;
+			HudManager.getInstance().updateChilds();
+			PopinManager.getInstance().updatePopin("PopinInventory");
+		}
+		else {
+			//feedback error
+		}
+	}
+
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
 	override private function childClick(pEvent:Dynamic){
@@ -139,24 +165,32 @@ class PopinMarket extends MyPopin
 		else if(name.indexOf("validBtn") != -1){
 			var index:Int = Std.parseInt(name.split('validBtn')[1]);
 			icons['validBtn'+index].setTextureToNormal();
+			
 			if(currentTab == "buyTab"){
 				//lastquantity sell and buy are updated eachTime the user clicks on a quantityButton
-				var cost:Float = GameInfo.ressources['poudre'+index].buyCost * GameInfo.ressources['poudre'+index].lastQuantityBuy;
+				cost = GameInfo.ressources['poudre'+index].buyCost * GameInfo.ressources['poudre'+index].lastQuantityBuy;
+				currentRessourceIndex = index;
 				if(cost <= GameInfo.ressources['fric'].userPossesion){
-					GameInfo.ressources['fric'].userPossesion -= cost;
-					GameInfo.ressources['poudre'+index].userPossesion += GameInfo.ressources['poudre'+index].lastQuantityBuy;
-					trace(GameInfo.ressources['poudre'+index].userPossesion);
-					HudManager.getInstance().updateChilds();
-					PopinManager.getInstance().updatePopin("PopinInventory");
+					var params:Map<String,String> = [
+						"facebookID"=>GameInfo.facebookID,
+						"event_name"=>'buy_ressource',
+						"ressource"=>'poudre'+index,
+						"quantity"=>GameInfo.ressources['poudre'+index].lastQuantityBuy
+					];
+					utils.server.MyAjax.call("data.php", params, finnishBuy );
 				}
 			}
 			else if(currentTab == "sellTab"){
-				var cost:Float = GameInfo.ressources['poudre'+index].sellCost * GameInfo.ressources['poudre'+index].lastQuantitySell;
+				cost = GameInfo.ressources['poudre'+index].sellCost * GameInfo.ressources['poudre'+index].lastQuantitySell;
+				currentRessourceIndex = index;
 				if(GameInfo.ressources['poudre'+index].userPossesion >= GameInfo.ressources['poudre'+index].lastQuantitySell){
-					GameInfo.ressources['fric'].userPossesion += cost;
-					GameInfo.ressources['poudre'+index].userPossesion -= GameInfo.ressources['poudre'+index].lastQuantitySell;
-					HudManager.getInstance().updateChilds();
-					PopinManager.getInstance().updatePopin("PopinInventory");
+					var params:Map<String,String> = [
+						"facebookID"=>GameInfo.facebookID,
+						"event_name"=>'sell_ressource',
+						"ressource"=>'poudre'+index,
+						"quantity"=>GameInfo.ressources['poudre'+index].lastQuantitySell
+					];
+					utils.server.MyAjax.call("data.php", params, finnishSell );
 				}
 			}
 		}

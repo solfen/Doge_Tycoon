@@ -13,7 +13,7 @@ class PreviewBuilding extends Building
 
 	public function new (p_type: Int, pX: Int, pY: Int): Void
 	{
-		super(p_type, -1, pX, pY);
+		super(p_type, "", -1, pX, pY);
 		
 		click = null;
 		mouseover = null;
