@@ -90,7 +90,7 @@ class GameUpdate
 			GameInfo.ressources["fric"].userPossesion = data.softCurrency;
 			GameInfo.ressources["hardMoney"].userPossesion = data.hardCurrency;
 			GameInfo.ressources["doges"].userPossesion = data.population;
-			GameInfo.faithPercent = data.faithPercent;
+			GameInfo.faithPercent = data.faithPercent/100;
 			GameInfo.dogeMaxNumber = data.populationMax;
 
 			//canot do for because canot acces data with [] so data["ressource_"+i] is not possible >_<
@@ -133,7 +133,6 @@ class GameUpdate
 		if(haxe.Timer.stamp() >= lastServerCheck + serverCheckInterval) {
 			lastServerCheck = haxe.Timer.stamp();
 			var params:Map<String,String> = [
-				"facebookID"  => GameInfo.facebookID,
 				"event_name"  => 'update_ressources',
 				"churchClicks" => GameInfo.churchClicks+'',
 				"museumClicks" => GameInfo.museumClicks+'',
@@ -161,7 +160,6 @@ class GameUpdate
 				if(!is_checking_with_server)  {
 					is_checking_with_server = true;
 					var params:Map<String,String> = [
-						"facebookID"  => GameInfo.facebookID,
 						"event_name"  => 'check_quest_completion',
 						"questID" => quest.bdd_id,
 					];
@@ -174,7 +172,6 @@ class GameUpdate
 		if(!is_checking_with_server && GameInfo.rockets.currentRocket != null && haxe.Timer.stamp() >= GameInfo.rockets.currentRocketLaunchTime + GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].timeToDestination) {
 			is_checking_with_server = true;
 			var params:Map<String,String> = [
-				"facebookID"  => GameInfo.facebookID,
 				"event_name"  => 'check_rocket_travel_end',
 				"rocket_builded_id" => GameInfo.rockets.currentRocketID,
 			];

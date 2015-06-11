@@ -294,7 +294,6 @@ class PopinMusee extends MyPopin
 			artefactsID.push(i);
 		}
 		var params:Map<String,String> = [
-			"facebookID"  => GameInfo.facebookID,
 			"event_name"  => 'get_friend_artefacts',
 			"artefactsID" => haxe.Json.stringify(artefactsID),
 			"friendID" => GameInfo.friendsList[currentFriendIndex].id,
@@ -316,7 +315,6 @@ class PopinMusee extends MyPopin
 	private function finishFbSendArtefact(data:Dynamic) {
 		if(data.to != null){
 			var params:Map<String,String> = [
-				"facebookID"  => GameInfo.facebookID,
 				"event_name"  => 'give_artefact',
 				"friendID" => data.to[0],
 				"artefactFbID" => artefactToGive,

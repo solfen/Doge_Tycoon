@@ -2,7 +2,7 @@
 ini_set('display_errors',1);
 session_start();
 include("../vendor/autoload.php");
-include("config.php");
+include("../config.php");
 use Facebook\FacebookSession;
 use Facebook\FacebookRequest;
 use Facebook\GraphUser;

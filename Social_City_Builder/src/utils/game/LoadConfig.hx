@@ -28,7 +28,6 @@ class LoadConfig {
 
 	public static function load() {
 		var params:Map<String,String> = [
-			"facebookID"  => GameInfo.facebookID,
 			"event_name"  => 'get_my_artefacts',
 		];
 		utils.server.MyAjax.call("data.php", params, finishLoadArtefacts);

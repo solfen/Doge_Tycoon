@@ -169,7 +169,6 @@ class PopinWorkshop extends MyPopin
 			is_checking_with_server = true;
 
 			var params:Map<String,String> = [
-				"facebookID"  => GameInfo.facebookID,
 				"event_name"  => 'check_end_rocket_build',
 				"rocket_builded_id" => workshopConfig.spaceShipID,
 				"clickNb"=>workshopConfig.clickNb
@@ -250,7 +249,6 @@ class PopinWorkshop extends MyPopin
 				is_checking_with_server = true;
 
 				var params:Map<String,String> = [
-					"facebookID"  => GameInfo.facebookID,
 					"event_name"  => 'build_rocket',
 					"rocket_ref" => workShopModel.spaceships[index],
 				];
@@ -264,7 +262,6 @@ class PopinWorkshop extends MyPopin
 		}
 		else if(pEvent.target._name == 'cancelBuild'){
 			var params:Map<String,String> = [
-				"facebookID"  => GameInfo.facebookID,
 				"event_name"  => 'destroy_rocket',
 				"rocket_builded_id" => workshopConfig.spaceShipID,
 			];
@@ -278,7 +275,6 @@ class PopinWorkshop extends MyPopin
 		else if(pEvent.target._name == 'launchShip' && !is_checking_with_server){
 			is_checking_with_server = true;
 			var params:Map<String,String> = [
-				"facebookID"  => GameInfo.facebookID,
 				"event_name"  => 'launch_rocket',
 				"rocket_builded_id" => workshopConfig.spaceShipID,
 			];
@@ -286,7 +282,6 @@ class PopinWorkshop extends MyPopin
 		}
 		else if(pEvent.target._name == 'destroyShip'){
 			var params:Map<String,String> = [
-				"facebookID"  => GameInfo.facebookID,
 				"event_name"  => 'destroy_rocket',
 				"rocket_builded_id" => workshopConfig.spaceShipID,
 			];

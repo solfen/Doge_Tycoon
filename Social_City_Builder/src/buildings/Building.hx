@@ -137,7 +137,6 @@ class Building extends MovieClip
 		{
 			var params: Map<String,String> = 
 			[
-				"facebookID" => GameInfo.facebookID,
 				"event_name" => 'build_building',
 				"building_builded_id" => bdd_id,
 				"building_id" => (type | lvl) + '',
@@ -181,7 +180,6 @@ class Building extends MovieClip
 		{
 			var params: Map<String,String> = 
 			[
-				"facebookID" => GameInfo.facebookID,
 				"event_name" => 'upgrade_building',
 				"building_builded_id" => bdd_id,
 				"building_id" => (type | (lvl + 0x100)) + '',
@@ -253,14 +251,12 @@ class Building extends MovieClip
 			{
 				is_checking_with_server = true;
 
-				/*var params: Map<String,String> = 
+				var params: Map<String,String> = 
 				[
-					"facebookID" => GameInfo.facebookID,
 					"event_name" => 'check_building_end',
 					"building_builded_id" => bdd_id,
 				];
-				utils.server.MyAjax.call("data.php", params, _build_end);*/
-				_build_end('1');
+				utils.server.MyAjax.call("data.php", params, _build_end);
 			}
 		}
 
@@ -309,7 +305,6 @@ class Building extends MovieClip
 		{
 			var params: Map<String,String> = 
 			[
-				"facebookID" => GameInfo.facebookID,
 				"event_name" => 'destroy_building',
 				"building_builded_id" => bdd_id,
 			];

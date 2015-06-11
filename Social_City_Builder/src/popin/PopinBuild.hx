@@ -173,7 +173,6 @@ class PopinBuild extends MyPopin
 			}
 			if(canBuy){
 				var params:Map<String,String> = [
-					"facebookID"  => GameInfo.facebookID,
 					"event_name"  => 'buy_building',
 					"building_id" => (article.buildingID | buildings.Building.LVL_1) + '',
 					"isSoft" 	  => "1"
@@ -193,7 +192,6 @@ class PopinBuild extends MyPopin
 
 			if(GameInfo.ressources['hardMoney'].userPossesion >= article.hardPrice){
 				var params:Map<String,String> = [
-					"facebookID"  => GameInfo.facebookID,
 					"event_name"  => 'buy_building',
 					"building_id" => (article.buildingID | buildings.Building.LVL_1) + '',
 					"isSoft" 	  => "0"
