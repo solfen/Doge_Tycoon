@@ -12,8 +12,6 @@ import pixi.InteractionData;
 class PopinMusee extends MyPopin 
 {	
 	private var hasVerticalScrollBar:Bool = false;
-	private var articleWidth:Float = Texture.fromFrame("PopInMuseeArticleBg.png").width;
-	private var articleInterline:Float = 0.08;
 	private var clickImage:MovieClip;
 	private var clickImageAnimationSpeed:Float = 0.25;
 	private var clickImageTexturesNb:Int = 10;
@@ -21,9 +19,13 @@ class PopinMusee extends MyPopin
 	private var particleSystem:ParticleSystem;
 	private var completionBar:TilingSprite;
 	private var completionBarMaxWidth:Float = 0.87;
-	private var currentTab:String = "myArtefactsTab";
+	private var currentTab:String = "homeTab";
 	private var planetsNames:Array<String> = ["SprungField","Mordor","Namok","Terre","Wundërland","StarWat"];
 	private var lastPlanetIcon:IconPopin;
+	private var currentPlanetIndex:Int = 0;
+	private var currentFriendIndex:Int = 0;
+	private var artefactToGive:String = '';
+	private var isChekingWithServer:Bool = false;
 
 	private var gui:GUI;
 	private var guiValuesList:Array<String> = ["clickImageAnimationSpeed","headerX","headerY","backTextX","backTextY","infoTextX","infoTextY","clickImageX","clickImageY","museeInfoX","museeInfoY"];
@@ -41,9 +43,15 @@ class PopinMusee extends MyPopin
 	private var minParticlesNb:Int = 3;
 	private var cheatDogeClick:Float = 1;
 
-	private var guiValuesListArtefacts:Array<String> = ["completionBarMaxWidth","planetTabX","planetTabY","planetTabInterval","articleInterline","articleBaseX","articleBaseY","actionButtonX","actionButtonY","articleImageX","articleImageY","articleNbX","articleNbY","headerMyAretefactsX","headerMyAretefactsY","backFillBarX","backFillBarY","loadbarStartX","loadbarStartY","completionInfoX","completionInfoY","scrollBackroundX","scrollBackroundY","scrollBarX","scrollBarY","scrollIndicOffsetX","scrollIndicOffsetY","artefactTxtX","artefactTxtY"];
+	private var guiValuesListArtefacts:Array<String> = ["completionBarMaxWidth","planetTabX","planetTabY","planetTabInterval","articleInterline","friendBackInterline","articleBaseX","articleBaseY","friendBaseX","friendBaseY","actionButtonX","actionButtonY","articleImageX","articleImageY","articleNbX","articleNbY","headerMyAretefactsX","headerMyAretefactsY","headerFriendsAretefactsX","headerFriendsAretefactsY","backFillBarX","backFillBarY","loadbarStartX","loadbarStartY","completionInfoX","completionInfoY","scrollBackroundX","scrollBackroundY","scrollBarX","scrollBarY","scrollIndicOffsetX","scrollIndicOffsetY","artefactTxtX","artefactTxtY"];
+	private var articleWidth:Float = Texture.fromFrame("PopInMuseeArticleBg.png").width;
+	private var articleInterline:Float = 0.08;
+	private var friendBakcWidth:Float = Texture.fromFrame("PopInMuseeFriendBg.png").width;
+	private var friendBackInterline:Float = -0.001;
 	private var headerMyAretefactsX:Float = 0.58;
 	private var headerMyAretefactsY:Float = 0.05;
+	private var headerFriendsAretefactsX:Float = 0.38;
+	private var headerFriendsAretefactsY:Float = 0.05;
 	private var backFillBarX:Float = 0.13;
 	private var backFillBarY:Float = 0.15;
 	private var loadbarStartX:Float = 0.319;
@@ -61,6 +69,12 @@ class PopinMusee extends MyPopin
 
 	private var articleBaseX:Float = 0.149;
 	private var articleBaseY:Float = 0.599;
+	private var friendBaseX:Float = 0.09;
+	private var friendBaseY:Float = 0.28;
+	private var friendImgX:Float = 0.008;
+	private var friendImgY:Float = 0.04;
+	private var friendTextX:Float = 0.01;
+	private var friendTextY:Float = 0.01;
 	private var actionButtonX:Float = 0.214;
 	private var actionButtonY:Float = 0.8;
 	private var articleImageX:Float = 0.158;
@@ -78,9 +92,10 @@ class PopinMusee extends MyPopin
 		GameInfo.can_map_update = false;
 		super(startX,startY, "PopInBackground.png");
 		articleWidth /= background.height; // background is defiened in MyPopin
+		friendBakcWidth /= background.height; // background is defiened in MyPopin
 		addBasePopin();
 		changeTab();
-		debugGUI();
+		//debugGUI();
 	}
 
 	private function addBasePopin() : Void {
@@ -149,25 +164,43 @@ class PopinMusee extends MyPopin
 		addArtefactPlanet(GameInfo.artefacts[planetsNames[0]]);
 	}
 	private function addAmisArtefactsTab() : Void {
+		getFriendArtefacts();
+		addMyArtefactsTab();
+		header.position.set(Std.int(headerFriendsAretefactsX*background.width-background.width/2),Std.int(headerFriendsAretefactsY*background.height-background.height/2));
+		
+		for(i in 0...GameInfo.friendsList.length) {
+			var friend = GameInfo.friendsList[i];
+			var x:Float = i*(friendBakcWidth+friendBackInterline);
+			addIcon(friendBaseX+x,friendBaseY,'PopInMuseeFriendBg.png',"friend"+i,containers['verticalScroller'],true,'PopInMuseeFriendBgActive.png',true);
+			addText(friendBaseX+x+friendTextX,friendBaseY+friendTextY,'FuturaStdHeavy','13px',friend.name,'friendName',containers["verticalScroller"],'black');
+			addIcon(friendBaseX+x+friendImgX,friendBaseY+friendImgY, friend.img,"friendImg",containers['verticalScroller'],false);
+			addIcon(friendBaseX+x+friendImgX,friendBaseY+friendImgY, "PopInMuseelPhotoBorders.png","friendImg",containers['verticalScroller'],false);
+		}
+
+		icons["friend0"].setTextureToActive();
 
 	}
-	private function addArtefactPlanet(ItemsConfig:Array<Dynamic>){
+	private function addArtefactPlanet(itemsConfig:Map<String,Dynamic>){
 		var cpt:Int = 0;
 		var itemOwnedNb:Int = 0;
+		var actionButton:String = currentTab == "amisArtefactsTab" ?  'PopInMuseeBoutonDemander' : 'PopInMuseeBoutonDonner';
+		var actionName:String = currentTab == "amisArtefactsTab" ?  'actionAsk' : 'actionGive';
 		if(hasVerticalScrollBar){
 			removeVerticalScrollBar();
 			hasVerticalScrollBar = false;
 		}
-		for(i in ItemsConfig){
+		for(i in itemsConfig.keys()){
+			var possesionNb:Int = currentTab == "amisArtefactsTab" ? itemsConfig[i].currentFriendPossesion : itemsConfig[i].userPossesion;
 			var x:Float = cpt*(articleWidth+articleInterline);
+
 			addIcon(articleBaseX+x,articleBaseY,'PopInMuseeArticleBg.png',"articleBase",containers["verticalScroller"],false);
-			addIcon(articleImageX+x,articleImageY,i.img,"articleImage",containers["verticalScroller"],false);
-			addText(articleNbX+x,articleNbY,'FuturaStdHeavy','15px','x'+i.userPossesion,'articleNb',containers["verticalScroller"],'white');
-			if(i.userPossesion > 0){
+			addIcon(articleImageX+x,articleImageY,itemsConfig[i].img,"articleImage",containers["verticalScroller"],false);
+			addText(articleNbX+x,articleNbY,'FuturaStdHeavy','15px','x'+possesionNb,'articleNb',containers["verticalScroller"],'white');
+			if(Std.parseInt(possesionNb+'') > 0){
 				itemOwnedNb++;
 			}
-			if(i.userPossesion > 1){
-				addIcon(actionButtonX+x,actionButtonY,'PopInMuseeBoutonDonnerNormal.png',"actionButton"+cpt,containers["verticalScroller"],true,'PopInMuseeBoutonDonnerActive.png',true);
+			if(Std.parseInt(possesionNb+'') > 1 ){
+				addIcon(actionButtonX+x,actionButtonY, actionButton+'Normal.png',actionName+i,containers["verticalScroller"],true, actionButton+'Active.png',true);
 			}
 			if( (cpt*(articleWidth+articleInterline)+articleWidth)*background.width > icons["contentBackground"].width && !hasVerticalScrollBar){
 				addScrollBar(false,scrollBarX,scrollBarY,scrollIndicOffsetX,scrollIndicOffsetY,containers["main"]);
@@ -175,9 +208,9 @@ class PopinMusee extends MyPopin
 			}
 			cpt++;
 		}
-		completionBar.width = itemOwnedNb/ItemsConfig.length * (completionBarMaxWidth*(background.width-background.width/2));
+		completionBar.width = itemOwnedNb/cpt* (completionBarMaxWidth*(background.width-background.width/2));
 		icons['fillRight'].position.x = completionBar.position.x+completionBar.width;
-		var percent:String = Std.string(itemOwnedNb/ItemsConfig.length *100);
+		var percent:String = Std.string(itemOwnedNb/cpt *100);
 		percent  = percent.indexOf('.') != -1 ? percent.substr(0, percent.indexOf('.')+2) : percent;
 		texts['completionInfo'].setText(percent + "%");
 	}
@@ -222,14 +255,27 @@ class PopinMusee extends MyPopin
 			changeTab();
 		}
 		else if(pEvent.target._name.indexOf("planetTab") != -1){
-			var index:Int = Std.parseInt(pEvent.target._name.split('planetTab')[1]);
+			currentPlanetIndex = Std.parseInt(pEvent.target._name.split('planetTab')[1]);
 			lastPlanetIcon != null ? lastPlanetIcon.setTextureToNormal() : null;
 			lastPlanetIcon = pEvent.target;
-			addArtefactPlanet(GameInfo.artefacts[planetsNames[index]]);
+			addArtefactPlanet(GameInfo.artefacts[planetsNames[currentPlanetIndex]]);
+		}			
+		else if(pEvent.target._name.indexOf("friend") != -1){
+			icons["friend"+currentFriendIndex].setTextureToNormal();
+			currentFriendIndex = Std.parseInt(pEvent.target._name.split('friend')[1]);
+			getFriendArtefacts();
 		}		
-		else if(pEvent.target._name.indexOf("actionButton") != -1){
-			var index:Int = Std.parseInt(pEvent.target._name.split('actionButton')[1]);
-			trace("need popin fb pour donner l'artefact : "+index+" de la planete : " + planetsNames[Std.parseInt(lastPlanetIcon._name.split('planetTab')[1])]);
+		else if(pEvent.target._name.indexOf("actionGive") != -1){
+			pEvent.target.setTextureToNormal();
+			artefactToGive = pEvent.target._name.split('actionGive')[1];
+
+			utils.server.MyFbHelper.getInstance().artefactRequest('GIFT', artefactToGive, finishFbSendArtefact);
+		}		
+		else if(pEvent.target._name.indexOf("actionAsk") != -1){
+			pEvent.target.setTextureToNormal();
+			artefactToGive = pEvent.target._name.split('actionAsk')[1];
+
+			utils.server.MyFbHelper.getInstance().artefactRequest('ASKFOR', artefactToGive, function(){}, GameInfo.artefacts[planetsNames[currentPlanetIndex]][artefactToGive].name);
 		}
 	}
 
@@ -241,7 +287,46 @@ class PopinMusee extends MyPopin
 			pEvent.target.setTextureToNormal();
 		}
 	}
+	private function getFriendArtefacts(){
+		isChekingWithServer = true;
+		var artefactsID:Array<String> = [];
+		for(i in GameInfo.artefacts[planetsNames[currentPlanetIndex]].keys()) {
+			artefactsID.push(i);
+		}
+		var params:Map<String,String> = [
+			"facebookID"  => GameInfo.facebookID,
+			"event_name"  => 'get_friend_artefacts',
+			"artefactsID" => haxe.Json.stringify(artefactsID),
+			"friendID" => GameInfo.friendsList[currentFriendIndex].id,
 
+		];
+		utils.server.MyAjax.call("data.php", params, finishGetFriendsArtefacts);		
+	}
+	private function finishGetFriendsArtefacts(data:String) {
+		isChekingWithServer = false;
+		var artefacts:Dynamic = haxe.Json.parse(data);
+		for(i in GameInfo.artefacts[planetsNames[currentPlanetIndex]].keys()) {
+			var index:Int = Std.parseInt(i);
+			GameInfo.artefacts[planetsNames[currentPlanetIndex]][i].currentFriendPossesion =  artefacts[index] != null ? artefacts[index] : 0;
+		}
+		if(currentTab == "amisArtefactsTab") {
+			addArtefactPlanet(GameInfo.artefacts[planetsNames[currentPlanetIndex]]);
+		}
+	}
+	private function finishFbSendArtefact(data:Dynamic) {
+		if(data.to != null){
+			var params:Map<String,String> = [
+				"facebookID"  => GameInfo.facebookID,
+				"event_name"  => 'give_artefact',
+				"friendID" => data.to[0],
+				"artefactFbID" => artefactToGive,
+			];
+			utils.server.MyAjax.call("data.php", params, finishGiveArtefact);
+		}
+	}
+	private function finishGiveArtefact(data:String) {
+		GameInfo.artefacts[planetsNames[currentPlanetIndex]][artefactToGive].userPossesion = Std.parseInt(GameInfo.artefacts[planetsNames[currentPlanetIndex]][artefactToGive].userPossesion)-1;
+	}
 	private function debugGUI() : Void {
 		gui = new GUI();
 		//gui.remember(this);

@@ -433,36 +433,36 @@ class GameInfo
  			spaceships: ['OrangeLv1','OrangeLv2','OrangeLv3']
  		},
  	];
- 	public static var artefacts:Map<String,Dynamic> = [
+ 	public static var artefacts:Map<String,Map<String,Dynamic>> = [
  		'SprungField' => [
- 			{name:'Skate',userPossesion:99,img:'IconArtefactsSimpsons1.png'},
- 			{name:'Bière',userPossesion:1,img:'IconArtefactsSimpsons2.png'},
- 			{name:'Donut',userPossesion:1,img:'IconArtefactsSimpsons3.png'},
+ 			"701943576599156" => {name:'Skate',userPossesion:0,img:'IconArtefactsSimpsons1.png', currentFriendPossesion:0 },
+ 			"1446334055683188" => {name:'Bière',userPossesion:0,img:'IconArtefactsSimpsons2.png', currentFriendPossesion:0 },
+ 			"906211629440719" => {name:'Donut',userPossesion:0,img:'IconArtefactsSimpsons3.png', currentFriendPossesion:0 },
  		],
  		'Mordor' => [
- 			{name:'Cheveux',userPossesion:1,img:'IconArtefactsLotr1.png'},
- 			{name:'Sting',userPossesion:0,img:'IconArtefactsLotr2.png'},
- 			{name:'Précieux',userPossesion:1,img:'IconArtefactsLotr3.png'},
+ 			"1077843055562367" => {name:'Cheveux',userPossesion:1,img:'IconArtefactsLotr1.png', currentFriendPossesion:0 },
+ 			"827350023985146" => {name:'Sting',userPossesion:0,img:'IconArtefactsLotr2.png', currentFriendPossesion:0 },
+ 			"751634398282728" => {name:'Précieux',userPossesion:1,img:'IconArtefactsLotr3.png', currentFriendPossesion:0 },
  		],
  		'Namok' => [
- 			{name:'Armure',userPossesion:1,img:'IconArtefactsDbz1.png'},
- 			{name:'Nuage',userPossesion:1,img:'IconArtefactsDbz2.png'},
- 			{name:'Kinto-un',userPossesion:1,img:'IconArtefactsDbz3.png'},
+ 			"1604447719812726" => {name:'Armure',userPossesion:1,img:'IconArtefactsDbz1.png', currentFriendPossesion:0 },
+ 			"1018587388159080" => {name:'Kinto-un',userPossesion:1,img:'IconArtefactsDbz2.png', currentFriendPossesion:0 },
+ 			"1579505662314572" => {name:'Dragon Ball',userPossesion:1,img:'IconArtefactsDbz3.png', currentFriendPossesion:0 },
  		],
  		'Terre' => [
- 			{name:'Casserole',userPossesion:1,img:'IconArtefactsTerre1.png'},
- 			{name:'Bote',userPossesion:1,img:'IconArtefactsTerre2.png'},
- 			{name:'Smartphone',userPossesion:0,img:'IconArtefactsTerre3.png'},
+ 			"1114090838608010" => {name:'Casserole',userPossesion:1,img:'IconArtefactsTerre1.png', currentFriendPossesion:0 },
+ 			"1697360473825549" => {name:'Bote',userPossesion:1,img:'IconArtefactsTerre2.png', currentFriendPossesion:0 },
+ 			"965436526822282" => {name:'Smartphone',userPossesion:0,img:'IconArtefactsTerre3.png', currentFriendPossesion:0 },
  		],
  		'Wundërland' => [
- 			{name:'Chapeau',userPossesion:1,img:'IconArtefactsWonderland1.png'},
- 			{name:'Tasse',userPossesion:1,img:'IconArtefactsWonderland2.png'},
- 			{name:'Potion',userPossesion:0,img:'IconArtefactsWonderland3.png'},
+ 			"1597297313857163" => {name:'Chapeau',userPossesion:1,img:'IconArtefactsWonderland1.png', currentFriendPossesion:0 },
+ 			"1619119738302355" => {name:'Tasse',userPossesion:1,img:'IconArtefactsWonderland2.png', currentFriendPossesion:0 },
+ 			"1440535986251958" => {name:'Potion',userPossesion:0,img:'IconArtefactsWonderland3.png', currentFriendPossesion:0 },
  		],
  		'StarWat' => [
- 			{name:'Casque',userPossesion:1,img:'IconArtefactsStarwars1.png'},
- 			{name:'Sabre',userPossesion:10,img:'IconArtefactsStarwars2.png'},
- 			{name:'Blaster',userPossesion:0,img:'IconArtefactsStarwars3.png'},
+ 			"629502290483631" => {name:'Casque',userPossesion:1,img:'IconArtefactsStarwars1.png', currentFriendPossesion:0 },
+ 			"1008605342490512" => {name:'Sabre',userPossesion:10,img:'IconArtefactsStarwars2.png', currentFriendPossesion:0 },
+ 			"1419846531672062" => {name:'Blaster',userPossesion:0,img:'IconArtefactsStarwars3.png', currentFriendPossesion:0 },
  		]
  	];
  	public static var planetsRessources: Map<String, Dynamic> = [
@@ -602,7 +602,7 @@ class GameInfo
 			],
 			constructionTime: 60, //sec
 			clickBonus: 0.01,
-			timeToDestination: 600, //sec
+			timeToDestination: 60, //sec
 			destination: "Namok"
  		},
  		"VertLv2" => {
@@ -788,6 +788,16 @@ class GameInfo
 			destination: "Namok"
  		}
  	];
+ 	public static var friendsList : Array<Dynamic> = [
+ 		/*{id:00000000148, name: "Riton le raton", img: "www.caca.com"}*/
+ 		{ id : "818989511510138", name : "Pif", img : "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c19.0.63.64/p64x64/10354686_10150004552801856_220367501106153455_n.jpg?oh=c3889da5f90a3d6d757926d55803d8ac&oe=55FC1A7E&__gda__=1445923720_0fdf1c1f2cf88430f8f1e4a08dd9eebf"},
+ 		{ id : "5", name : "Pif", img : "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c19.0.63.64/p64x64/10354686_10150004552801856_220367501106153455_n.jpg?oh=c3889da5f90a3d6d757926d55803d8ac&oe=55FC1A7E&__gda__=1445923720_0fdf1c1f2cf88430f8f1e4a08dd9eebf"},
+ 		{ id : "818989511510138", name : "Pif", img : "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c19.0.63.64/p64x64/10354686_10150004552801856_220367501106153455_n.jpg?oh=c3889da5f90a3d6d757926d55803d8ac&oe=55FC1A7E&__gda__=1445923720_0fdf1c1f2cf88430f8f1e4a08dd9eebf"},
+ 		{ id : "818989511510138", name : "Pif", img : "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c19.0.63.64/p64x64/10354686_10150004552801856_220367501106153455_n.jpg?oh=c3889da5f90a3d6d757926d55803d8ac&oe=55FC1A7E&__gda__=1445923720_0fdf1c1f2cf88430f8f1e4a08dd9eebf"},
+ 		{ id : "818989511510138", name : "Pif", img : "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c19.0.63.64/p64x64/10354686_10150004552801856_220367501106153455_n.jpg?oh=c3889da5f90a3d6d757926d55803d8ac&oe=55FC1A7E&__gda__=1445923720_0fdf1c1f2cf88430f8f1e4a08dd9eebf"},
+ 		{ id : "818989511510138", name : "Pif", img : "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c19.0.63.64/p64x64/10354686_10150004552801856_220367501106153455_n.jpg?oh=c3889da5f90a3d6d757926d55803d8ac&oe=55FC1A7E&__gda__=1445923720_0fdf1c1f2cf88430f8f1e4a08dd9eebf"},
+ 		{ id : "818989511510138", name : "Pif", img : "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c19.0.63.64/p64x64/10354686_10150004552801856_220367501106153455_n.jpg?oh=c3889da5f90a3d6d757926d55803d8ac&oe=55FC1A7E&__gda__=1445923720_0fdf1c1f2cf88430f8f1e4a08dd9eebf"}
+ 	];
 
  	public static var facebookID:String = '818989511510138';
  	public static var loaderCompletion:Float = 0; // when we're loading the game we need to know the % of completion
@@ -803,7 +813,7 @@ class GameInfo
  	public static var churchClicks:Int = 0;
  	public static var museumClicks:Int = 0;
 
- 	public static var building_2_build: Int = Building.PAS_DE_TIR;
+ 	public static var building_2_build: Int = Building.MUSEE;
  	public static var building_2_build_bdd_id: String = "";
  	public static var shipToLaunch: String;
  	public static var can_map_update: Bool = true; 	

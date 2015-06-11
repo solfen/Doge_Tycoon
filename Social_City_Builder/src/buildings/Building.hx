@@ -253,13 +253,14 @@ class Building extends MovieClip
 			{
 				is_checking_with_server = true;
 
-				var params: Map<String,String> = 
+				/*var params: Map<String,String> = 
 				[
 					"facebookID" => GameInfo.facebookID,
 					"event_name" => 'check_building_end',
 					"building_builded_id" => bdd_id,
 				];
-				utils.server.MyAjax.call("data.php", params, _build_end);
+				utils.server.MyAjax.call("data.php", params, _build_end);*/
+				_build_end('1');
 			}
 		}
 

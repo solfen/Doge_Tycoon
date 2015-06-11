@@ -45,7 +45,7 @@ class PopinFTUE extends MyPopin
 	}
 	private function addMain() {
 		addIcon(mainBackX,mainBackY,'PopInScrollBackground.png',"contentBackground",containers["main"],false);
-		addText(ftueTextX,ftueTextY,'FuturaStdHeavy','30px',ftueTexts[ftueTextIndex],'mainText',containers["main"],"black","center");
+		addText(ftueTextX,ftueTextY,'FuturaStdHeavy','30px',ftueTexts[ftueTextIndex],'mainText',containers["main"],"white","center");
 		addIcon(dogPosX,dogPosY,'assets/Dogs/DogAstro.png',"dog",containers["main"],false);
 	}
 

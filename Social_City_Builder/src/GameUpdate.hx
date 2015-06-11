@@ -102,6 +102,7 @@ class GameUpdate
 			GameInfo.ressources["poudre5"].userPossesion = data.ressource_6;
 
 			PopinManager.getInstance().updatePopin("PopinInventory");
+			hud.HudManager.getInstance().updateChilds();
 		}
 		else {
 			trace("eror");

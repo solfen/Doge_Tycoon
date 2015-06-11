@@ -82,7 +82,7 @@ class PopinSpaceShipReturn extends MyPopin
 		addText(artefactsTxtX,artefactsTxtY,'FuturaStdHeavy','25px',"ARTEFACTS TROUVÉS :",'artefactTxt',containers["main"]);
 
 		var cpt:Int = 0;
-		var artefacts:Array<Dynamic> = GameInfo.artefacts[destination];
+		/*ar artefacts:Array<Dynamic> = GameInfo.artefacts[destination];
 		for(i in artefacts) {
 			var x:Float = cpt*(articleWidth+articleInterline);
 			var hasIt:Float = Math.random(); // TEMP !! NEED TO HAVE A REAL RANDOM ATRIBUTION !!
@@ -93,7 +93,7 @@ class PopinSpaceShipReturn extends MyPopin
 				i.userPossesion += 1;
 				cpt++;
 			}
-		}
+		}*/
 	}
 
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)

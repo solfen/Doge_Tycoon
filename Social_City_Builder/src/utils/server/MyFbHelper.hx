@@ -9,29 +9,32 @@ class MyFbHelper
 {
 	private static var instance: MyFbHelper;
 
-	public static function getInstance (): MyFbHelper {
-		if (instance == null) instance = new MyFbHelper();
+	public static function getInstance (?calback:Dynamic): MyFbHelper {
+		if (instance == null) instance = new MyFbHelper(calback);
 		return instance;
 	}
-
-	private function new () {
-		FB.getLoginStatus(onFacebookConnect);
+	private function new (callback:Dynamic) {
+		FB.getLoginStatus(callback);
 	}
+
 	public function shareGame () {
 		FB.ui({method: 'apprequests',
 		  message: 'Hé viens jouer à ce super jeu. Jeu 100% sans panda roux albinos !'
-		}, function(response){
-		    trace(response);
-		});
+		}, emptyfunction);
+	}	
+
+	public function getFriendsList (callback:Dynamic) {
+		FB.api("me/friends?fields=id,first_name,picture.width(63).height(64)", "GET", null, callback);
 	}
-	public function sendArtefact(){
+
+	public function artefactRequest(pAction_type:String, artefactID:String, callback:Dynamic, ?objectName:String){
+		var msg:String = objectName != null ? objectName : 'artefact';
 		FB.ui({method: 'apprequests',
-			message: 'Take this awesome artefact !',
-			action_type:'send',
-			object_id: "706093629496403",
-		}, function(response){
-		    trace(response);
-		});
+			message: 'Please give me this awesome ' + msg + ' !',
+			action_type: pAction_type,
+			max_recipients: '1',
+			object_id: artefactID,
+		}, callback);
 	} 
 	public function findArtefact(){
 		FB.ui({
@@ -40,18 +43,9 @@ class MyFbHelper
 		  action_properties: haxe.Json.stringify({
 		      'artefact':'https://fbgame.isartdigital.com/isartdigital/dogeexplorer/FbObjects/boot.html'
 		  })
-		}, function(response){});
+		}, emptyfunction);
 	}
+	private function emptyfunction(){
 
-	private function onFacebookConnect(pResponse:Dynamic){
-		if(pResponse.status == 'connected'){
-			shareGame();
-		}
-		else if(pResponse.status == 'not_authorized'){
-			trace("Oh no ! you're not identified");
-			FB.login(function(response){
-				FB.getLoginStatus(onFacebookConnect);
-			}, {scope: 'publish_actions,email'});
-		}
 	}
 }

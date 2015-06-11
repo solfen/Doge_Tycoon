@@ -38,6 +38,8 @@ class Main extends EventDispatcher
 	private var WebFontConfig: Dynamic;
 	private var _old_stamp: Float;
 
+	private var isLocal:Bool = true;
+
 	private static function main (): Void
 	{
 		Main.getInstance();
@@ -86,9 +88,7 @@ class Main extends EventDispatcher
 				urls: ['fonts.css']
 			},
 
-			active: function() {
-			   preloadAssets();
-			}
+			active: preloadAssets
 		};
 		WebFontLoader.load(WebFontConfig);
 
@@ -103,26 +103,66 @@ class Main extends EventDispatcher
 		
 		gameLoop(0);
 	}
+
+	private function onFacebookConnect(pResponse:Dynamic){
+		if(pResponse.status == 'connected'){
+			GameInfo.facebookID = pResponse.authResponse.userID;
+			utils.server.MyFbHelper.getInstance().getFriendsList(finishFriendsList);
+		}
+		else if(pResponse.status == 'not_authorized'){
+			trace("Oh no ! you're not identified");
+			externs.FB.login(function(response){
+				externs.FB.getLoginStatus(onFacebookConnect);
+			}, {scope: 'publish_actions,email,user_friends'});
+		}
+	}
+	private function finishFriendsList(data:Dynamic) {
+		GameInfo.friendsList = [];
+		var friends:Array<Dynamic> = data.data;
+		var max:Int = Std.int(Math.min(8, friends.length));
+		for(i in 0...max) {
+			GameInfo.friendsList.push({id: friends[i].id, name: friends[i].first_name, img: friends[i].picture.data.url });
+			LoadInfo.loadAssets.push(friends[i].picture.data.url);
+		}
+		loadAssets();
+	}
+
+	private function fbInit(pEvent:Event) {
+		pEvent.target.removeEventListener("onComplete", loadAssets);
+		ScenesManager.getInstance().loadScene("LoaderScene");
+		utils.server.MyFbHelper.getInstance(onFacebookConnect);
+	}
 	
 	/**
 	 * charge les assets graphiques du preloader principal
 	 */
 	private function preloadAssets():Void {
 		var lLoader:AssetLoader = new AssetLoader(LoadInfo.preloadAssets);
-		lLoader.addEventListener("onComplete", loadAssets);
+
+		if(isLocal){
+			for(i in GameInfo.friendsList){
+				LoadInfo.loadAssets.push(i.img);	
+			}
+			lLoader.addEventListener("onComplete", loadAssets);
+		}
+		else {
+			lLoader.addEventListener("onComplete", fbInit);
+		}
+
 		lLoader.load();
 	}	
 	
 	/**
 	 * lance le chargement principal
 	 */
-	private function loadAssets (pEvent:Event): Void {
-		pEvent.target.removeEventListener("onComplete", loadAssets);
+	private function loadAssets (?pEvent:Event): Void {
+		if(pEvent != null) {
+			pEvent.target.removeEventListener("onComplete", loadAssets);
+		}
 		ScenesManager.getInstance().loadScene("LoaderScene");
 		var lLoader:AssetLoader = new AssetLoader(LoadInfo.loadAssets);
 		lLoader.addEventListener("onProgress", onLoadProgress);
 		lLoader.addEventListener("onComplete", onLoadComplete);
-		//utils.server.MyFbHelper.getInstance();
 		lLoader.load();
 	}
 	

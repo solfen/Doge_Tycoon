@@ -6,7 +6,7 @@
 
 	//TEMP VARS TO TEST !!
 	/*$_POST['facebookID'] = '818989511510138';
-	$_POST['event_name'] = 'buy_building';
+	$_POST['event_name'] = 'get_friend_artefacts';
 	$_POST['building_id'] = "257";
 	$_POST['isSoft'] = "0";
 	$_POST['building_builded_id'] = 35;
@@ -16,9 +16,9 @@
 	$_POST['rocket_builded_id'] = 1;
 	$_POST["clickNb"] = 1000;
 	$_POST['rocket_builded_id'] = 7;
-	$_POST['friendsID'] = ["818989511510138","818989511510138"];
+	$_POST['friendID'] = "818989511510138";
+	$_POST['artefactsID'] = ["701943576599156", "1446334055683188", "906211629440719"];
 	$_POST["artefactFbID"] = "1446334055683188";
-	$_POST["friendID"] = "1";
 	$_POST["questID"] = 1;
 	$_POST['col'] = 5;
 	$_POST['row'] = 5;*/
@@ -37,7 +37,6 @@
 	if (empty($_POST['facebookID']) || empty($_POST['event_name']) ) {
 		error('missing information');
 	}
-
 	$connexion = new PDO($src, $user, $pwd);
 	$connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$connexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
@@ -104,8 +103,12 @@
 			}
 			echo $result;
 		break;
-		case 'get_friends_artefacts':
-			$result = get_friends_artefacts($connexion);
+		case 'get_friend_artefacts':
+			$result = get_friend_artefacts($connexion);
+			echo $result;
+		break;
+		case 'get_my_artefacts':
+			$result = get_my_artefacts($connexion);
 			echo $result;
 		break;		
 		case 'give_artefact':
@@ -423,29 +426,32 @@
 		echo "1";
 	}
 
-	function get_friends_artefacts ($connexion){
-		$params = [];
-		$str = "SELECT collected_artefacts.playerFbID,artefacts.ref,artefacts.facebookID FROM `collected_artefacts` JOIN `artefacts` ON collected_artefacts.artefactID = artefacts.ID WHERE ";
-		for($i=0;$i<count($_POST["friendsID"]);$i++){
-			$str .= " collected_artefacts.playerFbID = :id" . $i . " || ";
-			$params[':id'.$i] = $_POST["friendsID"][$i];
+	function get_friend_artefacts ($connexion){
+		$params = ["id"=>$_POST["friendID"]];
+		$str = "SELECT  artefacts.facebookID, COUNT(*) as nb FROM `collected_artefacts` JOIN `artefacts` ON collected_artefacts.artefactID = artefacts.ID WHERE collected_artefacts.playerFbID = :id && ( ";
+
+		$_POST["artefactsID"] = json_decode($_POST["artefactsID"]);
+		for($i=0;$i<count($_POST["artefactsID"]);$i++){
+			$str .= " artefacts.facebookID = :id" . $i . " || ";
+			$params[':id'.$i] = $_POST["artefactsID"][$i];
 		}
-		$str = substr($str,0,count($str)-4);
+		$str = substr($str,0,count($str)-4); // get rid of the last "||"
+		$str .= " ) GROUP BY artefacts.facebookID ORDER BY nb DESC";
 
 		$artefacts = dbRequest($connexion,$str,$params,true);
 
-		$friendsArtefacts = [];
+		$arr = [];
 		foreach ($artefacts as $artefact) {
-			if(!array_key_exists($artefact["playerFbID"], $friendsArtefacts)){
-				$friendsArtefacts[$artefact["playerFbID"]] = [];
-			}
-			array_push($friendsArtefacts[$artefact["playerFbID"]], array("name" => $artefact["ref"], "facebookID" => $artefact["facebookID"]) );
+			$arr[$artefact["facebookID"]] = $artefact["nb"];
 		}
-		return json_encode($friendsArtefacts);
+		return json_encode($arr);
 	}
 	function give_artefact ($connexion){
 		if(!isset($_POST["friendID"]) || !isset($_POST["artefactFbID"])){
 			return "0=not enough data";
+		}
+		if($_POST["friendID"] == $_POST["facebookID"]) {
+			return "0=can't give to yourself";
 		}
 
 		$artefact = dbRequest($connexion,"SELECT collected_artefacts.ID FROM `collected_artefacts` JOIN `artefacts` ON artefacts.ID = collected_artefacts.artefactID WHERE artefacts.facebookID = :artefactID && collected_artefacts.playerFbID = :id",array(":artefactID"=>$_POST["artefactFbID"],":id"=>$_POST['facebookID']),true);
@@ -457,6 +463,16 @@
 		dbRequest($connexion,"UPDATE `collected_artefacts` SET `playerFbID`=:friendID WHERE `ID`=:artefactID",array(":friendID"=>$_POST["friendID"],":artefactID"=>$artefact["ID"]),false);
 
 		return "1";
+	}
+	function get_my_artefacts($connexion) {
+
+		$artefacts = dbRequest($connexion,"SELECT artefacts.facebookID, COUNT(*) as nb FROM `collected_artefacts` JOIN `artefacts` ON artefacts.ID = collected_artefacts.artefactID WHERE collected_artefacts.playerFbID = :id GROUP BY artefacts.facebookID ORDER BY nb DESC  ",array(":id"=>$_POST['facebookID']),true);
+		
+		$arr = [];
+		foreach ($artefacts as $artefact) {
+			$arr[$artefact["facebookID"]] = $artefact["nb"];
+		}
+		return json_encode($arr);
 	}
 	function check_quest_completion($connexion){
 		if(!isset($_POST["questID"])){
