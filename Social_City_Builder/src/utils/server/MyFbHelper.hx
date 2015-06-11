@@ -45,7 +45,5 @@ class MyFbHelper
 		  })
 		}, emptyfunction);
 	}
-	private function emptyfunction(){
-
-	}
+	private function emptyfunction() {}
 }

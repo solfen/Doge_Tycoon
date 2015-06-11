@@ -16,7 +16,7 @@ FacebookSession::setDefaultApplication($APP_ID,$APP_SECRET);
 $connexion = new PDO($src, $user, $pwd);
 $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $connexion->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-if($_GET['request_ids'])
+
 /**
 Récupération d'une session si on a pas de token en mémoire
 */
@@ -33,27 +33,6 @@ catch(\Exception $ex)
 {
     print_r($ex);
 }
- 
-/**
-Passage d'un Short-lived token à un Long-lived token
-*/
-if($session)
-{
-    $accessToken = $session->getAccessToken();
-
-    try
-    {
-        $longLivedAccessToken = $accessToken->extend();
-    }
-    catch(FacebookSDKException $e)
-    {
-        echo 'Error extending short-lived access token: '.$e->getMessage();
-        exit;
-    }
-
-    // Enregistrer le token en BDD
-}
- 
  
 /**
 Appel à l'Open Graph de Facebook
@@ -86,13 +65,13 @@ if($session)
     }
     $_SESSION["facebookID"] = $id;
     
-    echo '<script>window.location.replace("/bin/index.html")</script>'; 
+    echo '<script>window.location.replace("../bin/index.html")</script>'; 
 }
 else
 {
     //Si l'utilisateur n'a pas encore autorisé l'application
     $helper = new FacebookRedirectLoginHelper("https://apps.facebook.com/".$APP_ID."/");
-    $auth_url = $helper->getLoginUrl(['email','publish_actions']);
+    $auth_url = $helper->getLoginUrl(['email','publish_actions','user_friends']);
     echo '<script>top.location.href = "'.$auth_url.'";</script>';
 }
 ?>
