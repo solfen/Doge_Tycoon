@@ -209,8 +209,11 @@ class Building extends MovieClip
 
 	public function outline_fade_in (): Void
 	{
-		outline_thick = Math.max(outline_thick_min, Math.min(outline_thick_max, outline_thick + Main.getInstance().delta_time * _fading_speed * outline_thick_max));
-		filter.set_thickness(outline_thick);
+		if (is_builded)
+		{
+			outline_thick = Math.max(outline_thick_min, Math.min(outline_thick_max, outline_thick + Main.getInstance().delta_time * _fading_speed * outline_thick_max));
+			filter.set_thickness(outline_thick);
+		}
 	}
 
 	public function outline_fade_out (): Void
@@ -242,7 +245,7 @@ class Building extends MovieClip
 	{
 		if (!is_builded && !is_checking_with_server)
 		{
-			var color: Int = Std.int( (Timer.stamp() - _building_start_time) / (building_end_time-_building_start_time ) * 0x99 );
+			var color: Int = Std.int( (Timer.stamp() - _building_start_time) / (building_end_time - _building_start_time ) * 0x99);
 
 			tint = (color<<16) | (color<<8) | color; // 0x000000 -> 0x999999
 
@@ -250,8 +253,7 @@ class Building extends MovieClip
 			{
 				is_checking_with_server = true;
 
-				var params: Map<String,String> = 
-				[
+				var params: Map<String,String> = [
 					"event_name" => 'check_building_end',
 					"building_builded_id" => bdd_id,
 				];

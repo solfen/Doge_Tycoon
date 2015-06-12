@@ -5,7 +5,8 @@ error_reporting(E_ALL);
 include '../config.php';
 
 //TEMP VARS TO TEST !!
-/*$_SESSION['facebookID'] = '818989511510138';
+$_SESSION['facebookID'] = $facebookID;
+/*
 $_POST['event_name'] = 'get_friend_artefacts';
 $_POST['building_id'] = "257";
 $_POST['isSoft'] = "0";
