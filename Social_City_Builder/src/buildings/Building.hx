@@ -18,23 +18,23 @@ import pixi.geom.Rectangle;
  */
 class Building extends MovieClip
 {
-	public static var CASINO 		: Int 	=	0x001;
-	public static var EGLISE 		: Int 	=	0x002;
-	public static var HANGAR_BLEU 	: Int 	=	0x003;
-	public static var HANGAR_CYAN 	: Int 	=	0x004;
-	public static var HANGAR_JAUNE 	: Int 	=	0x005;
-	public static var HANGAR_ROUGE 	: Int 	=	0x006;
-	public static var HANGAR_VERT 	: Int 	=	0x007;
-	public static var HANGAR_VIOLET : Int 	=	0x008;
-	public static var LABO 			: Int 	=	0x009;
-	public static var NICHE 		: Int 	=	0x00A;
-	public static var PAS_DE_TIR 	: Int 	=	0x00B;
-	public static var ENTREPOT 		: Int 	=	0x00C;
-	public static var MUSEE 		: Int 	=	0x00D;
+	public static inline var CASINO 		: Int 	=	0x001;
+	public static inline var EGLISE 		: Int 	=	0x002;
+	public static inline var HANGAR_BLEU 	: Int 	=	0x003;
+	public static inline var HANGAR_CYAN 	: Int 	=	0x004;
+	public static inline var HANGAR_JAUNE 	: Int 	=	0x005;
+	public static inline var HANGAR_ROUGE 	: Int 	=	0x006;
+	public static inline var HANGAR_VERT 	: Int 	=	0x007;
+	public static inline var HANGAR_VIOLET 	: Int 	=	0x008;
+	public static inline var LABO 			: Int 	=	0x009;
+	public static inline var NICHE 			: Int 	=	0x00A;
+	public static inline var PAS_DE_TIR 	: Int 	=	0x00B;
+	public static inline var ENTREPOT 		: Int 	=	0x00C;
+	public static inline var MUSEE 			: Int 	=	0x00D;
 
-	public static var LVL_1 		: Int 	= 	0x100;
-	public static var LVL_2 		: Int 	= 	0x200;
-	public static var LVL_3 		: Int 	=	0x300;
+	public static inline var LVL_1 			: Int 	= 	0x100;
+	public static inline var LVL_2 			: Int 	= 	0x200;
+	public static inline var LVL_3 			: Int 	=	0x300;
 	
 	public static var CLICK_VALUE : Dynamic<Int> = {
 		CANT_CLICK 	: 0,
@@ -209,8 +209,11 @@ class Building extends MovieClip
 
 	public function outline_fade_in (): Void
 	{
-		outline_thick = Math.max(outline_thick_min, Math.min(outline_thick_max, outline_thick + Main.getInstance().delta_time * _fading_speed * outline_thick_max));
-		filter.set_thickness(outline_thick);
+		if (is_builded)
+		{
+			outline_thick = Math.max(outline_thick_min, Math.min(outline_thick_max, outline_thick + Main.getInstance().delta_time * _fading_speed * outline_thick_max));
+			filter.set_thickness(outline_thick);
+		}
 	}
 
 	public function outline_fade_out (): Void
@@ -242,7 +245,7 @@ class Building extends MovieClip
 	{
 		if (!is_builded && !is_checking_with_server)
 		{
-			var color: Int = Std.int( (Timer.stamp() - _building_start_time) / (building_end_time-_building_start_time ) * 0x99 );
+			var color: Int = Std.int( (Timer.stamp() - _building_start_time) / (building_end_time - _building_start_time ) * 0x99);
 
 			tint = (color<<16) | (color<<8) | color; // 0x000000 -> 0x999999
 
@@ -250,8 +253,7 @@ class Building extends MovieClip
 			{
 				is_checking_with_server = true;
 
-				var params: Map<String,String> = 
-				[
+				var params: Map<String,String> = [
 					"event_name" => 'check_building_end',
 					"building_builded_id" => bdd_id,
 				];

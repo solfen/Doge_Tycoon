@@ -109,37 +109,41 @@ class IsoMap extends DisplayObjectContainer
 		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
 	}
 
-	public function build_building (pBuilding_type: Int, pX: Int, pY: Int, pBdd_id: String): Building
+	public function build_building (pType: Int, pBdd_id: String, pCell: Int, ?pLvl: Int = Building.LVL_1, ?pBuilding_end_time: Float = 0): Building
 	{
-		var build_data = _get_building_coord(pBuilding_type, current_overflown_cell);
+		var build_data = _get_building_coord(pType, pCell);
 
 		if (!build_data.can_build)
 		{
 			return null;
 		}
 
-		var building: Building = switch (pBuilding_type)
+		var building: Building = switch (pType)
 		{
 			case Building.CASINO:
-				new Casino(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
+				new Casino(pBdd_id, pCell, build_data.x, build_data.y);
 			case Building.EGLISE:
-				new Eglise(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
+				new Eglise(pBdd_id, pCell, build_data.x, build_data.y);
 			case Building.HANGAR_BLEU | Building.HANGAR_CYAN | Building.HANGAR_JAUNE | Building.HANGAR_ROUGE | Building.HANGAR_VERT | Building.HANGAR_VIOLET:
-				new Hangar(pBdd_id, pBuilding_type, current_overflown_cell, build_data.x, build_data.y);
+				new Hangar(pBdd_id, pType, pCell, build_data.x, build_data.y);
 			case Building.LABO:
-				new Labo(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
+				new Labo(pBdd_id, pCell, build_data.x, build_data.y);
 			case Building.NICHE:
-				new Niche(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
+				new Niche(pBdd_id, pCell, build_data.x, build_data.y);
 			case Building.PAS_DE_TIR:
-				new Pas_de_tir(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
+				new Pas_de_tir(pBdd_id, pCell, build_data.x, build_data.y);
 			case Building.ENTREPOT:
-				new Entrepot(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
+				new Entrepot(pBdd_id, pCell, build_data.x, build_data.y);
 			case Building.MUSEE:
-				new Musee(pBdd_id, current_overflown_cell, build_data.x, build_data.y);
+				new Musee(pBdd_id, pCell, build_data.x, build_data.y);
 			case _: null;
 		}
 
 		building.build();
+
+		building.lvl = pLvl;
+		building.building_end_time = pBuilding_end_time;
+
 		buildings_list.push(building);
 
 		// set the obstacles layer :
@@ -340,7 +344,7 @@ class IsoMap extends DisplayObjectContainer
 
 			if (GameInfo.building_2_build > 0)
 			{
-				var new_building: Building = build_building(GameInfo.building_2_build, InputInfos.mouse_x, InputInfos.mouse_y, GameInfo.building_2_build_bdd_id);
+				var new_building: Building = build_building(GameInfo.building_2_build, GameInfo.building_2_build_bdd_id, current_overflown_cell);
 				
 				if (new_building != null)
 				{
@@ -353,7 +357,7 @@ class IsoMap extends DisplayObjectContainer
 		}
 	}
 
-	private function _get_building_coord (pBuilding_type: Int, index: Int): Dynamic
+	private function _get_building_coord (pType: Int, index: Int): Dynamic
 	{
 		var col: Float = IsoTools.cell_col(index, cols_nb);
 		var row: Float = IsoTools.cell_row(index, cols_nb);
@@ -362,7 +366,7 @@ class IsoMap extends DisplayObjectContainer
 
 		// vérification de l'obstacles_layer :
 
-		var conf = GameInfo.BUILDINGS_CONFIG[pBuilding_type|Building.LVL_1];
+		var conf = GameInfo.BUILDINGS_CONFIG[pType|Building.LVL_1];
 		var building_map_idx: Array<Int> = Building.get_map_idx(index, conf.width, conf.height);
 
 		var can_build: Bool = IsoTools.cell_col(building_map_idx[0], cols_nb) >= IsoTools.cell_col(building_map_idx[Std.int(conf.width-1)], cols_nb)

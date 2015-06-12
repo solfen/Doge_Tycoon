@@ -4,10 +4,13 @@
 	$src = 'mysql:host=localhost;dbname=dogeexplorer';
 	$user = 'dogeexplorer';
 	$pwd = 'doge2015';
+	$facebookID = '818989511510138';
 
-	/*$src = 'mysql:host=127.0.0.1;dbname=dogeexplorer_dev';
+	//$src = 'mysql:host=127.0.0.1;dbname=dogeexplorer_dev';
+	
 	$user = 'root';
-	$pwd = '';*/
+	$pwd = '';
+
 
 	function error ($error_msg) {
 
