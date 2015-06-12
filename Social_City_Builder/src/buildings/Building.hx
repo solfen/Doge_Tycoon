@@ -18,23 +18,23 @@ import pixi.geom.Rectangle;
  */
 class Building extends MovieClip
 {
-	public static var CASINO 		: Int 	=	0x001;
-	public static var EGLISE 		: Int 	=	0x002;
-	public static var HANGAR_BLEU 	: Int 	=	0x003;
-	public static var HANGAR_CYAN 	: Int 	=	0x004;
-	public static var HANGAR_JAUNE 	: Int 	=	0x005;
-	public static var HANGAR_ROUGE 	: Int 	=	0x006;
-	public static var HANGAR_VERT 	: Int 	=	0x007;
-	public static var HANGAR_VIOLET : Int 	=	0x008;
-	public static var LABO 			: Int 	=	0x009;
-	public static var NICHE 		: Int 	=	0x00A;
-	public static var PAS_DE_TIR 	: Int 	=	0x00B;
-	public static var ENTREPOT 		: Int 	=	0x00C;
-	public static var MUSEE 		: Int 	=	0x00D;
+	public static inline var CASINO 		: Int 	=	0x001;
+	public static inline var EGLISE 		: Int 	=	0x002;
+	public static inline var HANGAR_BLEU 	: Int 	=	0x003;
+	public static inline var HANGAR_CYAN 	: Int 	=	0x004;
+	public static inline var HANGAR_JAUNE 	: Int 	=	0x005;
+	public static inline var HANGAR_ROUGE 	: Int 	=	0x006;
+	public static inline var HANGAR_VERT 	: Int 	=	0x007;
+	public static inline var HANGAR_VIOLET 	: Int 	=	0x008;
+	public static inline var LABO 			: Int 	=	0x009;
+	public static inline var NICHE 			: Int 	=	0x00A;
+	public static inline var PAS_DE_TIR 	: Int 	=	0x00B;
+	public static inline var ENTREPOT 		: Int 	=	0x00C;
+	public static inline var MUSEE 			: Int 	=	0x00D;
 
-	public static var LVL_1 		: Int 	= 	0x100;
-	public static var LVL_2 		: Int 	= 	0x200;
-	public static var LVL_3 		: Int 	=	0x300;
+	public static inline var LVL_1 			: Int 	= 	0x100;
+	public static inline var LVL_2 			: Int 	= 	0x200;
+	public static inline var LVL_3 			: Int 	=	0x300;
 	
 	public static var CLICK_VALUE : Dynamic<Int> = {
 		CANT_CLICK 	: 0,
