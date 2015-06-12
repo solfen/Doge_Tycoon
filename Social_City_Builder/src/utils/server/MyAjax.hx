@@ -19,7 +19,7 @@ class MyAjax
 	}
 
 	public static function onEror(response:String) {
-		if(response.indexOf("401") != -1) {
+		if(response.indexOf("401") != -1 && !Main.isLocal) {
 			Browser.window.alert("Vous êtes déconecté, vous allez être redirrigé vers l'acceuil");
 			Browser.window.location.href = "../php/index.php";
 		}

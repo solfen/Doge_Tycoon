@@ -224,7 +224,10 @@ function sell_ressource ($connexion) {
 
 
 function building_operations ($connexion,$isSoft,$isUpgrade) {
-	if(!isset($_POST['building_id']) || !isset($_POST['building_builded_id'])){
+	if(!isset($_POST['building_id'])){
+		return "0=Missing params";
+	}
+	if($isUpgrade && !isset($_POST['building_builded_id'])) {
 		return "0=Missing params";
 	}
 	$buildingConfig = dbRequest($connexion,"SELECT `hardCost`, `softCost`, `dogeCost`, `buildingTime`, `ressource_cost_1`, `ressource_cost_2`, `ressource_cost_3`, `ressource_cost_4`, `ressource_cost_5`, `ressource_cost_6` FROM `buildings` WHERE `ID` = :id", array(':id'=>$_POST['building_id']), true);

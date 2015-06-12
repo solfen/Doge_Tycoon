@@ -30,6 +30,11 @@ class LoadConfig {
 		var params:Map<String,String> = [
 			"event_name"  => 'get_my_artefacts',
 		];
-		utils.server.MyAjax.call("data.php", params, finishLoadArtefacts);
+		utils.server.MyAjax.call("data.php", params, finishLoadArtefacts);		
+		
+		var params:Map<String,String> = [
+			"event_name"  => 'get_my_artefacts',
+		];
+		utils.server.MyAjax.call("data.php", params, finishLoadBuildings);
 	}
 }

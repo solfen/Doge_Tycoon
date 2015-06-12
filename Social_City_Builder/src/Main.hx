@@ -38,7 +38,7 @@ class Main extends EventDispatcher
 	private var WebFontConfig: Dynamic;
 	private var _old_stamp: Float;
 
-	private var isLocal:Bool = true;
+	public static var isLocal:Bool = true;
 
 	private static function main (): Void
 	{
