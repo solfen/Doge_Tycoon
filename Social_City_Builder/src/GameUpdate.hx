@@ -13,8 +13,6 @@ class GameUpdate
 
 	private static var instance: GameUpdate;
 	private var mainInstance: Main;
-	private var ftue1 : Bool = false;
-	private var ftue2 : Bool = false;
 	private var is_checking_with_server : Bool = false;
 	private var ftueParam : Map<String,Dynamic>;
 	private var quest:Dynamic;
@@ -177,16 +175,24 @@ class GameUpdate
 			];
 			utils.server.MyAjax.call("data.php", params, finishRocket);
 		}
-
-		if(!ftue1){
-			ftueParam = ['ftueIndex' => 0];
-			PopinManager.getInstance().openPopin("PopinFTUE",0.5,0.5,ftueParam);
-			ftue1 = true;
+		if(!is_checking_with_server && GameInfo.ftueLevel == -1) {
+			is_checking_with_server = true;
+			var params:Map<String,String> = [
+				"event_name"  => 'buy_building',
+				"building_id" => (Building.PAS_DE_TIR | Building.LVL_1) + '',
+				"isSoft" 	  => "0"
+			];
+			utils.server.MyAjax.call("data.php", params, finishFirstBuy );
 		}
-		else if(!ftue2 && GameInfo.buildingsGameplay[Building.PAS_DE_TIR | Building.LVL_1].userPossesion > 0){
-			ftueParam = ['ftueIndex' => 1];
+		else if(GameInfo.ftueLevel == 0){
+			ftueParam = ['ftueIndex' => GameInfo.ftueLevel];
 			PopinManager.getInstance().openPopin("PopinFTUE",0.5,0.5,ftueParam);
-			ftue2 = true;
+			GameInfo.ftueLevel++;
+		}
+		else if(GameInfo.ftueLevel == 1 && GameInfo.buildingsGameplay[Building.PAS_DE_TIR | Building.LVL_1].userPossesion > 0){
+			ftueParam = ['ftueIndex' => GameInfo.ftueLevel];
+			PopinManager.getInstance().openPopin("PopinFTUE",0.5,0.5,ftueParam);
+			GameInfo.ftueLevel++;
 		}
 
 	}
@@ -194,6 +200,15 @@ class GameUpdate
 	public function destroy (): Void {
 		Main.getInstance().removeEventListener(Event.GAME_LOOP,update);
 		instance = null;
+	}
+
+	private function finishFirstBuy(data:String) {
+		is_checking_with_server = false;
+		if(data.charAt(0) != "0") {
+			GameInfo.building_2_build = Building.PAS_DE_TIR;
+			GameInfo.building_2_build_bdd_id = data;
+		}
+		GameInfo.ftueLevel++;
 	}
 
 }

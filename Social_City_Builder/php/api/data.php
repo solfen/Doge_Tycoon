@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 include '../config.php';
 
 //TEMP VARS TO TEST !!
-/*$_SESSION['facebookID'] = '818989511510138';
+$_SESSION['facebookID'] = '818989511510138';/*
 $_POST['event_name'] = 'get_friend_artefacts';
 $_POST['building_id'] = "257";
 $_POST['isSoft'] = "0";
@@ -518,7 +518,7 @@ function check_rocket_construction_end ($connexion, $rocketInfo, $maxClickPerSec
 
 
 function launch_rocket ($connexion, $rocketInfo){
-	if(!isset($_POST['rocket_builded_id']) || !isset($_POST["clickNb"])) {
+	if(!isset($_POST['rocket_builded_id'])) {
 		return "0=Missing params";
 	}
 

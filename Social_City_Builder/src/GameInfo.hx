@@ -812,8 +812,9 @@ class GameInfo
  	public static var musseVisiteGain:Float = 1;
  	public static var churchClicks:Int = 0;
  	public static var museumClicks:Int = 0;
+ 	public static var ftueLevel :Int = -1;
 
- 	public static var building_2_build: Int = Building.MUSEE;
+ 	public static var building_2_build: Int;
  	public static var building_2_build_bdd_id: String = "";
  	public static var shipToLaunch: String;
  	public static var can_map_update: Bool = true; 	

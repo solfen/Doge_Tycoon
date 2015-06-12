@@ -26,10 +26,10 @@ class HudQuests extends IconHud
 		}
 		if(curName != "PopinQuests"){
 			PopinManager.getInstance().openPopin("PopinQuests", 0.5, 0.55);
-			if(!ftue3){
-				var ftueParam:Map<String, Dynamic> = ['ftueIndex' => 2];
+			if(GameInfo.ftueLevel == 2){
+				var ftueParam:Map<String, Dynamic> = ['ftueIndex' => GameInfo.ftueLevel];
 				PopinManager.getInstance().addPopinToQueue("PopinFTUE",0.5,0.5,ftueParam);
-				ftue3 = true;
+				GameInfo.ftueLevel++;
 			}
 		}
 	}	
