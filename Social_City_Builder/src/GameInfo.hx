@@ -411,22 +411,22 @@ class GameInfo
  			destination:'Modor',
  			previewImg: 'IconPlaneteMilieu.png',
  			spaceships: ['VertLv1','VertLv2','VertLv3']
- 		}, 		
+ 		},
  		Building.HANGAR_CYAN=> {
  			destination:'Namok',
  			previewImg: 'IconNamek.png',
  			spaceships: ['CyanLv1','CyanLv2','CyanLv3']
- 		}, 		
+ 		},
  		Building.HANGAR_BLEU=> {
  			destination:'Terre',
  			previewImg: 'IconTerre.png',
  			spaceships: ['BleuLv1','BleuLv2','BleuLv3']
- 		}, 		
+ 		},
  		Building.HANGAR_VIOLET=> {
  			destination:'Wundërland',
  			previewImg: 'IconWonderland.png',
  			spaceships: ['VioletLv1','VioletLv2','VioletLv3']
- 		}, 		
+ 		},
  		Building.HANGAR_ROUGE=> {
  			destination:'StarWat',
  			previewImg: 'IconPlaneteDesEtoiles.png',

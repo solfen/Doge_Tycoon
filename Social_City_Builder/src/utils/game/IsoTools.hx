@@ -8,35 +8,35 @@ class IsoTools
 {
 	public static function cell_col (cell_index: Int, cols_nb: Int) : Float
 	{
-		return (cell_index%cols_nb-(Std.int(cell_index/cols_nb))+cols_nb-1) * 0.5;
+		return (cell_index % cols_nb - Std.int(cell_index / cols_nb) + cols_nb - 1) * 0.5;
 	}
 
 	public static function cell_row (cell_index: Int, cols_nb: Int) : Float
 	{
-		return (cell_index%cols_nb+(Std.int(cell_index/cols_nb))) * 0.5;
+		return (cell_index % cols_nb + Std.int(cell_index / cols_nb)) * 0.5;
 	}
 
 	public static function cell_x (col: Float, cell_w: Int, offset_x: Int) : Int
 	{
-		return Std.int(col*cell_w + offset_x);
+		return Std.int(col * cell_w + offset_x);
 	}
 
 	public static function cell_y (row: Float, cell_h: Int, offset_y: Int) : Int
 	{
-		return Std.int(row*cell_h + offset_y);
+		return Std.int(row * cell_h + offset_y);
 	}
 
 	public static function cell_index_from_cr (col: Float, row: Float, cols_nb: Int) : Int
 	{
-		return Std.int(row+col-cols_nb*0.5+0.5) + Std.int(row-col+cols_nb*0.5-0.5) * cols_nb;
+		return Std.int(row + col - cols_nb * 0.5 + 0.5) + Std.int(row - col + cols_nb * 0.5 - 0.5) * cols_nb;
 	}
 
 	public static function cell_index_from_xy (x: Int, y: Int, offset_x: Int, offset_y: Int, cell_w: Int, cell_h: Int, cols_nb: Int) : Int
 	{
-		var nX: Float = (x-offset_x) / cell_w;
-		var nY: Float = (y-offset_y) / cell_h;
+		var nX: Float = (x - offset_x) / cell_w;
+		var nY: Float = (y - offset_y) / cell_h;
 
-		return Std.int(nY+nX-cols_nb*0.5) + Std.int(nY-nX+cols_nb*0.5) * cols_nb;
+		return Std.int(nY + nX - cols_nb * 0.5) + Std.int(nY - nX + cols_nb * 0.5) * cols_nb;
 	}
 
 	public static function is_inside_map (x: Int, y: Int, offset_x: Int, offset_y: Int, cell_w: Int, cell_h: Int, cells_nb: Int, cols_nb: Int): Bool

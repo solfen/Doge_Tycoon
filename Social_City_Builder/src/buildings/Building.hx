@@ -7,7 +7,6 @@ import utils.game.IsoTools;
 import utils.game.OutlineFilter;
 import utils.game.InputInfos;
 import pixi.display.MovieClip;
-import pixi.InteractionData;
 import pixi.display.Sprite;
 import pixi.textures.Texture;
 import pixi.textures.BaseTexture;
