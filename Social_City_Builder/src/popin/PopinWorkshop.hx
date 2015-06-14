@@ -15,6 +15,7 @@ class PopinWorkshop extends MyPopin
 {	
 	private var articleHeight:Float = Texture.fromFrame("PopInQuestBgArticle.png").height;
 	private var hasVerticalScrollBar:Bool = false;
+	private var worshopID:String;
 	private var workShopModel:Dynamic;
 	private var workshopConfig:Dynamic;
 	private var particleSystem:ParticleSystem;
@@ -81,7 +82,8 @@ class PopinWorkshop extends MyPopin
 	{
 		GameInfo.can_map_update = false;
 		super(startX,startY, "PopInBackground.png");
-		workshopConfig = optParams['config']; // TODO : obtain ID from param
+		worshopID = optParams['buildingId'];
+		workshopConfig = GameInfo.workshopConfigs[worshopID];
 		workShopModel = GameInfo.workshopsModels[workshopConfig.workshopType];
 		headerTextures = [ 
 			'atelier'=>Texture.fromFrame('PopInWorkshopHeader.png'),
@@ -225,6 +227,12 @@ class PopinWorkshop extends MyPopin
 			GameInfo.rockets.currentRocketLaunchTime = haxe.Timer.stamp();
 			close();
 		}
+		else {
+			workshopConfig.state = 'buy';
+			containers["verticalScroller"].removeChildren(0,containers["verticalScroller"].children.length);
+			addBuyState();
+			//need feedback problem build
+		}
 	}
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)
@@ -251,6 +259,7 @@ class PopinWorkshop extends MyPopin
 				var params:Map<String,String> = [
 					"event_name"  => 'build_rocket',
 					"rocket_ref" => workShopModel.spaceships[index],
+					"building_id" => worshopID
 				];
 				utils.server.MyAjax.call("data.php", params, finnishBuy );
 			}
@@ -265,7 +274,7 @@ class PopinWorkshop extends MyPopin
 				"event_name"  => 'destroy_rocket',
 				"rocket_builded_id" => workshopConfig.spaceShipID,
 			];
-			utils.server.MyAjax.call("data.php", params, finishBuild );
+			utils.server.MyAjax.call("data.php", params, function(){} );
 
 			workshopConfig.state = 'buy';
 			Main.getInstance().removeEventListener(Event.GAME_LOOP, refreshBuildBar);

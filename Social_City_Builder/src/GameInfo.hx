@@ -433,6 +433,8 @@ class GameInfo
  			spaceships: ['OrangeLv1','OrangeLv2','OrangeLv3']
  		},
  	];
+ 	public static var workshopConfigs:Map<String,Dynamic> = new Map(); // is beeing generated in game
+
  	public static var artefacts:Map<String,Map<String,Dynamic>> = [
  		'SprungField' => [
  			"701943576599156" => {name:'Skate',userPossesion:0,img:'IconArtefactsSimpsons1.png', currentFriendPossesion:0 },
@@ -813,6 +815,8 @@ class GameInfo
  	public static var churchClicks:Int = 0;
  	public static var museumClicks:Int = 0;
  	public static var ftueLevel :Int = -1;
+ 	public static var buildingsToLoad :Int = 9000;
+ 	public static var buildingsLoaded :Int = 0;
 
  	public static var building_2_build: Int;
  	public static var building_2_build_bdd_id: String = "";

@@ -13,9 +13,9 @@ class Niche extends Building
 {
 	private var nbDogesInside: Int;
 
-	public function new (pBdd_id:String, p_index: Int, pX: Int, pY: Int): Void
+	public function new (pBdd_id:String, p_index: Int, pX: Int, pY: Int, pIs_rebuild: Bool): Void
 	{
-		super(Building.NICHE, pBdd_id, p_index, pX, pY);
+		super(Building.NICHE, pBdd_id, p_index, pX, pY, pIs_rebuild);
 		
 		outline_thick_max = 1;
 		//outline_thick_min = 1;

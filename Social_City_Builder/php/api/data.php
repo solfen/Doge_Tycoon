@@ -7,8 +7,8 @@ include '../config.php';
 //TEMP VARS TO TEST !!
 
 $_SESSION['facebookID'] = $facebookID;
-/*
-$_POST['event_name'] = 'get_friend_artefacts';
+
+/*$_POST['event_name'] = 'get_all_rockets';
 $_POST['building_id'] = "257";
 $_POST['isSoft'] = "0";
 $_POST['building_builded_id'] = 35;
@@ -118,6 +118,10 @@ switch ($_POST['event_name']) {
 		if(is_array($result)){
 			$result = check_rocket_travel_end($connexion, $result);
 		}
+		echo $result;
+	break;
+	case 'get_all_rockets' :
+		$result = get_all_rockets($connexion);
 		echo $result;
 	break;
 	case 'get_friend_artefacts':
@@ -280,7 +284,8 @@ function building_operations ($connexion,$isSoft,$isUpgrade) {
 		dbRequest($connexion, $str, $params, false);
 
 		if($isUpgrade){
-			dbRequest($connexion,"UPDATE `builded_buildings` SET `isBuilded` = 0, `buildingID` = :buildingID, `buildingEnd` = :time WHERE `ID` = :id",array('buildingID' => $_POST['building_id'], ':time' => date("Y-m-d H:i:s",time() + $buildingConfig['buildingTime']), ':id'=>$_POST['building_builded_id']), false);
+			$cheatRatio = 0.01; // pour les test de construction
+			dbRequest($connexion,"UPDATE `builded_buildings` SET `isBuilded` = 0, `buildingID` = :buildingID, `buildingEnd` = :time WHERE `ID` = :id",array('buildingID' => $_POST['building_id'], ':time' => date("Y-m-d H:i:s",time() + $buildingConfig['buildingTime'] * $cheatRatio), ':id'=>$_POST['building_builded_id']), false);
 			return "1";
 		}
 		else{
@@ -396,7 +401,7 @@ function get_all_buildings($connexion) {
 
 
 function build_rocket ($connexion) {
-	if(!isset($_POST['rocket_ref'])) {
+	if(!isset($_POST['rocket_ref']) || !isset($_POST['building_id'])) {
 		return "0=Missing params";
 	}
 
@@ -439,7 +444,7 @@ function build_rocket ($connexion) {
 
 		dbRequest($connexion, $str, $params, false);
 
-		dbRequest($connexion,"INSERT INTO `builded_rockets`(`ID`, `playerFbID`, `rocketID`, `buildingEnd`, `travelEnd`) VALUES ('',:id,:rocketID,:buildEnd,'')",array(':id' => $_SESSION["facebookID"], ':rocketID' => $rocketConfig['ID'], ':buildEnd' => date("Y-m-d H:i:s",time() + $rocketConfig['constructionDuration'])), false);
+		dbRequest($connexion,"INSERT INTO `builded_rockets`(`ID`, `playerFbID`, `rocketID`, `buildingID`, `buildingEnd`, `travelEnd`) VALUES ('',:id,:rocketID,:buildingID,:buildEnd,'')",array(':id' => $_SESSION["facebookID"], ':rocketID' => $rocketConfig['ID'], ':buildingID' => $_POST['building_id'], ':buildEnd' => date("Y-m-d H:i:s",time() + $rocketConfig['constructionDuration'])), false);
 
 		return $connexion->lastInsertId();
 	}
@@ -494,10 +499,11 @@ function check_rocket_construction_end ($connexion, $rocketInfo, $maxClickPerSec
 	$rocket = $rocketInfo[0];
 	$rocketConfig = $rocketInfo[1];
 	if(!$rocket['isBuilded']){
-		$clickBonusPercent = min($rocketConfig["constructionDuration"] * $maxClickPerSecond, $_POST["clickNb"]) * ($rocketConfig["clickTimeRewardPercent"]/100);
+		$clicksNb = min($rocketConfig["constructionDuration"] * $maxClickPerSecond, $_POST["clickNb"]);
+		$clickBonusPercent = $clicksNb * ($rocketConfig["clickTimeRewardPercent"]/100);
 		$rocketEndTime = strtotime($rocket['buildingEnd']) - $clickBonusPercent*$rocketConfig["constructionDuration"];
 		if(time() >= $rocketEndTime){
-			dbRequest($connexion,"UPDATE `builded_rockets` SET `isBuilded`= 1 WHERE `ID` = :id",array(':id' => $_POST['rocket_builded_id']),false);
+			dbRequest($connexion,"UPDATE `builded_rockets` SET `isBuilded`= 1, `clicksNb` = :clickNb WHERE `ID` = :id",array(':clickNb' => $clicksNb, ':id' => $_POST['rocket_builded_id']),false);
 			return "1";
 		}
 		else {
@@ -615,6 +621,13 @@ function destroy_rocket ($connexion){
 
 	dbRequest($connexion,"DELETE FROM `builded_rockets` WHERE `ID` = :id",array(':id'=>$_POST['rocket_builded_id']), false);
 	echo "1";
+}
+
+function get_all_rockets($connexion) {
+	$str = 'SELECT builded_rockets.`ID`, builded_rockets.`buildingID`, builded_rockets.`isBuilded`, builded_rockets.`buildingEnd`, builded_rockets.`clicksNb`, builded_buildings.buildingID AS buildingType, rockets.`ref`, rockets.constructionDuration  FROM `builded_rockets` JOIN `rockets` ON builded_rockets.`rocketID`= rockets.`ID` JOIN builded_buildings ON builded_rockets.`buildingID` = builded_buildings.ID   WHERE builded_rockets.`travelEnd` = "0000-00-00 00:00:00" && builded_rockets.`playerFbID` = :id';
+	$params = [':id'=>$_SESSION["facebookID"]];
+	$rockets = dbRequest($connexion,$str,$params, true);
+	return json_encode($rockets);
 }
 
 

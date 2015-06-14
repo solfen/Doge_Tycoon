@@ -30,20 +30,138 @@ class GameUpdate
 		Main.getInstance().addEventListener(Event.GAME_LOOP, update); 
 	}
 	
-	private function finishRocket(data:String) {
-		is_checking_with_server = false;
-		if(data.charAt(0) == "{"){
-			var data:Dynamic = haxe.Json.parse(data);
-			if(data.durationLeft) {
-				GameInfo.rockets.currentRocketLaunchTime = Std.int(data.durationLeft) + haxe.Timer.stamp() - GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].timeToDestination;
+	/**
+	 * boucle de jeu (répétée à la cadence du jeu en fps)
+	 	it's possible that the code here will be placed in functions or in other classes but they'll still be called from here
+	 */
+	public function update (): Void {
+		if(GameInfo.ftueLevel < 2) {
+			ftue();
+		}
+
+		if(GameInfo.questsArticles["current"].length > 0) {
+			quests();
+		}
+
+		ressources();
+
+		rockets();
+	}
+	
+	public function destroy (): Void {
+		Main.getInstance().removeEventListener(Event.GAME_LOOP,update);
+		instance = null;
+	}
+
+	private function ftue() : Void {
+		if(!is_checking_with_server && GameInfo.ftueLevel == -1 && GameInfo.buildingsLoaded >= GameInfo.buildingsToLoad) {
+			if(GameInfo.buildingsGameplay[Building.PAS_DE_TIR | Building.LVL_1].userPossesion == 0
+			&& GameInfo.buildingsGameplay[Building.PAS_DE_TIR | Building.LVL_2].userPossesion == 0
+			&& GameInfo.buildingsGameplay[Building.PAS_DE_TIR | Building.LVL_3].userPossesion == 0) {
+				is_checking_with_server = true;
+				var params:Map<String,String> = [
+					"event_name"  => 'buy_building',
+					"building_id" => (Building.PAS_DE_TIR | Building.LVL_1) + '',
+					"isSoft" 	  => "0"
+				];
+				utils.server.MyAjax.call("data.php", params, finishFirstBuy );
 			}
 			else {
-				var data:Map<String,Dynamic> = ['destination' => GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].destination];
-				GameInfo.rockets.currentRocket = null;
-				PopinManager.getInstance().addPopinToQueue("PopinSpaceShipReturn",0.5,0.5, data);
+				GameInfo.ftueLevel++;
+			}
+		}
+		else if(GameInfo.ftueLevel == 0){
+			ftueParam = ['ftueIndex' => GameInfo.ftueLevel];
+			PopinManager.getInstance().openPopin("PopinFTUE",0.5,0.5,ftueParam);
+			GameInfo.ftueLevel++;
+		}
+		else if(GameInfo.ftueLevel == 1 && GameInfo.buildingsGameplay[Building.PAS_DE_TIR | Building.LVL_1].userPossesion > 0){
+			ftueParam = ['ftueIndex' => GameInfo.ftueLevel];
+			PopinManager.getInstance().addPopinToQueue("PopinFTUE",0.5,0.5,ftueParam);
+			GameInfo.ftueLevel++;
+		}
+		//be carful, there is an other part of the ftue in HudQuests for the ftue after opening the quest popin
+	}
+
+	private function quests() {
+		for( i in 0...GameInfo.questsArticles["current"].length){
+			quest = GameInfo.questsArticles["current"][i];
+			var questAcomplished:Bool = false;
+			if(quest.condition.building && GameInfo.buildingsGameplay[quest.condition.building].userPossesion >= quest.condition.numberToHave){
+				questAcomplished = true;
+			}
+			else if(quest.condition.rocketsConstructedNb && GameInfo.rockets.rocketsConstructedNb >= quest.condition.rocketsConstructedNb){
+				questAcomplished = true;
+			}
+			else if(quest.condition.rocketsLaunchedNb && GameInfo.rockets.rocketsLaunchedNb >= quest.condition.rocketsLaunchedNb){
+				questAcomplished = true;
+			}
+			if(questAcomplished){
+				if(!is_checking_with_server)  {
+					is_checking_with_server = true;
+					var params:Map<String,String> = [
+						"event_name"  => 'check_quest_completion',
+						"questID" => quest.bdd_id,
+					];
+					utils.server.MyAjax.call("data.php", params, finishQuest);
+				}
+				break;
 			}
 		}
 	}
+
+	private function ressources() {
+		if(GameInfo.buildingsGameplay[Building.EGLISE | Building.LVL_1].userPossesion > 0 
+		|| GameInfo.buildingsGameplay[Building.EGLISE | Building.LVL_2].userPossesion > 0
+		|| GameInfo.buildingsGameplay[Building.EGLISE | Building.LVL_3].userPossesion > 0) {
+			GameInfo.faithPercent = Math.max(GameInfo.faithPercent - GameInfo.faithLossSpeed * mainInstance.delta_time,0);
+			PopinManager.getInstance().updatePopin("PopinChurch");
+		}
+		if(GameInfo.buildingsGameplay[Building.MUSEE | Building.LVL_1].userPossesion > 0 
+		|| GameInfo.buildingsGameplay[Building.MUSEE | Building.LVL_2].userPossesion > 0
+		|| GameInfo.buildingsGameplay[Building.MUSEE | Building.LVL_3].userPossesion > 0) {
+			GameInfo.ressources['fric'].userPossesion += GameInfo.museeSoftSpeed * mainInstance.delta_time;
+		}
+
+		var doges:Float =   GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].userPossesion * GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesPerSecond
+						  + GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_2].userPossesion * GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesPerSecond
+						  + GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_3].userPossesion * GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesPerSecond;
+		GameInfo.ressources['doges'].userPossesion = Math.min(GameInfo.ressources['doges'].userPossesion + doges * mainInstance.delta_time,GameInfo.dogeMaxNumber);
+
+		if(haxe.Timer.stamp() >= lastServerCheck + serverCheckInterval) {
+			lastServerCheck = haxe.Timer.stamp();
+			var params:Map<String,String> = [
+				"event_name"  => 'update_ressources',
+				"churchClicks" => GameInfo.churchClicks+'',
+				"museumClicks" => GameInfo.museumClicks+'',
+			];
+			utils.server.MyAjax.call("data.php", params, finishUpdateRessources);
+
+			GameInfo.churchClicks = 0;
+			GameInfo.museumClicks = 0;
+		}
+	}
+
+	private function rockets() {
+		if(!is_checking_with_server && GameInfo.rockets.currentRocket != null && haxe.Timer.stamp() >= GameInfo.rockets.currentRocketLaunchTime + GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].timeToDestination) {
+			is_checking_with_server = true;
+			var params:Map<String,String> = [
+				"event_name"  => 'check_rocket_travel_end',
+				"rocket_builded_id" => GameInfo.rockets.currentRocketID,
+			];
+			utils.server.MyAjax.call("data.php", params, finishRocket);
+		}
+	}
+
+	private function finishFirstBuy(data:String) {
+		is_checking_with_server = false;
+		if(data.charAt(0) != "0") {
+			GameInfo.building_2_build = Building.PAS_DE_TIR;
+			GameInfo.building_2_build_bdd_id = data;
+		}
+		GameInfo.ftueLevel++;
+	}
+
 	private function finishQuest(data:String) {
 		is_checking_with_server = false;
 		if(data.charAt(0) == "{") {
@@ -82,6 +200,7 @@ class GameUpdate
 			GameInfo.questsArticles["current"].remove(quest);
 		}
 	}
+
 	private function finishUpdateRessources(data:String) {
 		if(data.charAt(0) != "0"){
 			var data:Dynamic = haxe.Json.parse(data);
@@ -106,109 +225,19 @@ class GameUpdate
 			trace("eror");
 		}
 	}
-	/**
-	 * boucle de jeu (répétée à la cadence du jeu en fps)
-	 	it's possible that the code here will be placed in functions or in other classes but they'll still be called from here
-	 */
-	public function update (): Void {
-		if(GameInfo.buildingsGameplay[Building.EGLISE | Building.LVL_1].userPossesion > 0 
-		|| GameInfo.buildingsGameplay[Building.EGLISE | Building.LVL_2].userPossesion > 0
-		|| GameInfo.buildingsGameplay[Building.EGLISE | Building.LVL_3].userPossesion > 0) {
-			GameInfo.faithPercent = Math.max(GameInfo.faithPercent - GameInfo.faithLossSpeed * mainInstance.delta_time,0);
-			PopinManager.getInstance().updatePopin("PopinChurch");
-		}
-		if(GameInfo.buildingsGameplay[Building.MUSEE | Building.LVL_1].userPossesion > 0 
-		|| GameInfo.buildingsGameplay[Building.MUSEE | Building.LVL_2].userPossesion > 0
-		|| GameInfo.buildingsGameplay[Building.MUSEE | Building.LVL_3].userPossesion > 0) {
-			GameInfo.ressources['fric'].userPossesion += GameInfo.museeSoftSpeed * mainInstance.delta_time;
-		}
 
-		var doges:Float =   GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].userPossesion * GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesPerSecond
-						  + GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_2].userPossesion * GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesPerSecond
-						  + GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_3].userPossesion * GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesPerSecond;
-		GameInfo.ressources['doges'].userPossesion = Math.min(GameInfo.ressources['doges'].userPossesion + doges * mainInstance.delta_time,GameInfo.dogeMaxNumber);
-
-		if(haxe.Timer.stamp() >= lastServerCheck + serverCheckInterval) {
-			lastServerCheck = haxe.Timer.stamp();
-			var params:Map<String,String> = [
-				"event_name"  => 'update_ressources',
-				"churchClicks" => GameInfo.churchClicks+'',
-				"museumClicks" => GameInfo.museumClicks+'',
-			];
-			utils.server.MyAjax.call("data.php", params, finishUpdateRessources);
-
-			GameInfo.churchClicks = 0;
-			GameInfo.museumClicks = 0;
-		}
-
-		// TO BE PUT IN QUEST UPDATE ?
-		for( i in 0...GameInfo.questsArticles["current"].length){
-			quest = GameInfo.questsArticles["current"][i];
-			var questAcomplished:Bool = false;
-			if(quest.condition.building && GameInfo.buildingsGameplay[quest.condition.building].userPossesion >= quest.condition.numberToHave){
-				questAcomplished = true;
-			}
-			else if(quest.condition.rocketsConstructedNb && GameInfo.rockets.rocketsConstructedNb >= quest.condition.rocketsConstructedNb){
-				questAcomplished = true;
-			}
-			else if(quest.condition.rocketsLaunchedNb && GameInfo.rockets.rocketsLaunchedNb >= quest.condition.rocketsLaunchedNb){
-				questAcomplished = true;
-			}
-			if(questAcomplished){
-				if(!is_checking_with_server)  {
-					is_checking_with_server = true;
-					var params:Map<String,String> = [
-						"event_name"  => 'check_quest_completion',
-						"questID" => quest.bdd_id,
-					];
-					utils.server.MyAjax.call("data.php", params, finishQuest);
-				}
-				break;
-			}
-		}
-
-		if(!is_checking_with_server && GameInfo.rockets.currentRocket != null && haxe.Timer.stamp() >= GameInfo.rockets.currentRocketLaunchTime + GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].timeToDestination) {
-			is_checking_with_server = true;
-			var params:Map<String,String> = [
-				"event_name"  => 'check_rocket_travel_end',
-				"rocket_builded_id" => GameInfo.rockets.currentRocketID,
-			];
-			utils.server.MyAjax.call("data.php", params, finishRocket);
-		}
-		if(!is_checking_with_server && GameInfo.ftueLevel == -1) {
-			is_checking_with_server = true;
-			var params:Map<String,String> = [
-				"event_name"  => 'buy_building',
-				"building_id" => (Building.PAS_DE_TIR | Building.LVL_1) + '',
-				"isSoft" 	  => "0"
-			];
-			utils.server.MyAjax.call("data.php", params, finishFirstBuy );
-		}
-		else if(GameInfo.ftueLevel == 0){
-			ftueParam = ['ftueIndex' => GameInfo.ftueLevel];
-			PopinManager.getInstance().openPopin("PopinFTUE",0.5,0.5,ftueParam);
-			GameInfo.ftueLevel++;
-		}
-		else if(GameInfo.ftueLevel == 1 && GameInfo.buildingsGameplay[Building.PAS_DE_TIR | Building.LVL_1].userPossesion > 0){
-			ftueParam = ['ftueIndex' => GameInfo.ftueLevel];
-			PopinManager.getInstance().openPopin("PopinFTUE",0.5,0.5,ftueParam);
-			GameInfo.ftueLevel++;
-		}
-
-	}
-	
-	public function destroy (): Void {
-		Main.getInstance().removeEventListener(Event.GAME_LOOP,update);
-		instance = null;
-	}
-
-	private function finishFirstBuy(data:String) {
+	private function finishRocket(data:String) {
 		is_checking_with_server = false;
-		if(data.charAt(0) != "0") {
-			GameInfo.building_2_build = Building.PAS_DE_TIR;
-			GameInfo.building_2_build_bdd_id = data;
+		if(data.charAt(0) == "{"){
+			var data:Dynamic = haxe.Json.parse(data);
+			if(data.durationLeft) {
+				GameInfo.rockets.currentRocketLaunchTime = Std.int(data.durationLeft) + haxe.Timer.stamp() - GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].timeToDestination;
+			}
+			else {
+				var data:Map<String,Dynamic> = ['destination' => GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].destination];
+				GameInfo.rockets.currentRocket = null;
+				PopinManager.getInstance().addPopinToQueue("PopinSpaceShipReturn",0.5,0.5, data);
+			}
 		}
-		GameInfo.ftueLevel++;
 	}
-
 }

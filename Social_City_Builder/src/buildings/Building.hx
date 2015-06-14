@@ -95,7 +95,7 @@ class Building extends MovieClip
 		return map_idx;
 	}
 
-	public function new (p_type: Int, pBdd_id: String, p_index: Int, pX: Int, pY: Int): Void
+	public function new (p_type: Int, pBdd_id: String, p_index: Int, pX: Int, pY: Int, pIs_rebuild): Void
 	{
 		_cheat_ratio = 0.01; // pour construire + vite, parce que c'est long sinon !
 		
@@ -132,7 +132,7 @@ class Building extends MovieClip
 
 		Main.getInstance().addEventListener(Event.GAME_LOOP, _update);
 
-		if (p_index != -1) 
+		if (p_index != -1 && !pIs_rebuild) 
 		{
 			var params: Map<String,String> = 
 			[
@@ -226,6 +226,10 @@ class Building extends MovieClip
 
 	private function _build_end (data: String): Void 
 	{
+		if(GameInfo.buildingsToLoad > GameInfo.buildingsLoaded) {
+			GameInfo.buildingsLoaded++;
+		}
+		
 		if (data.charAt(0) == '1')
 		{
 			GameInfo.buildingsGameplay[get_id()].userPossesion++;

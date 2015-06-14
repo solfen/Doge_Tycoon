@@ -13,9 +13,9 @@ import pixi.InteractionData;
 class Eglise extends Building
 {
 
-	public function new (pBdd_id: String, p_index: Int, pX: Int, pY: Int): Void
+	public function new (pBdd_id: String, p_index: Int, pX: Int, pY: Int, pIs_rebuild: Bool): Void
 	{
-		super(Building.EGLISE, pBdd_id, p_index, pX, pY);
+		super(Building.EGLISE, pBdd_id, p_index, pX, pY, pIs_rebuild);
 
 		outline_thick_max = 3;
 		//outline_thick_min = 1;
