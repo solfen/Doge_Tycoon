@@ -234,7 +234,7 @@ class GameUpdate
 				GameInfo.rockets.currentRocketLaunchTime = Std.int(data.durationLeft) + haxe.Timer.stamp() - GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].timeToDestination;
 			}
 			else {
-				var data:Map<String,Dynamic> = ['destination' => GameInfo.rocketsConfig[GameInfo.rockets.currentRocket].destination];
+				var data:Map<String,Dynamic> = ['ressources' => data.ressources, "artefacts" => data.artefacts];
 				GameInfo.rockets.currentRocket = null;
 				PopinManager.getInstance().addPopinToQueue("PopinSpaceShipReturn",0.5,0.5, data);
 			}

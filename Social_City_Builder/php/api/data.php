@@ -583,12 +583,12 @@ function check_rocket_travel_end ($connexion, $rocketInfo) {
 			$ressourceNb = rand($planet["meansRewardMin"],$planet["meansRewardMax"]);
 			$ressources = [];
 			for($i=1;$i<7;$i++){
-				array_push($ressources, $ressourceNb * ($planet['ressource_ratio_'.$i]/100)); // ressource_ratio_ is saved in DB in *100 form to avoid using floats
+				array_push($ressources, intval($ressourceNb * ($planet['ressource_ratio_'.$i]/100) ) ); // ressource_ratio_ is saved in DB in *100 form to avoid using floats
 			}
 
 			$artefactsFound = [];
 			foreach ($artefacts as $artefact) {
-				if(rand(1, 1/$artefact["rarity"]) == 1){
+				if(rand(1, $artefact["rarity"]) == 1){
 					dbRequest($connexion,"INSERT INTO `collected_artefacts`(`ID`, `artefactID`, `playerFbID`) VALUES ('',:artId,:id)", array(':id'=>$_SESSION['facebookID'], ':artId'=>$artefact["ID"]),false);
 					array_push($artefactsFound, array("name" => $artefact["ref"], "facebookID" => $artefact["facebookID"]) );
 				}

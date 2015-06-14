@@ -13,11 +13,13 @@ class PopinSpaceShipReturn extends MyPopin
 {	
 	private var articleWidth:Float = Texture.fromFrame("PopInMuseeArticleBg.png").width;
 	private var articleInterline:Float = 0.02;
+	private var artefactInterline:Float = 0.107;
 	private var hasVerticalScrollBar:Bool = false;
-	private var destination:String;
+	private var ressources:Array<Int>;
+	private var artefacts:Array<Dynamic>;
 
 	private var gui:GUI;
-	private var guiValuesList:Array<String> = ["articleInterline","ressourcesBackX","ressourcesBackY","ressourceBaseX","ressourceBaseY","ressourceImgX","ressourceImgY","ressourcesTxtX","ressourcesTxtY","ressourcesNbX","ressourcesNbY","artefactsBackX","artefactsBackY","artefactBaseX","artefactBaseY","artefactImgX","artefactImgY","artefactsTxtX","artefactsTxtY","artefactsNbX","artefactsNbY"];
+	private var guiValuesList:Array<String> = ["articleInterline","artefactInterline","ressourcesBackX","ressourcesBackY","ressourceBaseX","ressourceBaseY","ressourceImgX","ressourceImgY","ressourcesTxtX","ressourcesTxtY","ressourcesNbX","ressourcesNbY","artefactsBackX","artefactsBackY","artefactBaseX","artefactBaseY","artefactImgX","artefactImgY","artefactsTxtX","artefactsTxtY","artefactsNbX","artefactsNbY"];
 	private var ressourcesBackX:Float = 0.11;
 	private var ressourcesBackY:Float = 0.21;
 	private var ressourceBaseX:Float = 0.15;
@@ -42,12 +44,13 @@ class PopinSpaceShipReturn extends MyPopin
 	private var dogPosY:Float = 0.81;
 
 
-	private function new(?startX:Float,?startY:Float, ?optParam:Map<String,Dynamic>) 
+	private function new(?startX:Float,?startY:Float, ?optParams:Map<String,Dynamic>) 
 	{
 		GameInfo.can_map_update = false;
 		super(startX,startY, "PopInBackground.png");
 		articleWidth /= background.width; // background is defiened in MyPopin
-		destination = optParam['destination'];
+		ressources = optParams['ressources'];
+		artefacts = optParams['artefacts'];
 
 		addHeader(0.59,0.05,Texture.fromFrame('PopinReturnHeader.png'));
 		addIcon(-0.15,-0.15,'PopInTitleReturn.png',"popInTitle",this,false);
@@ -63,17 +66,15 @@ class PopinSpaceShipReturn extends MyPopin
 		addIcon(ressourcesBackX, ressourcesBackY,'PopinArticleBgReturn.png',"ressourcesBack",containers["main"],false);
 		addText(ressourcesTxtX,ressourcesTxtY,'FuturaStdHeavy','25px',"RESSOURCES RÉCOLTÉES :",'ressourceTxt',containers["main"]);
 
-		var cpt:Int = 0;
-		var ressources:Array<Dynamic> = GameInfo.planetsRessources[destination];
-		for(i in ressources) {
-			var x:Float = cpt*(articleWidth+articleInterline);
-			var nb:Int = Std.int(Math.random()*(i.maxNb-i.minNb) + i.minNb); // TEMP !! NEED TO HAVE A REAL RANDOM ATRIBUTION !!
-			addIcon(ressourceBaseX+x,ressourceBaseY,'PopInMuseeArticleBg.png',"ressourceBase",containers["main"],false);
-			addIcon(ressourceImgX+x,ressourceImgY,GameInfo.ressources[i.name].previewImg,"ressourceImg",containers["main"],false);
-			addText(ressourcesNbX+x,ressourcesNbY,'FuturaStdHeavy','25px',"x"+nb,'ressourceTxt',containers["main"]);
-			cpt++;
+		for(i in 0...ressources.length) {
+			if(ressources[i] > 0){
+				var x:Float = i*(articleWidth+articleInterline);
+				addIcon(ressourceBaseX+x,ressourceBaseY,'PopInMuseeArticleBg.png',"ressourceBase",containers["main"],false);
+				addIcon(ressourceImgX+x,ressourceImgY,GameInfo.ressources["poudre"+i].previewImg,"ressourceImg",containers["main"],false);
+				addText(ressourcesNbX+x,ressourcesNbY,'FuturaStdHeavy','25px',"x"+ressources[i],'ressourceTxt',containers["main"]);
 
-			GameInfo.ressources[i.name].userPossesion += nb;
+				GameInfo.ressources["poudre"+i].userPossesion += ressources[i];
+			}
 		}
 	}
 
@@ -81,19 +82,26 @@ class PopinSpaceShipReturn extends MyPopin
 		addIcon(artefactsBackX, artefactsBackY,'PopinArticleBgReturn.png',"artefactsBack",containers["main"],false);
 		addText(artefactsTxtX,artefactsTxtY,'FuturaStdHeavy','25px',"ARTEFACTS TROUVÉS :",'artefactTxt',containers["main"]);
 
-		var cpt:Int = 0;
-		/*ar artefacts:Array<Dynamic> = GameInfo.artefacts[destination];
-		for(i in artefacts) {
-			var x:Float = cpt*(articleWidth+articleInterline);
-			var hasIt:Float = Math.random(); // TEMP !! NEED TO HAVE A REAL RANDOM ATRIBUTION !!
-			if(hasIt >= 0.5){ 
-				addIcon(artefactBaseX+x,artefactBaseY,'PopInMuseeArticleBg.png',"artefactBase",containers["main"],false);
-				addIcon(artefactImgX+x,artefactImgY,i.img,"artefactImg",containers["main"],false);
-				addText(artefactsNbX+x,artefactsNbY,'FuturaStdHeavy','25px',"x1",'artefactTxt',containers["main"]);
-				i.userPossesion += 1;
-				cpt++;
+		var matched:Bool;
+		for(i in 0...artefacts.length) {
+			matched = false;
+			for(planetArtefact in GameInfo.artefacts) {
+				if(matched){
+					break;
+				}
+				for(id in planetArtefact.keys()){
+					if(artefacts[i].facebookID == id) {
+						var x:Float = i*(articleWidth+artefactInterline);
+						addIcon(artefactBaseX+x,artefactBaseY, 'PopInMuseeArticleBg.png', "artefactBase", containers["main"], false);
+						addIcon(artefactImgX+x,artefactImgY, planetArtefact[id].img, "artefactImg", containers["main"], false);
+						addText(artefactsNbX+x,artefactsNbY, 'FuturaStdHeavy', '25px', "x1", 'artefactTxt', containers["main"]);
+						planetArtefact[id].userPossesion += 1;
+						matched = true;
+						break;
+					}
+				}
 			}
-		}*/
+		}
 	}
 
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
