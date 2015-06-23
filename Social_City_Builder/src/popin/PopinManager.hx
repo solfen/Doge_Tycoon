@@ -50,9 +50,11 @@ class PopinManager extends DisplayObjectContainer
 	//instantiate any popIn just with its name so that anywhere in the code we can open a popin with a string
 	// by doing PopinManager.getInstance().openPopin("popinName")
 	public function openPopin(popinName:String, ?pX:Float = 0.5, ?pY:Float = 0.55,?optParams:Map<String,Dynamic>){
-		childs[popinName] = Type.createInstance( Type.resolveClass("popin."+popinName), [pX,pY,optParams]);
-		addChild(childs[popinName]);
-		currentPopinName = popinName != "PopinInventory" ? popinName:currentPopinName; // beacuse inventory can be opened along with other popins
+		if(childs[popinName] == null) {
+			childs[popinName] = Type.createInstance( Type.resolveClass("popin."+popinName), [pX,pY,optParams]);
+			addChild(childs[popinName]);
+			currentPopinName = popinName != "PopinInventory" ? popinName:currentPopinName; // beacuse inventory can be opened along with other popins
+		}
 	}
 
 	public function addPopinToQueue(popinName:String, ?pX:Float, ?pY:Float, ?optParams:Map<String,Dynamic>) : Void {
@@ -75,10 +77,12 @@ class PopinManager extends DisplayObjectContainer
 	}
 
 	public function closePopin(popinName:String){
-		childs[popinName].destroy();
-		removeChild(childs[popinName]);
-		childs.remove(popinName);
-		openPopinAfter();
+		if(childs[popinName] != null) {
+			childs[popinName].destroy();
+			removeChild(childs[popinName]);
+			childs.remove(popinName);
+			openPopinAfter();
+		}
 	}
 
 	public function closeCurentPopin():Void{

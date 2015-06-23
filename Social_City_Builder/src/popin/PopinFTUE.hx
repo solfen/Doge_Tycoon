@@ -30,9 +30,10 @@ class PopinFTUE extends MyPopin
 		GameInfo.can_map_update = false;
 		trace(startX,startY);
 		super(startX,startY, "PopInBackground.png");
-		ftueTexts = ["Hey c’est toi le nouveau gérant ? Super !\nGrâce à toi on va enfin pouvoir partir à la\n conquête de l’espace !\n\nAvant toute chose, tu vas devoir construire\n une base de lancement. Comme le\n gouvernement t'en offre une, tu n'a plus\n qu'a fermer cette popup et placer ta base",
-					"Génial tu a construit ta base !\nL'espace n'est plus si loin maintenant !\n\nCertains employés zélés t’ont donné des\nmissions pour t'aider avec la suite\n\nClique donc sur l’icône en forme de livre \n en bas à droite pour les voir",
-					"Ils sont sympa tes employés hein ?\n\nLes missions peuvent être effectuées\n n'importe quand et dans n’importe\n quel ordre. Cela te donnera des buts à\n atteindre tout au long de ta carrière\n\n   Allez bonne chance patron, on compte\n sur toi !"
+		
+		ftueTexts = [ "Salut, c'est vous le nouveau gérant ?\nSuper ! Grâce à vous, on va enfin pouvoir\npartir à la conquête de l’espace !\n\nAvant toute chose, vous allez devoir\nconstruire une base de lancement.\nComme le gouvernement vous l'offre, vous\nn'avez plus qu'a qu'a fermer cette popup\net placer votre base", 
+		"Génial vous avez construit la base !\nL'espace n'est plus si loin maintenant !\n\nCertains employés zélés vous ont donné  \ndes missions pour vous aider.\n\n Cliquez sur l’icône en forme de livre\nen bas à droite pour les voir",
+		"Ils sont gentils vos employés hein ?\n\nLes missions peuvent être effectuées\nn'importe quand et dans n’importe\nquel ordre. Cela vous donnera des buts à\n atteindre tout au long de votre carrière.\n\nAllez bonne chance, on compte\nsur vous !"
 		];
 		ftueTextIndex = optParam['ftueIndex'];
 		addHeader(0.55,0.05,Texture.fromFrame('PopInFTUEHeader.png'));

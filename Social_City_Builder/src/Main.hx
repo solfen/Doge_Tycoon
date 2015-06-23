@@ -32,13 +32,13 @@ class Main extends EventDispatcher
 	
 	private static inline var CONFIG_PATH: String = "config.json";	
 	private static var instance: Main;
-	private static var stats: Dynamic;
+	// private static var stats: Dynamic;
 	
 	private var stage: Stage;
 	private var WebFontConfig: Dynamic;
 	private var _old_stamp: Float;
 
-	public static var isLocal:Bool = true;
+	public static var isLocal:Bool = false;
 
 	private static function main (): Void
 	{
@@ -74,12 +74,12 @@ class Main extends EventDispatcher
 		delta_time = 0;
 		_old_stamp = Timer.stamp();
 
-		stats = new pixi.utils.Stats();
+		/*stats = new pixi.utils.Stats();
 		stats.domElement.style.position = "absolute";
-		stats.domElement.style.top = "0px";
+		stats.domElement.style.top = "0px";*/
 		
 		Browser.document.body.appendChild(renderer.view);
-		Browser.document.body.appendChild(stats.domElement);
+		// Browser.document.body.appendChild(stats.domElement);
 		Browser.window.addEventListener("resize", resize);
 		
 		WebFontConfig = {
@@ -99,7 +99,7 @@ class Main extends EventDispatcher
 		  loop: true,
 		  volume: 0.5,
 		});
-		//music.play();
+		music.play();
 		
 		gameLoop(0);
 	}
@@ -187,12 +187,12 @@ class Main extends EventDispatcher
 		delta_time = Timer.stamp() - _old_stamp;
 		_old_stamp = Timer.stamp();
 
-		stats.begin();
+		// stats.begin();
 		Browser.window.requestAnimationFrame(cast gameLoop);
 		render();		
 		dispatchEvent(new Event(Event.GAME_LOOP));
 
-		stats.end();
+		// stats.end();
 	}
 	
 	/**

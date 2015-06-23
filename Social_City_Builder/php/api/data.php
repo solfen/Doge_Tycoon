@@ -6,7 +6,7 @@ include '../config.php';
 
 //TEMP VARS TO TEST !!
 
-$_SESSION['facebookID'] = $facebookID;
+//$_SESSION['facebookID'] = $facebookID;
 
 /*$_POST['event_name'] = 'get_all_rockets';
 $_POST['building_id'] = "257";

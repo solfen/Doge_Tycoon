@@ -118,7 +118,7 @@ class GameInfo
  				dogX: -0.55,
  				dogY: 0.16,
  				title: "Première fusée",
- 				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et commencez la\n construction de la fusée. N'oubliez pas de fouet..\n*hum* motiver vos employés en cliquant sur\n l’icône dans le atelier",
+ 				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et commencez la\n construction de la fusée. N'oubliez pas de fouet..\n*hum* motiver vos employés en cliquant sur\n l’icône dans l'atelier",
  				condition: {"rocketsConstructedNb":1},
  				rewards: [
  					{"name":"fric","quantity":"1000"},

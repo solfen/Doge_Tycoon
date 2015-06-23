@@ -33,9 +33,9 @@ class PopinBuild extends MyPopin
 		addIcon(-0.15,-0.15,'PopInTitleConstruction.png',"popInTitle",this,false);
 		addIcon(0.09,0.15,'PopInScrollBackground.png',"contentBackground",this,false);
 
-		addIcon(-0.02,0.17,'PopInOngletNicheNormal.png',"nicheTab",this,true,'PopInOngletNicheActive.png',true);
+		addIcon(-0.02,0.17,'PopInOngletUtilitairesNormal.png',"utilitairesTab",this,true,'PopInOngletUtilitairesActive.png',true);
+		addIcon(-0.02,0.41,'PopInOngletNicheNormal.png',"nicheTab",this,true,'PopInOngletNicheActive.png',true);
 		addIcon(-0.02,0.29,'PopInOngletFuseeNormal.png',"spaceshipTab",this,true,'PopInOngletFuseeActive.png',true);
-		addIcon(-0.02,0.41,'PopInOngletUtilitairesNormal.png',"utilitairesTab",this,true,'PopInOngletUtilitairesActive.png',true);
 		addIcon(0.95, 0,'closeButtonNormal.png',"closeButton",this,true,'closeButtonActive.png',true);
 
 		addContainer("verticalScroller",this,0,0);
