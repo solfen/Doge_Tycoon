@@ -158,9 +158,9 @@ class Building extends MovieClip
 
 	public function set_position (x: Int, y: Int): Void
 	{
-		x = Std.int(x-IsoMap.singleton.cell_width*(width_in_tiles_nb-1)*0.5);
+		x = Std.int(x - IsoMap.singleton.cell_width * (width_in_tiles_nb - 1) * 0.5);
 		//y = Std.int(y+IsoMap.cell_height*(height_in_tiles_nb-(height_in_tiles_nb>>1))); // pour centrer par rapport au curseur
-		y = y+IsoMap.singleton.cell_height;
+		y = y + IsoMap.singleton.cell_height;
 		
 		position.set(x, y);
 	}
@@ -187,18 +187,6 @@ class Building extends MovieClip
 		}
 	}
 
-	private function _finish_upgrade (data:String) : Void 
-	{
-		if(data == "1") 
-		{
-			GameInfo.buildingsGameplay[get_id()].userPossesion--;
-
-			lvl += 0x100;
-			textures = _get_texture();
-			gotoAndStop(0);
-			build();
-		}
-	}
 
 	public function destroy (): Void 
 	{
@@ -222,6 +210,19 @@ class Building extends MovieClip
 		filter.set_thickness(0);
 		// outline_thick = Math.max(0, outline_thick - Main.getInstance().delta_time * _fading_speed * outline_thick_max);
 		// filter.set_thickness(outline_thick);
+	}
+	
+	private function _finish_upgrade (data: String): Void 
+	{
+		if (data == "1")
+		{
+			--GameInfo.buildingsGameplay[get_id()].userPossesion;
+
+			lvl += 0x100;
+			textures = _get_texture();
+			gotoAndStop(0);
+			build();
+		}
 	}
 
 	private function _build_end (data: String): Void 
@@ -251,13 +252,13 @@ class Building extends MovieClip
 		{
 			var color: Int = Std.int( (Timer.stamp() - _building_start_time) / (building_end_time - _building_start_time ) * 0x99);
 
-			tint = (color<<16) | (color<<8) | color; // 0x000000 -> 0x999999
+			tint = (color << 16) | (color << 8) | color; // 0x000000 -> 0x999999
 
 			if (Timer.stamp() >= building_end_time)
 			{
 				is_checking_with_server = true;
 
-				var params: Map<String,String> = [
+				var params: Map<String, String> = [
 					"event_name" => 'check_building_end',
 					"building_builded_id" => bdd_id,
 				];

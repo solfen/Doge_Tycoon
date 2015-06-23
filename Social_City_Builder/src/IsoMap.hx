@@ -139,9 +139,10 @@ class IsoMap extends DisplayObjectContainer
 			case _: null;
 		}
 
+		building.lvl = pLvl;
+
 		building.build();
 
-		building.lvl = pLvl;
 		building.building_end_time = pBuilding_end_time;
 
 		buildings_list.push(building);
