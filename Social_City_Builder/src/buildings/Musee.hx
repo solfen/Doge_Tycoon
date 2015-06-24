@@ -28,7 +28,7 @@ class Musee extends Building
 
 			return Building.CLICK_VALUE.OTHER;
 		}
-		
+
 		return Building.CLICK_VALUE.NOTHING;
 	}
 }
