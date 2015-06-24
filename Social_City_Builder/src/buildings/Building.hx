@@ -206,9 +206,9 @@ class Building extends MovieClip
 
 	public function outline_fade_out (): Void
 	{
-		outline_thick = 0;
+		outline_thick = 0; // brutal
 		filter.set_thickness(0);
-		// outline_thick = Math.max(0, outline_thick - Main.getInstance().delta_time * _fading_speed * outline_thick_max);
+		// outline_thick = Math.max(0, outline_thick - Main.getInstance().delta_time * _fading_speed * outline_thick_max); // smooth
 		// filter.set_thickness(outline_thick);
 	}
 	

@@ -202,15 +202,12 @@ class IsoMap extends DisplayObjectContainer
 
 		if (IsoTools.is_inside_map(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x), Std.int(this.y), cell_width, cell_height, cells_nb, cols_nb))
 		{
-			//current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x+0.5), Std.int(this.y+0.5), Std.int(cell_width*this.scale.x), Std.int(cell_height*this.scale.y), cols_nb);
 			current_overflown_cell = IsoTools.cell_index_from_xy(InputInfos.mouse_x, InputInfos.mouse_y, Std.int(this.x+0.5), Std.int(this.y+0.5), Std.int(cell_width), Std.int(cell_height), cols_nb);
 
 			var i: Int = buildings_list.length;
 			var map_x_on_screen: Float = InputInfos.mouse_x - x;
 			var map_y_on_screen: Float = InputInfos.mouse_y - y;
 			var next_focused: Building = null;
-
-			//focused_building = null;
 
 			while (i-->0)
 			{
@@ -240,10 +237,7 @@ class IsoMap extends DisplayObjectContainer
 					buildings_list[i].is_focus = false;
 				}
 			}
-
 			focused_building = next_focused;
-			//focused_building.outline_fade_in();
-
 		}
 
 		if (_can_click && !InputInfos.is_mouse_down) // click relaché après avoir été appuyé
@@ -270,7 +264,7 @@ class IsoMap extends DisplayObjectContainer
 		}
 
 
-		// déplacements de la map sur les bords de l'écran :
+		// déplacements de la map sur les bords de l'écran : // retiré ?
 
 /*
 		if (InputInfos.mouse_x < DeviceCapabilities.width*_screen_margin && InputInfos.mouse_x >= 0 && x < 0) // left
