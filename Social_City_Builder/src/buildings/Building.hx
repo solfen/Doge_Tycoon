@@ -158,8 +158,8 @@ class Building extends MovieClip
 
 	public function set_position (x: Int, y: Int): Void
 	{
-		x = Std.int(x - IsoMap.singleton.cell_width * (width_in_tiles_nb - 1) * 0.5);
-		//y = Std.int(y+IsoMap.cell_height*(height_in_tiles_nb-(height_in_tiles_nb>>1))); // pour centrer par rapport au curseur
+		x = Std.int(x - IsoMap.singleton.cell_width * (width_in_tiles_nb - 1) * 0.5); // curseur en bas du building
+		//y = Std.int(y+IsoMap.cell_height*(height_in_tiles_nb-(height_in_tiles_nb>>1))); // pour centrer le building par rapport au curseur
 		y = y + IsoMap.singleton.cell_height;
 		
 		position.set(x, y);

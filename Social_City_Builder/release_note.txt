@@ -1,0 +1,34 @@
+La release note de Doge Tycoon
+
+Ce jeu a été codé et game designé par Lucien Boudy et Maxime Lo Re, il a été illustré par Garance ROYERE LEBIGRE, Nicolas THAM Hoang Viet, Gabriel TUROT et Angie WOLNICZAK.
+
+Les 3 classes de Lucien représentatives :
+- buildings/Building
+- IsoMap
+- utils/game/IsoTools
+
+Les 3 classes de Maxime représentatives :
+- 
+- 
+- 
+
+Les features développées :
+
+- Le moteur isometrique,
+- La construction et l'amélioration des 8 buildings prévus,
+- Les spéciales features de 3 batiments (ateliers, musée et église),
+- L'interface utilisateur,
+- Les pop-ups de notification,
+- Le système de missions,
+- La gestion des ressources,
+- La conquète spaciale (envois et retour de fusées),
+- La collection des artefacts,
+- L'échange d'artefacts
+
+Les features prévus mais non développées à ce jour :
+- La présence de la population des doges animée (IA cosmétique),
+- Une meilleure illustration du feedback de construction des buildings,
+- 
+- 
+- 
+- 

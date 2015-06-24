@@ -264,46 +264,8 @@ class IsoMap extends DisplayObjectContainer
 		}
 
 
-		// déplacements de la map sur les bords de l'écran : // retiré ?
-
-/*
-		if (InputInfos.mouse_x < DeviceCapabilities.width*_screen_margin && InputInfos.mouse_x >= 0 && x < 0) // left
-		{
-			_screen_move_x = Std.int((DeviceCapabilities.width*_screen_margin-InputInfos.mouse_x)*_screen_move_speed);
-		}
-		else if (InputInfos.mouse_x > DeviceCapabilities.width*(1-_screen_margin) && InputInfos.mouse_x <= DeviceCapabilities.width && x > DeviceCapabilities.width-_map_width) // right
-		{
-			_screen_move_x = Std.int((DeviceCapabilities.width*(1-_screen_margin)-InputInfos.mouse_x)*_screen_move_speed);
-		}
-		else
-		{
-			_screen_move_x = 0;
-		}
-		
-		if (InputInfos.mouse_y < DeviceCapabilities.height*_screen_margin && InputInfos.mouse_y >= 0 && y < 0) // up
-		{
-			_screen_move_y = Std.int((DeviceCapabilities.height*_screen_margin-InputInfos.mouse_y)*_screen_move_speed);
-		}
-		else if (InputInfos.mouse_y > DeviceCapabilities.height*(1-_screen_margin) && InputInfos.mouse_y <= DeviceCapabilities.height && y > DeviceCapabilities.height-_map_height) // down
-		{
-			_screen_move_y = Std.int((DeviceCapabilities.height*(1-_screen_margin)-InputInfos.mouse_y)*_screen_move_speed);
-		}
-		else
-		{
-			_screen_move_y = 0;
-		}
-
-		if (_screen_move_x == 0 && _screen_move_y == 0)
-		{
-			_time_to_move_screen = Timer.stamp() + _screen_move_delay; // delay
-		}
-		else if (Timer.stamp() > _time_to_move_screen)
-		//else if (InputInfos.mouse_x == _last_mouse_x && InputInfos.mouse_y == _last_mouse_y)
-		{
-			x += _screen_move_x;
-			y += _screen_move_y;
-		}
-*/
+		// déplacements de la map sur les bords de l'écran :
+		//_move_camera_on_screen_borders(); // retiré...
 
 		_graphics.visible = GameInfo.building_2_build > 0;
 
@@ -388,6 +350,45 @@ class IsoMap extends DisplayObjectContainer
 			y: new_y,
 			can_build: can_build
 		};
+	}
+
+	private function _move_camera_on_screen_borders (): Void
+	{
+		if (InputInfos.mouse_x < DeviceCapabilities.width*_screen_margin && InputInfos.mouse_x >= 0 && x < 0) // left
+		{
+			_screen_move_x = Std.int((DeviceCapabilities.width*_screen_margin-InputInfos.mouse_x)*_screen_move_speed);
+		}
+		else if (InputInfos.mouse_x > DeviceCapabilities.width*(1-_screen_margin) && InputInfos.mouse_x <= DeviceCapabilities.width && x > DeviceCapabilities.width-_map_width) // right
+		{
+			_screen_move_x = Std.int((DeviceCapabilities.width*(1-_screen_margin)-InputInfos.mouse_x)*_screen_move_speed);
+		}
+		else
+		{
+			_screen_move_x = 0;
+		}
+		
+		if (InputInfos.mouse_y < DeviceCapabilities.height*_screen_margin && InputInfos.mouse_y >= 0 && y < 0) // up
+		{
+			_screen_move_y = Std.int((DeviceCapabilities.height*_screen_margin-InputInfos.mouse_y)*_screen_move_speed);
+		}
+		else if (InputInfos.mouse_y > DeviceCapabilities.height*(1-_screen_margin) && InputInfos.mouse_y <= DeviceCapabilities.height && y > DeviceCapabilities.height-_map_height) // down
+		{
+			_screen_move_y = Std.int((DeviceCapabilities.height*(1-_screen_margin)-InputInfos.mouse_y)*_screen_move_speed);
+		}
+		else
+		{
+			_screen_move_y = 0;
+		}
+
+		if (_screen_move_x == 0 && _screen_move_y == 0)
+		{
+			_time_to_move_screen = Timer.stamp() + _screen_move_delay; // delay
+		}
+		else if (Timer.stamp() > _time_to_move_screen)
+		{
+			x += _screen_move_x;
+			y += _screen_move_y;
+		}
 	}
 
 }
