@@ -8,7 +8,7 @@ include '../config.php';
 
 //$_SESSION['facebookID'] = $facebookID;
 
-/*$_POST['event_name'] = 'get_all_rockets';
+/*$_POST['event_name'] = 'check_rocket_travel_end';
 $_POST['building_id'] = "257";
 $_POST['isSoft'] = "0";
 $_POST['building_builded_id'] = 35;
@@ -17,7 +17,7 @@ $_POST["quantity"] = 100;
 $_POST['rocket_ref'] = "JauneLv3";
 $_POST['rocket_builded_id'] = 1;
 $_POST["clickNb"] = 1000;
-$_POST['rocket_builded_id'] = 7;
+$_POST['rocket_builded_id'] = 62;
 $_POST['friendID'] = "818989511510138";
 $_POST['artefactsID'] = ["701943576599156", "1446334055683188", "906211629440719"];
 $_POST["artefactFbID"] = "1446334055683188";
@@ -33,8 +33,11 @@ $gameInfo["prayerEffect"] = 0.005;
 $gameInfo["museeSoftSpeed"] = 10;
 $gameInfo["musseVisiteGain"] = 1;
 $gameInfo['nicheLv1']['dogepersecond'] = .1;
+$gameInfo['nicheLv1']['dogeAdd'] = 5;
 $gameInfo['nicheLv2']['dogepersecond'] = .2;
+$gameInfo['nicheLv2']['dogeAdd'] = 10;
 $gameInfo['nicheLv3']['dogepersecond'] = .3;
+$gameInfo['nicheLv3']['dogeAdd'] = 15;
 
 if(empty($_SESSION['facebookID'])) {
 	header('HTTP/1.1 401 Unauthorized');
@@ -76,7 +79,7 @@ switch ($_POST['event_name']) {
 		echo $result;
 	break;		
 	case 'check_building_end':
-		$result = check_building_end($connexion);
+		$result = check_building_end($connexion, $gameInfo);
 		echo $result;
 	break;
 	case 'upgrade_building':
@@ -84,7 +87,7 @@ switch ($_POST['event_name']) {
 		echo $result;
 	break;
 	case 'destroy_building':
-		$result = destroy_building($connexion);
+		$result = destroy_building($connexion, $gameInfo);
 		echo $result;
 	break;		
 	case 'get_all_buildings':
@@ -338,12 +341,12 @@ function build_buidling($connexion){
 //                                                                                                                                                         
 
 
-function check_building_end($connexion){
+function check_building_end($connexion, $gameInfo){
 	if(!isset($_POST['building_builded_id']) ){
 		return "0=Missing params";
 	}
 
-	$building = dbRequest($connexion,"SELECT `buildingEnd`, `isBuilded` FROM `builded_buildings` WHERE `ID` = :id && `playerFbID` = :fbID", array(':id'=>$_POST['building_builded_id'],':fbID'=>$_SESSION['facebookID']), true);
+	$building = dbRequest($connexion,"SELECT `buildingID`, `buildingEnd`, `isBuilded` FROM `builded_buildings` WHERE `ID` = :id && `playerFbID` = :fbID", array(':id'=>$_POST['building_builded_id'],':fbID'=>$_SESSION['facebookID']), true);
 	if(!count($building)){
 		return "0=Invalid building ID";
 	}
@@ -353,6 +356,12 @@ function check_building_end($connexion){
 	}
 	
 	dbRequest($connexion,"UPDATE `builded_buildings` SET `isBuilded` = 1 WHERE `ID` = :id",array(':id'=>$_POST['building_builded_id']), false);
+	if($building["buildingID"] == 266) 		$newPop = $gameInfo['nicheLv1']['dogeAdd'];
+	else if($building["buildingID"] == 522) $newPop = $gameInfo['nicheLv2']['dogeAdd'];
+	else if($building["buildingID"] == 778) $newPop = $gameInfo['nicheLv3']['dogeAdd'];
+	if(isset($newPop)){
+		dbRequest($connexion,"UPDATE `players` SET `populationMax`=`populationMax`+:dogeAdd WHERE facebookID = :id", array(":id"=>$_SESSION["facebookID"],":dogeAdd"=>$newPop), false);
+	}
 	return "1";
 }
 
@@ -366,9 +375,22 @@ function check_building_end($connexion){
 //                                                                                                                                                          
 
 
-function destroy_building ($connexion) {
+function destroy_building ($connexion, $gameInfo) {
 	if(!isset($_POST['building_builded_id']) ){
 		return "0=Missing params";
+	}
+
+	$building = dbRequest($connexion,"SELECT `buildingID`, `buildingEnd`, `isBuilded` FROM `builded_buildings` WHERE `ID` = :id && `playerFbID` = :fbID", array(':id'=>$_POST['building_builded_id'],':fbID'=>$_SESSION['facebookID']), true);
+	if(!count($building)){
+		return "0=Invalid building ID";
+	}
+	$building = $building[0];
+
+	if($building["buildingID"] == 266) 		$newPop = $gameInfo['nicheLv1']['dogeAdd'];
+	else if($building["buildingID"] == 522) $newPop = $gameInfo['nicheLv2']['dogeAdd'];
+	else if($building["buildingID"] == 778) $newPop = $gameInfo['nicheLv3']['dogeAdd'];
+	if(isset($newPop)){
+		dbRequest($connexion,"UPDATE `players` SET `populationMax`=`populationMax`-:dogeAdd WHERE facebookID = :id", array(":id"=>$_SESSION["facebookID"],":dogeAdd"=>$newPop), false);
 	}
 
 	dbRequest($connexion,"DELETE FROM `builded_buildings` WHERE `ID` = :id && `playerFbID` = :fbID",array(':id'=>$_POST['building_builded_id'],':fbID'=>$_SESSION['facebookID']), false);
@@ -582,9 +604,16 @@ function check_rocket_travel_end ($connexion, $rocketInfo) {
 
 			$ressourceNb = rand($planet["meansRewardMin"],$planet["meansRewardMax"]);
 			$ressources = [];
+			$str = "UPDATE `players` SET";
 			for($i=1;$i<7;$i++){
-				array_push($ressources, intval($ressourceNb * ($planet['ressource_ratio_'.$i]/100) ) ); // ressource_ratio_ is saved in DB in *100 form to avoid using floats
+				$gain = intval($ressourceNb * ($planet['ressource_ratio_'.$i]/100)); // ressource_ratio_ is saved in DB in *100 form to avoid using floats
+				$str .= " ressource_".$i."="."ressource_".$i."+".$gain.' ,';
+				array_push($ressources,  $gain);
 			}
+			$str = substr($str,0,strlen($str)-1); // get rid of the last ","
+			$str .= " WHERE facebookID = :id";
+
+			dbRequest($connexion, $str, array(":id"=>$_SESSION["facebookID"]), false);
 
 			$artefactsFound = [];
 			foreach ($artefacts as $artefact) {
@@ -653,7 +682,7 @@ function get_friend_artefacts ($connexion){
 		$str .= " artefacts.facebookID = :id" . $i . " || ";
 		$params[':id'.$i] = $_POST["artefactsID"][$i];
 	}
-	$str = substr($str,0,count($str)-4); // get rid of the last "||"
+	$str = substr($str,0, strlen($str)-4); // get rid of the last "||"
 	$str .= " ) GROUP BY artefacts.facebookID ORDER BY nb DESC";
 
 	$artefacts = dbRequest($connexion,$str,$params,true);
@@ -786,9 +815,6 @@ function check_quest_completion($connexion){
 //                                                                                                                                                                                     
 
 function update_ressources($connexion, $gameInfo) {
-	if(!isset($_POST["churchClicks"]) || !isset($_POST["museumClicks"])){
-		return "0=Missing params";
-	}
 
 	// need fichier gameplay config in JSON
 	$player = dbRequest($connexion,"SELECT `gameTime`, `hardCurrency`, `softCurrency`, `ressource_1`, `ressource_2`, `ressource_3`, `ressource_4`, `ressource_5`, `ressource_6`, `population`, `populationMax`, `faithPercent`, `lastTimeUpdated` FROM `players` WHERE `facebookID` = :id", array(":id"=>$_SESSION["facebookID"]),true);

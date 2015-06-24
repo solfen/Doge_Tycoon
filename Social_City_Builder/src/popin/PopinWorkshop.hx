@@ -77,7 +77,6 @@ class PopinWorkshop extends MyPopin
 	private var dogPosX:Float = -0.7;
 
 
-
 	private function new(?startX:Float,?startY:Float,?optParams:Map<String,Dynamic>) 
 	{
 		GameInfo.can_map_update = false;
@@ -220,11 +219,7 @@ class PopinWorkshop extends MyPopin
 		is_checking_with_server = false;
 		if(data.charAt(0) != "0") {
 			workshopConfig.state = 'buy';
-			GameInfo.rockets.rocketsLaunchedNb++;
-			GameInfo.shipToLaunch = workshopConfig.spaceShip;
-			GameInfo.rockets.currentRocket = workshopConfig.spaceShip;
-			GameInfo.rockets.currentRocketID = workshopConfig.spaceShipID;
-			GameInfo.rockets.currentRocketLaunchTime = haxe.Timer.stamp();
+			haxe.Timer.delay(setLaunchSpaceship,500); // pour être sûr que tout à bien été fermé et que le joueur est "ingame";
 			close();
 		}
 		else {
@@ -233,6 +228,13 @@ class PopinWorkshop extends MyPopin
 			addBuyState();
 			//need feedback problem build
 		}
+	}
+	private function setLaunchSpaceship(){
+		GameInfo.rockets.rocketsLaunchedNb++;
+		GameInfo.shipToLaunch = workshopConfig.spaceShip;
+		GameInfo.rockets.currentRocket = workshopConfig.spaceShip;
+		GameInfo.rockets.currentRocketID = workshopConfig.spaceShipID;
+		GameInfo.rockets.currentRocketLaunchTime = haxe.Timer.stamp();	
 	}
 	// childClick is the function binded on all of the interactive icons (see MyPopin.hx)
 	// pEvent is a Dynamic type since Interaction Data thinks pEvent.target is a Sprite while it's actually an IconPopin (ask mathieu if there's an another way)

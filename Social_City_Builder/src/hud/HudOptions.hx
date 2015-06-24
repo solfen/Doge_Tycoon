@@ -9,6 +9,8 @@ import pixi.InteractionData;
 // if the change texture repeats itself among all the HUD it will be put in IconHUD
 class HudOptions extends IconHud
 {
+	private var isPlaying:Bool = true;
+
 	private function new(startX:Float,startY:Float) 
 	{
 		//the position is in ratio of deviceCapabilities (0 0 = top left, 1 1 = botom right)
@@ -16,6 +18,14 @@ class HudOptions extends IconHud
 	}
 	
 	override private function onClick (pData:InteractionData) : Void {
+		if(isPlaying){
+			Main.getInstance().music.pause();
+			isPlaying = false;
+		}
+		else {
+			Main.getInstance().music.play();
+			isPlaying = true;
+		}
 		var curName:String = PopinManager.getInstance().getCurrentPopinName();
 		if(curName != "PopinInventory")
 			PopinManager.getInstance().closeCurentPopin();

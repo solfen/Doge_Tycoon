@@ -20,8 +20,8 @@ class Niche extends Building
 		outline_thick_max = 1;
 		//outline_thick_min = 1;
 
-		GameInfo.dogeMaxNumber += GameInfo.buildingsGameplay[get_id()].dogesMaxGain;
-		nbDogesInside = GameInfo.buildingsGameplay[get_id()].dogesMaxGain;
+		GameInfo.dogeMaxNumber += Std.parseInt(GameInfo.buildingsGameplay[get_id()].dogesMaxGain);
+		nbDogesInside = Std.parseInt(GameInfo.buildingsGameplay[get_id()].dogesMaxGain);
 	}
 
 	override public function upgrade (): Void 
@@ -30,8 +30,8 @@ class Niche extends Building
 
 		if (lvl < Building.LVL_3)
 		{
-			GameInfo.dogeMaxNumber += GameInfo.buildingsGameplay[get_id()].dogesMaxGain;	
-			nbDogesInside += GameInfo.buildingsGameplay[get_id()].dogesMaxGain;	
+			GameInfo.dogeMaxNumber += Std.parseInt(GameInfo.buildingsGameplay[get_id()].dogesMaxGain);	
+			nbDogesInside += Std.parseInt(GameInfo.buildingsGameplay[get_id()].dogesMaxGain);	
 		}
 	}
 
@@ -39,7 +39,6 @@ class Niche extends Building
 	{
 		if (super._on_click() == Building.CLICK_VALUE.DESTROY)
 		{
-			GameInfo.buildingsGameplay[get_id()].userPossesion--;
 			GameInfo.dogeMaxNumber -= nbDogesInside;
 
 			return Building.CLICK_VALUE.OTHER;

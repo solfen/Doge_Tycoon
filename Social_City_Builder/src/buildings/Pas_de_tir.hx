@@ -42,7 +42,7 @@ class Pas_de_tir extends Building
 	{
 		super._update();
 
-		if (GameInfo.shipToLaunch != null)
+		if (GameInfo.shipToLaunch != null && popin.PopinManager.getInstance().currentPopinName == null)
 		{
 			for (i in 0...25)
 			{

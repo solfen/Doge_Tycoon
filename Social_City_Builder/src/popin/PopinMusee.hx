@@ -269,7 +269,7 @@ class PopinMusee extends MyPopin
 			pEvent.target.setTextureToNormal();
 			artefactToGive = pEvent.target._name.split('actionGive')[1];
 
-			utils.server.MyFbHelper.getInstance().artefactRequest('GIFT', artefactToGive, finishFbSendArtefact);
+			utils.server.MyFbHelper.getInstance().artefactRequest('SEND', artefactToGive, finishFbSendArtefact);
 		}		
 		else if(pEvent.target._name.indexOf("actionAsk") != -1){
 			pEvent.target.setTextureToNormal();

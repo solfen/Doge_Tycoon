@@ -21,7 +21,7 @@ class PopinManager extends DisplayObjectContainer
 	//all the childs are stocked in an associative array where their name are the keys. That allows cool stuf (like in closePopin)
 	private var childs:Map<String, MyPopin> = new Map();
 	private var popinQueue:Array<Dynamic> = [];
-	private var currentPopinName:String = null;
+	public var currentPopinName:String = null;
 	private static var instance: PopinManager;
 
 	public static function getInstance (): PopinManager {

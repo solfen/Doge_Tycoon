@@ -109,7 +109,7 @@ class GameInfo
  				condition: {"building":Building.HANGAR_JAUNE | Building.LVL_1, "numberToHave" : 0 },
  				rewards: [
  					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"poudre0","quantity":"100"},
  				],
  				bdd_id: "4"
  			},
@@ -121,8 +121,8 @@ class GameInfo
  				description: "Construire votre première fusée est maintenant possible !\nCliquez sur votre atelier et commencez la\n construction de la fusée. N'oubliez pas de fouet..\n*hum* motiver vos employés en cliquant sur\n l’icône dans l'atelier",
  				condition: {"rocketsConstructedNb":1},
  				rewards: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"fric","quantity":"2000"},
+ 					{"name":"poudre0","quantity":"200"},
  				],
  				bdd_id: "5"
  			},
@@ -134,8 +134,8 @@ class GameInfo
  				description: "Votre première fusée est prête à partir !\nVous n'avez plus qu'a appuyer sur le gros\nbouton vert pour la lancer. Ça ne devrait pas être\ntrop compliqué non ?",
  				condition: {"rocketsLaunchedNb": 1 },
  				rewards: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"fric","quantity":"3000"},
+ 					{"name":"poudre0","quantity":"300"},
  				],
  				bdd_id: "6"
  			},
@@ -147,8 +147,7 @@ class GameInfo
  				condition: {"building":Building.CASINO | Building.LVL_1, "numberToHave" : 1 },
  				description: "Vos employés veulent se détendre, vous voulez\n vous remplir les poches.\nUn casino semble le parfait compromis",
  				rewards: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"fric","quantity":"4000"},
  				],
  				bdd_id: "7"
  			},
@@ -160,8 +159,7 @@ class GameInfo
  				condition: {"building":Building.MUSEE | Building.LVL_1, "numberToHave" : 1 },
  				description: "Les artefacts que vous trouvez sur les planètes\nsont incroyablement rares Et comme ce qui est\nrare est cher, les billets ne sont pas donnés. Entre la\nboutique de souvenirs et les entrées, vous allez\nencaisser sec !",
  				rewards: [
- 					{"name":"fric","quantity":"1000"},
- 					{"name":"poudre0","quantity":"10"},
+ 					{"name":"fric","quantity":"4000"},
  				],
  				bdd_id: "8"
  			}
@@ -235,9 +233,7 @@ class GameInfo
  				description: "L'association des travailleurs canins (l'ATC) impose un logement de fonction.\nDonc pour faire court niches = employés.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre1","quantity":25},
+ 					{"name":"fric","quantity":500},
  				]
  			},
  		],
@@ -253,8 +249,7 @@ class GameInfo
  				hardPrice: 3,
  				ressources: [
  					{"name":"fric","quantity":1000},
- 					{"name":"poudre2","quantity":10},
- 					{"name":"poudre1","quantity":25},
+ 					{"name":"poudre0","quantity":50},
  				]
  			},
  			{
@@ -266,9 +261,9 @@ class GameInfo
  				description: "Cet atelier construit des fusées grâce au pouvoir de l’amitié et à des techniques\n de management éprouvés.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre5","quantity":250},
+ 					{"name":"fric","quantity":5000},
+ 					{"name":"poudre0","quantity":100},
+ 					{"name":"poudre1","quantity":50},
  				]
  			},
  			{
@@ -280,9 +275,10 @@ class GameInfo
  				description: "Dans cet atelier les employés sont les plus heureux au monde.\nLes semaines de 169 heures ne sont bien sur qu'un mythe.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre3","quantity":10},
- 					{"name":"poudre4","quantity":25},
+ 					{"name":"fric","quantity":10000},
+ 					{"name":"poudre0","quantity":500},
+ 					{"name":"poudre1","quantity":250},
+ 					{"name":"poudre2","quantity":50},
  				]
  			}, 			
  			{
@@ -294,9 +290,9 @@ class GameInfo
  				description: "Dans cet atelier, aucun incident n'a jamais été rapporté à la direction\net ce n'est absolument pas par crainte de représailles.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre1","quantity":25},
+ 					{"name":"fric","quantity":20000},
+ 					{"name":"poudre1","quantity":1500},
+ 					{"name":"poudre2","quantity":250},
  				]
  			},
  			{
@@ -308,9 +304,9 @@ class GameInfo
  				description: "Les soupçons des conséquences mortelles liés à la manipulation\n des moteurs à Dogetonium ont été réfutés par le professeur Van-Du.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre1","quantity":25},
+ 					{"name":"fric","quantity":50000},
+ 					{"name":"poudre0","quantity":10000},
+ 					{"name":"poudre3","quantity":250},
  				]
  			},
  			{
@@ -322,9 +318,12 @@ class GameInfo
  				description: "Cet atelier utilise uniquement des huiles écologiques.\nQui ne sont en aucun cas faites a partir de travailleurs retraités.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre1","quantity":25},
+ 					{"name":"fric","quantity":75000},
+ 					{"name":"poudre0","quantity":2500},
+ 					{"name":"poudre1","quantity":1750},
+ 					{"name":"poudre2","quantity":1000},
+ 					{"name":"poudre3","quantity":250},
+ 					{"name":"poudre4","quantity":250},
  				]
  			},
  		],
@@ -338,9 +337,7 @@ class GameInfo
  				description: "Un établissement haut de gamme qui ne propose que des jeux honnêtes\npermettant à nos fiers travailleurs de se détendre.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre1","quantity":25},
+ 					{"name":"fric","quantity":10000},
  				]
  			},
  			{
@@ -352,39 +349,9 @@ class GameInfo
  				description: "Une modeste chapelle où nos employés implorent le grand manitou\nde nous accorder des finances prospères.",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre1","quantity":25},
+ 					{"name":"fric","quantity":10000},
  				]
  			},
- 			{
-				isAvailable : true,
-				isOneshot : false,
-				buildingID: Building.ENTREPOT,
- 				previewImg: 'PopInBuiltArticlePreviewEntrepot.png',
- 				title: 'Entrepôt',
- 				description: "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.",
- 				hardPrice: 3,
- 				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre1","quantity":25},
- 				]
- 			},
- 			{
-				isAvailable : true,
-				isOneshot : false,
-				buildingID: Building.LABO,
- 				previewImg: 'PopInBuiltArticlePreviewLabo.png',
- 				title: 'Labo',
- 				description: "Les labos servent à faire avancer la recherche.\nNos chiens ont une idée de ce qu'il font ne vous en faites pas.",
- 				hardPrice: 3,
- 				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre1","quantity":25},
- 				]
- 			},		
  			{
 				isAvailable : true,
 				isOneshot : true,
@@ -394,11 +361,33 @@ class GameInfo
  				description: "Le Mussée est l'endroit ou vous présentez vos artefacts aliens au monde.\nEt en plus ça rapporte un max",
  				hardPrice: 3,
  				ressources: [
- 					{"name":"fric","quantity":1000},
- 					{"name":"poudre0","quantity":10},
- 					{"name":"poudre1","quantity":25},
+ 					{"name":"fric","quantity":20000},
  				]
  			}, 
+ 			{
+				isAvailable : false,
+				isOneshot : false,
+				buildingID: Building.ENTREPOT,
+ 				previewImg: 'PopInBuiltArticlePreviewEntrepot.png',
+ 				title: 'Entrepôt',
+ 				description: "Les Entrepôts servent à stocker toutes les ressources physiques,\net absolument pas à faire un trafic de substances douteuses.",
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"name":"fric","quantity":1000},
+ 				]
+ 			},
+ 			{
+				isAvailable : false,
+				isOneshot : false,
+				buildingID: Building.LABO,
+ 				previewImg: 'PopInBuiltArticlePreviewLabo.png',
+ 				title: 'Labo',
+ 				description: "Les labos servent à faire avancer la recherche.\nNos chiens ont une idée de ce qu'il font ne vous en faites pas.",
+ 				hardPrice: 3,
+ 				ressources: [
+ 					{"name":"fric","quantity":150000},
+ 				]
+ 			}	
  		],
  	};
  	public static var workshopsModels:Map<Int,Dynamic> = [
@@ -561,9 +550,9 @@ class GameInfo
 			ressources: [
 				{"name":"fric","quantity":"1000"},
 				{"name":"doges","quantity":"10"},
-				{"name":"poudre1","quantity":"25"},
+				{"name":"poudre0","quantity":"10"},
 			],
-			constructionTime: 8, //sec
+			constructionTime: 10, //sec
 			clickBonus: 0.01,
 			timeToDestination: 5, //sec
 			destination: "Namok"
@@ -572,9 +561,9 @@ class GameInfo
  			name: "Fusée jaune niveau 2",
  			previewImg: "IconFuseeJaune2.png",
 			ressources: [
-				{"name":"fric","quantity":"1000"},
-				{"name":"poudre0","quantity":"10"},
-				{"name":"poudre1","quantity":"25"},
+				{"name":"fric","quantity":"10000"},
+				{"name":"doges","quantity":"100"},
+				{"name":"poudre0","quantity":"100"},
 			],
 			constructionTime: 60, //sec
 			clickBonus: 0.005,
@@ -585,11 +574,11 @@ class GameInfo
  			name: "Fusée jaune niveau 3",
  			previewImg: "IconFuseeJaune3.png",
 			ressources: [
-				{"name":"fric","quantity":"1000"},
-				{"name":"poudre0","quantity":"10"},
-				{"name":"poudre1","quantity":"25"},
+				{"name":"fric","quantity":"99999"},
+				{"name":"doges","quantity":"999"},
+				{"name":"poudre0","quantity":"999"},
 			],
-			constructionTime: 60, //sec
+			constructionTime: 120, //sec
 			clickBonus: 0.0025,
 			timeToDestination: 600, //sec
 			destination: "Namok"
@@ -599,7 +588,8 @@ class GameInfo
  			previewImg: "IconFuseeVert1.png",
 			ressources: [
 				{"name":"fric","quantity":"1000"},
-				{"name":"poudre0","quantity":"10"},
+				{"name":"poudre0","quantity":"50"},
+				{"name":"doges","quantity":"20"},
 				{"name":"poudre1","quantity":"25"},
 			],
 			constructionTime: 60, //sec
@@ -611,9 +601,10 @@ class GameInfo
  			name: "Fusée verte niveau 2",
  			previewImg: "IconFuseeVert2.png",
 			ressources: [
-				{"name":"fric","quantity":"1000"},
-				{"name":"poudre0","quantity":"10"},
-				{"name":"poudre1","quantity":"25"},
+				{"name":"fric","quantity":"5000"},
+				{"name":"poudre0","quantity":"500"},
+				{"name":"doges","quantity":"200"},
+				{"name":"poudre1","quantity":"250"},
 			],
 			constructionTime: 60, //sec
 			clickBonus: 0.005,
@@ -624,9 +615,10 @@ class GameInfo
  			name: "Fusée verte niveau 3",
  			previewImg: "IconFuseeVert3.png",
 			ressources: [
-				{"name":"fric","quantity":"1000"},
-				{"name":"poudre0","quantity":"10"},
-				{"name":"poudre1","quantity":"25"},
+				{"name":"fric","quantity":"5000"},
+				{"name":"poudre0","quantity":"500"},
+				{"name":"doges","quantity":"200"},
+				{"name":"poudre1","quantity":"250"},
 			],
 			constructionTime: 60, //sec
 			clickBonus: 0.0025,
@@ -790,7 +782,7 @@ class GameInfo
 			destination: "Namok"
  		}
  	];
- 	public static var friendsList : Array<Dynamic> = [
+ 	public static var friendsList : Array<Dynamic> = [ // prérempli pour les tests hors ligne mais overridé à la connexion FB
  		/*{id:00000000148, name: "Riton le raton", img: "www.caca.com"}*/
  		{ id : "818989511510138", name : "Pif", img : "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c19.0.63.64/p64x64/10354686_10150004552801856_220367501106153455_n.jpg?oh=c3889da5f90a3d6d757926d55803d8ac&oe=55FC1A7E&__gda__=1445923720_0fdf1c1f2cf88430f8f1e4a08dd9eebf"},
  		{ id : "5", name : "Pif", img : "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/c19.0.63.64/p64x64/10354686_10150004552801856_220367501106153455_n.jpg?oh=c3889da5f90a3d6d757926d55803d8ac&oe=55FC1A7E&__gda__=1445923720_0fdf1c1f2cf88430f8f1e4a08dd9eebf"},

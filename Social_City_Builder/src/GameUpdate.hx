@@ -17,7 +17,7 @@ class GameUpdate
 	private var ftueParam : Map<String,Dynamic>;
 	private var quest:Dynamic;
 	private var lastServerCheck:Float = 0;
-	private var serverCheckInterval:Float = 60;
+	private var serverCheckInterval:Float = 1;
 	
 	public static function getInstance (): GameUpdate {
 		if (instance == null) instance = new GameUpdate();
@@ -123,6 +123,7 @@ class GameUpdate
 			GameInfo.ressources['fric'].userPossesion += GameInfo.museeSoftSpeed * mainInstance.delta_time;
 		}
 
+		untyped console.log( GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].userPossesion);
 		var doges:Float =   GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].userPossesion * GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesPerSecond
 						  + GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_2].userPossesion * GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesPerSecond
 						  + GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_3].userPossesion * GameInfo.buildingsGameplay[Building.NICHE | Building.LVL_1].dogesPerSecond;

@@ -37,7 +37,7 @@ class HudManager extends DisplayObjectContainer
 		addHud(new HudFric(0,hudTopY),"HudFric",'HudTop');
 		addHud(new HudHardMoney(0,hudTopY),"HudHardMoney",'HudTop');
 		addHud(new HudDoges(0,hudTopY),"HudDoges",'HudTop');
-		addHud(new HudStock(0,hudTopY),"HudStock",'HudTop');
+		//addHud(new HudStock(0,hudTopY),"HudStock",'HudTop');
 
 		addContainer(0.94,0,'HudLeft',0.05,0.05,'right');
 		addHud(new HudOptions(0,hudTopY),"HudOptions",'HudLeft');
